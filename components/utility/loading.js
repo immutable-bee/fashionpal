@@ -1,7 +1,7 @@
 import React from 'react';
 import { Loading, Grid } from "@nextui-org/react";
 
-const LoadingComponent = ({ type = 'primarySpin', color = '#2EAAED', gradientHead, gradientTail, size = 'sm', noMargin = false }) => {
+const LoadingComponent = ({ type = 'primarySpin', color = '#E44A1F', gradientHead, gradientTail, size = 'sm', noMargin = false }) => {
 
   const sizeMap = {
     xs: 'h-6 w-6',

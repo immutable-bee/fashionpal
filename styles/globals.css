@@ -18,10 +18,46 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
+  background: linear-gradient(to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+
+.text-primary {
+  color: #E44A1F !important;
+}
+
+
+.text-secondary {
+  color: #FF9C75 !important;
+}
+
+
+.text-lightprimary {
+  color: #FEDDBC !important;
+}
+
+
+.text-white {
+  color: #FFFFFF !important;
+}
+
+.bg-primary {
+  background-color: #E44A1F !important;
+}
+
+
+.bg-secondary {
+  background-color: #FF9C75 !important;
+}
+
+
+.bg-lightprimary {
+  background-color: #FEDDBC !important;
+}
+
+
+.bg-white {
+  background-color: #FFFFFF !important;
 }

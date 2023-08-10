@@ -6,7 +6,7 @@ import BookWorm from '../../assets/worm.webp'
 const HeaderComponent = () => {
   const router = useRouter();
   const linkColor = (path) => {
-    return router.pathname === path ? "#2EAAED" : "#828282";
+    return router.pathname === path ? "#E44A1F" : "#828282";
   };
   console.log("router ::::::::::::::::::::", router);
   return (
@@ -31,6 +31,15 @@ const HeaderComponent = () => {
           >
             {" "}
             Home
+          </span>
+        </Link>
+        <Link className="no-underline	" href="/">
+          <span
+            style={{ color: linkColor("/customer") }}
+            className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+          >
+            {" "}
+            Customer
           </span>
         </Link>
       </div>

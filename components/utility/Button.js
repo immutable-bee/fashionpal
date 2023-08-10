@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import Image from 'next/image';
 
-function ButtonComponent({ children, onClick, icon, id, className = '', rounded = false, color = 'yellow', full = false, align = 'center', padding = 'normal', border = true, disabled = false, onlyIcon = false }) {
+function ButtonComponent({ children, onClick, icon, id, className = '', rounded = false, color = 'primary', full = false, align = 'center', padding = 'normal', border = true, disabled = false, onlyIcon = false }) {
   const colorMap = {
-    blue: 'bg-sky-500 text-white',
-    yellow: 'bg-yellow-500 text-black border border-black',
-    white: 'bg-white text-black',
-    gray: 'bg-[#e6dddd] text-black',
-    red: 'bg-red-500 text-white border border-black',
+    primary: 'bg-primary text-white',
+    secondary: 'bg-secondary text-black border border-black',
+    light: 'bg-lightprimary text-black',
   };
   const alignMap = {
     start: 'justify-start',
@@ -25,7 +23,7 @@ function ButtonComponent({ children, onClick, icon, id, className = '', rounded 
 
     <button
       id={id}
-      className={`flex items-center my-1 text-sm font-normal
+      className={`flex items-center my-1 text-lg font-normal
         ${rounded ? 'rounded-full' : ''}
         ${full ? 'w-full' : ''}
         ${border ? 'border border-black' : ''}
