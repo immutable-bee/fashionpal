@@ -24,24 +24,62 @@ const HeaderComponent = () => {
       </div>
 
       <div className="flex items-center">
-        <Link className="no-underline	" href="/">
-          <span
-            style={{ color: linkColor("/") }}
-            className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
-          >
-            {" "}
-            Home
-          </span>
-        </Link>
-        <Link className="no-underline	" href="/">
-          <span
-            style={{ color: linkColor("/customer") }}
-            className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
-          >
-            {" "}
-            Customer
-          </span>
-        </Link>
+        {router.pathname.includes('/customer') ?
+          (
+            <>
+              <Link className="no-underline	" href="/customer">
+                <span
+                  style={{ color: linkColor("/customer") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                >
+                  {" "}
+                  Home
+                </span>
+              </Link>
+              <Link className="no-underline	" href="/customer/search">
+                <span
+                  style={{ color: linkColor("/customer/search") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                >
+                  {" "}
+                  Search
+                </span>
+              </Link>
+              <Link className="no-underline	" href="/">
+                <span
+                  style={{ color: linkColor("/") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                >
+                  {" "}
+                  Business
+                </span>
+              </Link>
+            </>
+          )
+          :
+          (
+            <>
+              <Link className="no-underline	" href="/">
+                <span
+                  style={{ color: linkColor("/") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                >
+                  {" "}
+                  Home
+                </span>
+              </Link>
+              <Link className="no-underline	" href="/customer">
+                <span
+                  style={{ color: linkColor("/customer") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                >
+                  {" "}
+                  Customer
+                </span>
+              </Link>
+            </>
+          )
+        }
       </div>
 
       <div className="flex items-center">
