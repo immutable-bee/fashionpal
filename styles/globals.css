@@ -47,6 +47,10 @@ body {
   background-color: #E44A1F !important;
 }
 
+.border-primary {
+  border-color: #E44A1F !important;
+}
+
 
 .bg-secondary {
   background-color: #FF9C75 !important;

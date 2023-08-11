@@ -244,7 +244,7 @@ function ImageUploader({ onBack }) {
                     {[1, 2, 3, 4].includes(step) ?
                         <div className="w-72 mx-auto flex-shrink-0">
                             {!image.url && [1, 2, 3].includes(step) ? (
-                                <label className="rounded-2xl mx-auto mt-8 cursor-pointer hover:opacity-70 flex items-center justify-center border-2 border-black w-64 h-56">
+                                <label className="rounded-2xl mx-auto mt-8 cursor-pointer hover:opacity-70 flex items-center justify-center border-2 border-primary w-64 h-56">
                                     <div>
                                         <input type="file" accept="image/*" capture="user" className="sr-only" onChange={handleImageChange} />
                                         <h1 className="text-3xl text-center font-medium font-mono ">Take a Photo</h1>
@@ -258,7 +258,7 @@ function ImageUploader({ onBack }) {
                             {step !== 1 && step !== 4 ? (
                                 <>
                                     {image.url ? (
-                                        <div className="mt-8 mx-auto border-2 border-black rounded-2xl px-4 py-10 w-64 relative">
+                                        <div className="mt-8 mx-auto border-2 border-primary rounded-2xl px-4 py-10 w-64 relative">
 
                                             <Image src={image.url} alt="Uploaded preview" width={1} height={1} className="rounded w-full" />
 
@@ -287,7 +287,7 @@ function ImageUploader({ onBack }) {
                                 <>
                                     <div className="flex flex-wrap justify-center  mb-4">
                                         {uploadedImages.main ?
-                                            <div className=" border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                            <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                 <div className="w-full flex items-center justify-center">
                                                     <img src={uploadedImages.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
@@ -301,7 +301,7 @@ function ImageUploader({ onBack }) {
 
                                             </div> : ''}
                                         {uploadedImages.brandTag ?
-                                            <div className=" border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                            <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                 <div className="w-full flex items-center justify-center">
                                                     <img src={uploadedImages.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
@@ -331,7 +331,7 @@ function ImageUploader({ onBack }) {
                                     <>
                                         <div key={rowIndex} className="flex flex-wrap justify-center sm:justify-start">
                                             {row.items.main ?
-                                                <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                     <div className="w-full flex items-center justify-center">
                                                         <img src={row.items.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                     </div>
@@ -345,7 +345,7 @@ function ImageUploader({ onBack }) {
 
                                                 </div> : ''}
                                             {row.items.brandTag ?
-                                                <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                     <div className="w-full flex items-center justify-center">
                                                         <img src={row.items.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                     </div>
@@ -399,7 +399,7 @@ function ImageUploader({ onBack }) {
                                 <div key={index}>
                                     <div className="flex flex-wrap justify-center sm:justify-start">
                                         {row.items.main ?
-                                            <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                            <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                 <div className="w-full flex items-center justify-center">
                                                     <img src={row.items.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
@@ -413,7 +413,7 @@ function ImageUploader({ onBack }) {
 
                                             </div> : ''}
                                         {row.items.brandTag ?
-                                            <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                            <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                 <div className="w-full flex items-center justify-center">
                                                     <img src={row.items.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
