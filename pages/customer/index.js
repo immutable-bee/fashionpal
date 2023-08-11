@@ -18,6 +18,31 @@ export default function Home() {
   const [selectedTag, setSelectedTag] = useState(null);
   const [inputVisible, setInputVisible] = useState(true);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [type, setType] = useState([]);
+  const [sizes, setSizes] = useState([
+    { value: 'XS', type: '' },
+    { value: 'S', type: '' },
+    { value: 'M', type: '' },
+    { value: 'L', type: '' },
+    { value: 'XL', type: '' },
+    { value: 'XXL', type: '' },
+    { value: 1, type: 'Footwear' },
+    { value: 2, type: 'Footwear' },
+    { value: 3, type: 'Footwear' },
+    { value: 4, type: 'Footwear' },
+    { value: 5, type: 'Footwear' },
+    { value: 6, type: 'Footwear' },
+    { value: 7, type: 'Footwear' },
+    { value: 8, type: 'Footwear' },
+    { value: 9, type: 'Footwear' },
+    { value: 10, type: 'Footwear' },
+    { value: 11, type: 'Footwear' },
+    { value: 12, type: 'Footwear' },
+    { value: 13, type: 'Footwear' },
+    { value: 14, type: 'Footwear' },
+    { value: 15, type: 'Footwear' },
+
+  ])
 
   const [tagEditModal, setTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
@@ -247,18 +272,25 @@ export default function Home() {
           </div>
           <ul className=" mt-2 flex justify-center items-center ml-2">
             <div className="mx-1">
-              <label>Clothing Or Footwear</label>
-              <select className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600">
-                <option value="1">1</option>
-                <option value="2">1</option>
+              <label>Apparel</label>
+              <select className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
+                <option value="Clothing">Clothing</option>
+                <option value="Footwear">Footwear</option>
+                <option value="Hats">Hats</option>
               </select>
             </div>
+
             <div className="mx-1">
               <label>Size</label>
-              <select className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600">
-                <option value="1">1</option>
-                <option value="2">1</option>
+              <select
+                className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
+                onChange={(e) => handleUpdateTagName(e.target.value)}
+              >
+                {sizes.filter(x => x.type === 'Footwear' ? x.type === type : x.type !== type).map(x => (
+                  <option key={x.value} value={x.value}>{x.value}</option>
+                ))}
               </select>
+
             </div>
           </ul>
 
@@ -332,6 +364,51 @@ export default function Home() {
                       )}
                     </div>
                     <h3 className="text-xl text-center mt-8">Newly listed In Footwear</h3>
+                    <div className="sm:flex flex-wrap justify-center mt-2">
+                      <Swiper
+                        slidesPerView='auto'
+                        spaceBetween={14}
+                        navigation
+                      >
+                        {testData.map((row, index) => {
+                          return (
+                            <SwiperSlide key={index} className="!w-32">
+                              <div
+                                className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
+                                key={row.id}
+                              >
+                                <div className="flex">
+                                  <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
+                                    <Image
+                                      src={row.image_url}
+                                      className="rounded"
+                                      alt=""
+                                    />
+                                  </div>
+
+                                </div>
+                              </div>
+                            </SwiperSlide>
+                          );
+                        })}
+                      </Swiper>
+                    </div>
+
+                    <div
+                      id="inventory-matches-pagination"
+                      className="flex justify-center"
+                    >
+                      {arrayToMap?.length > 0 && !loadingListings && (
+                        <PaginationComponent
+                          total={Math.ceil(
+                            arrayToMap.length / openRequestsItemsPerPage
+                          )}
+                          current={inventoryMatchesPage}
+                          onChange={(page) => setInventoryMatchesPage(page)}
+                        />
+                      )}
+                    </div>
+                    <h3 className="text-xl text-center mt-8">Newly listed In Hats</h3>
                     <div className="sm:flex flex-wrap justify-center mt-2">
                       <Swiper
                         slidesPerView='auto'

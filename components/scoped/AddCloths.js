@@ -242,9 +242,9 @@ function ImageUploader({ onBack }) {
             {!uploading ? (
                 <div className="">
                     {[1, 2, 3, 4].includes(step) ?
-                        <div className="w-72 flex-shrink-0">
+                        <div className="w-72 mx-auto flex-shrink-0">
                             {!image.url && [1, 2, 3].includes(step) ? (
-                                <label className="rounded-2xl mt-8 cursor-pointer hover:opacity-70 flex items-center justify-center border-2 border-black w-64 h-56">
+                                <label className="rounded-2xl mx-auto mt-8 cursor-pointer hover:opacity-70 flex items-center justify-center border-2 border-black w-64 h-56">
                                     <div>
                                         <input type="file" accept="image/*" capture="user" className="sr-only" onChange={handleImageChange} />
                                         <h1 className="text-3xl text-center font-medium font-mono ">Take a Photo</h1>
@@ -258,7 +258,7 @@ function ImageUploader({ onBack }) {
                             {step !== 1 && step !== 4 ? (
                                 <>
                                     {image.url ? (
-                                        <div className="mt-8 border-2 border-black rounded-2xl px-4 py-10 w-64 relative">
+                                        <div className="mt-8 mx-auto border-2 border-black rounded-2xl px-4 py-10 w-64 relative">
 
                                             <Image src={image.url} alt="Uploaded preview" width={1} height={1} className="rounded w-full" />
 
@@ -272,12 +272,12 @@ function ImageUploader({ onBack }) {
                                     ) : ''}
                                     <div className="mt-4">
                                         {step === 2 ?
-                                            <ButtonComponent full onClick={() => handleAdd('main')} className={`!my-2 !w-64 rounded-lg  !text-black`}>Main Photo</ButtonComponent>
+                                            <ButtonComponent full onClick={() => handleAdd('main')} className={`!my-2 mx-auto !w-64 rounded-lg  !text-black`}>Main Photo</ButtonComponent>
                                             : ''}
                                         {step === 3 ?
                                             <>
-                                                <ButtonComponent full onClick={() => handleAdd('brandTag')} className={`!my-2 !w-64 rounded-lg !bg-green-600 !text-black`}>Brand Tag Photo</ButtonComponent>
-                                                <ButtonComponent color="light" full onClick={() => setStep(4)} className={`!my-2 !w-64 rounded-lg !text-black`}>Skip Brand Tag</ButtonComponent>
+                                                <ButtonComponent full onClick={() => handleAdd('brandTag')} className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}>Brand Tag Photo</ButtonComponent>
+                                                <ButtonComponent color="light" full onClick={() => setStep(4)} className={`!my-2 mx-auto !w-64 rounded-lg !text-black`}>Skip Brand Tag</ButtonComponent>
                                             </>
                                             : ''}
                                     </div>
@@ -285,10 +285,10 @@ function ImageUploader({ onBack }) {
 
                             {step === 4 ?
                                 <>
-                                    <div className="flex flex-wrap mb-4">
+                                    <div className="flex flex-wrap justify-center  mb-4">
                                         {uploadedImages.main ?
-                                            <div className=" p-2 w-56 bg-white rounded-xl m-1 relative">
-                                                <div className="w-full h-32 flex items-center justify-center">
+                                            <div className=" border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="w-full flex items-center justify-center">
                                                     <img src={uploadedImages.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
 
@@ -301,8 +301,8 @@ function ImageUploader({ onBack }) {
 
                                             </div> : ''}
                                         {uploadedImages.brandTag ?
-                                            <div className=" p-2 w-56 bg-white rounded-xl m-1 relative">
-                                                <div className="w-full h-32 flex items-center justify-center">
+                                            <div className=" border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="w-full flex items-center justify-center">
                                                     <img src={uploadedImages.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
 
@@ -316,8 +316,8 @@ function ImageUploader({ onBack }) {
                                             </div> : ''}
 
                                     </div>
-                                    <ButtonComponent color="secondary" full onClick={() => handleListMore()} className={`!my-1 rounded-lg !bg-green-600 !text-black`}>List More</ButtonComponent>
-                                    <ButtonComponent full onClick={() => handleFinishListing()} className={`!my-1 rounded-lg !text-black`}>Finish Listing</ButtonComponent>
+                                    <ButtonComponent color="secondary" full onClick={() => handleListMore()} className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}>List More</ButtonComponent>
+                                    <ButtonComponent full onClick={() => handleFinishListing()} className={`!my-2 mx-auto !w-64 rounded-lg !text-black`}>Finish Listing</ButtonComponent>
                                 </>
                                 : ''}
                         </div> : ''}
@@ -329,10 +329,10 @@ function ImageUploader({ onBack }) {
                             <div className="">
                                 {listings.map((row, rowIndex) => (
                                     <>
-                                        <div key={rowIndex} className="flex flex-wrap">
+                                        <div key={rowIndex} className="flex flex-wrap justify-center sm:justify-start">
                                             {row.items.main ?
-                                                <div className=" p-2 w-56 bg-white rounded-xl m-1 relative">
-                                                    <div className="w-full h-32 flex items-center justify-center">
+                                                <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                    <div className="w-full flex items-center justify-center">
                                                         <img src={row.items.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                     </div>
 
@@ -345,8 +345,8 @@ function ImageUploader({ onBack }) {
 
                                                 </div> : ''}
                                             {row.items.brandTag ?
-                                                <div className=" p-2 w-56 bg-white rounded-xl m-1 relative">
-                                                    <div className="w-full h-32 flex items-center justify-center">
+                                                <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                    <div className="w-full flex items-center justify-center">
                                                         <img src={row.items.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                     </div>
 
@@ -366,22 +366,25 @@ function ImageUploader({ onBack }) {
                             {listings.length > 0 && (
                                 <div className="mt-10 ml-3">
 
+                                    <div className="flex justify-center sm:justify-start">
+                                        <label className="relative mb-4 flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                value=""
+                                                className="sr-only peer"
+                                                checked={editGeneratedTags}
+                                                onChange={() => setEditGeneratedTags(!editGeneratedTags)}
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                Edit generated tags?
+                                            </span>
 
-                                    <label className="relative mb-4 flex items-center cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            value=""
-                                            className="sr-only peer"
-                                            checked={editGeneratedTags}
-                                            onChange={() => setEditGeneratedTags(!editGeneratedTags)}
-                                        />
-                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                            Edit generated tags?
-                                        </span>
-
-                                    </label>
-                                    <ButtonComponent rounded className="!w-48" onClick={() => triggerToTagsPage()} >Generate Tags</ButtonComponent>
+                                        </label>
+                                    </div>
+                                    <div className="flex justify-center sm:justify-start">
+                                        <ButtonComponent rounded className="!w-48" onClick={() => triggerToTagsPage()} >Generate Tags</ButtonComponent>
+                                    </div>
 
                                 </div>
                             )}
@@ -394,10 +397,10 @@ function ImageUploader({ onBack }) {
                         <div>
                             {listings.map((row, index) => (
                                 <div key={index}>
-                                    <div className="flex flex-wrap">
+                                    <div className="flex flex-wrap justify-center sm:justify-start">
                                         {row.items.main ?
-                                            <div className=" p-2 w-56 bg-white rounded-xl m-1 relative">
-                                                <div className="w-full h-32 flex items-center justify-center">
+                                            <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="w-full flex items-center justify-center">
                                                     <img src={row.items.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
 
@@ -410,8 +413,8 @@ function ImageUploader({ onBack }) {
 
                                             </div> : ''}
                                         {row.items.brandTag ?
-                                            <div className=" p-2 w-56 bg-white rounded-xl m-1 relative">
-                                                <div className="w-full h-32 flex items-center justify-center">
+                                            <div className="mx-1 border-2 border-black rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="w-full flex items-center justify-center">
                                                     <img src={row.items.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                 </div>
 
@@ -443,7 +446,9 @@ function ImageUploader({ onBack }) {
                                     <button className=" bg-[#FF9C75] px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => handleAddTag(index)}>Add Tag</button>
                                 </div>
                             ))}
-                            <ButtonComponent rounded className="!w-48 !mt-6" onClick={() => setStep(7)} >{editAfterUpload ? 'Next' : 'Upload All'}</ButtonComponent>
+                            <div className="flex justify-center sm:justify-start">
+                                <ButtonComponent rounded className="!w-48 !mt-6" onClick={() => setStep(7)} >{editAfterUpload ? 'Next' : 'Upload All'}</ButtonComponent>
+                            </div>
                         </div>
 
                         : ''
@@ -452,11 +457,11 @@ function ImageUploader({ onBack }) {
                     {
                         step === 7 ?
                             <>
-                                <div className="sm:flex flex-wrap mt-4 items-center">
+                                <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
                                     {listings.map((row, index) => {
                                         return (
                                             <div
-                                                className="px-2 py-2 relative rounded-lg border sm:mx-2 my-2 sm:my-2 w-full sm:w-96 border-[#2eaaed]"
+                                                className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
                                                 key={row.id}
                                             >
                                                 <div className="flex">
@@ -484,7 +489,9 @@ function ImageUploader({ onBack }) {
                                         );
                                     })}
                                 </div>
-                                <ButtonComponent rounded className="!w-48 mt-6" onClick={handleUploadAll} >Upload All</ButtonComponent>
+                                <div className="flex justify-center sm:justify-start">
+                                    <ButtonComponent rounded className="!w-48 mt-6" onClick={handleUploadAll} >Upload All</ButtonComponent>
+                                </div>
                             </> : ''
                     }
                     {
