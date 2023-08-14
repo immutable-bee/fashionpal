@@ -147,7 +147,7 @@ export default function Home() {
   const testData = [
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -163,7 +163,7 @@ export default function Home() {
     },
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -179,7 +179,7 @@ export default function Home() {
     },
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -195,7 +195,7 @@ export default function Home() {
     },
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -283,7 +283,7 @@ export default function Home() {
                             <div className="flex">
                               <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
                                 <Image
-                                  src={row.image_url}
+                                  src={row.mainPhoto}
                                   className="rounded"
                                   alt=""
                                 />
@@ -340,7 +340,7 @@ export default function Home() {
             footer={
               <div className="flex justify-end w-full">
 
-                <button className=" bg-indigo-600 px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => setTagEditModal(false)}>Close</button>
+                <button className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => setTagEditModal(false)}>Close</button>
               </div>
             }
           >
@@ -358,7 +358,7 @@ export default function Home() {
                 </button>
               </div>
             ))}
-            <button className=" bg-indigo-600 px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => handleAddTag(activeTagIndex)}>Add Tag</button>
+            <button className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => handleAddTag(activeTagIndex)}>Add Tag</button>
 
           </ModalComponent> : ""
       }

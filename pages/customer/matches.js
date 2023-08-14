@@ -19,6 +19,7 @@ export default function Home() {
   const [inputVisible, setInputVisible] = useState(true);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [type, setType] = useState('Clothing');
+
   const [sizes, setSizes] = useState([
     { value: 'XS', type: '' },
     { value: 'S', type: '' },
@@ -43,8 +44,8 @@ export default function Home() {
     { value: 15, type: 'Footwear' },
   ])
 
-  const [tagEditModal, setTagEditModal] = useState(false);
-  const [activeTagIndex, setActiveTagIndex] = useState(0);
+  const [detailsModal, setDetailsModal] = useState(false);
+  const [activeTagIndex, setActiveIndex] = useState(0);
   const [active, setActive] = useState("clothingorfootwear");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -179,6 +180,7 @@ export default function Home() {
     {
       id: 1,
       mainPhoto: Shirt,
+      matches: 12,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -195,6 +197,7 @@ export default function Home() {
     {
       id: 1,
       mainPhoto: Shirt,
+      matches: 12,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -211,6 +214,75 @@ export default function Home() {
     {
       id: 1,
       mainPhoto: Shirt,
+      matches: 12,
+      tags: [
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+      ]
+    },
+    {
+      id: 1,
+      mainPhoto: Shirt,
+      matches: 12,
+      tags: [
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+      ]
+    },
+    {
+      id: 1,
+      mainPhoto: Shirt,
+      matches: 12,
+      tags: [
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+      ]
+    },
+    {
+      id: 1,
+      mainPhoto: Shirt,
+      matches: 12,
+      tags: [
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+        { name: 'size', value: 'medium' },
+        { name: 'sleeve length', value: 'short' },
+        { name: 'color', value: 'pink' },
+      ]
+    },
+    {
+      id: 1,
+      mainPhoto: Shirt,
+      matches: 12,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -226,6 +298,11 @@ export default function Home() {
     },
 
   ];
+
+  const triggerDetailsModal = (index) => {
+    setDetailsModal(true)
+    setActiveIndex(index)
+  };
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -317,35 +394,39 @@ export default function Home() {
                 <div className="">
                   <h3 className="text-xl text-center">Newly listed Clothes</h3>
                   <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView='auto'
-                      spaceBetween={14}
-                      navigation
-                    >
 
 
-                      {testData.map((row, index) => {
-                        return (
-                          <SwiperSlide key={index} className="!w-32">
-                            <div
-                              className="px-4 py-4 relative rounded-lg mx-2 my-2 w-32 border-2 shadow-lg border-[#E44A1F]"
-                              key={row.id}
-                            >
-                              <div className="flex">
-                                <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                  <Image
-                                    src={row.mainPhoto}
-                                    className="rounded"
-                                    alt=""
-                                  />
+
+                    {testData.map((row, index) => {
+                      return (
+                        <div
+                          className="px-4 py-3 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
+                          key={row.id}
+                        >
+
+
+                          <div className="w-full mb-3 ">
+                            <div className="sm:h-36 sm:overflow-y-auto">
+
+                              {row.tags.map((tag, tagIndex) => (
+                                <div
+                                  key={tagIndex}
+                                  className={`text-gray-800 font-light ${tagIndex % 2 === 0 ? 'bg-lightprimary' : 'bg-white'} rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
                                 </div>
-
-                              </div>
+                              ))}
                             </div>
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
+                            <h3 className="text-lg font-light mt-3">12 Results</h3>
+                            <button onClick={() => triggerDetailsModal(index)} className="bg-primary text-white px-4 hover:opacity-90 py-1.5 text-base mt-2 rounded-lg">
+                              View matches
+                            </button>
+                          </div>
+                        </div>
+
+                      );
+                    })}
+
                   </div>
 
                   <div
@@ -362,102 +443,72 @@ export default function Home() {
                       />
                     )}
                   </div>
-                  <h3 className="text-xl text-center mt-8">Newly listed In Footwear</h3>
-                  <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView='auto'
-                      spaceBetween={14}
-                      navigation
-                    >
-                      {testData.map((row, index) => {
-                        return (
-                          <SwiperSlide key={index} className="!w-32">
-                            <div
-                              className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
-                              key={row.id}
-                            >
-                              <div className="flex">
-                                <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                  <Image
-                                    src={row.mainPhoto}
-                                    className="rounded"
-                                    alt=""
-                                  />
-                                </div>
 
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                  </div>
-
-                  <div
-                    id="inventory-matches-pagination"
-                    className="flex justify-center"
-                  >
-                    {arrayToMap?.length > 0 && !loadingListings && (
-                      <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
-                      />
-                    )}
-                  </div>
-                  <h3 className="text-xl text-center mt-8">Newly listed In Hats</h3>
-                  <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView='auto'
-                      spaceBetween={14}
-                      navigation
-                    >
-                      {testData.map((row, index) => {
-                        return (
-                          <SwiperSlide key={index} className="!w-32">
-                            <div
-                              className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
-                              key={row.id}
-                            >
-                              <div className="flex">
-                                <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                  <Image
-                                    src={row.mainPhoto}
-                                    className="rounded"
-                                    alt=""
-                                  />
-                                </div>
-
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                  </div>
-
-                  <div
-                    id="inventory-matches-pagination"
-                    className="flex justify-center"
-                  >
-                    {arrayToMap?.length > 0 && !loadingListings && (
-                      <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
-                      />
-                    )}
-                  </div>
                 </div>
               )}
             </div>
           </div>
         </section>
       </div>
+
+      {
+        detailsModal ?
+          <ModalComponent
+            open={detailsModal}
+            title="Matches Details"
+            width="90vw"
+            onClose={() => setDetailsModal(false)}
+            footer={
+              <div className="flex justify-end w-full">
+                <button className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => setDetailsModal(false)}>Close</button>
+              </div>
+            }
+          >
+            <div className="sm:flex flex-wrap justify-center mt-2">
+
+
+
+              {testData.map((row, index) => {
+                return (
+
+                  <div
+                    className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
+                    key={row.id}
+                  >
+                    <div className="flex">
+                      <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
+                        <Image
+                          src={row.mainPhoto}
+                          className="rounded"
+                          alt=""
+                        />
+                      </div>
+                      <div className="w-full mb-3 ">
+                        <div className="sm:h-36 sm:overflow-y-auto">
+
+                          {row.tags.map((tag, tagIndex) => (
+                            <p key={tagIndex} className="text-gray-800 text-base leading-5">
+                              {tag.name}: {tag.value}
+                            </p>
+                          ))}
+                        </div>
+
+                        <div className="flex items-center">
+                          <button onClick={() => triggerDetailsModal(index)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                            View details
+                          </button>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                );
+              })}
+
+            </div>
+          </ModalComponent> : ""
+      }
 
     </div>
   );

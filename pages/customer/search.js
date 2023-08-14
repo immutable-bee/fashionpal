@@ -5,6 +5,7 @@ import TooltipComponent from "@/components/utility/Tooltip";
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import Shirt from '../../assets/shirt.png'
+import Shirt2 from '../../assets/shirt-2.jpg'
 import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
 import AddCloths from "@/components/scoped/AddCloths";
@@ -13,14 +14,39 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 export default function Home() {
 
+
+  const [type, setType] = useState('Clothing');
+  const [sizes, setSizes] = useState([
+    { value: 'XS', type: '' },
+    { value: 'S', type: '' },
+    { value: 'M', type: '' },
+    { value: 'L', type: '' },
+    { value: 'XL', type: '' },
+    { value: 'XXL', type: '' },
+    { value: 1, type: 'Footwear' },
+    { value: 2, type: 'Footwear' },
+    { value: 3, type: 'Footwear' },
+    { value: 4, type: 'Footwear' },
+    { value: 5, type: 'Footwear' },
+    { value: 6, type: 'Footwear' },
+    { value: 7, type: 'Footwear' },
+    { value: 8, type: 'Footwear' },
+    { value: 9, type: 'Footwear' },
+    { value: 10, type: 'Footwear' },
+    { value: 11, type: 'Footwear' },
+    { value: 12, type: 'Footwear' },
+    { value: 13, type: 'Footwear' },
+    { value: 14, type: 'Footwear' },
+    { value: 15, type: 'Footwear' },
+  ])
   // add
   const [image, setImage] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [inputVisible, setInputVisible] = useState(true);
   const [uploadedImages, setUploadedImages] = useState([]);
 
-  const [tagEditModal, setTagEditModal] = useState(false);
-  const [activeTagIndex, setActiveTagIndex] = useState(0);
+  const [detailsModal, setDetailsModal] = useState(false);
+  const [activeTagIndex, setActiveIndex] = useState(0);
   const [active, setActive] = useState("clothing");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -47,9 +73,9 @@ export default function Home() {
     setUploadedImages(uploadedImages.filter((_, i) => i !== index));
   };
 
-  const triggerEditTagsModal = (index) => {
-    setTagEditModal(true)
-    setActiveTagIndex(index)
+  const triggerDetailsModal = (index) => {
+    setDetailsModal(true)
+    setActiveIndex(index)
   };
   const handleActiveChange = (newActive) => {
     setActive(newActive);
@@ -154,7 +180,8 @@ export default function Home() {
   const testData = [
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
+      brandTagPhoto: Shirt2,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -170,7 +197,8 @@ export default function Home() {
     },
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
+      brandTagPhoto: Shirt2,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -186,7 +214,8 @@ export default function Home() {
     },
     {
       id: 1,
-      image_url: Shirt,
+      mainPhoto: Shirt,
+      brandTagPhoto: Shirt2,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -202,177 +231,253 @@ export default function Home() {
     },
 
   ];
+
+  const [showAll, setShowAll] = useState(false);
+  const tagsToDisplay = showAll ? testData[activeTagIndex].tags : testData[activeTagIndex].tags.slice(0, 3);
+
+  const [activeImage, setActiveImage] = useState(0);
+
+  const isMainPhoto = activeImage === 0;
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
-      {mode === 'view' ?
-        <div>
-          <div class=" sm:flex justify-between px-5 max-w-7xl mx-auto">
-            <Inputcomponent
-              handleSearch={fetchSearchResults}
-              filter={filter}
-              setFilter={setFilter}
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-            />
-            <div className="flex flex-shrink-0 items-center justify-end mt-2 sm:mt-0">
-              <ul className=" flex items-center ml-2">
-                <button
-                  onClick={() => handleActiveChange("clothing")}
-                  className={`  rounded-full px-6 sm:px-10 font-medium sm:font-semibold py-1 sm:py-2   ${active == "clothing" && "bg-secondary !text-white"
-                    } `}
-                  id="pills-all-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#pills-all"
-                  type="button"
-                  role="tab"
-                  aria-controls="pills-all"
-                  aria-selected="true"
-                >
-                  Clothing
-                </button>
-                <button
-                  onClick={() => handleActiveChange("medium")}
-                  className={`  rounded-full px-6 sm:px-10 font-medium sm:font-semibold py-1 sm:py-2   ${active == "medium" && "bg-secondary !text-white"
-                    } `}
-                  id="pills-profile-tab"
-                  data-bs-toggle="pill"
-                  data-bs-target="#pills-profile"
-                  type="button"
-                  role="tab"
-                  aria-controls="pills-profile"
-                  aria-selected="false"
-                >
-                  Medium
-                </button>
-              </ul>
-              <div className="ml-2 sm:ml-3">
-                <button
-                  type="button"
-                  class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-lg sm:rounded-xl"
-                  //onClick={fetchSearchResults}
-                  onClick={() => handleSearch(searchTerm, filter)}
-                >
-                  <div>
-                    <svg
-                      class="text-white w-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </div>
-            </div>
+      <div>
+        <div class=" sm:flex justify-between px-5 max-w-7xl mx-auto">
+          <Inputcomponent
+            handleSearch={fetchSearchResults}
+            filter={filter}
+            setFilter={setFilter}
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+          />
+          <div className="flex flex-shrink-0 items-center justify-end mt-2 sm:mt-0">
 
+            <div className="ml-2 sm:ml-3">
+              <button
+                type="button"
+                class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-lg sm:rounded-xl"
+                //onClick={fetchSearchResults}
+                onClick={() => handleSearch(searchTerm, filter)}
+              >
+                <div>
+                  <svg
+                    class="text-white w-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                    />
+                  </svg>
+                </div>
+              </button>
+            </div>
           </div>
 
-          <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
+        </div>
+        <ul className=" mt-2 flex justify-center items-center ml-2">
+          <div className="mx-1">
+            <label>Apparel</label>
+            <select className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
+              <option value="Clothing">Clothing</option>
+              <option value="Footwear">Footwear</option>
+              <option value="Hats">Hats</option>
+            </select>
+          </div>
+
+          <div className="mx-1">
+            <label>Size</label>
+            <select
+              className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
+              onChange={(e) => handleUpdateTagName(e.target.value)}
+            >
+              {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
+                <option key={x.value} value={x.value}>{x.value}</option>
+              ))}
+            </select>
+
+          </div>
+        </ul>
+
+        <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
+          <div className="">
+            <div className="flex justify-between items-center">
+              <p className="text-gray-900 text-base">
+                {resultCount} Results found
+              </p>
+
+
+            </div>
+
             <div className="">
-              <div className="flex justify-between items-center">
-                <p className="text-gray-900 text-base">
-                  {resultCount} Results found
-                </p>
-
-
-              </div>
-
-              <div className="">
-                {loadingListings || loadingSearchResults ? (
-                  <div className="sm:flex justify-center pb-10">
-                    <div>
-                      <p className="me-1">{loadingMessage()}</p>
-                      <div className="pt-2.5">
-                        <Loading />
-                      </div>
+              {loadingListings || loadingSearchResults ? (
+                <div className="sm:flex justify-center pb-10">
+                  <div>
+                    <p className="me-1">{loadingMessage()}</p>
+                    <div className="pt-2.5">
+                      <Loading />
                     </div>
                   </div>
-                ) : (
-                  <div className="">
+                </div>
+              ) : (
+                <div className="">
 
-                    <div className="sm:flex flex-wrap justify-center mt-2">
-                      {/* <Swiper
-                        slidesPerView='auto'
-                        spaceBetween={14}
-                        navigation
-                      > */}
+                  <div className="sm:flex flex-wrap justify-center mt-2">
 
 
-                      {testData.map((row, index) => {
-                        return (
-                          // <SwiperSlide key={index} className="!w-96">
-                          <div
-                            className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
-                            key={row.id}
-                          >
-                            <div className="flex">
-                              <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                <Image
-                                  src={row.image_url}
-                                  className="rounded"
-                                  alt=""
-                                />
+
+                    {testData.map((row, index) => {
+                      return (
+
+                        <div
+                          className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
+                          key={row.id}
+                        >
+                          <div className="flex">
+                            <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
+                              <Image
+                                src={row.mainPhoto}
+                                className="rounded"
+                                alt=""
+                              />
+                            </div>
+                            <div className="w-full mb-3 ">
+                              <div className="sm:h-36 sm:overflow-y-auto">
+
+                                {row.tags.map((tag, tagIndex) => (
+                                  <p key={tagIndex} className="text-gray-800 text-base leading-5">
+                                    {tag.name}: {tag.value}
+                                  </p>
+                                ))}
                               </div>
-                              <div className="w-full mb-3 ">
-                                <div className="sm:h-36 sm:overflow-y-auto">
 
-                                  {row.tags.map((tag, tagIndex) => (
-                                    <p key={tagIndex} className="text-gray-800 text-base leading-5">
-                                      {tag.name}: {tag.value}
-                                    </p>
-                                  ))}
-                                </div>
-
-                                <div className="flex items-center">
-                                  <button onClick={() => triggerEditTagsModal(index)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
-                                    View details
-                                  </button>
-                                  <button onClick={() => triggerEditTagsModal(index)} className="bg-primary text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
-                                    Save
-                                  </button>
-                                </div>
+                              <div className="flex items-center">
+                                <button onClick={() => triggerDetailsModal(index)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                                  View details
+                                </button>
+                                <button className="bg-primary text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                                  Save
+                                </button>
                               </div>
                             </div>
                           </div>
-                          // </SwiperSlide>
-                        );
-                      })}
-                      {/* </Swiper> */}
-                    </div>
+                        </div>
 
-                    <div
-                      id="inventory-matches-pagination"
-                      className="flex justify-center"
-                    >
-                      {arrayToMap?.length > 0 && !loadingListings && (
-                        <PaginationComponent
-                          total={Math.ceil(
-                            arrayToMap.length / openRequestsItemsPerPage
-                          )}
-                          current={inventoryMatchesPage}
-                          onChange={(page) => setInventoryMatchesPage(page)}
-                        />
-                      )}
-                    </div>
+                      );
+                    })}
 
                   </div>
-                )}
+
+                  <div
+                    id="inventory-matches-pagination"
+                    className="flex justify-center"
+                  >
+                    {arrayToMap?.length > 0 && !loadingListings && (
+                      <PaginationComponent
+                        total={Math.ceil(
+                          arrayToMap.length / openRequestsItemsPerPage
+                        )}
+                        current={inventoryMatchesPage}
+                        onChange={(page) => setInventoryMatchesPage(page)}
+                      />
+                    )}
+                  </div>
+
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      </div>
+      {
+        detailsModal ?
+          <ModalComponent
+            open={detailsModal}
+            title="Details"
+            onClose={() => setDetailsModal(false)}
+            footer={
+              <div className="flex justify-end w-full">
+                <button className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => setDetailsModal(false)}>Close</button>
+              </div>
+            }
+          >
+            <div className="flex justify-center relative"> {/* relative to position arrows absolutely */}
+              {activeImage === 1 && (
+                <button
+                  onClick={() => setActiveImage(0)}
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2"
+                >
+                  ←
+                </button>
+              )}
+              {activeImage === 1 ?
+                <Image
+                  src={testData[activeTagIndex]?.mainPhoto}
+                  className="rounded-lg w-full"
+                  width="150"
+                  height="150"
+                  alt=""
+                /> :
+                <Image
+                  src={testData[activeTagIndex]?.brandTagPhoto}
+                  className="rounded-lg w-full"
+                  width="150"
+                  height="150"
+                  alt=""
+                />}
+
+              {activeImage === 0 && (
+                <button
+                  onClick={() => setActiveImage(1)}
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2"
+                >
+                  →
+                </button>
+              )}
+            </div>
+            <h3 className="text-xl">Item Tags</h3>
+            {tagsToDisplay.map((tag, tagIndex) => (
+              <div
+                key={tagIndex}
+                className={`text-gray-800 font-light ${tagIndex % 2 === 0 ? 'bg-lightprimary' : 'bg-white'} rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+              >
+                <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
+              </div>
+            ))}
+            {!showAll && testData[activeTagIndex].tags.length > 3 && (
+              <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
+            )}
+
+            <div className="flex justify-center !mt-3">
+              <button className="bg-primary text-white px-5 py-1.5 rounded-lg">Save item</button>
+            </div>
+
+            <div className="flex items-center">
+              <Image
+                src={testData[activeTagIndex]?.brandTagPhoto}
+                className="w-28 rounded-full"
+                width="150"
+                height="150"
+                alt=""
+              />
+
+              <div className="ml-4">
+                <h3 className="text-base font-light">BiblioPal Inc.</h3>
+                <h3 className="text-base font-light">Naseer Complex, Miani Road, Sukkur, Pakistan</h3>
+                <a href="mailto:ibrahim@justibrahim.com" className="text-primary text-base font-light block hover:underline">ibrahim@justibrahim.com</a>
+                <a href="https://fashionpal.vercel.app/" className="text-primary text-base font-light block hover:underline">https://fashionpal.vercel.app/</a>
               </div>
             </div>
-          </section>
-        </div> :
-        <AddCloths onBack={() => setMode('view')} />
 
+
+
+          </ModalComponent> : ""
       }
-
     </div>
   );
 }

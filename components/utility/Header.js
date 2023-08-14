@@ -45,6 +45,15 @@ const HeaderComponent = () => {
                   Search
                 </span>
               </Link>
+              <Link className="no-underline	" href="/customer/matches">
+                <span
+                  style={{ color: linkColor("/customer/matches") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                >
+                  {" "}
+                  Matches
+                </span>
+              </Link>
               <Link className="no-underline	" href="/">
                 <span
                   style={{ color: linkColor("/") }}
