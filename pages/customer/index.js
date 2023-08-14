@@ -18,6 +18,7 @@ export default function Home() {
   const [selectedTag, setSelectedTag] = useState(null);
   const [inputVisible, setInputVisible] = useState(true);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [size, setSize] = useState('');
   const [type, setType] = useState('Clothing');
   const [sizes, setSizes] = useState([
     { value: 'XS', type: '' },
@@ -283,7 +284,7 @@ export default function Home() {
             <label>Size</label>
             <select
               className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
-              onChange={(e) => handleUpdateTagName(e.target.value)}
+              onChange={(e) => setSize(e.target.value)}
             >
               {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
                 <option key={x.value} value={x.value}>{x.value}</option>

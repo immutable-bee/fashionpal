@@ -9,12 +9,12 @@ import Shirt2 from '../../assets/shirt-2.jpg'
 import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
 import AddCloths from "@/components/scoped/AddCloths";
-import ModalComponent from "@/components/utility/Modal";
+import ProductDetails from "@/components/utility/ProductDetails";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 export default function Home() {
 
-
+  const [size, setSize] = useState('');
   const [type, setType] = useState('Clothing');
   const [sizes, setSizes] = useState([
     { value: 'XS', type: '' },
@@ -232,12 +232,7 @@ export default function Home() {
 
   ];
 
-  const [showAll, setShowAll] = useState(false);
-  const tagsToDisplay = showAll ? testData[activeTagIndex].tags : testData[activeTagIndex].tags.slice(0, 3);
 
-  const [activeImage, setActiveImage] = useState(0);
-
-  const isMainPhoto = activeImage === 0;
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -294,7 +289,7 @@ export default function Home() {
             <label>Size</label>
             <select
               className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
-              onChange={(e) => handleUpdateTagName(e.target.value)}
+              onChange={(e) => setSize(e.target.value)}
             >
               {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
                 <option key={x.value} value={x.value}>{x.value}</option>
@@ -394,90 +389,12 @@ export default function Home() {
           </div>
         </section>
       </div>
-      {
-        detailsModal ?
-          <ModalComponent
-            open={detailsModal}
-            title="Details"
-            onClose={() => setDetailsModal(false)}
-            footer={
-              <div className="flex justify-end w-full">
-                <button className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => setDetailsModal(false)}>Close</button>
-              </div>
-            }
-          >
-            <div className="flex justify-center relative"> {/* relative to position arrows absolutely */}
-              {activeImage === 1 && (
-                <button
-                  onClick={() => setActiveImage(0)}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2"
-                >
-                  ←
-                </button>
-              )}
-              {activeImage === 1 ?
-                <Image
-                  src={testData[activeTagIndex]?.mainPhoto}
-                  className="rounded-lg w-full"
-                  width="150"
-                  height="150"
-                  alt=""
-                /> :
-                <Image
-                  src={testData[activeTagIndex]?.brandTagPhoto}
-                  className="rounded-lg w-full"
-                  width="150"
-                  height="150"
-                  alt=""
-                />}
+      <ProductDetails
+        open={detailsModal}
+        onClose={() => setDetailsModal(false)}
+        data={testData[activeTagIndex]}
+      />
 
-              {activeImage === 0 && (
-                <button
-                  onClick={() => setActiveImage(1)}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2"
-                >
-                  →
-                </button>
-              )}
-            </div>
-            <h3 className="text-xl">Item Tags</h3>
-            {tagsToDisplay.map((tag, tagIndex) => (
-              <div
-                key={tagIndex}
-                className={`text-gray-800 font-light ${tagIndex % 2 === 0 ? 'bg-lightprimary' : 'bg-white'} rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-              >
-                <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
-              </div>
-            ))}
-            {!showAll && testData[activeTagIndex].tags.length > 3 && (
-              <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
-            )}
-
-            <div className="flex justify-center !mt-3">
-              <button className="bg-primary text-white px-5 py-1.5 rounded-lg">Save item</button>
-            </div>
-
-            <div className="flex items-center">
-              <Image
-                src={testData[activeTagIndex]?.brandTagPhoto}
-                className="w-28 rounded-full"
-                width="150"
-                height="150"
-                alt=""
-              />
-
-              <div className="ml-4">
-                <h3 className="text-base font-light">BiblioPal Inc.</h3>
-                <h3 className="text-base font-light">Naseer Complex, Miani Road, Sukkur, Pakistan</h3>
-                <a href="mailto:ibrahim@justibrahim.com" className="text-primary text-base font-light block hover:underline">ibrahim@justibrahim.com</a>
-                <a href="https://fashionpal.vercel.app/" className="text-primary text-base font-light block hover:underline">https://fashionpal.vercel.app/</a>
-              </div>
-            </div>
-
-
-
-          </ModalComponent> : ""
-      }
     </div>
   );
 }

@@ -8,6 +8,8 @@ import Shirt from '../../assets/shirt.png'
 import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
 import AddCloths from "@/components/scoped/AddCloths";
+import Shirt2 from '../../assets/shirt-2.jpg';
+import ProductDetails from "@/components/utility/ProductDetails";
 import ModalComponent from "@/components/utility/Modal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -19,6 +21,7 @@ export default function Home() {
   const [inputVisible, setInputVisible] = useState(true);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [type, setType] = useState('Clothing');
+  const [size, setSize] = useState('');
 
   const [sizes, setSizes] = useState([
     { value: 'XS', type: '' },
@@ -46,6 +49,8 @@ export default function Home() {
 
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeTagIndex, setActiveIndex] = useState(0);
+  const [detailsChildModal, setDetailsChildModal] = useState(false);
+  const [activeTagChildIndex, setActiveChildIndex] = useState(0);
   const [active, setActive] = useState("clothingorfootwear");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -192,6 +197,60 @@ export default function Home() {
         { name: 'size', value: 'medium' },
         { name: 'sleeve length', value: 'short' },
         { name: 'color', value: 'pink' },
+      ],
+      results: [
+        {
+          id: 1,
+          mainPhoto: Shirt,
+          brandTagPhoto: Shirt2,
+          tags: [
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+          ]
+        },
+        {
+          id: 1,
+          mainPhoto: Shirt,
+          brandTagPhoto: Shirt2,
+          tags: [
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+          ]
+        },
+        {
+          id: 1,
+          mainPhoto: Shirt,
+          brandTagPhoto: Shirt2,
+          tags: [
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+          ]
+        },
+
       ]
     },
     {
@@ -209,99 +268,74 @@ export default function Home() {
         { name: 'size', value: 'medium' },
         { name: 'sleeve length', value: 'short' },
         { name: 'color', value: 'pink' },
+      ],
+      results: [
+        {
+          id: 1,
+          mainPhoto: Shirt,
+          brandTagPhoto: Shirt2,
+          tags: [
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+          ]
+        },
+        {
+          id: 1,
+          mainPhoto: Shirt,
+          brandTagPhoto: Shirt2,
+          tags: [
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+          ]
+        },
+        {
+          id: 1,
+          mainPhoto: Shirt,
+          brandTagPhoto: Shirt2,
+          tags: [
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+            { name: 'size', value: 'medium' },
+            { name: 'sleeve length', value: 'short' },
+            { name: 'color', value: 'pink' },
+          ]
+        },
+
       ]
     },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      matches: 12,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      matches: 12,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      matches: 12,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      matches: 12,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      matches: 12,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
+
 
   ];
 
   const triggerDetailsModal = (index) => {
     setDetailsModal(true)
     setActiveIndex(index)
+  };
+
+  const triggerDetailsChildModal = (index) => {
+    setDetailsChildModal(true)
+    setActiveChildIndex(index)
   };
   return (
     <div className="min-h-screen bg-white">
@@ -360,7 +394,7 @@ export default function Home() {
             <label>Size</label>
             <select
               className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
-              onChange={(e) => handleUpdateTagName(e.target.value)}
+              onChange={(e) => setSize(e.target.value)}
             >
               {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
                 <option key={x.value} value={x.value}>{x.value}</option>
@@ -465,10 +499,7 @@ export default function Home() {
             }
           >
             <div className="sm:flex flex-wrap justify-center mt-2">
-
-
-
-              {testData.map((row, index) => {
+              {testData[activeTagIndex].results.map((row, index) => {
                 return (
 
                   <div
@@ -494,7 +525,7 @@ export default function Home() {
                         </div>
 
                         <div className="flex items-center">
-                          <button onClick={() => triggerDetailsModal(index)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                          <button onClick={() => triggerDetailsChildModal(index)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
                             View details
                           </button>
 
@@ -509,6 +540,12 @@ export default function Home() {
             </div>
           </ModalComponent> : ""
       }
+
+      <ProductDetails
+        open={detailsChildModal}
+        onClose={() => setDetailsChildModal(false)}
+        data={testData[activeTagIndex].results[activeTagChildIndex]}
+      />
 
     </div>
   );
