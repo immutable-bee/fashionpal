@@ -5,6 +5,7 @@ import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
 import cloneDeep from "lodash.clonedeep";
 import EditTagsModal from "@/components/utility/EditTagsModal";
+import ListingItem from "@/components/utility/ListingItem";
 function ImageUploader({ onBack }) {
     const [image, setImage] = useState({ url: null, file: null });
     const [uploadedImages, setUploadedImages] = useState({
@@ -459,34 +460,14 @@ function ImageUploader({ onBack }) {
                         step === 7 ?
                             <>
                                 <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
-                                    {listings.map((row, index) => {
+                                    {listings.map((row, key) => {
                                         return (
-                                            <div
-                                                className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
-                                                key={row.id}
-                                            >
-                                                <div className="flex">
-                                                    <div className="w-36 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                                        <img
-                                                            src={row.items.main.image} alt={'Main Photo'}
-                                                            className="rounded"
-                                                        />
-                                                    </div>
-                                                    <div className="w-full mb-3 ">
-                                                        <div className=" h-36 overflow-y-auto">
-                                                            {row.tags.map((tag, tagIndex) => (
-                                                                <p key={tagIndex} className="text-gray-800 text-base leading-5">
-                                                                    {tag.name}: {tag.value}
-                                                                </p>
-                                                            ))}
-                                                        </div>
+                                            <ListingItem key={key} mainPhoto={row.items.main.image} tags={row.tags}>
+                                                <button onClick={() => triggerEditTagsModal(key)} className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded">
+                                                    Edit Tags
+                                                </button>
+                                            </ListingItem>
 
-                                                        <button onClick={() => triggerEditTagsModal(index)} className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded">
-                                                            Edit Tags
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         );
                                     })}
                                 </div>
