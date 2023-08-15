@@ -343,7 +343,7 @@ export default function Home() {
       <HeaderComponent />
 
       <div>
-        <div class=" sm:flex justify-between px-5 max-w-7xl mx-auto">
+        <div class="flex justify-between px-5 max-w-7xl mx-auto">
           <Inputcomponent
             handleSearch={fetchSearchResults}
             filter={filter}
@@ -351,12 +351,12 @@ export default function Home() {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
           />
-          <div className="flex flex-shrink-0 items-center justify-end mt-2 sm:mt-0">
+          <div className="flex flex-shrink-0 items-center justify-end">
 
             <div className="ml-2 sm:ml-3">
               <button
                 type="button"
-                class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-lg sm:rounded-xl"
+                class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
                 //onClick={fetchSearchResults}
                 onClick={() => handleSearch(searchTerm, filter)}
               >
@@ -384,7 +384,7 @@ export default function Home() {
         <ul className=" mt-2 flex justify-center items-center ml-2">
           <div className="mx-1">
             <label>Apparel</label>
-            <select className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
+            <select className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
               <option value="Clothing">Clothing</option>
               <option value="Footwear">Footwear</option>
               <option value="Hats">Hats</option>
@@ -394,7 +394,7 @@ export default function Home() {
           <div className="mx-1">
             <label>Size</label>
             <select
-              className="w-full mx-1 mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
+              className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
               onChange={(e) => setSize(e.target.value)}
             >
               {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
@@ -435,7 +435,7 @@ export default function Home() {
                     {testData.map((row, index) => {
                       return (
                         <div
-                          className="px-4 py-3 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
+                          className="px-4 py-3 relative rounded-lg sm:mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
                           key={row.id}
                         >
 

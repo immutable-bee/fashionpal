@@ -4,7 +4,7 @@ function ListingItem({ mainPhoto, tags, children }) {
 
   return (
     <div
-      className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
+      className="px-4 py-4 relative rounded-lg sm:mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
     >
       <div className="flex">
         <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">

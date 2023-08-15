@@ -26,7 +26,7 @@ function ProductDetails({ open, onClose, data }) {
                             {activeImage === 1 && (
                                 <button
                                     onClick={() => setActiveImage(0)}
-                                    className="absolute left-0 top-1/2 transform -translate-y-1/2"
+                                    className="absolute text-3xl left-0 top-1/2 transform -translate-y-1/2"
                                 >
                                     ←
                                 </button>
@@ -50,7 +50,7 @@ function ProductDetails({ open, onClose, data }) {
                             {activeImage === 0 && (
                                 <button
                                     onClick={() => setActiveImage(1)}
-                                    className="absolute right-0 top-1/2 transform -translate-y-1/2"
+                                    className="absolute text-3xl right-0 top-1/2 transform -translate-y-1/2"
                                 >
                                     →
                                 </button>

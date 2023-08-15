@@ -449,7 +449,7 @@ function ImageUploader({ onBack }) {
                                 </div>
                             ))}
                             <div className="flex justify-center sm:justify-start">
-                                <ButtonComponent rounded className="!w-48 !mt-6" onClick={() => setStep(7)} >{editAfterUpload ? 'Next' : 'Upload All'}</ButtonComponent>
+                                <ButtonComponent rounded className="!w-48 !mt-6" onClick={() => setStep(7)} >Review All</ButtonComponent>
                             </div>
                         </div>
 

@@ -245,7 +245,7 @@ export default function Home() {
       <HeaderComponent />
       {mode === 'view' ?
         <div>
-          <div class=" sm:flex justify-between px-5 max-w-7xl mx-auto">
+          <div class=" flex justify-between px-5 max-w-7xl mx-auto">
             <Inputcomponent
               handleSearch={fetchSearchResults}
               filter={filter}
@@ -253,11 +253,11 @@ export default function Home() {
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
             />
-            <div class="flex items-center justify-end mt-2 sm:mt-0">
+            <div class="flex items-center justify-end">
               <div class="ml-2 sm:ml-3">
                 <button
                   type="button"
-                  class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-lg sm:rounded-xl"
+                  class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
                 >
                   <div>
                     <svg
@@ -280,8 +280,8 @@ export default function Home() {
             </div>
           </div>
 
-          <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
-            <div className="">
+          <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">
+            <div className="w-full">
               <div className="flex justify-between items-center">
                 <p className="text-gray-900 text-base">
                   {resultCount} Results found
@@ -290,7 +290,7 @@ export default function Home() {
                 <ButtonComponent onClick={() => setMode('adding')} rounded className="!px-7 !py-1.5">Add listing</ButtonComponent>
               </div>
 
-              <div className="">
+              <div className="w-full">
                 {loadingListings || loadingSearchResults ? (
                   <div className="sm:flex justify-center pb-10">
                     <div>
@@ -301,8 +301,8 @@ export default function Home() {
                     </div>
                   </div>
                 ) : (
-                  <div className="">
-                    <div className="sm:flex flex-wrap justify-center">
+                  <div className="w-full">
+                    <div className="sm:flex flex-wrap justify-center w-full">
 
                       {listings.map((row, key) => {
                         return (

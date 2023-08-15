@@ -30,7 +30,7 @@ const HeaderComponent = () => {
               <Link className="no-underline	" href="/customer">
                 <span
                   style={{ color: linkColor("/customer") }}
-                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                  className="!mx-2 font-medium sm:!mx-5 text-xs sm:text-2xl"
                 >
                   {" "}
                   Home
@@ -39,7 +39,7 @@ const HeaderComponent = () => {
               <Link className="no-underline	" href="/customer/search">
                 <span
                   style={{ color: linkColor("/customer/search") }}
-                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                  className="!mx-2 font-medium sm:!mx-5 text-xs sm:text-2xl"
                 >
                   {" "}
                   Search
@@ -48,7 +48,7 @@ const HeaderComponent = () => {
               <Link className="no-underline	" href="/customer/matches">
                 <span
                   style={{ color: linkColor("/customer/matches") }}
-                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                  className="!mx-2 font-medium sm:!mx-5 text-xs sm:text-2xl"
                 >
                   {" "}
                   Matches
@@ -57,7 +57,7 @@ const HeaderComponent = () => {
               <Link className="no-underline	" href="/">
                 <span
                   style={{ color: linkColor("/") }}
-                  className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
+                  className="!mx-2 font-medium sm:!mx-5 text-xs sm:text-2xl"
                 >
                   {" "}
                   Business
