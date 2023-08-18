@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/core": "^6.0.10",
     "@nextui-org/react": "^1.0.0-beta.12",
     "autoprefixer": "10.4.14",
     "eslint": "8.45.0",
