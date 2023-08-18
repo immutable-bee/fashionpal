@@ -92,24 +92,47 @@ const HeaderComponent = () => {
       </div>
 
       <div className="flex items-center">
-        <Link
-          href="/customer/profile"
-          className="flex items-center no-underline"
-        >
-          {" "}
-          <div className="border rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center">
-            <Image
-              src={BookWorm}
-              width={40}
-              height={40}
-              className="w-10 rounded-full"
-              alt="logo"
-            />
-          </div>
-          <span className="!ml-3 hidden sm:block text-black font-semibold text-lg">
-            Hi, Demo User!
-          </span>
-        </Link>
+        {router.pathname.includes('/customer') ?
+          (
+            <Link
+              href="/customer/profile"
+              className="flex items-center no-underline"
+            >
+              {" "}
+              <div className="border rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                <Image
+                  src={BookWorm}
+                  width={40}
+                  height={40}
+                  className="w-10 rounded-full"
+                  alt="logo"
+                />
+              </div>
+              <span className="!ml-3 hidden sm:block text-black font-semibold text-lg">
+                Hi, Demo User!
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href="/profile"
+              className="flex items-center no-underline"
+            >
+              {" "}
+              <div className="border rounded-full w-14 h-14 flex-shrink-0 flex items-center justify-center">
+                <Image
+                  src={BookWorm}
+                  width={40}
+                  height={40}
+                  className="w-10 rounded-full"
+                  alt="logo"
+                />
+              </div>
+              <span className="!ml-3 hidden sm:block text-black font-semibold text-lg">
+                Hi, Demo User!
+              </span>
+            </Link>
+          )
+        }
       </div>
     </header>
   );
