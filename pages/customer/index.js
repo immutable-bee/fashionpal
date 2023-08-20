@@ -3,8 +3,10 @@ import Inputcomponent from "@/components/utility/Input";
 import HeaderComponent from "@/components/utility/Header";
 import TooltipComponent from "@/components/utility/Tooltip";
 import Loading from "@/components/utility/loading";
+import ProductDetails from "@/components/utility/ProductDetails";
 import PaginationComponent from "@/components/utility/Pagination";
 import Shirt from '../../assets/shirt.png'
+import Shirt2 from '../../assets/shirt-2.jpg'
 import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
 import AddCloths from "@/components/scoped/AddCloths";
@@ -17,6 +19,8 @@ export default function Home() {
   const [image, setImage] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [inputVisible, setInputVisible] = useState(true);
+  const [detailsModal, setDetailsModal] = useState(false);
+  const [activeTagIndex, setActiveIndex] = useState(0);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [size, setSize] = useState('');
   const [type, setType] = useState('Clothing');
@@ -45,7 +49,6 @@ export default function Home() {
   ])
 
   const [tagEditModal, setTagEditModal] = useState(false);
-  const [activeTagIndex, setActiveTagIndex] = useState(0);
   const [active, setActive] = useState("clothingorfootwear");
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -59,27 +62,14 @@ export default function Home() {
     setSelectedTag(tag);
   };
 
-  const handleAdd = () => {
-    if (image && selectedTag) {
-      setUploadedImages([...uploadedImages, { image, tag: selectedTag }]);
-      setImage(null);
-      setSelectedTag(null);
-      setInputVisible(true);
-    }
+  const triggerDetailsModal = (index) => {
+    setDetailsModal(true)
+    setActiveIndex(index)
   };
 
-  const handleDelete = (index) => {
-    setUploadedImages(uploadedImages.filter((_, i) => i !== index));
-  };
 
-  const triggerEditTagsModal = (index) => {
-    setTagEditModal(true)
-    setActiveTagIndex(index)
-  };
-  const handleActiveChange = (newActive) => {
-    setActive(newActive);
-    setFilter(newActive.toLowerCase());
-  };
+
+
 
   // add end
   const [loadingListings, setLoadingListings] = useState(false);
@@ -97,36 +87,6 @@ export default function Home() {
   const [inventoryMatchesPage, setInventoryMatchesPage] = useState(1);
 
   const openRequestsItemsPerPage = 7;
-
-  const paginateData = (data, currentPage, itemsPerPage) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    return data.slice(startIndex, endIndex);
-  };
-  // pagination end
-
-  const calculateDaysAgo = (dateListed) => {
-    const listedDate = new Date(dateListed);
-
-    const currentDate = new Date();
-
-    const diffTime = Math.abs(currentDate - listedDate);
-
-    // Calculate the difference in days
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    // If the difference is more than one day, return it as "x days ago"
-    // If it's exactly one day, return "1 day ago"
-    // Else if it's less than a day, return "Today"
-    if (diffDays > 1) {
-      return `${diffDays} days ago`;
-    } else if (diffDays === 1) {
-      return `1 day ago`;
-    } else {
-      return "Today";
-    }
-  };
 
   const fetchListings = async () => {
     const res = await fetch("/api/fetch-listings");
@@ -180,6 +140,7 @@ export default function Home() {
     {
       id: 1,
       mainPhoto: Shirt,
+      brandTagPhoto: Shirt2,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -196,6 +157,7 @@ export default function Home() {
     {
       id: 1,
       mainPhoto: Shirt,
+      brandTagPhoto: Shirt2,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -212,6 +174,7 @@ export default function Home() {
     {
       id: 1,
       mainPhoto: Shirt,
+      brandTagPhoto: Shirt2,
       tags: [
         { name: 'color', value: 'pink' },
         { name: 'size', value: 'medium' },
@@ -232,6 +195,12 @@ export default function Home() {
       <HeaderComponent />
 
       <div>
+        <ProductDetails
+          open={detailsModal}
+          onClose={() => setDetailsModal(false)}
+          data={testData[activeTagIndex]}
+        />
+
         <div class=" flex justify-between px-5 max-w-7xl mx-auto">
           <Inputcomponent
             handleSearch={fetchSearchResults}
@@ -329,8 +298,9 @@ export default function Home() {
                         return (
                           <SwiperSlide key={index} className="!w-32">
                             <div
-                              className="px-4 py-4 relative rounded-lg mx-2 my-2 w-32 border-2 shadow-lg border-[#E44A1F]"
+                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-32 border-2 shadow-lg border-[#E44A1F]"
                               key={row.id}
+                              onClick={() => triggerDetailsModal(index)}
                             >
                               <div className="flex">
                                 <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
@@ -374,8 +344,9 @@ export default function Home() {
                         return (
                           <SwiperSlide key={index} className="!w-32">
                             <div
-                              className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
+                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
                               key={row.id}
+                              onClick={() => triggerDetailsModal(index)}
                             >
                               <div className="flex">
                                 <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
@@ -419,8 +390,9 @@ export default function Home() {
                         return (
                           <SwiperSlide key={index} className="!w-32">
                             <div
-                              className="px-4 py-4 relative rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
+                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
                               key={row.id}
+                              onClick={() => triggerDetailsModal(index)}
                             >
                               <div className="flex">
                                 <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">

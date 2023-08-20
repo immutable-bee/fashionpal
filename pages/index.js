@@ -307,7 +307,7 @@ export default function Home() {
                       {listings.map((row, key) => {
                         return (
                           <ListingItem key={key} mainPhoto={row.mainPhoto} tags={row.tags}>
-                            <button onClick={() => triggerEditTagsModal(index)} className="bg-primary text-white px-3 py-1 text-xs mt-1 rounded">
+                            <button onClick={() => triggerEditTagsModal(key)} className="bg-primary text-white px-3 py-1 text-xs mt-1 rounded">
                               Edit Tags
                             </button>
                           </ListingItem>
