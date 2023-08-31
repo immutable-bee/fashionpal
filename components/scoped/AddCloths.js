@@ -4,9 +4,9 @@ import ButtonComponent from "@/components/utility/Button";
 import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
 import cloneDeep from "lodash.clonedeep";
-import EditTagsModal from "@/components/utility/EditTagsModal";
+import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
-function ImageUploader({ onBack }) {
+function ImageUploader({ onBack, onFecth }) {
     const [image, setImage] = useState({ url: null, file: null });
     const [uploadedImages, setUploadedImages] = useState({
         main: null,
@@ -15,7 +15,6 @@ function ImageUploader({ onBack }) {
     const [listings, setListings] = useState([]);
     const [tagEditModal, setTagEditModal] = useState(false);
     const [activeTagIndex, setActiveTagIndex] = useState(0);
-    const [editAfterUpload, setEditAfterUpload] = useState(false);
     const [editGeneratedTags, setEditGeneratedTags] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [step, setStep] = useState(1);
@@ -49,7 +48,7 @@ function ImageUploader({ onBack }) {
             setStep(step === 2 ? 3 : 4)
         }
     };
-    const triggerEditTagsModal = (index) => {
+    const triggerEditTagsModalOffline = (index) => {
         setTagEditModal(true)
         setActiveTagIndex(index)
     };
@@ -64,6 +63,28 @@ function ImageUploader({ onBack }) {
         if (key === 'main') {
             setStep(2)
         }
+    };
+    const handleListingImageDelete = (index, key) => {
+        console.log(listings)
+        console.log(index)
+        console.log(key)
+        let newListings = cloneDeep(listings)
+        console.log(newListings)
+        if (newListings[index] && newListings[index].items) {
+            console.log(newListings[index].items[key])
+            newListings[index].items[key] = null
+            console.log(newListings[index].items[key])
+        }
+        console.log(newListings)
+        if (key === 'main') {
+            newListings.splice(index, 1)
+        }
+
+        if (newListings.length === 0) {
+            setStep(2)
+        }
+        setListings(newListings);
+
     };
 
     const handleImageDeleteInListing = (index, key) => {
@@ -165,38 +186,62 @@ function ImageUploader({ onBack }) {
         }
     }
 
-
-
-
-    const handleUploadAll = () => {
-        setUploading(true)
-
-        setTimeout(() => {
-            alert('uploaded')
-            setUploading(false)
-            onBack()
-        }, 5000);
-
-        // const formData = new FormData();
-        // listings.flat().forEach((item, index) => {
-        //     formData.append(`images[${index}]`, item.file);
-        //     formData.append(`tags[${index}]`, item.tag);
-        // });
-
-        // // Replace with your actual API endpoint
-        // fetch('/api/upload', {
-        //     method: 'POST',
-        //     body: formData,
-        // })
-        //     .then((response) => response.json())
-        //     .then((result) => {
-        //         console.log('Success:', result);
-        //         setListings([[]]); // Clear listings after upload
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error:', error);
-        //     });
+    const fileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]); // split to get only Base64 value
+            reader.onerror = error => reject(error);
+        });
     }
+
+    const handleUploadAll = async () => {
+        setUploading(true);
+        console.log(listings);
+
+        const convertedListings = await Promise.all(listings.map(async listing => {
+            const mainImageBase64 = await fileToBase64(listing.items.main.file);
+            const brandImageBase64 = listing.items.brandTag
+                ? await fileToBase64(listing.items.brandTag.file)
+                : null;
+
+            return {
+                mainImage: mainImageBase64,
+                brandImage: brandImageBase64,
+                tags: listing.tags,
+            };
+        }));
+
+        try {
+            console.log(convertedListings)
+            const response = await fetch(
+                `api/createListing`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ listings: convertedListings }), // Send all listings as an array
+                }
+            );
+
+            const res = await response.json();
+            console.log(res);
+            if (!response.ok) {
+                throw new Error('Failed to upload.');
+            }
+
+            onFecth()
+
+            alert('uploaded');
+            setUploading(false);
+            onBack();
+        } catch (error) {
+            console.error(error);
+            setUploading(false);
+        }
+    };
+
 
     const handleDeleteTag = (listingIndex, tagIndex) => {
         console.log(listingIndex, tagIndex)
@@ -278,7 +323,8 @@ function ImageUploader({ onBack }) {
                                             : ''}
                                         {step === 3 ?
                                             <>
-                                                <ButtonComponent full onClick={() => handleAdd('brandTag')} className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}>Brand Tag Photo</ButtonComponent>
+
+                                                <ButtonComponent disabled={!image.url} full onClick={() => handleAdd('brandTag')} className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}>Brand Tag Photo</ButtonComponent>
                                                 <ButtonComponent color="light" full onClick={() => setStep(4)} className={`!my-2 mx-auto !w-64 rounded-lg !text-black`}>Skip Brand Tag</ButtonComponent>
                                             </>
                                             : ''}
@@ -339,7 +385,7 @@ function ImageUploader({ onBack }) {
                                                     </div>
 
 
-                                                    <button onClick={() => handleDelete('main')} className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 absolute top-2 right-2 z-10 px-1 rounded">
+                                                    <button onClick={() => handleListingImageDelete(rowIndex, 'main')} className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 absolute top-2 right-2 z-10 px-1 rounded">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                         </svg>
@@ -353,7 +399,7 @@ function ImageUploader({ onBack }) {
                                                     </div>
 
 
-                                                    <button onClick={() => handleDelete('brandTag')} className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 absolute top-2 right-2 z-10 px-1 rounded">
+                                                    <button onClick={() => handleListingImageDelete(rowIndex, 'brandTag')} className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 absolute top-2 right-2 z-10 px-1 rounded">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                         </svg>
@@ -463,7 +509,8 @@ function ImageUploader({ onBack }) {
                                     {listings.map((row, key) => {
                                         return (
                                             <ListingItem key={key} mainPhoto={row.items.main.image} tags={row.tags}>
-                                                <button onClick={() => triggerEditTagsModal(key)} className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded">
+
+                                                <button onClick={() => triggerEditTagsModalOffline(key)} className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded">
                                                     Edit Tags
                                                 </button>
                                             </ListingItem>
@@ -476,7 +523,7 @@ function ImageUploader({ onBack }) {
                                 </div>
                             </> : ''
                     }
-                    <EditTagsModal
+                    <EditTagsModalOffline
                         open={tagEditModal}
                         onClose={() => setTagEditModal(false)}
                         handleDeleteTag={(index) => handleDeleteTag(activeTagIndex, index)}
@@ -489,8 +536,8 @@ function ImageUploader({ onBack }) {
                 </div >
             ) :
                 (
-                    <div className="mt-12">
-                        <h3 className="text-center">36%</h3>
+                    <div className="mt-16">
+
                         <LoadingComponent size='xl' />
                     </div>
                 )

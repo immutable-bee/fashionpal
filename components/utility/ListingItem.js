@@ -4,17 +4,19 @@ function ListingItem({ mainPhoto, tags, children }) {
 
   return (
     <div
-      className="px-4 py-4 relative rounded-lg sm:mx-2 my-2 w-full sm:w-96 border-2 shadow-lg border-[#E44A1F]"
+      className="px-4 py-4 relative rounded-3xl sm:mx-3 sm:my-3 my-5 w-full sm:w-96 shadow-lg"
+
+      style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
     >
       <div className="flex">
-        <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-          <Image
+        <div className="w-36 my-auto flex-shrink-0 mr-3 rounded-lg">
+          {mainPhoto ? <Image
             src={mainPhoto}
             width={100}
             height={100}
-            className="rounded"
+            className="rounded w-full"
             alt=""
-          />
+          /> : ''}
         </div>
         <div className="w-full mb-3 ">
           <div className="sm:h-36 sm:overflow-y-auto">
