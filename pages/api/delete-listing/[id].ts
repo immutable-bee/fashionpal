@@ -26,14 +26,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             // Step 2: Delete images from Supabase storage
             const { mainImage, brandImage } = listing;
             console.log(mainImage)
-            if (mainImage && mainImage.url) {
-                const imagePath = mainImage.url.split('/').pop();
+            if (mainImage && (mainImage as any).url) {
+                const imagePath = (mainImage as any).url.split('/').pop();
                 console.log(imagePath)
                 await supabase.storage.from('listings').remove([imagePath]);
             }
 
-            if (brandImage && brandImage.url) {
-                const imagePath = brandImage.url.split('/').pop();
+            if (brandImage && (brandImage as any).url) {
+                const imagePath = (brandImage as any).url.split('/').pop();
                 await supabase.storage.from('listings').remove([imagePath]);
             }
 
