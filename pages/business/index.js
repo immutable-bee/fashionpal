@@ -153,14 +153,24 @@ export default function Home() {
   const fetchListings = async (e) => {
     setLoadingListings(true);
 
-    const res = await fetch(`/api/fetch-listings?limit=1&page=${e}`);
-    setLoadingListings(false);
-    if (res.status === 200) {
-      const data = await res.json();
-      setListings(data.results);
-      setPagination(data.pagination)
+    try {
+      const res = await fetch(`/api/fetch-listings?limit=1&page=${e}`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setListings(data.results);
+        setPagination(data.pagination);
+      } else {
+        const errorMessage = await res.text();
+        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching listings:', error);
+    } finally {
+      setLoadingListings(false);
     }
   };
+
 
   useEffect(() => {
     const initialFetch = async () => {
