@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
-import DeleteModal from "@/components/utility/DeleteModal";
+import DeleteModal from "../utility/DeleteModal";
 import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
 import cloneDeep from "lodash.clonedeep";
