@@ -54,9 +54,9 @@ const HeaderComponent = () => {
                   Matches
                 </span>
               </Link>
-              <Link className="no-underline	" href="/">
+              <Link className="no-underline	" href="/business">
                 <span
-                  style={{ color: linkColor("/") }}
+                  style={{ color: linkColor("/business") }}
                   className="!mx-2 font-medium sm:!mx-5 text-xs sm:text-2xl"
                 >
                   {" "}
@@ -114,7 +114,7 @@ const HeaderComponent = () => {
             </Link>
           ) : (
             <Link
-              href="/profile"
+              href="/business/profile"
               className="flex items-center no-underline"
             >
               {" "}
