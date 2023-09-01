@@ -68,9 +68,9 @@ const HeaderComponent = () => {
           :
           (
             <>
-              <Link className="no-underline	" href="/">
+              <Link className="no-underline	" href="/business">
                 <span
-                  style={{ color: linkColor("/") }}
+                  style={{ color: linkColor("/business") }}
                   className="!mx-2 font-medium sm:!mx-5 text-base sm:text-2xl"
                 >
                   {" "}

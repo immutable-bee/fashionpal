@@ -4,6 +4,7 @@ import ButtonComponent from "@/components/utility/Button";
 import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
 import cloneDeep from "lodash.clonedeep";
+import Compressor from 'compressorjs'
 import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
 function ImageUploader({ onBack, onFecth }) {
@@ -12,6 +13,9 @@ function ImageUploader({ onBack, onFecth }) {
         main: null,
         brandTag: null,
     });
+    const max_size = 5000000
+    const max_size_words = '5 MB'
+
     const [listings, setListings] = useState([]);
     const [tagEditModal, setTagEditModal] = useState(false);
     const [activeTagIndex, setActiveTagIndex] = useState(0);
@@ -23,11 +27,12 @@ function ImageUploader({ onBack, onFecth }) {
 
 
         const file = e.target.files[0];
-        const blobURL = URL.createObjectURL(file);
-        setImage({ url: blobURL, file, tag: '' });
-        if (step === 1) {
-            setStep(2);
-        }
+        compressImage(file)
+        // const blobURL = URL.createObjectURL(file);
+        // setImage({ url: blobURL, file, tag: '' });
+        // if (step === 1) {
+        //     setStep(2);
+        // }
     };
     const deleteImage = (e) => {
 
@@ -141,6 +146,36 @@ function ImageUploader({ onBack, onFecth }) {
         // alert('Listed more items successfully!');
     };
 
+    const compressImage = (file) => {
+        // compress file
+        const options = {
+            quality: 0.9,
+            maxWidth: 1000,
+            // quality: max_size / file.size,
+            success: (compressedFile) => {
+                console.log('compress success in...')
+                const newFile = new File([compressedFile], file.name, {
+                    type: compressedFile.type,
+                })
+                console.log(newFile)
+                const blobURL = URL.createObjectURL(newFile);
+                setImage({ url: blobURL, file: newFile, tag: '' });
+                if (step === 1) {
+                    setStep(2);
+                }
+
+                // newFile.url = URL.createObjectURL(newFile)
+                // this.localUrl = newFile
+                // this.uploadAndCrop()
+            },
+            error: (error) => {
+                console.error(error.message)
+            },
+        }
+        console.log(options)
+        new Compressor(file, options)
+    }
+
     const handleFinishListing = () => {
         const defaultTags = [
             { name: 'color', value: 'pink' },
@@ -187,6 +222,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
 
     const fileToBase64 = (file) => {
+        console.log(file)
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -200,6 +236,7 @@ function ImageUploader({ onBack, onFecth }) {
         console.log(listings);
 
         const convertedListings = await Promise.all(listings.map(async listing => {
+            console.log(listing)
             const mainImageBase64 = await fileToBase64(listing.items.main.file);
             const brandImageBase64 = listing.items.brandTag
                 ? await fileToBase64(listing.items.brandTag.file)
