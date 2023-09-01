@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
 import ButtonComponent from "@/components/utility/Button";
+
+
 function ProductDetails({ children, title, onConfirmed }) {
     const [openModal, setOpenModal] = useState(false)
 
