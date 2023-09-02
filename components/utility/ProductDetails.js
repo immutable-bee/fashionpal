@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
 function ProductDetails({ open, onClose, data }) {
-
+    console.log(data)
     const [showAll, setShowAll] = useState(false);
-    const tagsToDisplay = showAll ? data.tags : data.tags.slice(0, 3);
+    const tagsToDisplay = showAll ? data?.tags : data?.tags.slice(0, 3);
 
     const [activeImage, setActiveImage] = useState(0);
     return (
@@ -31,23 +31,23 @@ function ProductDetails({ open, onClose, data }) {
                                     ←
                                 </button>
                             )}
-                            {activeImage === 1 ?
+                            {activeImage === 0 ?
                                 <Image
-                                    src={data?.mainPhoto}
+                                    src={data?.mainImage?.url}
                                     className="rounded-lg w-full"
                                     width="150"
                                     height="150"
                                     alt=""
                                 /> :
                                 <Image
-                                    src={data?.brandTagPhoto}
+                                    src={data?.brandImage?.url}
                                     className="rounded-lg w-full"
                                     width="150"
                                     height="150"
                                     alt=""
                                 />}
 
-                            {activeImage === 0 && (
+                            {data?.brandImage && data?.brandImage?.url && activeImage === 0 && (
                                 <button
                                     onClick={() => setActiveImage(1)}
                                     className="absolute text-3xl right-0 top-1/2 transform -translate-y-1/2"
@@ -65,7 +65,7 @@ function ProductDetails({ open, onClose, data }) {
                                 <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
                             </div>
                         ))}
-                        {!showAll && data.tags.length > 3 && (
+                        {!showAll && data?.tags.length > 3 && (
                             <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
                         )}
 

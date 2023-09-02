@@ -15,41 +15,14 @@ import cloneDeep from "lodash.clonedeep";
 export default function Home() {
 
   // add
-  const [image, setImage] = useState(null);
-  const [selectedTag, setSelectedTag] = useState(null);
-  const [inputVisible, setInputVisible] = useState(true);
+
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activeDeleteIndex, setActiveDeleteIndex] = useState(null);
-  const [uploadedImages, setUploadedImages] = useState([]);
 
   const [tagEditModal, setTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
   const [notMatchesPage, setNotMatchesPage] = useState(1);
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const blobURL = URL.createObjectURL(file);
-    setImage(blobURL);
-    setSelectedTag(null);
-    setInputVisible(false);
-  };
-
-  const handleTagClick = (tag) => {
-    setSelectedTag(tag);
-  };
-
-  const handleAdd = () => {
-    if (image && selectedTag) {
-      setUploadedImages([...uploadedImages, { image, tag: selectedTag }]);
-      setImage(null);
-      setSelectedTag(null);
-      setInputVisible(true);
-    }
-  };
-
-  const handleDelete = (index) => {
-    setUploadedImages(uploadedImages.filter((_, i) => i !== index));
-  };
 
   const onPaginationChange = (e) => {
     console.log(e)
@@ -107,54 +80,19 @@ export default function Home() {
     has_next_page: false,
   });
 
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("title");
+
   const [mode, setMode] = useState("view");
 
   const [loadingSearchResults, setLoadingSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
-  // pagination
 
-  const [inventoryMatchesPage, setInventoryMatchesPage] = useState(1);
-
-  const openRequestsItemsPerPage = 2;
-
-  const paginateData = (data, currentPage, itemsPerPage) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    return data.slice(startIndex, endIndex);
-  };
-  // pagination end
-
-  const calculateDaysAgo = (dateListed) => {
-    const listedDate = new Date(dateListed);
-
-    const currentDate = new Date();
-
-    const diffTime = Math.abs(currentDate - listedDate);
-
-    // Calculate the difference in days
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    // If the difference is more than one day, return it as "x days ago"
-    // If it's exactly one day, return "1 day ago"
-    // Else if it's less than a day, return "Today"
-    if (diffDays > 1) {
-      return `${diffDays} days ago`;
-    } else if (diffDays === 1) {
-      return `1 day ago`;
-    } else {
-      return "Today";
-    }
-  };
 
   const fetchListings = async (e) => {
     setLoadingListings(true);
 
     try {
-      const res = await fetch(`/api/fetch-listings?limit=1&page=${e}`);
+      const res = await fetch(`/api/fetch-listings?limit=15&page=${e}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -181,30 +119,6 @@ export default function Home() {
     initialFetch();
   }, []);
 
-  const fetchSearchResults = async () => {
-    setLoadingSearchResults(true);
-    const res = await fetch("/api/fetch-searchResults", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ searchTerm, filter }),
-    });
-
-    if (res.status === 200) {
-      const data = await res.json();
-      setSearchResults(data);
-      setLoadingSearchResults(false);
-    }
-  };
-
-  const loadingMessage = () => {
-    if (loadingListings === true) {
-      return "Loading";
-    } else if (loadingSearchResults === true) {
-      return "Searching";
-    }
-  };
 
   const arrayToMap = searchResults.length > 0 ? searchResults : listings;
 
@@ -254,7 +168,7 @@ export default function Home() {
             <div className="w-full">
               <div className="flex justify-between items-center">
                 <p className="text-gray-900 text-base">
-                  {resultCount} Results found
+                  {pagination.total} Results found
                 </p>
 
                 <ButtonComponent onClick={() => setMode('adding')} rounded className="!px-7 !py-1.5">Add listing</ButtonComponent>
@@ -264,7 +178,7 @@ export default function Home() {
                 {loadingListings || loadingSearchResults ? (
                   <div className="sm:flex justify-center pb-10">
                     <div>
-                      {/* <p className="me-1">{loadingMessage()}</p> */}
+
                       <div className="pt-2.5 mt-10">
                         <Loading size="xl" />
                       </div>

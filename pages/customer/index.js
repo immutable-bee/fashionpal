@@ -23,7 +23,7 @@ export default function Home() {
   const [activeTagIndex, setActiveIndex] = useState(0);
   const [uploadedImages, setUploadedImages] = useState([]);
   const [size, setSize] = useState('');
-  const [type, setType] = useState('Clothing');
+  const [type, setType] = useState('');
   const [sizes, setSizes] = useState([
     { value: 'XS', type: '' },
     { value: 'S', type: '' },
@@ -76,7 +76,7 @@ export default function Home() {
   const [listings, setListings] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("title");
+  const [filter, setFilter] = useState("");
   const [mode, setMode] = useState("view");
 
   const [loadingSearchResults, setLoadingSearchResults] = useState(false);
@@ -88,20 +88,34 @@ export default function Home() {
 
   const openRequestsItemsPerPage = 7;
 
-  const fetchListings = async () => {
-    const res = await fetch("/api/fetch-listings");
+  const fetchListings = async (e) => {
+    console.log('fetch')
+    setLoadingListings(true);
 
-    if (res.status === 200) {
-      const data = await res.json();
-      setListings(data);
+    try {
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setListings(data.results);
+        setPagination(data.pagination);
+      } else {
+        const errorMessage = await res.text();
+        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching listings:', error);
+    } finally {
+      setLoadingListings(false);
     }
   };
 
+
   useEffect(() => {
     const initialFetch = async () => {
-      setLoadingListings(true);
-      await fetchListings();
-      setLoadingListings(false);
+      // setLoadingListings(true);
+      await fetchListings(1);
+      //   setLoadingListings(false);
     };
     initialFetch();
   }, []);
@@ -130,6 +144,21 @@ export default function Home() {
       return "Searching";
     }
   };
+
+  const onChangeType = (e) => {
+    setType(e.target.value)
+
+    setTimeout(() => {
+      fetchListings(1)
+    }, 1000);
+  }
+  const onChangeSize = (e) => {
+    setSize(e.target.value)
+
+    setTimeout(() => {
+      fetchListings(1)
+    }, 1000);
+  }
 
   const arrayToMap = searchResults.length > 0 ? searchResults : listings;
 
@@ -195,28 +224,26 @@ export default function Home() {
       <HeaderComponent />
 
       <div>
-        <ProductDetails
-          open={detailsModal}
-          onClose={() => setDetailsModal(false)}
-          data={testData[activeTagIndex]}
-        />
+        {detailsModal ?
+          <ProductDetails
+            open={detailsModal}
+            onClose={() => setDetailsModal(false)}
+            data={listings[activeTagIndex]}
+          /> : ''}
 
         <div class=" flex justify-between px-5 max-w-7xl mx-auto">
           <Inputcomponent
-            handleSearch={fetchSearchResults}
-            filter={filter}
-            setFilter={setFilter}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
           />
+
           <div className="flex flex-shrink-0 items-center justify-end">
 
             <div className="ml-2 sm:ml-3">
               <button
                 type="button"
                 class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
-                //onClick={fetchSearchResults}
-                onClick={() => handleSearch(searchTerm, filter)}
+                onClick={() => fetchListings(1)}
               >
                 <div>
                   <svg
@@ -242,7 +269,8 @@ export default function Home() {
         <ul className=" mt-2 flex justify-center items-center ml-2">
           <div className="mx-1">
             <label>Apparel</label>
-            <select className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
+            <select className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => onChangeType(e)}>
+              <option value="">All</option>
               <option value="Clothing">Clothing</option>
               <option value="Footwear">Footwear</option>
               <option value="Hats">Hats</option>
@@ -253,8 +281,9 @@ export default function Home() {
             <label>Size</label>
             <select
               className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
-              onChange={(e) => setSize(e.target.value)}
+              onChange={(e) => onChangeSize(e)}
             >
+              <option value="">All</option>
               {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
                 <option key={x.value} value={x.value}>{x.value}</option>
               ))}
@@ -269,8 +298,6 @@ export default function Home() {
               <p className="text-gray-900 text-base">
                 {resultCount} Results found
               </p>
-
-
             </div>
 
             <div className="">
@@ -294,19 +321,21 @@ export default function Home() {
                     >
 
 
-                      {testData.map((row, index) => {
+                      {listings.map((row, index) => {
                         return (
-                          <SwiperSlide key={index} className="!w-32">
+                          <SwiperSlide key={index} className="!w-56">
                             <div
-                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-32 border-2 shadow-lg border-[#E44A1F]"
+                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
                               key={row.id}
                               onClick={() => triggerDetailsModal(index)}
                             >
                               <div className="flex">
-                                <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
+                                <div className="w-full my-auto flex-shrink-0 mr-3 rounded-lg">
                                   <Image
-                                    src={row.mainPhoto}
-                                    className="rounded"
+                                    src={row.mainImage?.url}
+                                    width={100}
+                                    height={100}
+                                    className="rounded !w-full !h-64 object-cover"
                                     alt=""
                                   />
                                 </div>
