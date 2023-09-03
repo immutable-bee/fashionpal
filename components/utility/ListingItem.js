@@ -9,16 +9,16 @@ function ListingItem({ mainPhoto, tags, children }) {
       style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
     >
       <div className="flex">
-        <div className="w-36 my-auto flex-shrink-0 mr-3 rounded-lg">
+        <div className="w-36 my-auto flex-shrink-0 mr-3">
           {mainPhoto ? <Image
             src={mainPhoto}
             width={100}
             height={100}
-            className="rounded w-full"
+            className="rounded-lg w-full h-48 object-cover"
             alt=""
           /> : ''}
         </div>
-        <div className="w-full mb-3 ">
+        <div className="w-full mb-3 flex flex-col justify-between ">
           <div className="sm:h-36 sm:overflow-y-auto">
 
             {tags.map((tag, tagIndex) => (
@@ -28,7 +28,9 @@ function ListingItem({ mainPhoto, tags, children }) {
             ))}
           </div>
 
-          {children}
+          <div>
+            {children}
+          </div>
         </div>
       </div>
     </div>

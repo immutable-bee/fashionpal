@@ -15,10 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const listingsWithTags = await prisma.listing.findMany({
                 skip,
                 take: limit,
+                orderBy: {
+                    createdAt: 'desc'  // Assuming 'createdAt' is the field for the creation timestamp
+                },
                 include: {
                     tags: true,  // Include associated tags for each listing
                 },
             });
+
 
             // Get the total count of listings
             const total = await prisma.listing.count();

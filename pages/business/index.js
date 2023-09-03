@@ -214,7 +214,7 @@ export default function Home() {
                       className="flex justify-center"
                     >
 
-                      {arrayToMap?.length > 0 && !loadingListings && (
+                      {pagination && pagination.total_pages > 1 && !loadingListings && (
                         <PaginationComponent
                           total={pagination.total}
                           current={notMatchesPage}

@@ -11,10 +11,12 @@ datasource db {
 }
 
 model Listing {
-  id         Int   @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   mainImage  Json?
   brandImage Json?
   tags       Tag[]
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
 }
 
 model Tag {
