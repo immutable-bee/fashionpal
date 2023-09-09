@@ -144,20 +144,25 @@ export default function Home() {
       return "Searching";
     }
   };
+  useEffect(() => {
+    if (type !== "") { // Only fetch if type is changed to a non-empty value
+      fetchListings(1);
+    }
+  }, [type]); // Dependency array with type, so the effect runs whenever type changes.
+  useEffect(() => {
+    if (size !== "") { // Only fetch if type is changed to a non-empty value
+      fetchListings(1);
+    }
+  }, [size]); // Dependency array with type, so the effect runs whenever type changes.
 
   const onChangeType = (e) => {
     setType(e.target.value)
 
-    setTimeout(() => {
-      fetchListings(1)
-    }, 1000);
+
   }
   const onChangeSize = (e) => {
     setSize(e.target.value)
 
-    setTimeout(() => {
-      fetchListings(1)
-    }, 1000);
   }
 
   const arrayToMap = searchResults.length > 0 ? searchResults : listings;
