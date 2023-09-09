@@ -2,33 +2,37 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    console.log(req)
     if (req.method === 'GET') {
         // Parse query parameters for pagination
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 15;
-        const searchText = req.query.searchText as string || '';
-        const apparel = req.query.apparel as string || '';
-        const size = req.query.size as string || '';
+        const searchText = req.query.searchText as string;
+        const apparel = req.query.apparel as string;
+        const size = req.query.size as string;
 
         try {
             // Calculate the number of records to skip
             const skip = (page - 1) * limit;
 
             // Construct the where clause for filtering based on tags' value only
-            const whereClause = {
+            const filters = [];
+            if (searchText) {
+                filters.push({ value: { contains: searchText } });
+            }
+            if (apparel) {
+                filters.push({ value: { contains: apparel } });
+            }
+            if (size) {
+                filters.push({ value: { contains: size } });
+            }
+
+            const whereClause = filters.length > 0 ? {
                 tags: {
                     some: {
-                        OR: [
-                            { value: { contains: searchText } },
-                            { value: { contains: apparel } },
-                            { value: { contains: size } },
-                        ],
-                    },
-                },
-            };
-
-
+                        OR: filters
+                    }
+                }
+            } : {};
 
             // Fetch limited number of listings with an offset and with filtering
             const listingsWithTags = await prisma.listing.findMany({
@@ -71,4 +75,3 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
     }
 }
-

@@ -1,11 +1,9 @@
 import Image from 'next/image';
 
 function ListingItem({ mainPhoto, tags, children }) {
-
   return (
     <div
       className="px-4 py-4 relative rounded-3xl sm:mx-3 sm:my-3 my-5 w-full sm:w-96 shadow-lg"
-
       style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
     >
       <div className="flex">
