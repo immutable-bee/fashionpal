@@ -16,7 +16,7 @@ import "swiper/css";
 export default function Home() {
 
   const [size, setSize] = useState('');
-  const [type, setType] = useState('Clothing');
+  const [type, setType] = useState('');
   const [sizes, setSizes] = useState([
     { value: 'XS', type: '' },
     { value: 'S', type: '' },
@@ -84,11 +84,12 @@ export default function Home() {
   };
 
   // add end
+  const [saveLoading, setLoadingSave] = useState(false);
   const [loadingListings, setLoadingListings] = useState(false);
   const [listings, setListings] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [filter, setFilter] = useState("title");
+  const [filter, setFilter] = useState("");
   const [mode, setMode] = useState("view");
 
   const [loadingSearchResults, setLoadingSearchResults] = useState(false);
@@ -130,23 +131,69 @@ export default function Home() {
     }
   };
 
-  const fetchListings = async () => {
-    const res = await fetch("/api/fetch-listings");
+  // pagination
 
-    if (res.status === 200) {
-      const data = await res.json();
-      setListings(data);
+
+  const onSave = async (row) => {
+    setLoadingSave(true);
+
+    try {
+      const res = await fetch(`/api/edit-listing`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: row.id
+        })
+      });
+
+      if (res.status === 200) {
+        fetchListings(1)
+
+      } else {
+        const errorMessage = await res.text();
+        console.error(`edit failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while edit listing:', error);
+    } finally {
+      setLoadingSave(false);
     }
   };
 
+  const fetchListings = async (e) => {
+    console.log('fetch')
+    setLoadingListings(true);
+
+    try {
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setListings(data.results);
+        setPagination(data.pagination);
+      } else {
+        const errorMessage = await res.text();
+        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching listings:', error);
+    } finally {
+      setLoadingListings(false);
+    }
+  };
+
+
   useEffect(() => {
     const initialFetch = async () => {
-      setLoadingListings(true);
-      await fetchListings();
-      setLoadingListings(false);
+      // setLoadingListings(true);
+      await fetchListings(1);
+      //   setLoadingListings(false);
     };
     initialFetch();
   }, []);
+
 
   const fetchSearchResults = async () => {
     setLoadingSearchResults(true);
@@ -178,82 +225,26 @@ export default function Home() {
   const resultCount =
     searchResults.length > 0 ? searchResults.length : listings.length;
 
-  const testData = [
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      brandTagPhoto: Shirt2,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      brandTagPhoto: Shirt2,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      brandTagPhoto: Shirt2,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
 
-  ];
 
 
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
       <div>
-        <div class="flex justify-between px-5 max-w-7xl mx-auto">
+        <div class=" flex justify-between px-5 max-w-7xl mx-auto">
           <Inputcomponent
-            handleSearch={fetchSearchResults}
-            filter={filter}
-            setFilter={setFilter}
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
           />
+
           <div className="flex flex-shrink-0 items-center justify-end">
 
             <div className="ml-2 sm:ml-3">
               <button
                 type="button"
                 class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
-                //onClick={fetchSearchResults}
-                onClick={() => handleSearch(searchTerm, filter)}
+                onClick={() => fetchListings(1)}
               >
                 <div>
                   <svg
@@ -279,7 +270,8 @@ export default function Home() {
         <ul className=" mt-2 flex justify-center items-center ml-2">
           <div className="mx-1">
             <label>Apparel</label>
-            <select className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
+            <select className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => onChangeType(e)}>
+              <option value="">All</option>
               <option value="Clothing">Clothing</option>
               <option value="Footwear">Footwear</option>
               <option value="Hats">Hats</option>
@@ -290,8 +282,9 @@ export default function Home() {
             <label>Size</label>
             <select
               className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
-              onChange={(e) => setSize(e.target.value)}
+              onChange={(e) => onChangeSize(e)}
             >
+              <option value="">All</option>
               {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
                 <option key={x.value} value={x.value}>{x.value}</option>
               ))}
@@ -299,7 +292,6 @@ export default function Home() {
 
           </div>
         </ul>
-
         <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
           <div className="">
             <div className="flex justify-between items-center">
@@ -327,18 +319,20 @@ export default function Home() {
 
 
 
-                    {testData.map((row, key) => {
+                    {listings && listings.map((row, key) => {
                       return (
-                        <ListingItem key={key} mainPhoto={row.mainPhoto} tags={row.tags}>
+                        <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
                           <div className="flex items-center">
                             <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
                               View details
                             </button>
-                            <button className="bg-primary text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                            <button onClick={() => onSave(row)} className="bg-primary text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
                               Save
                             </button>
+                            {/* saveLoading */}
                           </div>
                         </ListingItem>
+
                       );
                     })}
 
@@ -368,7 +362,7 @@ export default function Home() {
       <ProductDetails
         open={detailsModal}
         onClose={() => setDetailsModal(false)}
-        data={testData[activeTagIndex]}
+        data={listings[activeTagIndex]}
       />
 
     </div>

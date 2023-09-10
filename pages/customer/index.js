@@ -120,22 +120,7 @@ export default function Home() {
     initialFetch();
   }, []);
 
-  const fetchSearchResults = async () => {
-    setLoadingSearchResults(true);
-    const res = await fetch("/api/fetch-searchResults", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ searchTerm, filter }),
-    });
 
-    if (res.status === 200) {
-      const data = await res.json();
-      setSearchResults(data);
-      setLoadingSearchResults(false);
-    }
-  };
 
   const loadingMessage = () => {
     if (loadingListings === true) {

@@ -14,6 +14,8 @@ model Listing {
   id         Int       @id @default(autoincrement())
   mainImage  Json?
   brandImage Json?
+  type       String
+  matches    Boolean   @default(false)
   tags       Tag[]
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @updatedAt

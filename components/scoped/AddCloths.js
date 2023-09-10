@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import axios from 'axios';
 import ButtonComponent from "@/components/utility/Button";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 import ModalComponent from "@/components/utility/Modal";
@@ -8,6 +9,10 @@ import cloneDeep from "lodash.clonedeep";
 import Compressor from 'compressorjs'
 import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
+// 
+const XIMILAR_API_URL = process.env.NEXT_PUBLIC_XIMILAR_API_URL;
+const XIMILAR_API_TOKEN = process.env.NEXT_PUBLIC_XIMILAR_API_TOKEN;
+console.log(process.env)
 function ImageUploader({ onBack, onFecth }) {
     const [image, setImage] = useState({ url: null, file: null });
     const [uploadedImages, setUploadedImages] = useState({
@@ -22,18 +27,27 @@ function ImageUploader({ onBack, onFecth }) {
     const [activeTagIndex, setActiveTagIndex] = useState(0);
     const [editGeneratedTags, setEditGeneratedTags] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(0);
+
+    const [type, setType] = useState('');
 
     const handleImageChange = (e) => {
 
 
         const file = e.target.files[0];
         compressImage(file)
-        // const blobURL = URL.createObjectURL(file);
-        // setImage({ url: blobURL, file, tag: '' });
-        // if (step === 1) {
-        //     setStep(2);
-        // }
+
+    };
+    const onNextToImageUploader = (e) => {
+
+
+        if (!type) {
+            alert('Type is required!')
+            return
+        }
+
+        setStep(1)
+
     };
     const deleteImage = (e) => {
 
@@ -112,23 +126,12 @@ function ImageUploader({ onBack, onFecth }) {
     };
 
     const handleListMore = () => {
-        const defaultTags = [
-            { name: 'color', value: 'pink' },
-            { name: 'size', value: 'medium' },
-            { name: 'sleeve length', value: 'short' },
-            { name: 'color', value: 'pink' },
-            { name: 'size', value: 'medium' },
-            { name: 'sleeve length', value: 'short' },
-            { name: 'color', value: 'pink' },
-            { name: 'size', value: 'medium' },
-            { name: 'sleeve length', value: 'short' },
-            { name: 'color', value: 'pink' },
-        ];
+
         console.log(listings)
         console.log(uploadedImages)
         const newListing = listings
         newListing.push({
-            tags: defaultTags,
+            tags: [],
             items: uploadedImages
         })
         console.log(newListing)
@@ -175,23 +178,12 @@ function ImageUploader({ onBack, onFecth }) {
     }
 
     const handleFinishListing = () => {
-        const defaultTags = [
-            { name: 'color', value: 'pink' },
-            { name: 'size', value: 'medium' },
-            { name: 'sleeve length', value: 'short' },
-            { name: 'color', value: 'pink' },
-            { name: 'size', value: 'medium' },
-            { name: 'sleeve length', value: 'short' },
-            { name: 'color', value: 'pink' },
-            { name: 'size', value: 'medium' },
-            { name: 'sleeve length', value: 'short' },
-            { name: 'color', value: 'pink' },
-        ];
+
         console.log(listings)
         console.log(uploadedImages)
         const newListing = listings
         newListing.push({
-            tags: defaultTags,
+            tags: [],
             items: uploadedImages
         })
         console.log(newListing)
@@ -211,13 +203,88 @@ function ImageUploader({ onBack, onFecth }) {
         // alert('Finished listing items!');
     };
 
-    const triggerToTagsPage = () => {
-        if (editGeneratedTags) {
-            setStep(6)
-        } else {
-            handleUploadAll()
+    const convertBlobToBase64 = async (blobUrl) => {
+        const blob = await fetch(blobUrl).then(r => r.blob());
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onerror = reject;
+            reader.onload = () => {
+                resolve(reader.result.split(',')[1]);  // Return only Base64 content
+            };
+            reader.readAsDataURL(blob);
+        });
+    };
+
+
+
+    const getTagsFromXimilar = async (base64Image, type) => {
+        console.log(XIMILAR_API_URL)
+        const response = await axios.post(XIMILAR_API_URL, {
+            relevance: 0.3,
+            records: [{ _base64: base64Image }]
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${XIMILAR_API_TOKEN}`
+            }
+        });
+
+        // Attach the type ("main" or "brandTag") to each tag.
+        return response.data.records[0]._tags.map(tag => {
+            return { name: tag.name, value: tag.prob, tagType: type };
+        });
+    };
+
+    const triggerToTagsPage = async () => {
+        const requests = [];
+
+        for (let listing of listings) {
+            const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
+            requests.push(getTagsFromXimilar(mainImageBase64, 'main'));
+
+            if (listing.items.brandTag && listing.items.brandTag.image) {
+                const brandTagImageBase64 = await convertBlobToBase64(listing.items.brandTag.image);
+                requests.push(getTagsFromXimilar(brandTagImageBase64, 'brandTag'));
+            }
         }
-    }
+
+        const responses = await axios.all(requests);
+
+        setListings(prevListings => {
+            let responseIndex = 0;
+            const updatedListings = prevListings.map(listing => {
+                // Merge tags from 'main' and 'brandTag' (if present).
+                listing.tags = [...responses[responseIndex]];
+                responseIndex++;
+
+                if (listing.items.brandTag && listing.items.brandTag.image) {
+                    listing.tags = [...listing.tags, ...responses[responseIndex]];
+                    responseIndex++;
+                }
+
+                return listing;
+            });
+
+            return updatedListings;
+        });
+
+        // Execute the additional logic after updating the tags:
+        if (editGeneratedTags) {
+            setStep(6);
+        } else {
+            handleUploadAll();
+        }
+    };
+
+
+
+    // const triggerToTagsPage = () => {
+    //     if (editGeneratedTags) {
+    //         setStep(6)
+    //     } else {
+    //         handleUploadAll()
+    //     }
+    // }
 
     const fileToBase64 = (file) => {
         console.log(file)
@@ -229,12 +296,12 @@ function ImageUploader({ onBack, onFecth }) {
         });
     }
 
+
+
     const handleUploadAll = async () => {
         setUploading(true);
-        console.log(listings);
 
         const convertedListings = await Promise.all(listings.map(async listing => {
-            console.log(listing)
             const mainImageBase64 = await fileToBase64(listing.items.main.file);
             const brandImageBase64 = listing.items.brandTag
                 ? await fileToBase64(listing.items.brandTag.file)
@@ -243,39 +310,31 @@ function ImageUploader({ onBack, onFecth }) {
             return {
                 mainImage: mainImageBase64,
                 brandImage: brandImageBase64,
+                type: type,
                 tags: listing.tags,
             };
         }));
 
         try {
-            console.log(convertedListings)
-            const response = await fetch(
-                `api/createListing`,
-                {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ listings: convertedListings }), // Send all listings as an array
-                }
+            const requests = convertedListings.map(listing =>
+                axios.post('/api/add-listing', { listing })
             );
 
-            const res = await response.json();
-            console.log(res);
-            if (!response.ok) {
-                throw new Error('Failed to upload.');
-            }
+            const responses = await axios.all(requests);
+            const results = responses.map(response => response.data);
 
-            onFecth()
+            console.log(results);
 
+            onFecth();
             alert('uploaded');
-            setUploading(false);
-            onBack();
         } catch (error) {
             console.error(error);
+        } finally {
             setUploading(false);
+            onBack();
         }
     };
+
 
 
     const handleDeleteTag = (listingIndex, tagIndex) => {
@@ -323,6 +382,23 @@ function ImageUploader({ onBack, onFecth }) {
             </div>
             {!uploading ? (
                 <div className="">
+                    {step == 0 ?
+                        <div className="mt-8">
+                            <div className=" w-64">
+                                <label>Type</label>
+                                <select value={type} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
+                                    <option value="" disabled>Select type</option>
+                                    <option value="Clothing">Clothing</option>
+                                    <option value="Footwear">Footwear</option>
+                                    <option value="Hats">Hats</option>
+                                </select>
+                            </div>
+                            <div className="mt-3">
+                                <ButtonComponent rounded className="!w-32 mt-6" onClick={onNextToImageUploader} >Next</ButtonComponent>
+                            </div>
+                        </div>
+                        : ''
+                    }
                     {[1, 2, 3, 4].includes(step) ?
                         <div className="w-72 mx-auto flex-shrink-0">
                             {!image.url && [1, 2, 3].includes(step) ? (

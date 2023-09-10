@@ -19,20 +19,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             if (searchText) {
                 filters.push({ value: { contains: searchText } });
             }
-            if (apparel) {
-                filters.push({ value: { contains: apparel } });
-            }
+
             if (size) {
                 filters.push({ value: { contains: size } });
             }
 
-            const whereClause = filters.length > 0 ? {
+            let whereClause = filters.length > 0 ? {
                 tags: {
                     some: {
                         OR: filters
                     }
                 }
             } : {};
+
+            if (apparel) {
+                whereClause.type = apparel;
+            }
 
             // Fetch limited number of listings with an offset and with filtering
             const listingsWithTags = await prisma.listing.findMany({
