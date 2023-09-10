@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 filters.push({ value: { contains: size } });
             }
 
-            let whereClause = filters.length > 0 ? {
+            let whereClause: any = filters.length > 0 ? {
                 tags: {
                     some: {
                         OR: filters
