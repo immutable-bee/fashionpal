@@ -31,7 +31,7 @@ function ImageUploader({ onBack, onFecth }) {
     const [uploading, setUploading] = useState(false);
     const [step, setStep] = useState(0);
 
-    const [type, setType] = useState('Footware');
+    const [type, setType] = useState('');
 
     const handleImageChange = (e) => {
 
@@ -216,7 +216,6 @@ function ImageUploader({ onBack, onFecth }) {
             reader.readAsDataURL(blob);
         });
     };
-
 
 
     const getTagsFromXimilar = async (base64Image, imageType) => {
