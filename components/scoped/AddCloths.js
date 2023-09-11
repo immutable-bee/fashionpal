@@ -28,7 +28,7 @@ function ImageUploader({ onBack, onFecth }) {
     const [uploading, setUploading] = useState(false);
     const [step, setStep] = useState(0);
 
-    const [type, setType] = useState('');
+    const [type, setType] = useState('Footware');
 
     const handleImageChange = (e) => {
 
@@ -216,44 +216,87 @@ function ImageUploader({ onBack, onFecth }) {
 
 
 
-    const getTagsFromXimilar = async (base64Image, type) => {
-        const response = await axios.post('https://api.ximilar.com/tagging/fashion/v2/detect_tags_all', {
-            relevance: 0.3,
-            records: [{ _base64: base64Image }]
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${XIMILAR_API_TOKEN}`
+    const getTagsFromXimilar = async (base64Image, imageType) => {
+        if (imageType === "main") {
+
+            // Define the Top Category and Category based on the type
+            let topCategory = type; // Assuming the type matches the Top Category exactly
+            let category; // Assuming a default category here, you can modify as needed
+
+            switch (type) {
+                case 'Footware':
+                    category = 'Footware/Boots'; // Modify as per your requirement
+                    break;
+                case 'Clothing':
+                    category = 'Clothing/Upper'; // Modify as per your requirement
+                    break;
+                case 'Hats':
+                    category = 'Hats/Caps'; // Modify as per your requirement
+                    break;
+                default:
+                    break;
             }
-        });
 
-        function getAllTags(data) {
-            const tagsArray = [];
-
-
-            data.forEach(item => {
-                const tags = item._tags;
-                for (const category in tags) {
-                    tags[category].forEach(tag => {
-                        tagsArray.push({
-                            name: tag.name,
-                            prob: tag.prob
-                        });
-                    });
+            const response = await axios.post('https://api.ximilar.com/tagging/fashion/v2/detect_tags', {
+                relevance: 0.3,
+                records: [{
+                    _base64: base64Image,
+                    'Top Category': topCategory,
+                    Category: category
+                }],
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${XIMILAR_API_TOKEN}`
                 }
             });
 
-            return tagsArray;
+            function getAllTags(data) {
+                const tagsArray = [];
+
+                data.forEach(item => {
+                    const tags = item._tags;
+                    for (const category in tags) {
+                        tags[category].forEach(tag => {
+                            tagsArray.push({
+                                name: tag.name,
+                                prob: tag.prob
+                            });
+                        });
+                    }
+                });
+
+                return tagsArray;
+            }
+
+            const allTags = getAllTags(response.data.records[0]._objects);
+
+            return allTags.map(tag => {
+                return { name: tag.name, value: tag.prob, tagType: imageType };
+            });
+        } else if (imageType === "brandTag") {
+            // Using Ximilar's OCR endpoint
+            const response = await axios.post('https://api.ximilar.com/ocr/v2/read', {
+                lang: "en", // Change this as per your requirement
+                records: [{
+                    _base64: base64Image
+                }],
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${XIMILAR_API_TOKEN}`
+                }
+            });
+
+            // Parse the OCR response to get the text
+            const ocrData = response.data.records[0]._ocr;
+
+
+
+
+            // Return the OCR data as tags (or process further as needed)
+            return [{ name: 'brand', value: ocrData.full_text }]
         }
-
-
-
-        // Attach the type ("main" or "brandTag") to each tag.
-        const allTags = getAllTags(response.data.records[0]._objects);
-
-        return allTags.map(tag => {
-            return { name: tag.name, value: tag.prob, tagType: type };
-        });
     };
 
     const triggerToTagsPage = async () => {
