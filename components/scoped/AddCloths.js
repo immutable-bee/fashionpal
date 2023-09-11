@@ -12,6 +12,9 @@ import ListingItem from "@/components/utility/ListingItem";
 // 
 const XIMILAR_API_TOKEN = process.env.NEXT_PUBLIC_XIMILAR_API_TOKEN;
 console.log(process.env)
+const dJSON = require('dirty-json');
+
+
 function ImageUploader({ onBack, onFecth }) {
     const [image, setImage] = useState({ url: null, file: null });
     const [uploadedImages, setUploadedImages] = useState({
@@ -270,16 +273,19 @@ function ImageUploader({ onBack, onFecth }) {
             }
 
             const allTags = getAllTags(response.data.records[0]._objects);
-
-            return allTags.map(tag => {
+            const allTagsFilter = allTags.map(tag => {
                 return { name: tag.name, value: tag.prob, tagType: imageType };
             });
-        } else if (imageType === "brandTag") {
-            // Using Ximilar's OCR endpoint
-            const response = await axios.post('https://api.ximilar.com/ocr/v2/read', {
-                lang: "en", // Change this as per your requirement
+            console.log(allTagsFilter)
+            return allTagsFilter
+        }
+        else if (imageType === "brandTag") {
+            // Using Ximilar's OCR + GPT endpoint
+            const response = await axios.post('https://api.ximilar.com/ocr/v2/read_gpt', {
+                lang: "en",
                 records: [{
-                    _base64: base64Image
+                    _base64: base64Image,
+                    prompt: "Please extract specific details from the provided text and create an array. Each entry in the array should consist of a name and its corresponding value. for example if image found brand or Made then should return this: {name: 'Made in', value: 'country here....'} {name: 'Brand', value: 'brand here.....'} ..."
                 }],
             }, {
                 headers: {
@@ -287,16 +293,36 @@ function ImageUploader({ onBack, onFecth }) {
                     'Authorization': `Token ${XIMILAR_API_TOKEN}`
                 }
             });
-
-            // Parse the OCR response to get the text
-            const ocrData = response.data.records[0]._ocr;
-
-
-
-
-            // Return the OCR data as tags (or process further as needed)
-            return [{ name: 'brand', value: ocrData.full_text }]
+            const tags = dJSON.parse(response.data.records[0]._gpt.result)
+            console.log(tags)
+            // Return GPT's result directly
+            return tags;
         }
+
+
+        // else if (imageType === "brandTag") {
+        //     // Using Ximilar's OCR endpoint
+        //     const response = await axios.post('https://api.ximilar.com/ocr/v2/read', {
+        //         lang: "en", // Change this as per your requirement
+        //         records: [{
+        //             _base64: base64Image
+        //         }],
+        //     }, {
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //             'Authorization': `Token ${XIMILAR_API_TOKEN}`
+        //         }
+        //     });
+
+        //     // Parse the OCR response to get the text
+        //     const ocrData = response.data.records[0]._ocr;
+
+
+
+
+        //     // Return the OCR data as tags (or process further as needed)
+        //     return [{ name: 'brand', value: ocrData.full_text }]
+        // }
     };
 
     const triggerToTagsPage = async () => {
@@ -313,16 +339,18 @@ function ImageUploader({ onBack, onFecth }) {
         }
 
         const responses = await axios.all(requests);
-
+        console.log(responses)
         setListings(prevListings => {
             let responseIndex = 0;
             const updatedListings = prevListings.map(listing => {
                 // Merge tags from 'main' and 'brandTag' (if present).
                 listing.tags = [...responses[responseIndex]];
+                console.log(listing.tags)
                 responseIndex++;
 
                 if (listing.items.brandTag && listing.items.brandTag.image) {
                     listing.tags = [...listing.tags, ...responses[responseIndex]];
+                    console.log(listing.tags)
                     responseIndex++;
                 }
 
