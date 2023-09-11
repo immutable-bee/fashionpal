@@ -10,7 +10,6 @@ import Compressor from 'compressorjs'
 import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
 // 
-const XIMILAR_API_URL = process.env.NEXT_PUBLIC_XIMILAR_API_URL;
 const XIMILAR_API_TOKEN = process.env.NEXT_PUBLIC_XIMILAR_API_TOKEN;
 console.log(process.env)
 function ImageUploader({ onBack, onFecth }) {
@@ -218,8 +217,7 @@ function ImageUploader({ onBack, onFecth }) {
 
 
     const getTagsFromXimilar = async (base64Image, type) => {
-        console.log(XIMILAR_API_URL)
-        const response = await axios.post(XIMILAR_API_URL, {
+        const response = await axios.post('https://api.ximilar.com/tagging/fashion/v2/detect_tags_all', {
             relevance: 0.3,
             records: [{ _base64: base64Image }]
         }, {
@@ -229,8 +227,30 @@ function ImageUploader({ onBack, onFecth }) {
             }
         });
 
+        function getAllTags(data) {
+            const tagsArray = [];
+
+            data.forEach(item => {
+                const tags = item._tags;
+                for (const category in tags) {
+                    tags[category].forEach(tag => {
+                        tagsArray.push({
+                            name: tag.name,
+                            prob: tag.prob
+                        });
+                    });
+                }
+            });
+
+            return tagsArray;
+        }
+
+
+
         // Attach the type ("main" or "brandTag") to each tag.
-        return response.data.records[0]._tags.map(tag => {
+        const allTags = getAllTags(response.data.records[0]._objects);
+
+        return allTags.map(tag => {
             return { name: tag.name, value: tag.prob, tagType: type };
         });
     };
