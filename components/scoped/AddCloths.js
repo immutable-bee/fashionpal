@@ -230,6 +230,7 @@ function ImageUploader({ onBack, onFecth }) {
         function getAllTags(data) {
             const tagsArray = [];
 
+
             data.forEach(item => {
                 const tags = item._tags;
                 for (const category in tags) {
