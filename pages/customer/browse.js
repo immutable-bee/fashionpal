@@ -128,6 +128,7 @@ const Slidercomponent = ({ storesNearYou }) => {
             //   setLoadingListings(false);
         };
         initialFetch();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
