@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
+import Link from "next/link";
 function ProductDetails({ open, onClose, data }) {
     console.log(data)
     const [showAll, setShowAll] = useState(false);
@@ -90,6 +91,11 @@ function ProductDetails({ open, onClose, data }) {
                             </div>
                         </div>
 
+                        <div className="flex justify-center !mt-3">
+                            <Link href="/store/id">
+                                <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
+                            </Link>
+                        </div>
 
 
                     </ModalComponent> : ""

@@ -65,3 +65,47 @@ body {
 .bg-white {
   background-color: #FFFFFF !important;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&family=Raleway:wght@100;200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Poppins:wght@200;300;400;500;600;700;800&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,900&display=swap");
+
+.swiper.swiper-initialized.swiper-horizontal {
+  width: calc(100% + 33px);
+}
+
+.bookslide .bookbox {
+  background-color: #d0efff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 129px;
+  border-radius: 11px;
+  margin-bottom: 14px;
+}
+
+.bookslide .about_book p {
+  font-family: "DM Sans";
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 17px;
+  color: #000;
+  margin-bottom: 9px;
+  white-space: nowrap;
+}
+
+.bookslide .about_book label {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.bookslide {
+  border: 1px solid #e7e7e7;
+  padding: 12px 13px;
+
+  border-radius: 14px;
+  margin-bottom: 39px;
+}
