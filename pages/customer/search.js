@@ -74,6 +74,12 @@ export default function Home() {
     setUploadedImages(uploadedImages.filter((_, i) => i !== index));
   };
 
+  const onChangeType = (e) => {
+    setType(e.target.value)
+
+
+  }
+
   const triggerDetailsModal = (index) => {
     setDetailsModal(true)
     setActiveIndex(index)
@@ -219,6 +225,10 @@ export default function Home() {
       return "Searching";
     }
   };
+
+  const onChangeSize = (e) => {
+    setSize(e.target.value)
+  }
 
   const arrayToMap = searchResults.length > 0 ? searchResults : listings;
 

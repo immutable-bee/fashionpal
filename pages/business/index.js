@@ -120,10 +120,7 @@ export default function Home() {
   }, []);
 
 
-  const arrayToMap = searchResults.length > 0 ? searchResults : listings;
 
-  const resultCount =
-    searchResults.length > 0 ? searchResults.length : listings.length;
 
 
   const handleDeleteTag = (tagIndex) => {

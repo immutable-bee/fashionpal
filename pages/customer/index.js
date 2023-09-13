@@ -16,12 +16,10 @@ import "swiper/css";
 export default function Home() {
 
   // add
-  const [image, setImage] = useState(null);
-  const [selectedTag, setSelectedTag] = useState(null);
-  const [inputVisible, setInputVisible] = useState(true);
+
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeTagIndex, setActiveIndex] = useState(0);
-  const [uploadedImages, setUploadedImages] = useState([]);
+
   const [size, setSize] = useState('');
   const [type, setType] = useState('');
   const [sizes, setSizes] = useState([
@@ -48,19 +46,8 @@ export default function Home() {
     { value: 15, type: 'Footwear' },
   ])
 
-  const [tagEditModal, setTagEditModal] = useState(false);
-  const [active, setActive] = useState("clothingorfootwear");
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    const blobURL = URL.createObjectURL(file);
-    setImage(blobURL);
-    setSelectedTag(null);
-    setInputVisible(false);
-  };
 
-  const handleTagClick = (tag) => {
-    setSelectedTag(tag);
-  };
+
 
   const triggerDetailsModal = (index) => {
     setDetailsModal(true)
@@ -71,22 +58,150 @@ export default function Home() {
 
 
 
-  // add end
+  // clothes
   const [loadingListings, setLoadingListings] = useState(false);
   const [listings, setListings] = useState([]);
+  const [notMatchesPage, setNotMatchesPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    previous_page: 1,
+    current_page: 1,
+    next_page: 0,
+    items: [1],
+    total_pages: 2,
+    has_prev_page: true,
+    limit_per_page: 15,
+    has_next_page: false,
+  });
 
-  const [searchTerm, setSearchTerm] = useState("");
+  const onPaginationChange = (e) => {
+    console.log(e)
+    setNotMatchesPage(e)
+    fetchClothesListings(e)
+  }
+
+  const fetchClothesListings = async (e) => {
+    console.log('fetch')
+    setLoadingListings(true);
+
+    try {
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=1&apparel=Clothing`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setListings(data.results);
+        setPagination(data.pagination);
+      } else {
+        const errorMessage = await res.text();
+        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching listings:', error);
+    } finally {
+      setLoadingListings(false);
+    }
+  };
+  // end
+  // Footwear
+  const [hatsloadingListings, setHatsLoadingListings] = useState(false);
+  const [hatsListings, setHatsListings] = useState([]);
+  const [notHatsMatchesPage, setHatsNotMatchesPage] = useState(1);
+  const [hatspagination, setHatsPagination] = useState({
+    total: 0,
+    previous_page: 1,
+    current_page: 1,
+    next_page: 0,
+    items: [1],
+    total_pages: 2,
+    has_prev_page: true,
+    limit_per_page: 15,
+    has_next_page: false,
+  });
+
+  const onHatsPaginationChange = (e) => {
+    console.log(e)
+    setHatsNotMatchesPage(e)
+    fetchHatsListings(e)
+  }
+
+  const fetchHatsListings = async (e) => {
+    console.log('fetch')
+    setHatsLoadingListings(true);
+
+    try {
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=1&apparel=Hats`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setHatsListings(data.results);
+        setHatsPagination(data.pagination);
+      } else {
+        const errorMessage = await res.text();
+        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching listings:', error);
+    } finally {
+      setHatsLoadingListings(false);
+    }
+  };
+  // end
+  // Footwear
+  const [footwearloadingListings, setFootwearLoadingListings] = useState(false);
+  const [footwearListings, setFootwearListings] = useState([]);
+  const [notFootwearMatchesPage, setFootwearNotMatchesPage] = useState(1);
+  const [footwearpagination, setFootwearPagination] = useState({
+    total: 0,
+    previous_page: 1,
+    current_page: 1,
+    next_page: 0,
+    items: [1],
+    total_pages: 2,
+    has_prev_page: true,
+    limit_per_page: 15,
+    has_next_page: false,
+  });
+
+  const onFootwearPaginationChange = (e) => {
+    console.log(e)
+    setFootwearNotMatchesPage(e)
+    fetchFootwearListings(e)
+  }
+
+  const fetchFootwearListings = async (e) => {
+    console.log('fetch')
+    setFootwearLoadingListings(true);
+
+    try {
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=1&apparel=Footwear`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setFootwearListings(data.results);
+        setFootwearPagination(data.pagination);
+      } else {
+        const errorMessage = await res.text();
+        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while fetching listings:', error);
+    } finally {
+      setFootwearLoadingListings(false);
+    }
+  };
+  // end
+
+
   const [filter, setFilter] = useState("");
-  const [mode, setMode] = useState("view");
+
 
   const [loadingSearchResults, setLoadingSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
   // pagination
 
-  const [inventoryMatchesPage, setInventoryMatchesPage] = useState(1);
 
-  const openRequestsItemsPerPage = 7;
+
 
   const fetchListings = async (e) => {
     console.log('fetch')
@@ -111,10 +226,14 @@ export default function Home() {
   };
 
 
+
+
   useEffect(() => {
     const initialFetch = async () => {
       // setLoadingListings(true);
-      await fetchListings(1);
+      await fetchClothesListings(1);
+      await fetchHatsListings(1);
+      await fetchFootwearListings(1);
       //   setLoadingListings(false);
     };
     initialFetch();
@@ -132,11 +251,25 @@ export default function Home() {
   useEffect(() => {
     if (type !== "") { // Only fetch if type is changed to a non-empty value
       fetchListings(1);
+    } else if (type == "") { // Only fetch if type is changed to a non-empty value
+
+      fetchClothesListings(1);
+
+      fetchHatsListings(1);
+
+      fetchFootwearListings(1);
     }
   }, [type]); // Dependency array with type, so the effect runs whenever type changes.
   useEffect(() => {
-    if (size !== "") { // Only fetch if type is changed to a non-empty value
+    if (type !== "") { // Only fetch if type is changed to a non-empty value
       fetchListings(1);
+    } else if (type == "") { // Only fetch if type is changed to a non-empty value
+
+      fetchClothesListings(1);
+
+      fetchHatsListings(1);
+
+      fetchFootwearListings(1);
     }
   }, [size]); // Dependency array with type, so the effect runs whenever type changes.
 
@@ -155,60 +288,7 @@ export default function Home() {
   const resultCount =
     searchResults.length > 0 ? searchResults.length : listings.length;
 
-  const testData = [
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      brandTagPhoto: Shirt2,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      brandTagPhoto: Shirt2,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
-    {
-      id: 1,
-      mainPhoto: Shirt,
-      brandTagPhoto: Shirt2,
-      tags: [
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-        { name: 'size', value: 'medium' },
-        { name: 'sleeve length', value: 'short' },
-        { name: 'color', value: 'pink' },
-      ]
-    },
 
-  ];
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -301,149 +381,191 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="">
-                  <h3 className="text-xl text-center">Newly listed Clothes</h3>
-                  <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView='auto'
-                      spaceBetween={14}
-                      navigation
+                <div>
+                  {/* Clothing */}
+                  <div className="">
+                    <h3 className="text-xl text-center">Newly listed Clothes</h3>
+                    <div className="sm:flex flex-wrap justify-center mt-2">
+                      <Swiper
+                        slidesPerView='auto'
+                        spaceBetween={14}
+                        navigation
+                      >
+
+
+                        {listings.map((row, index) => {
+                          return (
+                            <SwiperSlide key={index} className="!w-56">
+                              <div
+                                className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
+                                key={row.id}
+                                onClick={() => triggerDetailsModal(index)}
+                              >
+                                <div className="flex">
+                                  <div className="w-full my-auto flex-shrink-0 mr-3 rounded-lg">
+                                    <Image
+                                      src={row.mainImage?.url}
+                                      width={100}
+                                      height={100}
+                                      className="rounded !w-full !h-64 object-cover"
+                                      alt=""
+                                    />
+                                  </div>
+
+                                </div>
+                              </div>
+                            </SwiperSlide>
+                          );
+                        })}
+                      </Swiper>
+                    </div>
+
+
+                    <div
+                      id="inventory-matches-pagination"
+                      className="flex justify-center"
                     >
 
+                      {pagination && pagination.total_pages > 1 && !loadingListings && (
+                        <PaginationComponent
+                          total={pagination.total}
+                          current={notMatchesPage}
+                          pageSize={pagination.limit_per_page}
+                          onChange={(e) => onPaginationChange(e)}
+                        />
+                      )}
+                    </div>
 
-                      {listings.map((row, index) => {
-                        return (
-                          <SwiperSlide key={index} className="!w-56">
-                            <div
-                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
-                              key={row.id}
-                              onClick={() => triggerDetailsModal(index)}
+
+
+                  </div>
+                  {/* Clothing end */}
+                  {
+                    type === '' ? (
+                      <>
+                        {/* Footwear */}
+                        <div className="mt-6">
+                          <h3 className="text-xl text-center">Newly listed Footwear</h3>
+                          <div className="sm:flex flex-wrap justify-center mt-2">
+
+                            <Swiper
+                              slidesPerView='auto'
+                              spaceBetween={14}
+                              navigation
                             >
-                              <div className="flex">
-                                <div className="w-full my-auto flex-shrink-0 mr-3 rounded-lg">
-                                  <Image
-                                    src={row.mainImage?.url}
-                                    width={100}
-                                    height={100}
-                                    className="rounded !w-full !h-64 object-cover"
-                                    alt=""
-                                  />
-                                </div>
 
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                  </div>
 
-                  <div
-                    id="inventory-matches-pagination"
-                    className="flex justify-center"
-                  >
-                    {arrayToMap?.length > 0 && !loadingListings && (
-                      <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
-                      />
-                    )}
-                  </div>
-                  <h3 className="text-xl text-center mt-8">Newly listed In Footwear</h3>
-                  <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView='auto'
-                      spaceBetween={14}
-                      navigation
-                    >
-                      {testData.map((row, index) => {
-                        return (
-                          <SwiperSlide key={index} className="!w-32">
-                            <div
-                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
-                              key={row.id}
-                              onClick={() => triggerDetailsModal(index)}
+                              {footwearListings.map((row, index) => {
+                                return (
+                                  <SwiperSlide key={index} className="!w-56">
+                                    <div
+                                      className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
+                                      key={row.id}
+                                      onClick={() => triggerDetailsModal(index)}
+                                    >
+                                      <div className="flex">
+                                        <div className="w-full my-auto flex-shrink-0 mr-3 rounded-lg">
+                                          <Image
+                                            src={row.mainImage?.url}
+                                            width={100}
+                                            height={100}
+                                            className="rounded !w-full !h-64 object-cover"
+                                            alt=""
+                                          />
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                  </SwiperSlide>
+                                );
+                              })}
+                            </Swiper>
+                          </div>
+
+
+                          <div
+                            id="inventory-matches-pagination"
+                            className="flex justify-center"
+                          >
+
+                            {footwearpagination && footwearpagination.total_pages > 1 && !footwearloadingListings && (
+                              <PaginationComponent
+                                total={footwearpagination.total}
+                                current={notFootwearMatchesPage}
+                                pageSize={footwearpagination.limit_per_page}
+                                onChange={(e) => onFootwearPaginationChange(e)}
+                              />
+                            )}
+                          </div>
+
+
+
+                        </div>
+                        {/* Footwear end */}
+
+                        {/* Hats */}
+                        <div className="mt-6">
+                          <h3 className="text-xl text-center">Newly listed Hats</h3>
+                          <div className="sm:flex flex-wrap justify-center mt-2">
+
+                            <Swiper
+                              slidesPerView='auto'
+                              spaceBetween={14}
+                              navigation
                             >
-                              <div className="flex">
-                                <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                  <Image
-                                    src={row.mainPhoto}
-                                    className="rounded"
-                                    alt=""
-                                  />
-                                </div>
 
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                  </div>
 
-                  <div
-                    id="inventory-matches-pagination"
-                    className="flex justify-center"
-                  >
-                    {arrayToMap?.length > 0 && !loadingListings && (
-                      <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
-                      />
-                    )}
-                  </div>
-                  <h3 className="text-xl text-center mt-8">Newly listed In Hats</h3>
-                  <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView='auto'
-                      spaceBetween={14}
-                      navigation
-                    >
-                      {testData.map((row, index) => {
-                        return (
-                          <SwiperSlide key={index} className="!w-32">
-                            <div
-                              className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full sm:w-32 border-2 shadow-lg border-[#E44A1F]"
-                              key={row.id}
-                              onClick={() => triggerDetailsModal(index)}
-                            >
-                              <div className="flex">
-                                <div className="w-24 my-auto flex-shrink-0 mr-3 rounded-lg">
-                                  <Image
-                                    src={row.mainPhoto}
-                                    className="rounded"
-                                    alt=""
-                                  />
-                                </div>
+                              {hatsListings.map((row, index) => {
+                                return (
+                                  <SwiperSlide key={index} className="!w-56">
+                                    <div
+                                      className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
+                                      key={row.id}
+                                      onClick={() => triggerDetailsModal(index)}
+                                    >
+                                      <div className="flex">
+                                        <div className="w-full my-auto flex-shrink-0 mr-3 rounded-lg">
+                                          <Image
+                                            src={row.mainImage?.url}
+                                            width={100}
+                                            height={100}
+                                            className="rounded !w-full !h-64 object-cover"
+                                            alt=""
+                                          />
+                                        </div>
 
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                        );
-                      })}
-                    </Swiper>
-                  </div>
+                                      </div>
+                                    </div>
+                                  </SwiperSlide>
+                                );
+                              })}
+                            </Swiper>
+                          </div>
 
-                  <div
-                    id="inventory-matches-pagination"
-                    className="flex justify-center"
-                  >
-                    {arrayToMap?.length > 0 && !loadingListings && (
-                      <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
-                      />
-                    )}
-                  </div>
+
+                          <div
+                            id="inventory-matches-pagination"
+                            className="flex justify-center"
+                          >
+
+                            {hatspagination && hatspagination.total_pages > 1 && !hatsloadingListings && (
+                              <PaginationComponent
+                                total={hatspagination.total}
+                                current={notHatsMatchesPage}
+                                pageSize={hatspagination.limit_per_page}
+                                onChange={(e) => onHatsPaginationChange(e)}
+                              />
+                            )}
+                          </div>
+
+
+
+                        </div>
+                        {/* Footwear end */}
+                      </>
+                    ) : ''
+                  }
+
                 </div>
               )}
             </div>
