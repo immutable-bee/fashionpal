@@ -63,6 +63,15 @@ const HeaderComponent = () => {
                   Sales
                 </span>
               </Link>
+              <Link className="no-underline	" href="/customer/browse">
+                <span
+                  style={{ color: linkColor("/customer/browse") }}
+                  className="!mx-2 font-medium sm:!mx-5 text-xs sm:text-2xl"
+                >
+                  {" "}
+                  Browse
+                </span>
+              </Link>
               <Link className="no-underline	" href="/business">
                 <span
                   style={{ color: linkColor("/business") }}
