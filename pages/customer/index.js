@@ -1,51 +1,26 @@
 import { useState, useEffect } from "react";
-import Inputcomponent from "@/components/utility/Input";
+import CustomerFilters from "@/components/customer/CustomerFilters";
 import HeaderComponent from "@/components/utility/Header";
-import TooltipComponent from "@/components/utility/Tooltip";
 import Loading from "@/components/utility/loading";
 import ProductDetails from "@/components/utility/ProductDetails";
 import PaginationComponent from "@/components/utility/Pagination";
-import Shirt from '../../assets/shirt.png'
-import Shirt2 from '../../assets/shirt-2.jpg'
+
 import Image from "next/image";
-import ButtonComponent from "@/components/utility/Button";
-import AddCloths from "@/components/scoped/AddCloths";
-import ModalComponent from "@/components/utility/Modal";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { NotificationManager } from 'react-notifications';
+
 export default function Home() {
 
   // add
 
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeTagIndex, setActiveIndex] = useState(0);
-
+  const [filter, setFilter] = useState("");
+  const [zipCode, setZipCode] = useState('');
+  const [radius, setRadius] = useState('');
   const [size, setSize] = useState('');
   const [type, setType] = useState('');
-  const [sizes, setSizes] = useState([
-    { value: 'XS', type: '' },
-    { value: 'S', type: '' },
-    { value: 'M', type: '' },
-    { value: 'L', type: '' },
-    { value: 'XL', type: '' },
-    { value: 'XXL', type: '' },
-    { value: 1, type: 'Footwear' },
-    { value: 2, type: 'Footwear' },
-    { value: 3, type: 'Footwear' },
-    { value: 4, type: 'Footwear' },
-    { value: 5, type: 'Footwear' },
-    { value: 6, type: 'Footwear' },
-    { value: 7, type: 'Footwear' },
-    { value: 8, type: 'Footwear' },
-    { value: 9, type: 'Footwear' },
-    { value: 10, type: 'Footwear' },
-    { value: 11, type: 'Footwear' },
-    { value: 12, type: 'Footwear' },
-    { value: 13, type: 'Footwear' },
-    { value: 14, type: 'Footwear' },
-    { value: 15, type: 'Footwear' },
-  ])
-
 
 
 
@@ -192,7 +167,7 @@ export default function Home() {
   // end
 
 
-  const [filter, setFilter] = useState("");
+
 
 
   const [loadingSearchResults, setLoadingSearchResults] = useState(false);
@@ -273,15 +248,6 @@ export default function Home() {
     }
   }, [size]); // Dependency array with type, so the effect runs whenever type changes.
 
-  const onChangeType = (e) => {
-    setType(e.target.value)
-
-
-  }
-  const onChangeSize = (e) => {
-    setSize(e.target.value)
-
-  }
 
   const arrayToMap = searchResults.length > 0 ? searchResults : listings;
 
@@ -301,66 +267,16 @@ export default function Home() {
             data={listings[activeTagIndex]}
           /> : ''}
 
-        <div class=" flex justify-between px-5 max-w-7xl mx-auto">
-          <Inputcomponent
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          />
 
-          <div className="flex flex-shrink-0 items-center justify-end">
+        <CustomerFilters
+          fetchListings={() => fetchListings(1)}
+          changeFilter={(e) => setFilter(e)}
+          changeType={(e) => setType(e)}
+          changeSize={(e) => setSize(e)}
+          changeZipCode={(e) => setZipCode(e)}
+          changeRadius={(e) => setRadius(e)}
+        />
 
-            <div className="ml-2 sm:ml-3">
-              <button
-                type="button"
-                class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
-                onClick={() => fetchListings(1)}
-              >
-                <div>
-                  <svg
-                    class="text-white w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                </div>
-              </button>
-            </div>
-          </div>
-
-        </div>
-        <ul className=" mt-2 flex justify-center items-center ml-2">
-          <div className="mx-1">
-            <label>Apparel</label>
-            <select className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => onChangeType(e)}>
-              <option value="">All</option>
-              <option value="Clothing">Clothing</option>
-              <option value="Footwear">Footwear</option>
-              <option value="Hats">Hats</option>
-            </select>
-          </div>
-
-          <div className="mx-1">
-            <label>Size</label>
-            <select
-              className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600"
-              onChange={(e) => onChangeSize(e)}
-            >
-              <option value="">All</option>
-              {sizes.filter(x => type === 'Footwear' ? x.type === 'Footwear' : x.type !== 'Footwear').map(x => (
-                <option key={x.value} value={x.value}>{x.value}</option>
-              ))}
-            </select>
-
-          </div>
-        </ul>
 
         <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
           <div className="">
@@ -381,7 +297,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div>
+                <div className="w-screen overflow-hidden">
                   {/* Clothing */}
                   <div className="">
                     <h3 className="text-xl text-center">Newly listed Clothes</h3>
@@ -565,7 +481,6 @@ export default function Home() {
                       </>
                     ) : ''
                   }
-
                 </div>
               )}
             </div>

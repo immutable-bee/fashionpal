@@ -1,7 +1,8 @@
 import '../styles/globals.css'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-
+import 'react-notifications/lib/notifications.css';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 function App({ Component, pageProps }) {
   const router = useRouter();
 
@@ -14,7 +15,7 @@ function App({ Component, pageProps }) {
     }
   }, [router]);
 
-  return <Component {...pageProps} />
+  return <> <Component {...pageProps} /> <NotificationContainer /></>
 }
 
 export default App;

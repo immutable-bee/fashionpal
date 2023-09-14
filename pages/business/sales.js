@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ButtonComponent from "@/components/utility/Button";
-import HeaderComponent from "@/components/utility/Header";
+import HeaderComponent from "@/components/utility/BusinessHeader";
 const ProfileComponent = ({ }) => {
     const { user, fetchUserData } = {}
 
@@ -38,10 +38,8 @@ const ProfileComponent = ({ }) => {
             <HeaderComponent />
             <div className="h-full flex flex-col items-center justify-center">
                 <div className="max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded">
-                    <h1 className="text-lg sm:text-2xl font-medium text-center ">
-                        Profile Page
-                    </h1>
-                    <form onSubmit={handleSubmit} className="mt-2 sm:mt-6">
+
+                    <form onSubmit={handleSubmit} className="">
                         <div className="py-2">
                             <label className="text-sm text-gray-700">Name of sale</label>
                             <input

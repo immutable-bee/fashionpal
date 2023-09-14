@@ -273,7 +273,7 @@ const Slidercomponent = ({ storesNearYou }) => {
 
 
 
-            <div className="pt-8 px-6">
+            <div className="pt-0 sm:pt-8 px-6">
 
 
                 <Swiper
@@ -338,7 +338,7 @@ const Slidercomponent = ({ storesNearYou }) => {
                         <>
                             {listings.map((row, key) => {
                                 return (
-                                    <SwiperSlide key={key} onClick={() => triggerDetailsModal(key)} className="border border-gray-300 cursor-pointer hover:bg-gray-50 sm:h-96 rounded-xl p-[11px]">
+                                    <SwiperSlide key={key} onClick={() => triggerDetailsModal(key)} className="border sm:!w-72 !w-64 border-gray-300 cursor-pointer hover:bg-gray-50 sm:h-96 rounded-xl p-[11px]">
                                         <div>
                                             <div>
                                                 <div className="">

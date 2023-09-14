@@ -57,9 +57,8 @@ const Inputcomponent = ({
                     <ul className=" flex items-center ml-2">
                       <button
                         onClick={() => handleActiveChange("Title")}
-                        className={`  rounded-full px-6 sm:px-10 font-medium sm:font-semibold py-1 sm:py-2   ${
-                          active == "Title" && "!bg-[#978367] !text-white"
-                        } `}
+                        className={`  rounded-full px-6 sm:px-10 font-medium sm:font-semibold py-1 sm:py-2   ${active == "Title" && "!bg-[#978367] !text-white"
+                          } `}
                         id="pills-all-tab"
                         data-bs-toggle="pill"
                         data-bs-target="#pills-all"
@@ -72,9 +71,8 @@ const Inputcomponent = ({
                       </button>
                       <button
                         onClick={() => handleActiveChange("Author")}
-                        className={`  rounded-full px-6 sm:px-10 font-medium sm:font-semibold py-1 sm:py-2   ${
-                          active == "Author" && "!bg-[#978367] !text-white"
-                        } `}
+                        className={`  rounded-full px-6 sm:px-10 font-medium sm:font-semibold py-1 sm:py-2   ${active == "Author" && "!bg-[#978367] !text-white"
+                          } `}
                         id="pills-profile-tab"
                         data-bs-toggle="pill"
                         data-bs-target="#pills-profile"

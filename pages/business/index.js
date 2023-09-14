@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Inputcomponent from "@/components/utility/Input";
-import HeaderComponent from "@/components/utility/Header";
+import BusinessFilters from "@/components/customer/BusinessFilters";
+import HeaderComponent from "@/components/utility/BusinessHeader";
 import TooltipComponent from "@/components/utility/Tooltip";
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
@@ -15,6 +15,11 @@ import cloneDeep from "lodash.clonedeep";
 export default function Home() {
 
   // add
+
+  const [filter, setFilter] = useState("");
+
+  const [size, setSize] = useState('');
+  const [type, setType] = useState('');
 
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -89,10 +94,11 @@ export default function Home() {
 
 
   const fetchListings = async (e) => {
+    console.log('fetch')
     setLoadingListings(true);
 
     try {
-      const res = await fetch(`/api/fetch-listings?limit=15&page=${e}`);
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -117,7 +123,20 @@ export default function Home() {
       //   setLoadingListings(false);
     };
     initialFetch();
-  }, []);
+  }, [type, size]);
+
+  // useEffect(() => {
+
+  //   fetchListings(1);
+
+  // }, [type]);
+
+
+  // useEffect(() => {
+
+  //   fetchListings(1);
+
+  // }, [size]);
 
 
 
@@ -158,6 +177,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
+      <BusinessFilters
+        fetchListings={() => fetchListings(1)}
+        changeFilter={(e) => setFilter(e)}
+        changeType={(e) => setType(e)}
+        changeSize={(e) => setSize(e)}
+
+      />
+
       {mode === 'view' ?
         <div>
 
