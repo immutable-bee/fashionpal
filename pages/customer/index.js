@@ -178,15 +178,13 @@ export default function Home() {
     }
   };
 
-
   useEffect(() => {
     const initialFetch = async () => {
-      // setLoadingListings(true);
       await fetchListings(1);
-      //   setLoadingListings(false);
     };
     initialFetch();
-  }, [type, size]);
+  }, [type, size, fetchListings]);
+
 
 
   const fetchSearchResults = async () => {
