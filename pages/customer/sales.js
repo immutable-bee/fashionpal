@@ -198,7 +198,7 @@
 //     setDetailsChildModal(true)
 //     setActiveChildIndex(index)
 //   };
-
+import ModalComponent from "@/components/utility/Modal";
 import { useState, useEffect } from "react";
 import HeaderComponent from "@/components/utility/Header";
 import CustomerFilters from "@/components/customer/CustomerFilters";
