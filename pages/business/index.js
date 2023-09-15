@@ -123,7 +123,7 @@ export default function Home() {
       //   setLoadingListings(false);
     };
     initialFetch();
-  }, [type, size]);
+  }, [type, size, fetchListings]);
 
   // useEffect(() => {
 
