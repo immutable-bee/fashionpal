@@ -92,9 +92,8 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState([]);
 
 
-
-  const fetchListings = async (e) => {
-    console.log('fetch')
+  const fetchListings = useCallback(async (e) => {
+    console.log('fetch');
     setLoadingListings(true);
 
     try {
@@ -113,17 +112,15 @@ export default function Home() {
     } finally {
       setLoadingListings(false);
     }
-  };
-
+  }, [filter, type, size]);  // Only re-create if filter, type or size changes
 
   useEffect(() => {
     const initialFetch = async () => {
-      // setLoadingListings(true);
       await fetchListings(1);
-      //   setLoadingListings(false);
     };
     initialFetch();
   }, [type, size, fetchListings]);
+
 
   // useEffect(() => {
 
