@@ -112,12 +112,12 @@ export default function Home() {
 
   // pagination
 
-  const fetchListings = async (e) => {
-    console.log('fetch')
+  const fetchListings = useCallback(async (e) => {
+    console.log('fetch');
     setLoadingListings(true);
 
     try {
-      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&matches=true&searchText=${filter}&apparel=${type}&size=${size}`);
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -132,17 +132,14 @@ export default function Home() {
     } finally {
       setLoadingListings(false);
     }
-  };
-
+  }, [filter, type, size]);  // Only re-create if filter, type or size changes
 
   useEffect(() => {
     const initialFetch = async () => {
-      // setLoadingListings(true);
       await fetchListings(1);
-      //   setLoadingListings(false);
     };
     initialFetch();
-  }, [type, size]);
+  }, [type, size, fetchListings]);
 
 
   const fetchSearchResults = async () => {
