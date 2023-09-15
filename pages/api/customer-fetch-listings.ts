@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const limit = parseInt(req.query.limit as string) || 15;
         const searchText = req.query.searchText as string;
         const apparel = req.query.apparel as string;
+        const matches = req.query.matches as string;
         const size = req.query.size as string;
 
         try {
@@ -34,6 +35,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
             if (apparel) {
                 whereClause.type = apparel;
+            }
+            if (matches) {
+                whereClause.matches = true;
             }
 
             // Fetch limited number of listings with an offset and with filtering

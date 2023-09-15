@@ -24,7 +24,7 @@ function ProductDetails({ open, onClose, data, handleDeleteTag, handleAddTag, ed
                             <div key={tagIndex} className="py-1 w-full items-center flex !mt-1">
                                 <input className="w-full mx-1 rounded-lg px-3 py-1.5 border border-gray-600" type="text" value={tag.name} onInput={(e) => editTagName(tagIndex, e.target.value)} />
                                 <input className="w-full mx-1 rounded-lg px-3 py-1.5 border border-gray-600" type="text" value={tag.value} onInput={(e) => editTagValue(tagIndex, e.target.value)} />
-                                <DeleteModalComponent title='Are you sure you want to delete image?' onConfirmed={() => handleDeleteTag(tagIndex)}>
+                                <DeleteModalComponent title='Are you sure you want to delete tag?' onConfirmed={() => handleDeleteTag(tagIndex)}>
                                     <button className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 px-1 rounded">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

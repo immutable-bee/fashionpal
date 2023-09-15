@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { NotificationManager } from 'react-notifications';
 import Inputcomponent from "@/components/utility/Input";
-import ModalComponent from '@/components/utility/Modal';
+import ShareFashionPal from '@/components/customer/ShareFashionPal';
 export default function CustomerFilters({
 	fetchListings,
 	changeFilter,
@@ -10,7 +9,10 @@ export default function CustomerFilters({
 	changeZipCode,
 	changeRadius
 }) {
-	const [openModal, setOpenModal] = useState(false);
+
+	const [showFilters, setShowFilters] = useState(false);
+
+
 	const [filter, setFilter] = useState("");
 
 	const [zipCode, setZipCode] = useState('');
@@ -42,10 +44,6 @@ export default function CustomerFilters({
 	])
 
 
-	const handleCopy = () => {
-		navigator.clipboard.writeText("https://fashionpal.vercel.app/");
-		NotificationManager.success('Link Copied!');
-	};
 
 	const onChangeFilter = (e) => {
 		const value = e.target.value
@@ -72,32 +70,11 @@ export default function CustomerFilters({
 		setRadius(value)
 		changeRadius(value)
 	}
+
 	return (
 		<div>
-			<ModalComponent open={openModal} width="400px" title="Share FashionPal" onClose={() => setOpenModal(false)}>
 
-				<div className="bg-gray-200 px-4 py-2 text-center text-gray-700 rounded-lg w-full">
-					https://fashionpal.vercel.app/
-				</div>
-				<div className="flex justify-center mt-4">
-					<button
-						onClick={() => handleCopy()}
-						className="bg-primary px-5 py-2 rounded-xl text-white mb-2"
-					>
-						Copy url
-					</button>
-				</div>
-
-			</ModalComponent>
-			<div className="flex justify-center sm:mt-2 mt-3">
-				<button
-					onClick={() => setOpenModal(true)}
-					className="bg-primary px-5 py-2 rounded-xl text-white mb-2"
-				>
-					Share FashionPal
-				</button>
-			</div>
-
+			<ShareFashionPal />
 			<div class=" flex justify-between px-5 max-w-7xl mx-auto">
 				<Inputcomponent
 					value={filter}
@@ -131,8 +108,8 @@ export default function CustomerFilters({
 					</div>
 				</div>
 			</div>
-			<ul className=" mt-2 grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center sm:items-center sm:ml-2">
-				<div className="mx-2 sm:mt-0 mt-3 ">
+			<ul className=" mt-2 flex flex-wrap sm:justify-center sm:items-center sm:ml-2">
+				<div className="px-2 w-[50%] sm:w-auto sm:mt-0 mt-3 ">
 					<label className="block">Apparel</label>
 					<select
 						className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
@@ -145,7 +122,7 @@ export default function CustomerFilters({
 					</select>
 				</div>
 
-				<div className="mx-2 sm:mt-0 mt-3 ">
+				<div className="px-2 w-[50%] sm:w-auto sm:mt-0 mt-3 ">
 					<label className="block">Size</label>
 					<select
 						className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
@@ -165,8 +142,24 @@ export default function CustomerFilters({
 							))}
 					</select>
 				</div>
+				{/* Button to toggle filters visibility */}
 
-				<div className="mx-2 sm:mt-0 mt-3 ">
+				<div className={`flex sm:hidden justify-center w-full mt-3 ${showFilters ? '!hidden' : ''}`}>
+					<button
+						className="mb-3 flex items-center text-blue-600 border-b border-blue-600"
+						onClick={() => setShowFilters(!showFilters)}
+					>
+						More Filters
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+						</svg>
+
+					</button>
+				</div>
+
+				{/* Conditional rendering of filters based on state */}
+
+				<div className={`px-2 w-[50%] sm:w-auto sm:mt-0 mt-3 sm:block hidden ${showFilters ? '!block' : ''}`}>
 					<label className="block">Zip Code</label>
 					<input
 						className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
@@ -174,7 +167,7 @@ export default function CustomerFilters({
 						onChange={(e) => onChangeZipCode(e)}
 					/>
 				</div>
-				<div className="mx-2 sm:mt-0 mt-3 ">
+				<div className={`px-2 w-[50%] sm:w-auto sm:mt-0 mt-3 sm:block hidden ${showFilters ? '!block' : ''}`}>
 					<label className="block">Mile Radius</label>
 					<select
 						className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
@@ -188,6 +181,7 @@ export default function CustomerFilters({
 					</select>
 
 				</div>
+
 			</ul>
 		</div>
 	);

@@ -2,12 +2,41 @@ import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
 import Link from "next/link";
-function ProductDetails({ open, onClose, data }) {
+function ProductDetails({ open, onClose, data, fetchListings }) {
     console.log(data)
     const [showAll, setShowAll] = useState(false);
     const tagsToDisplay = showAll ? data?.tags : data?.tags.slice(0, 3);
-
+    const [saveLoading, setLoadingSave] = useState(false);
     const [activeImage, setActiveImage] = useState(0);
+
+    const onSave = async (row) => {
+        setLoadingSave(true);
+
+        try {
+            const res = await fetch(`/api/edit-listing`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: data.id
+                })
+            });
+
+            if (res.status === 200) {
+                alert('Listing saved successfully!')
+                fetchListings()
+
+            } else {
+                const errorMessage = await res.text();
+                console.error(`edit failed with status: ${res.status}, message: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('An error occurred while edit listing:', error);
+        } finally {
+            setLoadingSave(false);
+        }
+    };
     return (
 
         <div>
@@ -69,10 +98,11 @@ function ProductDetails({ open, onClose, data }) {
                         {!showAll && data?.tags.length > 3 && (
                             <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
                         )}
-
-                        <div className="flex justify-center !mt-3">
-                            <button className="bg-primary text-white px-5 py-1.5 rounded-lg">Save item</button>
-                        </div>
+                        {!data.matches ? (
+                            <div className="flex justify-center !mt-3">
+                                <button onClick={() => onSave()} className={`bg-primary text-white px-5 py-1.5 rounded-lg ${saveLoading ? "opacity-70 pointer-events-none" : ""}`}>Save item</button>
+                            </div>
+                        ) : ''}
 
                         <div className="flex items-center">
                             <Image

@@ -21,10 +21,10 @@ const HeaderComponent = () => {
       <div>
         <Link href="">
           <Image
-            src="/images/logo.jpg"
+            src="/images/logo-vertical.jpg"
             width={120}
             height={58}
-            className="w-20 sm:w-36"
+            className="w-20 sm:w-48"
             alt="logo"
           />
         </Link>

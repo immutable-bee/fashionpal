@@ -5,6 +5,7 @@ import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import ProductDetails from "@/components/utility/ProductDetails";
 import ListingItem from "@/components/utility/ListingItem";
+import Image from "next/image";
 import "swiper/css";
 export default function Home() {
 
@@ -63,7 +64,6 @@ export default function Home() {
   };
 
   // add end
-  const [saveLoading, setLoadingSave] = useState(false);
   const [loadingListings, setLoadingListings] = useState(false);
   const [listings, setListings] = useState([]);
 
@@ -112,41 +112,12 @@ export default function Home() {
 
   // pagination
 
-
-  const onSave = async (row) => {
-    setLoadingSave(true);
-
-    try {
-      const res = await fetch(`/api/edit-listing`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: row.id
-        })
-      });
-
-      if (res.status === 200) {
-        fetchListings(1)
-
-      } else {
-        const errorMessage = await res.text();
-        console.error(`edit failed with status: ${res.status}, message: ${errorMessage}`);
-      }
-    } catch (error) {
-      console.error('An error occurred while edit listing:', error);
-    } finally {
-      setLoadingSave(false);
-    }
-  };
-
   const fetchListings = async (e) => {
     console.log('fetch')
     setLoadingListings(true);
 
     try {
-      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&matches=true&searchText=${filter}&apparel=${type}&size=${size}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -252,17 +223,37 @@ export default function Home() {
 
                     {listings && listings.map((row, key) => {
                       return (
-                        <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
-                          <div className="flex items-center">
-                            <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
-                              View details
-                            </button>
-                            <button onClick={() => onSave(row)} className="bg-primary text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
-                              Save
-                            </button>
-                            {/* saveLoading */}
+                        <div
+                          className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
+                          key={row.id}
+                          onClick={() => triggerDetailsModal(key)}
+                        >
+
+                          <Image
+                            src={row.mainImage?.url}
+                            width={100}
+                            height={100}
+                            className="rounded !w-full !h-64 object-cover"
+                            alt=""
+                          />
+                          <div className="mt-2">
+                            {row.tags.slice(0, 3).map((tag, tagIndex) => (
+                              <p key={tagIndex} className="text-gray-800 text-base leading-5">
+                                {tag.name}: {tag.value}
+                              </p>
+                            ))}
                           </div>
-                        </ListingItem>
+
+                        </div>
+                        // <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
+                        //   <div className="flex items-center">
+                        //     <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                        //       View details
+                        //     </button>
+
+
+                        //   </div>
+                        // </ListingItem>
 
                       );
                     })}
@@ -294,6 +285,7 @@ export default function Home() {
         open={detailsModal}
         onClose={() => setDetailsModal(false)}
         data={listings[activeTagIndex]}
+        fetchListings={() => fetchListings(1)}
       />
 
     </div>

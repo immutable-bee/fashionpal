@@ -21,49 +21,33 @@ const HeaderComponent = () => {
       <div>
         <Link href="">
           <Image
-            src="/images/logo.jpg"
+            src="/images/logo-vertical.jpg"
             width={120}
             height={58}
-            className="w-20 sm:w-36"
+            className="w-36 sm:w-48"
             alt="logo"
           />
         </Link>
       </div>
-
-
-
-
 
       <div class={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${open ? '!block' : ''} `} id="navbar-default">
         <ul class="font-medium sm:w-auto w-full text-lg flex flex-col p-4 md:p-0 mt-4 border border-gray-100 sm:border-transparent rounded-lg sm:bg-transparent bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
           <li>
             <Link href="/customer" style={{ color: linkColor("/customer") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 " aria-current="page">Home</Link>
           </li>
+
           <li>
-            <Link href="/customer/search" style={{ color: linkColor("/customer/search") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Search</Link>
-          </li>
-          <li>
-            <Link href="/customer/matches" style={{ color: linkColor("/customer/matches") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Matches</Link>
+            <Link href="/customer/saved" style={{ color: linkColor("/customer/saved") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Saved</Link>
           </li>
           <li>
             <Link href="/customer/sales" style={{ color: linkColor("/customer/sales") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Sales</Link>
           </li>
-          <li>
-            <Link href="/customer/browse" style={{ color: linkColor("/customer/browse") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Browse</Link>
-          </li>
+
           <li>
             <Link href="/business" style={{ color: linkColor("/business") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Business</Link>
           </li>
         </ul>
       </div>
-
-
-
-
-
-
-
-
 
       <Link
         href="/customer/profile"

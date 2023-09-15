@@ -517,11 +517,7 @@
 //           </ModalComponent> : ""
 //       }
 
-//       <ProductDetails
-//         open={detailsChildModal}
-//         onClose={() => setDetailsChildModal(false)}
-//         data={testData[activeTagIndex].results[activeTagChildIndex]}
-//       />
+
 
 //     </div>
 //   );
@@ -885,6 +881,7 @@ export default function Home() {
         open={detailsChildModal}
         onClose={() => setDetailsChildModal(false)}
         data={listings[activeTagIndex]}
+        fetchListings={() => fetchListings(1)}
       />
       {/* ?.tags[activeTagChildIndex */}
     </div>
