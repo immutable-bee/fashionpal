@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
+import { NotificationManager } from 'react-notifications';
 import Link from "next/link";
 function ProductDetails({ open, onClose, data, fetchListings }) {
     console.log(data)
@@ -24,7 +25,7 @@ function ProductDetails({ open, onClose, data, fetchListings }) {
             });
 
             if (res.status === 200) {
-                alert('Listing saved successfully!')
+                NotificationManager.success('Listing saved successfully!')
                 fetchListings()
 
             } else {

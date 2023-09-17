@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import HeaderComponent from "@/components/utility/Header";
 import CustomerFilters from "@/components/customer/CustomerFilters";
 import Loading from "@/components/utility/loading";
+import { NotificationManager } from 'react-notifications';
 import PaginationComponent from "@/components/utility/Pagination";
 import ProductDetails from "@/components/utility/ProductDetails";
 import ListingItem from "@/components/utility/ListingItem";
@@ -130,7 +131,7 @@ export default function Home() {
       });
 
       if (res.status === 200) {
-        alert('Listing saved successfully!')
+        NotificationManager.success('Listing saved successfully!')
         fetchListings(1)
 
       } else {

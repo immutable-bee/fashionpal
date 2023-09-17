@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Header from "../utility/Header";
+import HeaderComponent from "@/components/utility/BusinessHeader";
 import ManageSubscriptionModal from "@/components/scoped/ManageSubscriptionModal";
 import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import UnsubscribeModal from "@/components/scoped/UnsubscribeModal";
@@ -115,7 +115,7 @@ const ProfileComponent = ({ }) => {
 
   return (
     <div className="min-h-screen bg-white ">
-      <Header />
+      <HeaderComponent />
       <div className="h-full flex flex-col items-center justify-center">
         <div className="max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded">
           <h1 className="text-lg sm:text-2xl font-medium text-center ">

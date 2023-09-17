@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/customer/BusinessFilters";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import TooltipComponent from "@/components/utility/Tooltip";
+import { NotificationManager } from 'react-notifications';
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import EditTagsModal from "@/components/utility/EditTagsModal";
@@ -58,11 +59,11 @@ export default function Home() {
       if (res.status === 200) {
         setDeleteModal(false)
         fetchListings()
-        alert(errorData.message)
+        NotificationManager.success(errorData.message)
       } else {
         // Handle error
         const errorData = await res.json();
-        alert(errorData);
+        NotificationManager.error(errorData);
       }
     } catch (error) {
       console.error("An error occurred while deleting the listing", error);
@@ -122,19 +123,6 @@ export default function Home() {
   }, [type, size, fetchListings]);
 
 
-  // useEffect(() => {
-
-  //   fetchListings(1);
-
-  // }, [type]);
-
-
-  // useEffect(() => {
-
-  //   fetchListings(1);
-
-  // }, [size]);
-
 
 
 
@@ -174,17 +162,17 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
-      <BusinessFilters
-        fetchListings={() => fetchListings(1)}
-        changeFilter={(e) => setFilter(e)}
-        changeType={(e) => setType(e)}
-        changeSize={(e) => setSize(e)}
 
-      />
 
       {mode === 'view' ?
         <div>
+          <BusinessFilters
+            fetchListings={() => fetchListings(1)}
+            changeFilter={(e) => setFilter(e)}
+            changeType={(e) => setType(e)}
+            changeSize={(e) => setSize(e)}
 
+          />
           <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">
             <div className="w-full">
               <div className="flex justify-between items-center">

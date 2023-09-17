@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NotificationManager } from 'react-notifications';
 import Image from "next/image";
 import axios from 'axios';
 import ButtonComponent from "@/components/utility/Button";
@@ -16,6 +17,83 @@ const dJSON = require('dirty-json');
 
 
 function ImageUploader({ onBack, onFecth }) {
+
+    const subCategoryOptionsClothing = [
+        { name: "Men's Wear", value: "mens_wear" },
+        { name: "Women's Wear", value: "womens_wear" },
+        { name: "Kid's Wear", value: "kids_wear" },
+        { name: "Activewear", value: "activewear" },
+        { name: "Formal Wear", value: "formal_wear" },
+    ];
+    const subCategoryOptionsFootwear = [
+        { name: "Running Shoes", value: "running_shoes" },
+        { name: "Sandals", value: "sandals" },
+        { name: "Boots", value: "boots" },
+        { name: "Formal Shoes", value: "formal_shoes" },
+        { name: "Heels", value: "heels" },
+
+
+    ];
+    const subCategoryOptionsHats = [
+        { name: "Baseball Caps", value: "baseball_caps" },
+        { name: "Beanies", value: "beanies" },
+        { name: "Fedora", value: "fedora" },
+        { name: "Sun Hats", value: "sun_hats" },
+        { name: "Berets", value: "berets" },
+    ];
+
+    const subCategoryOptionsTwoClothing = [
+        { name: "Winter Collection", value: "winter_collection" },
+        { name: "Summer Collection", value: "summer_collection" },
+        { name: "Fall Collection", value: "fall_collection" },
+    ];
+    const subCategoryOptionsTwoFootwear = [
+        { name: "Sneakers Edition", value: "sneakers_edition" },
+        { name: "Formal Edition", value: "formal_edition" },
+        { name: "Limited Edition", value: "limited_edition" },
+
+    ];
+    const subCategoryOptionsTwoHats = [
+        { name: "Vintage Hats", value: "vintage_hats" },
+        { name: "Modern Caps", value: "modern_caps" },
+        { name: "Special Edition", value: "special_edition" },
+    ];
+
+
+
+    const computedCategoryOne = () => {
+        if (category === "Hats") {
+            return subCategoryOptionsHats;
+        } else if (category === "Clothing") {
+            return subCategoryOptionsClothing;
+        } else if (category === "Footwear") {
+            return subCategoryOptionsFootwear;
+        }
+        return []; // or some default value
+    }
+
+    const computedCategoryTwo = () => {
+        if (category === "Hats") {
+            return subCategoryOptionsTwoHats;
+        } else if (category === "Clothing") {
+            return subCategoryOptionsTwoClothing;
+        } else if (category === "Footwear") {
+            return subCategoryOptionsTwoFootwear;
+        }
+        return []; // or some default value
+    }
+
+
+
+
+    const [category, setCategory] = useState('');
+    const [subCategoryOne, setSubCategoryOne] = useState('');
+    const [subCategoryTwo, setSubCategoryTwo] = useState('');
+
+
+
+
+
     const [image, setImage] = useState({ url: null, file: null });
     const [uploadedImages, setUploadedImages] = useState({
         main: null,
@@ -29,22 +107,22 @@ function ImageUploader({ onBack, onFecth }) {
     const [activeTagIndex, setActiveTagIndex] = useState(0);
     const [editGeneratedTags, setEditGeneratedTags] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(1);
 
-    const [type, setType] = useState('');
 
-    const handleImageChange = (e) => {
+
+    const handleImageChange = (e, type) => {
 
 
         const file = e.target.files[0];
-        compressImage(file)
+        compressImage(file, type)
 
     };
     const onNextToImageUploader = (e) => {
 
 
         if (!type) {
-            alert('Type is required!')
+            NotificationManager.error('Type is required!')
             return
         }
 
@@ -64,12 +142,13 @@ function ImageUploader({ onBack, onFecth }) {
     const handleAdd = (key) => {
         if (image.url && key) {
             let newUploadedImages = uploadedImages
-            newUploadedImages[key] = { image: image.url, file: image.file }
+            newUploadedImages[key] = { image: image.url, file: image.file, type: image.type }
             setUploadedImages(newUploadedImages);
             setImage({ url: null, file: null });
             setStep(step === 2 ? 3 : 4)
         }
     };
+
     const triggerEditTagsModalOffline = (index) => {
         setTagEditModal(true)
         setActiveTagIndex(index)
@@ -147,12 +226,10 @@ function ImageUploader({ onBack, onFecth }) {
             console.log(listings)
         }, 100);
 
-        // Add your additional functionality here
-        // For example:
-        // alert('Listed more items successfully!');
+
     };
 
-    const compressImage = (file) => {
+    const compressImage = (file, type) => {
         // compress file
         const options = {
             quality: 0.6,
@@ -165,7 +242,7 @@ function ImageUploader({ onBack, onFecth }) {
                 })
                 console.log(newFile)
                 const blobURL = URL.createObjectURL(newFile);
-                setImage({ url: blobURL, file: newFile, tag: '' });
+                setImage({ url: blobURL, file: newFile, tag: '', type: type });
                 if (step === 1) {
                     setStep(2);
                 }
@@ -200,9 +277,7 @@ function ImageUploader({ onBack, onFecth }) {
             console.log(listings)
         }, 100);
 
-        // Add your additional functionality here
-        // For example:
-        // alert('Finished listing items!');
+
     };
 
     const convertBlobToBase64 = async (blobUrl) => {
@@ -222,18 +297,18 @@ function ImageUploader({ onBack, onFecth }) {
         if (imageType === "main") {
 
             // Define the Top Category and Category based on the type
-            let topCategory = type; // Assuming the type matches the Top Category exactly
-            let category; // Assuming a default category here, you can modify as needed
+            let topCategory = category; // Assuming the type matches the Top Category exactly
+            let localCategory; // Assuming a default category here, you can modify as needed
 
-            switch (type) {
+            switch (localCategory) {
                 case 'Footware':
-                    category = 'Footware/Boots'; // Modify as per your requirement
+                    localCategory = 'Footware/Boots'; // Modify as per your requirement
                     break;
                 case 'Clothing':
-                    category = 'Clothing/Upper'; // Modify as per your requirement
+                    localCategory = 'Clothing/Upper'; // Modify as per your requirement
                     break;
                 case 'Hats':
-                    category = 'Hats/Caps'; // Modify as per your requirement
+                    localCategory = 'Hats/Caps'; // Modify as per your requirement
                     break;
                 default:
                     break;
@@ -244,7 +319,7 @@ function ImageUploader({ onBack, onFecth }) {
                 records: [{
                     _base64: base64Image,
                     'Top Category': topCategory,
-                    Category: category
+                    Category: localCategory
                 }],
             }, {
                 headers: {
@@ -273,7 +348,9 @@ function ImageUploader({ onBack, onFecth }) {
 
             const allTags = getAllTags(response.data.records[0]._objects);
             const allTagsFilter = allTags.map(tag => {
-                return { name: tag.name, value: tag.prob, tagType: imageType };
+                let percentage = (tag.prob * 100).toFixed(1); // Converts 0.99212 to "99.2"
+                if (percentage === "100.0") percentage = "100"; // Adjust for the edge case
+                return { name: tag.name, value: percentage, tagType: imageType };
             });
             console.log(allTagsFilter)
             return allTagsFilter
@@ -299,39 +376,19 @@ function ImageUploader({ onBack, onFecth }) {
         }
 
 
-        // else if (imageType === "brandTag") {
-        //     // Using Ximilar's OCR endpoint
-        //     const response = await axios.post('https://api.ximilar.com/ocr/v2/read', {
-        //         lang: "en", // Change this as per your requirement
-        //         records: [{
-        //             _base64: base64Image
-        //         }],
-        //     }, {
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //             'Authorization': `Token ${XIMILAR_API_TOKEN}`
-        //         }
-        //     });
 
-        //     // Parse the OCR response to get the text
-        //     const ocrData = response.data.records[0]._ocr;
-
-
-
-
-        //     // Return the OCR data as tags (or process further as needed)
-        //     return [{ name: 'brand', value: ocrData.full_text }]
-        // }
     };
 
     const triggerToTagsPage = async () => {
         const requests = [];
 
         for (let listing of listings) {
-            const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
-            requests.push(getTagsFromXimilar(mainImageBase64, 'main'));
+            if (listing.items.main && listing.items.main.image && listing.items.main.type === "ai") {
+                const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
+                requests.push(getTagsFromXimilar(mainImageBase64, 'main'));
+            }
 
-            if (listing.items.brandTag && listing.items.brandTag.image) {
+            if (listing.items.brandTag && listing.items.brandTag.image && listing.items.brandTag.type === "ai") {
                 const brandTagImageBase64 = await convertBlobToBase64(listing.items.brandTag.image);
                 requests.push(getTagsFromXimilar(brandTagImageBase64, 'brandTag'));
             }
@@ -367,6 +424,29 @@ function ImageUploader({ onBack, onFecth }) {
         }
     };
 
+    function hasAIType(listings) {
+        for (let row of listings) {
+            let typesArray = [];
+
+            // Check if main exists and push its type to typesArray
+            if (row.items.main) {
+                typesArray.push(row.items.main.type);
+            }
+
+            // Check if brandTag exists and push its type to typesArray
+            if (row.items.brandTag) {
+                typesArray.push(row.items.brandTag.type);
+            }
+
+            // If typesArray includes "ai", return true immediately
+            if (typesArray.includes("ai")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
 
     // const triggerToTagsPage = () => {
@@ -401,7 +481,9 @@ function ImageUploader({ onBack, onFecth }) {
             return {
                 mainImage: mainImageBase64,
                 brandImage: brandImageBase64,
-                type: type,
+                category: category,
+                subCategoryOne: subCategoryOne,
+                subCategoryTwo: subCategoryTwo,
                 tags: listing.tags,
             };
         }));
@@ -417,7 +499,7 @@ function ImageUploader({ onBack, onFecth }) {
             console.log(results);
 
             onFecth();
-            alert('uploaded');
+            NotificationManager.success('uploaded');
         } catch (error) {
             console.error(error);
         } finally {
@@ -425,8 +507,6 @@ function ImageUploader({ onBack, onFecth }) {
             onBack();
         }
     };
-
-
 
     const handleDeleteTag = (listingIndex, tagIndex) => {
         console.log(listingIndex, tagIndex)
@@ -459,6 +539,16 @@ function ImageUploader({ onBack, onFecth }) {
         setListings(newListing);
     }
 
+    const determineColorClass = (value) => {
+        const percentage = parseFloat(value); // Since value is now a string like "99.2%", we need to parse it
+
+        if (percentage >= 80) return "bg-green-200";
+        else if (percentage >= 60 && percentage < 80) return "bg-yellow-200";
+        else return "bg-red-200";
+    }
+
+
+
 
 
     return (
@@ -473,7 +563,7 @@ function ImageUploader({ onBack, onFecth }) {
             </div>
             {!uploading ? (
                 <div className="">
-                    {step == 0 ?
+                    {/* {step == 0 ?
                         <div className="mt-8">
                             <div className=" w-64">
                                 <label>Category</label>
@@ -489,21 +579,34 @@ function ImageUploader({ onBack, onFecth }) {
                             </div>
                         </div>
                         : ''
-                    }
-                    {[1, 2, 3, 4].includes(step) ?
-                        <div className="w-72 mx-auto flex-shrink-0">
-                            {!image.url && [1, 2, 3].includes(step) ? (
-                                <label className="rounded-2xl mx-auto mt-8 cursor-pointer hover:opacity-70 flex items-center justify-center border-2 border-primary w-64 h-56">
-                                    <div>
-                                        <input type="file" accept="image/*" capture="user" className="sr-only" onChange={handleImageChange} />
-                                        <h1 className="text-3xl text-center font-medium font-mono ">Take a Photo</h1>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24 mt-4 mx-auto">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                                        </svg>
-                                    </div>
+                    } */}
 
-                                </label>) : ''}
+                    {[1, 2, 3, 4].includes(step) ?
+                        <div className=" mx-auto">
+                            {!image.url && [1, 2, 3].includes(step) ? (
+                                <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
+                                    <label className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-56 border-2 shadow-md h-56">
+                                        <div>
+                                            <input type="file" accept="image/*" capture="user" className="sr-only" onChange={(e) => handleImageChange(e, 'ai')} />
+                                            <h1 className="text-xl text-center font-medium font-mono ">Take AI Photo</h1>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                                            </svg>
+                                        </div>
+                                    </label>
+                                    <label className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-56 border-2 shadow-md h-56">
+                                        <div>
+                                            <input type="file" accept="image/*" capture="user" className="sr-only" onChange={(e) => handleImageChange(e, 'normal')} />
+                                            <h1 className="text-xl text-center font-medium font-mono ">Take Normal Photo</h1>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                                            </svg>
+                                        </div>
+                                    </label>
+                                </div>
+                            ) : ''}
                             {step !== 1 && step !== 4 ? (
                                 <>
                                     {image.url ? (
@@ -572,6 +675,37 @@ function ImageUploader({ onBack, onFecth }) {
                                             </div> : ''}
 
                                     </div>
+
+                                    <div className="w-64 mx-auto">
+                                        <label>Category</label>
+                                        <select value={category} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setCategory(e.target.value)}>
+                                            <option value="" disabled>Select type</option>
+                                            <option value="Clothing">Clothing</option>
+                                            <option value="Footwear">Footwear</option>
+                                            <option value="Hats">Hats</option>
+                                        </select>
+                                    </div>
+                                    {/* Sub-category 01 */}
+                                    <div className="w-64 mx-auto mt-4">
+                                        <label>Sub-category 01</label>
+                                        <select value={subCategoryOne} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setSubCategoryOne(e.target.value)}>
+                                            <option value="" disabled>Select sub-category 01</option>
+                                            {computedCategoryOne().map(option => (
+                                                <option key={option.value} value={option.value}>{option.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* Sub-category 02 */}
+                                    <div className="w-64 !mb-6 mx-auto mt-4">
+                                        <label>Sub-category 02</label>
+                                        <select value={subCategoryTwo} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setSubCategoryTwo(e.target.value)}>
+                                            <option value="" disabled>Select sub-category 02</option>
+                                            {computedCategoryTwo().map(option => (
+                                                <option key={option.value} value={option.value}>{option.name}</option>
+                                            ))}
+                                        </select>
+                                    </div>
                                     <ButtonComponent color="secondary" full onClick={() => handleListMore()} className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}>List More</ButtonComponent>
                                     <ButtonComponent full onClick={() => handleFinishListing()} className={`!my-2 mx-auto !w-64 rounded-lg !text-black`}>Finish Listing</ButtonComponent>
                                 </>
@@ -585,6 +719,7 @@ function ImageUploader({ onBack, onFecth }) {
                             <div className="">
                                 {listings.map((row, rowIndex) => (
                                     <>
+
                                         <div key={rowIndex} className="flex flex-wrap justify-center sm:justify-start">
                                             {row.items.main ?
                                                 <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
@@ -609,7 +744,9 @@ function ImageUploader({ onBack, onFecth }) {
                                 ))}
                             </div>
 
-                            {listings.length > 0 && (
+
+                            {listings.length > 0 && hasAIType(listings) ? (
+
                                 <div className="mt-10 ml-3">
 
                                     <div className="flex justify-center sm:justify-start">
@@ -632,6 +769,10 @@ function ImageUploader({ onBack, onFecth }) {
                                         <ButtonComponent rounded className="!w-48" onClick={() => triggerToTagsPage()} >Generate Tags</ButtonComponent>
                                     </div>
 
+                                </div>
+                            ) : (
+                                <div className="flex justify-center sm:justify-start mt-10 ml-3">
+                                    <ButtonComponent rounded className="!w-48" onClick={() => setStep(7)} >Review All</ButtonComponent>
                                 </div>
                             )}
                         </div>
@@ -663,24 +804,38 @@ function ImageUploader({ onBack, onFecth }) {
                                             </div>
                                             : ''}
                                     </div>
+
+
                                     {
                                         row.tags.map((tag, tagIndex) => (
-                                            <div key={tagIndex} className="py-1 w-full items-center flex">
-                                                <input className="w-full mx-1 rounded-lg px-3 py-1.5 border border-gray-600" type="text" value={tag.name} onChange={(e) => handleUpdateTagName(index, tagIndex, e.target.value)} />
-                                                <input className="w-full mx-1 rounded-lg px-3 py-1.5 border border-gray-600" type="text" value={tag.value} onChange={(e) => handleUpdateTagValue(index, tagIndex, e.target.value)} />
+                                            <div key={tagIndex} className="py-1 w-full items-center flex max-w-xl">
+                                                <input
+                                                    className={`w-full mx-1 rounded-lg px-2 py-1 border ${determineColorClass(tag.value)} text-black`}
+                                                    type="text"
+                                                    value={`${tag.name}%`}
+                                                    onChange={(e) => handleUpdateTagName(index, tagIndex, e.target.value)}
+                                                />
+                                                <div className="`w-24 sm:w-32 flex items-center relative">
+                                                    <input
+                                                        className={`w-24 sm:w-32 flex-shrink-0 mx-1 rounded-lg px-2 py-1 border border-gray-600 ${determineColorClass(tag.value)}`}
+                                                        type="text"
+                                                        value={tag.value}
+                                                        onChange={(e) => handleUpdateTagValue(index, tagIndex, e.target.value)}
+                                                    />
+                                                    <h3 className="absolute right-4 text-lg">%</h3>
+                                                </div>
+
                                                 <DeleteModalComponent title='Are you sure you want to delete tag?' onConfirmed={() => handleDeleteTag(index, tagIndex)}>
                                                     <button className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 px-1 rounded">
-
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                         </svg>
-
-
                                                     </button>
                                                 </DeleteModalComponent>
                                             </div>
                                         ))
                                     }
+
                                     <button className=" bg-[#FF9C75] px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => handleAddTag(index)}>Add Tag</button>
                                 </div>
                             ))}

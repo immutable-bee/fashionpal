@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
+import { NotificationManager } from 'react-notifications';
 import ButtonComponent from "@/components/utility/Button";
 function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
     const [loading, setLoading] = useState(false)
@@ -58,11 +59,11 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
                 setDeleteModal(false)
                 onFecth()
 
-                alert(errorData.message)
+                NotificationManager.success(errorData.message)
             } else {
                 // Handle error
                 const errorData = await res.json();
-                alert(errorData);
+                NotificationManager.error(errorData);
             }
         } catch (error) {
             console.error("An error occurred while deleting the listing", error);
@@ -92,11 +93,11 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
                 if (response.status === 200) {
                     setOpenModal(false)
                     onFecth()
-                    alert(errorData.message)
+                    NotificationManager.success(errorData.message)
                 } else {
                     // Handle error
                     const errorData = await res.json();
-                    alert(errorData);
+                    NotificationManager.error(errorData);
                 }
 
             } catch (error) {
@@ -129,7 +130,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
 
                 onFecth()
 
-                alert('uploaded');
+                NotificationManager.success('uploaded');
                 setLoading(false);
                 setOpenModal(false)
 

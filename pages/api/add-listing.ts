@@ -49,7 +49,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             const payload: any = {
-                type: listing.type,
+                category: listing.category,
+                subCategoryOne: listing.subCategoryOne,
+                subCategoryTwo: listing.subCategoryTwo,
                 mainImage: mainImagePath,
                 brandImage: brandImagePath,
                 tags: {
