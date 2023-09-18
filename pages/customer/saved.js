@@ -221,7 +221,9 @@ export default function Home() {
                     {listings && listings.map((row, key) => {
                       return (
                         <div
-                          className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-lg mx-2 my-2 w-full border-2 shadow-lg border-[#E44A1F]"
+                          style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
+                          className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full "
+
                           key={row.id}
                           onClick={() => triggerDetailsModal(key)}
                         >
