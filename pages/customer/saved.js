@@ -50,8 +50,6 @@ export default function Home() {
 
   const onChangeType = (e) => {
     setType(e.target.value)
-
-
   }
 
   const triggerDetailsModal = (index) => {
@@ -215,9 +213,6 @@ export default function Home() {
                 <div className="">
 
                   <div className="sm:flex flex-wrap justify-center mt-2">
-
-
-
                     {listings && listings.map((row, key) => {
                       return (
                         <div

@@ -1,7 +1,7 @@
 import ModalComponent from "@/components/utility/Modal";
 import { useState, useEffect, useCallback } from "react";
 import HeaderComponent from "@/components/utility/Header";
-import CustomerFilters from "@/components/customer/CustomerFilters";
+import CustomerSalesFilters from "@/components/customer/CustomerSalesFilters";
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import ProductDetails from "@/components/utility/ProductDetails";
@@ -9,6 +9,7 @@ import ListingItem from "@/components/utility/ListingItem";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { NotificationManager } from 'react-notifications';
 import Image from "next/image";
+import Link from "next/link";
 import "swiper/css";
 export default function Home() {
 
@@ -162,7 +163,8 @@ export default function Home() {
     setLoadingListings(true);
 
     try {
-      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
+      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}`);
+      // &apparel=${type}&size=${size}
 
       if (res.status === 200) {
         const data = await res.json();
@@ -185,6 +187,14 @@ export default function Home() {
     };
     initialFetch();
   }, [type, size, fetchListings]);
+
+  const toggleLike = (index, event) => {
+    event.stopPropagation();
+
+    const updatedListings = [...listings];
+    updatedListings[index].isLiked = !updatedListings[index].isLiked
+    setListings(updatedListings);
+  };
 
 
   const fetchSearchResults = async () => {
@@ -228,7 +238,7 @@ export default function Home() {
       <HeaderComponent />
 
       <div>
-        <CustomerFilters
+        <CustomerSalesFilters
           fetchListings={() => fetchListings(1)}
           changeFilter={(e) => setFilter(e)}
           changeType={(e) => setType(e)}
@@ -239,13 +249,13 @@ export default function Home() {
 
         <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
           <div className="">
-            <div className="flex justify-between items-center">
+            {/* <div className="flex justify-between items-center">
               <p className="text-gray-900 text-base">
                 {resultCount} Results found
               </p>
 
 
-            </div>
+            </div> */}
 
             <div className="">
               {loadingListings || loadingSearchResults ? (
@@ -258,78 +268,187 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="">
+                <>
+                  <div className="">
+                    <h3 className="mt-4 text-xl">Current Sales</h3>
+                    <div className="sm:flex flex-wrap justify-center mt-2">
+                      <Swiper
+                        slidesPerView='auto'
+                        spaceBetween={14}
+                        navigation
+                      >
 
-                  <div className="sm:flex flex-wrap justify-center mt-2">
 
 
+                        {listings.map((row, index) => {
+                          return (
+                            <SwiperSlide key={index} className="!w-96">
+                              <div
+                                className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 shadow-lg"
+                                style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
+                                key={row.id}
+                              >
+                                <button onClick={(e) => toggleLike(index, e)} className="hover:bg-green-200 cursor-pointer hover:opacity-90 w-10 h-10 absolute top-2 right-2 rounded-full flex items-center justify-center">
+                                  <svg onClick={(e) => toggleLike(index, e)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`w-6 h-6 ${row.isLiked ? 'fill-green-400 text-green-400' : ''}`}>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                  </svg>
+                                </button>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Business name:</span> <span className="w-1/2">Softronet Inc</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Name of sale:</span> <span className="w-1/2">Summer sale</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">Cloths, Footware</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Discount amount:</span> <span className="w-1/2">$50</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Start date:</span> <span className="w-1/2">14th sep 2021</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">End date:</span> <span className="w-1/2">11th oct 2022</span>
+                                </div>
 
-                    {listings.map((row, index) => {
-                      return (
-                        <div
-                          className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:w-96 shadow-lg"
-                          style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
-                          key={row.id}
-                        >
-                          <div
-                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                          >
-                            <span className="w-1/2">Business name:</span> <span className="w-1/2">Softronet Inc</span>
-                          </div>
-                          <div
-                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                          >
-                            <span className="w-1/2">Name of sale:</span> <span className="w-1/2">Summer sale</span>
-                          </div>
-                          <div
-                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                          >
-                            <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">Cloths, Footware</span>
-                          </div>
-                          <div
-                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                          >
-                            <span className="w-1/2">Discount amount:</span> <span className="w-1/2">$50</span>
-                          </div>
-                          <div
-                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                          >
-                            <span className="w-1/2">Start date:</span> <span className="w-1/2">14th sep 2021</span>
-                          </div>
-                          <div
-                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                          >
-                            <span className="w-1/2">End date:</span> <span className="w-1/2">11th oct 2022</span>
-                          </div>
+                                <div className="flex justify-center !mt-5">
+                                  <Link href="/store/id">
+                                    <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
+                                  </Link>
+                                </div>
 
-                        </div>
+                              </div>
+                            </SwiperSlide>
 
-                      );
-                    })}
+                          );
+                        })}
+
+                      </Swiper>
+
+                    </div>
+
+                    <div
+                      id="inventory-matches-pagination"
+                      className="flex justify-center"
+                    >
+                      {arrayToMap?.length > 0 && !loadingListings && (
+                        <PaginationComponent
+                          total={Math.ceil(
+                            arrayToMap.length / openRequestsItemsPerPage
+                          )}
+                          current={inventoryMatchesPage}
+                          onChange={(page) => setInventoryMatchesPage(page)}
+                        />
+                      )}
+                    </div>
 
                   </div>
+                  <div className="">
+                    <h3 className="mt-4 text-xl">Upcoming Sales</h3>
+                    <div className="sm:flex flex-wrap justify-center mt-2">
+                      <Swiper
+                        slidesPerView='auto'
+                        spaceBetween={14}
+                        navigation
+                      >
 
-                  <div
-                    id="inventory-matches-pagination"
-                    className="flex justify-center"
-                  >
-                    {arrayToMap?.length > 0 && !loadingListings && (
-                      <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
-                      />
-                    )}
+
+
+                        {listings.map((row, index) => {
+                          return (
+                            <SwiperSlide key={index} className="!w-96">
+                              <div
+                                className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 shadow-lg"
+                                style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
+                                key={row.id}
+                              >
+                                <button onClick={(e) => toggleLike(index, e)} className="hover:bg-green-200 cursor-pointer hover:opacity-90 w-10 h-10 absolute top-2 right-2 rounded-full flex items-center justify-center">
+                                  <svg onClick={(e) => toggleLike(index, e)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`w-6 h-6 ${row.isLiked ? 'fill-green-400 text-green-400' : ''}`}>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                  </svg>
+                                </button>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Business name:</span> <span className="w-1/2">Softronet Inc</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Name of sale:</span> <span className="w-1/2">Summer sale</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">Cloths, Footware</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Discount amount:</span> <span className="w-1/2">$50</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">Start date:</span> <span className="w-1/2">14th sep 2021</span>
+                                </div>
+                                <div
+                                  className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                >
+                                  <span className="w-1/2">End date:</span> <span className="w-1/2">11th oct 2022</span>
+                                </div>
+
+                                <div className="flex justify-center !mt-5">
+                                  <Link href="/store/id">
+                                    <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
+                                  </Link>
+                                </div>
+
+                              </div>
+                            </SwiperSlide>
+
+                          );
+                        })}
+
+                      </Swiper>
+
+                    </div>
+
+                    <div
+                      id="inventory-matches-pagination"
+                      className="flex justify-center"
+                    >
+                      {arrayToMap?.length > 0 && !loadingListings && (
+                        <PaginationComponent
+                          total={Math.ceil(
+                            arrayToMap.length / openRequestsItemsPerPage
+                          )}
+                          current={inventoryMatchesPage}
+                          onChange={(page) => setInventoryMatchesPage(page)}
+                        />
+                      )}
+                    </div>
+
                   </div>
-
-                </div>
+                </>
               )}
             </div>
           </div>
         </section>
-      </div>
+      </div >
 
       {
         detailsModal ?
@@ -359,11 +478,11 @@ export default function Home() {
               })}
 
             </div>
-          </ModalComponent> : ""
+          </ModalComponent > : ""
       }
 
 
 
-    </div>
+    </div >
   );
 }

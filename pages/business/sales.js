@@ -130,6 +130,8 @@ const ProfileComponent = ({ }) => {
                                 style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
                                 key={row.id}
                             >
+
+
                                 <div
                                     className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
                                 >
