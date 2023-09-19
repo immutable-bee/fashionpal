@@ -18,6 +18,8 @@ model Listing {
   subCategoryOne String
   subCategoryTwo String
   matches        Boolean   @default(false)
+  isLiked        Boolean   @default(false)
+  isUnLiked      Boolean   @default(false)
   tags           Tag[]
   createdAt      DateTime? @default(now())
   updatedAt      DateTime? @updatedAt

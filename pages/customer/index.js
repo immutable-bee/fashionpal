@@ -125,37 +125,7 @@ export default function Home() {
     }
   };
 
-  // pagination
 
-
-  const onSave = async (row) => {
-    setLoadingSave(true);
-
-    try {
-      const res = await fetch(`/api/edit-listing`, {
-        method: "PUT",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          id: row.id
-        })
-      });
-
-      if (res.status === 200) {
-        NotificationManager.success('Listing saved successfully!')
-        fetchListings(1)
-
-      } else {
-        const errorMessage = await res.text();
-        console.error(`edit failed with status: ${res.status}, message: ${errorMessage}`);
-      }
-    } catch (error) {
-      console.error('An error occurred while edit listing:', error);
-    } finally {
-      setLoadingSave(false);
-    }
-  };
 
   const fetchListings = useCallback(async (e) => {
     console.log('fetch');
@@ -228,6 +198,8 @@ export default function Home() {
     const updatedListings = [...listings];
     updatedListings[index].isLiked = !updatedListings[index].isLiked
     updatedListings[index].isUnLiked = false
+
+    onSave(updatedListings[index])
     setListings(updatedListings);
   };
 
@@ -237,13 +209,37 @@ export default function Home() {
     const updatedListings = [...listings];
     updatedListings[index].isUnLiked = !updatedListings[index].isUnLiked
     updatedListings[index].isLiked = false
+
+    onSave(updatedListings[index])
     setListings(updatedListings);
   };
 
+  const onSave = async (row) => {
+    try {
+      const res = await fetch(`/api/edit-listing`, {
+        method: "PUT",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: row.id,
+          isLiked: row.isLiked,
+          isUnLiked: row.isUnLiked,
+        })
+      });
 
+      if (res.status === 200) {
+        NotificationManager.success('Listing saved successfully!')
+        fetchListings()
 
-
-
+      } else {
+        const errorMessage = await res.text();
+        console.error(`edit failed with status: ${res.status}, message: ${errorMessage}`);
+      }
+    } catch (error) {
+      console.error('An error occurred while edit listing:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">

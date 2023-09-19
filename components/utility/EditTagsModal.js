@@ -93,7 +93,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
                 if (response.status === 200) {
                     setOpenModal(false)
                     onFecth()
-                    NotificationManager.success(errorData.message)
+                    NotificationManager.success('Tag added successfully!');
                 } else {
                     // Handle error
                     const errorData = await res.json();
@@ -130,7 +130,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
 
                 onFecth()
 
-                NotificationManager.success('uploaded');
+                NotificationManager.success('Tag updated successfully!');
                 setLoading(false);
                 setOpenModal(false)
 

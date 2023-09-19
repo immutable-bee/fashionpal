@@ -10,7 +10,7 @@ function ProductDetails({ open, onClose, data, fetchListings }) {
     const [saveLoading, setLoadingSave] = useState(false);
     const [activeImage, setActiveImage] = useState(0);
 
-    const onSave = async (row) => {
+    const onSave = async () => {
         setLoadingSave(true);
 
         try {
@@ -20,7 +20,8 @@ function ProductDetails({ open, onClose, data, fetchListings }) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    id: data.id
+                    id: data.id,
+                    matches: data.matches
                 })
             });
 

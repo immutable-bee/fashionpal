@@ -499,7 +499,7 @@ function ImageUploader({ onBack, onFecth }) {
             console.log(results);
 
             onFecth();
-            NotificationManager.success('uploaded');
+            NotificationManager.success('Listing added successfully!');
         } catch (error) {
             console.error(error);
         } finally {
