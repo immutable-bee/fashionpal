@@ -1,13 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/customer/BusinessFilters";
 import HeaderComponent from "@/components/utility/BusinessHeader";
-import TooltipComponent from "@/components/utility/Tooltip";
 import { NotificationManager } from 'react-notifications';
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import EditTagsModal from "@/components/utility/EditTagsModal";
-import Shirt from '../../assets/shirt.png'
-import Image from "next/image";
+
 import ModalComponent from '@/components/utility/Modal';
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";

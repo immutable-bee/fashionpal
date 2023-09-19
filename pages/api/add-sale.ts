@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../prisma/client';
-import { createClient } from '@supabase/supabase-js';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        // const listing = req.body.listing;
-
         try {
-            const payload: any = req.body
+            const payload: any = req.body;
 
+            // Ensure items are stored as an array
+            if (payload.items && typeof payload.items === "string") {
+                payload.items = JSON.parse(payload.items);
+            }
 
             const data = await prisma.sale.create({
                 data: payload

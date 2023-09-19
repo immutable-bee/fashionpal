@@ -36,8 +36,8 @@ model Tag {
 model Sale {
   id              Int       @id @default(autoincrement())
   name            String
-  item            String
-  discount_amount Float
+  items           String[]
+  discount_amount String
   start_date      DateTime
   end_date        DateTime
   is_liked        Boolean   @default(false)

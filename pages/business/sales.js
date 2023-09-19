@@ -2,28 +2,61 @@ import { useState, useEffect } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import axios from 'axios';
+import 'react-datepicker/dist/react-datepicker.css';
+import DatePicker from "react-datepicker";
+import Select from 'react-select';
+
+import Loading from "@/components/utility/loading";
 import { NotificationManager } from 'react-notifications';
 import moment from 'moment'
 const ProfileComponent = ({ }) => {
+    const [loadingUpcomingSales, setLoadingUpcomingSales] = useState(false);
+    const [loadingCurrentSales, setLoadingCurrentSales] = useState(false);
+    const [submittingSale, setSubmittingSale] = useState(false);
+
     const [data, setData] = useState({
         name: '',
-        item: '',
-        discount_amount: 0,
+
+        discount_amount: '',
         start_date: '',
         end_date: '',
     })
-    const [uploading, setUploading] = useState(false);
-    const testData = [
-        {},
-        {},
-        {},
+
+    const [selectedItems, setSelectedItems] = useState([]);
+
+
+    const options = [
+        { value: 'Thrift', label: 'Thrift' },
+        { value: 'Library', label: 'Library' },
+        { value: 'Bookstore', label: 'Bookstore' }
     ];
+
+
 
 
     const [currentSales, setCurrentSales] = useState([]);
     const [upcomingSales, setUpcomingSales] = useState([]);
 
+    const handleItemChange = (selectedOptions) => {
+        setSelectedItems(selectedOptions);
+    }
+
+    const handleStartDateChange = (date) => {
+        setData(prevData => ({ ...prevData, start_date: date }));
+    };
+
+    // Custom handler for end date
+    const handleEndDateChange = (date) => {
+        setData(prevData => ({ ...prevData, end_date: date }));
+    };
+
     const fetchSales = async (type) => {
+        if (type === 'current') {
+            setLoadingCurrentSales(true);
+        } else {
+            setLoadingUpcomingSales(true);
+        }
+
         try {
             const res = await fetch(`/api/fetch-sales?type=${type}`);
             if (res.status === 200) {
@@ -35,19 +68,24 @@ const ProfileComponent = ({ }) => {
             }
         } catch (error) {
             console.error('An error occurred while fetching sales:', error);
+        } finally {
+            setLoadingUpcomingSales(false);
+            setLoadingCurrentSales(false);
         }
     };
 
+    const loadSales = async () => {
+        const current = await fetchSales("current");
+        setCurrentSales(current);
+
+        const upcoming = await fetchSales("upcoming");
+        setUpcomingSales(upcoming);
+    };
 
     useEffect(() => {
-        (async () => {
-            const current = await fetchSales("current");
-            setCurrentSales(current);
-
-            const upcoming = await fetchSales("upcoming");
-            setUpcomingSales(upcoming);
-        })();
+        loadSales();
     }, []);
+
 
 
 
@@ -58,26 +96,40 @@ const ProfileComponent = ({ }) => {
     };
 
     const onAddSale = async () => {
+        if (moment(data.end_date).isBefore(moment(data.start_date))) {
+            NotificationManager.error('End Date cannot be before Start Date!');
+            return;
+        }
+
+
         if (!data.name) {
             NotificationManager.error('Name is required!')
+            return
         } else
-            if (!data.item) {
+            if (!selectedItems.length) {
                 NotificationManager.error('Item is required!')
+                return
             } else
                 if (!data.discount_amount) {
                     NotificationManager.error('Discount Amount is required!')
+                    return
                 } else
                     if (!data.start_date) {
                         NotificationManager.error('Start Date is required!')
+                        return
                     } else
                         if (!data.end_date) {
                             NotificationManager.error('End Date is required!')
+                            return
                         }
+        setSubmittingSale(true);
+        const newSelectedItems = selectedItems.map(option => option.value);
+
         try {
             const res = await axios.post('/api/add-sale', {
                 name: data.name,
-                item: data.item,
-                discount_amount: Number(data.discount_amount),
+                items: newSelectedItems,
+                discount_amount: data.discount_amount,
                 start_date: new Date(data.start_date).toISOString(),
                 end_date: new Date(data.end_date).toISOString(),
             })
@@ -86,12 +138,18 @@ const ProfileComponent = ({ }) => {
             setData({
                 name: '',
                 item: '',
-                discount_amount: 0,
+                discount_amount: '',
                 start_date: '',
                 end_date: '',
             })
+
+            setSelectedItems([])
+            loadSales()
+
         } catch (error) {
             console.error('An error occurred while edit listing:', error);
+        } finally {
+            setSubmittingSale(false);
         }
     };
 
@@ -101,71 +159,100 @@ const ProfileComponent = ({ }) => {
             <div className="h-full flex flex-col items-center justify-center">
                 <div className="max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded">
 
-                    <div className="">
+                    <div className="sm:w-[500px] w-[90vw]">
                         <div className="py-2">
-                            <label className="text-sm text-gray-700">Name of sale</label>
+                            <label className="text-sm text-gray-700 block">Name of sale</label>
                             <input
                                 name="name"
                                 value={data?.name}
                                 type="text"
-                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
                                 onChange={handleChange}
 
                             />
                         </div>
 
                         <div className="py-2">
-                            <label className="text-sm text-gray-700">Items on sale</label>
-                            <select
+                            <label className="text-sm text-gray-700 block">Items on sale</label>
+                            <Select
+                                isMulti
                                 name="item"
-                                value={data?.item}
-                                className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-select border border-gray-500 w-full rounded-lg  px-3 my-1 py-2"
-                                onChange={handleChange}
-                            >
-                                <option value="" disabled>Select Item</option>
-                                <option value="THRIFT">Thrift</option>
-                                <option value="LIBRARY">Library</option>
-                                <option value="BOOKSTORE">Bookstore</option>
-                            </select>
+                                options={options}
+                                className="basic-multi-select"
+                                classNamePrefix="select"
+                                value={selectedItems}
+                                onChange={handleItemChange}
+                            />
+
                         </div>
                         <div className="py-2">
-                            <label className="text-sm text-gray-700">Discount amount</label>
+                            <label className="text-sm text-gray-700 block">Discount amount</label>
                             <input
                                 name="discount_amount"
                                 value={data?.discount_amount}
-                                type="number"
-                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                                type="text"
+                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
                                 onChange={handleChange}
 
                             />
                         </div>
                         <div className="py-2">
-                            <label className="text-sm text-gray-700">Start date</label>
+                            <label className="text-sm block text-gray-700">Start date</label>
+                            <div className="relative">
+                                <DatePicker
+                                    selected={data.start_date}
+                                    onChange={handleStartDateChange}
+                                    dateFormat="yyyy/MM/dd"
+                                    className="bg-white sm:w-[500px] w-[90vw] form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 rounded-lg  px-4 my-1 py-2"
+                                />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 absolute right-3 top-3 pointer-events-none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div className="py-2 w-full">
+                            <label className="text-sm block text-gray-700">End date</label>
+                            <div className="relative">
+                                <DatePicker
+                                    selected={data.end_date}
+                                    onChange={handleEndDateChange}
+                                    minDate={data.start_date}
+                                    dateFormat="yyyy/MM/dd"
+                                    className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg bg-transparent  px-4 my-1 py-2 "
+                                />
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 absolute right-3 top-3 z-0 pointer-events-none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
+                                </svg>
+                            </div>
+
+                        </div>
+                        {/* <div className="py-2">
+                            <label className="text-sm text-gray-700 block">Start date</label>
                             <input
                                 name="start_date"
                                 value={data?.start_date}
                                 type="date"
-                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
                                 onChange={handleChange}
 
                             />
                         </div>
                         <div className="py-2">
-                            <label className="text-sm text-gray-700">End date</label>
+                            <label className="text-sm text-gray-700 block">End date</label>
                             <input
                                 name="end_date"
                                 value={data?.end_date}
                                 type="date"
-                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
                                 onChange={handleChange}
 
                             />
-                        </div>
+                        </div> */}
 
 
 
                         <div className="mt-5">
-                            <ButtonComponent onClick={onAddSale} rounded full type="submit">
+                            <ButtonComponent loading={submittingSale} onClick={onAddSale} rounded full type="submit">
                                 Submit
                             </ButtonComponent>
                         </div>
@@ -179,106 +266,136 @@ const ProfileComponent = ({ }) => {
 
             <div>
                 <h3 className="text-xl text-center font-medium text-primary">Upcoming Sales</h3>
-                {upcomingSales.length !== 0 ? <div className="sm:flex flex-wrap justify-center mt-2">
+                {loadingUpcomingSales ? (
+                    <div className="sm:flex justify-center pb-10">
+                        <div>
 
-
-
-                    {upcomingSales.map((row, index) => {
-                        return (
-                            <div
-                                className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:w-96 shadow-lg"
-                                style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
-                                key={row.id}
-                            >
-
-
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Business name:</span> <span className="w-1/2">Softronet Inc</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Name of sale:</span> <span className="w-1/2">Summer sale</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">Cloths, Footware</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Discount amount:</span> <span className="w-1/2">$50</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Start date:</span> <span className="w-1/2">14th sep 2021</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">End date:</span> <span className="w-1/2">11th oct 2022</span>
-                                </div>
-
+                            <div className="pt-2.5 mt-10">
+                                <Loading size="xl" />
                             </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        {upcomingSales.length !== 0 ? <div className="sm:flex flex-wrap justify-center mt-2">
 
-                        );
-                    })}
+                            {upcomingSales.map((row, index) => {
+                                return (
+                                    <div
+                                        className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
+                                        style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
+                                        key={row.id}
+                                    >
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Name of sale:</span> <span className="w-1/2">{row.name}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">{row.items}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Discount amount:</span> <span className="w-1/2">{row.discount_amount}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Start date:</span> <span className="w-1/2">{moment(row.start_date).format('YYYY/MM/DD')}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
+                                        </div>
 
-                </div> : 'No Upcoming Sales'}
+                                    </div>
+
+                                );
+                            })}
+
+                        </div> :
+                            <h3 className="text-center text-lg mt-5">
+                                No Upcoming Sales
+                            </h3>
+                        }
+                    </div>
+                )}
             </div>
 
             <div className="mt-12">
                 <h3 className="text-xl text-center font-medium text-primary">Current Sales</h3>
-                {upcomingSales.length !== 0 ? <div className="sm:flex flex-wrap justify-center mt-2">
+                {loadingCurrentSales ? (
+                    <div className="sm:flex justify-center pb-10">
+                        <div>
 
-                    {currentSales.map((row, index) => {
-                        return (
-                            <div
-                                className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:w-96 shadow-lg"
-                                style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
-                                key={row.id}
-                            >
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Name of sale:</span> <span className="w-1/2">{row.name}</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">{row.item}</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Discount amount:</span> <span className="w-1/2">{row.discount_amount}</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">Start date:</span> <span className="w-1/2">{moment(row.start_date).format('YYYY/MM/DD')}</span>
-                                </div>
-                                <div
-                                    className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                >
-                                    <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
-                                </div>
-
+                            <div className="pt-2.5 mt-10">
+                                <Loading size="xl" />
                             </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        {currentSales.length !== 0 ? <div className="sm:flex flex-wrap justify-center mt-2">
 
-                        );
-                    })}
+                            {currentSales.map((row, index) => {
+                                return (
+                                    <div
+                                        className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
+                                        style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
+                                        key={row.id}
+                                    >
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Name of sale:</span> <span className="w-1/2">{row.name}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">{row.items}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Discount amount:</span> <span className="w-1/2">{row.discount_amount}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Start date:</span> <span className="w-1/2">{moment(row.start_date).format('YYYY/MM/DD')}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
+                                        </div>
 
-                </div> : 'No Current Sales'}
+                                    </div>
+
+                                );
+                            })}
+
+                        </div> :
+                            <h3 className="text-center text-lg mt-5">
+                                No Current Sales
+                            </h3>}
+
+                    </div>
+                )}
             </div>
         </div>
     );
