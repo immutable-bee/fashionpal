@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     try {
         let sales;
-        const baseQuery = {};
+        const baseQuery: any = {};
 
         // If name is provided, add a name filter
         if (searchName) {
