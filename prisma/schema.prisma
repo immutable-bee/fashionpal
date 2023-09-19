@@ -32,3 +32,15 @@ model Tag {
   listingId Int
   listing   Listing @relation(fields: [listingId], references: [id])
 }
+
+model Sale {
+  id              Int       @id @default(autoincrement())
+  name            String
+  item            String
+  discount_amount Float
+  start_date      DateTime
+  end_date        DateTime
+  is_liked        Boolean   @default(false)
+  createdAt       DateTime? @default(now())
+  updatedAt       DateTime? @updatedAt
+}
