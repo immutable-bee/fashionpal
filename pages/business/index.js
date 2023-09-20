@@ -1,24 +1,23 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/customer/BusinessFilters";
 import HeaderComponent from "@/components/utility/BusinessHeader";
-import { NotificationManager } from 'react-notifications';
+import { NotificationManager } from "react-notifications";
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import EditTagsModal from "@/components/utility/EditTagsModal";
 import ProductDetails from "@/components/utility/ProductDetails";
-import ModalComponent from '@/components/utility/Modal';
+import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
 import AddCloths from "@/components/scoped/AddCloths";
 import cloneDeep from "lodash.clonedeep";
 export default function Home() {
-
   // add
 
   const [filter, setFilter] = useState("");
 
-  const [size, setSize] = useState('');
-  const [type, setType] = useState('');
+  const [size, setSize] = useState("");
+  const [type, setType] = useState("");
 
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -33,41 +32,41 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onPaginationChange = (e) => {
-    console.log(e)
-    setNotMatchesPage(e)
-    fetchListings(e)
-  }
+    console.log(e);
+    setNotMatchesPage(e);
+    fetchListings(e);
+  };
 
   const triggerDetailsModal = (index) => {
-    console.log(index)
-    setDetailsModal(true)
-    setActiveIndex(index)
+    console.log(index);
+    setDetailsModal(true);
+    setActiveIndex(index);
   };
 
   const triggerDeleteModal = (index) => {
-    setActiveDeleteIndex(index)
-    setDeleteModal(true)
+    setActiveDeleteIndex(index);
+    setDeleteModal(true);
   };
 
   const triggerEditTagsModal = (index) => {
-    setTagEditModal(true)
-    setActiveTagIndex(index)
-  }
+    setTagEditModal(true);
+    setActiveTagIndex(index);
+  };
 
   const onDeleteListing = async () => {
-    setDeleteLoading(true)
-    const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id
+    setDeleteLoading(true);
+    const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id;
     try {
       const res = await fetch(`/api/delete-listing/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
       });
       const errorData = await res.json();
-      setDeleteLoading(false)
+      setDeleteLoading(false);
       if (res.status === 200) {
-        setDeleteModal(false)
-        fetchListings()
-        NotificationManager.success(errorData.message)
+        setDeleteModal(false);
+        fetchListings();
+        NotificationManager.success(errorData.message);
       } else {
         // Handle error
         const errorData = await res.json();
@@ -76,7 +75,6 @@ export default function Home() {
     } catch (error) {
       console.error("An error occurred while deleting the listing", error);
     }
-
   };
 
   // add end
@@ -94,34 +92,39 @@ export default function Home() {
     has_next_page: false,
   });
 
-
   const [mode, setMode] = useState("view");
 
   const [loadingSearchResults, setLoadingSearchResults] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
+  const fetchListings = useCallback(
+    async (e) => {
+      console.log("fetch");
+      setLoadingListings(true);
 
-  const fetchListings = useCallback(async (e) => {
-    console.log('fetch');
-    setLoadingListings(true);
+      try {
+        const res = await fetch(
+          `/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`
+        );
 
-    try {
-      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
-
-      if (res.status === 200) {
-        const data = await res.json();
-        setListings(data.results);
-        setPagination(data.pagination);
-      } else {
-        const errorMessage = await res.text();
-        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+        if (res.status === 200) {
+          const data = await res.json();
+          setListings(data.results);
+          setPagination(data.pagination);
+        } else {
+          const errorMessage = await res.text();
+          console.error(
+            `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+          );
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching listings:", error);
+      } finally {
+        setLoadingListings(false);
       }
-    } catch (error) {
-      console.error('An error occurred while fetching listings:', error);
-    } finally {
-      setLoadingListings(false);
-    }
-  }, [filter, type, size]);  // Only re-create if filter, type or size changes
+    },
+    [filter, type, size]
+  ); // Only re-create if filter, type or size changes
 
   useEffect(() => {
     const initialFetch = async () => {
@@ -130,65 +133,61 @@ export default function Home() {
     initialFetch();
   }, [type, size, fetchListings]);
 
-
-
-
-
-
   const handleDeleteTag = (tagIndex) => {
-    const newListing = cloneDeep(listings)
+    const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags.splice(tagIndex, 1);
     setListings(newListing);
-  }
+  };
   const editTagName = (tagIndex, name) => {
-    console.log(name)
-    const newListing = cloneDeep(listings)
-    newListing[activeTagIndex].tags[tagIndex].name = name
-    console.log(newListing[activeTagIndex].tags)
+    console.log(name);
+    const newListing = cloneDeep(listings);
+    newListing[activeTagIndex].tags[tagIndex].name = name;
+    console.log(newListing[activeTagIndex].tags);
     setListings(newListing);
-  }
+  };
   const editTagValue = (tagIndex, value) => {
-    console.log(value)
-    const newListing = cloneDeep(listings)
-    newListing[activeTagIndex].tags[tagIndex].value = value
+    console.log(value);
+    const newListing = cloneDeep(listings);
+    newListing[activeTagIndex].tags[tagIndex].value = value;
     setListings(newListing);
-  }
+  };
 
   const handleAddTag = () => {
     const newTag = {
-      name: "",  // or some default value
-      value: ""  // or some default value
+      name: "", // or some default value
+      value: "", // or some default value
     };
     const newListing = [...listings];
     newListing[activeTagIndex].tags.push(newTag);
     setListings(newListing);
-  }
+  };
 
   const onPageChange = (page) => {
-    console.log(page)
-  }
+    console.log(page);
+  };
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
 
-      {detailsModal ?
+      {detailsModal ? (
         <ProductDetails
           open={detailsModal}
           imageOnly={true}
           onClose={() => setDetailsModal(false)}
           data={listings[activeIndex]}
           fetchListings={() => fetchListings(1)}
-        /> : ''}
+        />
+      ) : (
+        ""
+      )}
 
-
-      {mode === 'view' ?
+      {mode === "view" ? (
         <div>
           <BusinessFilters
             fetchListings={() => fetchListings(1)}
             changeFilter={(e) => setFilter(e)}
             changeType={(e) => setType(e)}
             changeSize={(e) => setSize(e)}
-
           />
           <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">
             <div className="w-full">
@@ -197,14 +196,19 @@ export default function Home() {
                   {pagination.total} Results found
                 </p>
 
-                <ButtonComponent onClick={() => setMode('adding')} rounded className="!px-7 !py-1.5">Add listing</ButtonComponent>
+                <ButtonComponent
+                  onClick={() => setMode("adding")}
+                  rounded
+                  className="!px-7 !py-1.5"
+                >
+                  Add listing
+                </ButtonComponent>
               </div>
 
               <div className="w-full">
                 {loadingListings || loadingSearchResults ? (
                   <div className="sm:flex justify-center pb-10">
                     <div>
-
                       <div className="pt-2.5 mt-10">
                         <Loading size="xl" />
                       </div>
@@ -213,17 +217,40 @@ export default function Home() {
                 ) : (
                   <div className="w-full">
                     <div className="sm:flex flex-wrap justify-center w-full">
-
                       {listings.map((row, key) => {
                         return (
-                          <div key={key} onClick={() => triggerDetailsModal(key)}>
-                            <ListingItem mainPhoto={row?.mainImage?.url} tags={row?.tags} clickable={true}>
-                              <button onClick={() => triggerEditTagsModal(key)} className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded">
+                          <div
+                            key={key}
+                            onClick={() => triggerDetailsModal(key)}
+                          >
+                            <ListingItem
+                              mainPhoto={row?.mainImage?.url}
+                              tags={row?.tags}
+                              clickable={true}
+                            >
+                              <button
+                                onClick={() => triggerEditTagsModal(key)}
+                                className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded"
+                              >
                                 Edit Tags
                               </button>
-                              <button onClick={() => triggerDeleteModal(key)} className="bg-primary absolute top-3 right-4 text-white px-1 py-1 text-xs mt-1 rounded">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                              <button
+                                onClick={() => triggerDeleteModal(key)}
+                                className="bg-primary absolute top-3 right-4 text-white px-1 py-1 text-xs mt-1 rounded"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke-width="1.5"
+                                  stroke="currentColor"
+                                  class="w-5 h-5"
+                                >
+                                  <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                  />
                                 </svg>
                               </button>
                             </ListingItem>
@@ -233,40 +260,50 @@ export default function Home() {
 
                       {listings.length === 0 ? (
                         <p className="text-2xl mt-5">No Listings</p>
-                      ) : ''
-                      }
+                      ) : (
+                        ""
+                      )}
                     </div>
 
                     <div
                       id="inventory-matches-pagination"
                       className="flex justify-center"
                     >
-
-                      {pagination && pagination.total_pages > 1 && !loadingListings && (
-                        <PaginationComponent
-                          total={pagination.total}
-                          current={notMatchesPage}
-                          pageSize={pagination.limit_per_page}
-                          onChange={(e) => onPaginationChange(e)}
-                        />
-                      )}
+                      {pagination &&
+                        pagination.total_pages > 1 &&
+                        !loadingListings && (
+                          <PaginationComponent
+                            total={pagination.total}
+                            current={notMatchesPage}
+                            pageSize={pagination.limit_per_page}
+                            onChange={(e) => onPaginationChange(e)}
+                          />
+                        )}
                     </div>
                   </div>
                 )}
               </div>
             </div>
           </section>
-        </div> :
-        <AddCloths onBack={() => setMode('view')} onFecth={() => fetchListings(1)} />
-      }
+        </div>
+      ) : (
+        <AddCloths
+          onBack={() => setMode("view")}
+          onFecth={() => fetchListings(1)}
+        />
+      )}
 
-      <ModalComponent open={deleteModal}
-        onClose={() => setDeleteModal(false)} title="Confirm delete listing"
+      <ModalComponent
+        open={deleteModal}
+        onClose={() => setDeleteModal(false)}
+        title="Confirm delete listing"
         footer={
           <div className="flex justify-end w-full">
             <ButtonComponent
               rounded
-              id="close-unsubscribe-modal-btn" className="!mx-1 !px-5" loading={deleteLoading}
+              id="close-unsubscribe-modal-btn"
+              className="!mx-1 !px-5"
+              loading={deleteLoading}
               onClick={() => onDeleteListing()}
             >
               Delete
@@ -275,7 +312,9 @@ export default function Home() {
         }
       >
         <>
-          <h4 className="text-base">Are you sure you want to delete listing?</h4>
+          <h4 className="text-base">
+            Are you sure you want to delete listing?
+          </h4>
         </>
       </ModalComponent>
       <EditTagsModal
