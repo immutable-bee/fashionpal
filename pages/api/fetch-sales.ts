@@ -3,8 +3,8 @@ import prisma from '../../prisma/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const type = req.query.type;
-    const customStartDate = req.query.start_date;
-    const customEndDate = req.query.end_date;
+    const customStartDate: any = req.query.start_date;
+    const customEndDate: any = req.query.end_date;
     const searchName = req.query.name;
 
     const currentDate = new Date().toISOString();
