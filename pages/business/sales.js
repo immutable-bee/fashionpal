@@ -316,6 +316,11 @@ const ProfileComponent = ({ }) => {
                                         >
                                             <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
                                         </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Created at:</span> <span className="w-1/2">   {moment(row.createdAt).fromNow()}</span>
+                                        </div>
 
                                     </div>
 
@@ -382,6 +387,11 @@ const ProfileComponent = ({ }) => {
                                             className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
                                         >
                                             <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Created at:</span> <span className="w-1/2">   {moment(row.createdAt).fromNow()}</span>
                                         </div>
 
                                     </div>

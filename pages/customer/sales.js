@@ -200,6 +200,7 @@ export default function Home() {
                             <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
                           </div>
 
+
                         </div>
 
                       );
