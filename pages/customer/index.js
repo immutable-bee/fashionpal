@@ -3,10 +3,12 @@ import HeaderComponent from "@/components/utility/Header";
 import CustomerFilters from "@/components/customer/CustomerFilters";
 import Loading from "@/components/utility/loading";
 import { NotificationManager } from 'react-notifications';
-import PaginationComponent from "@/components/utility/Pagination";
 import ProductDetails from "@/components/utility/ProductDetails";
+import PaginationComponent from "@/components/utility/Pagination";
+import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import { Swiper, SwiperSlide } from "swiper/react";
+import moment from 'moment'
 import Image from "next/image";
 import "swiper/css";
 export default function Home() {
@@ -326,6 +328,9 @@ export default function Home() {
                                   </svg>
 
                                 </button>
+                                <h3 className="text-gray-500 font-base absolute right-4 bottom-2">
+                                  {moment(row.createdAt).fromNow()}
+                                </h3>
                               </div>
                             </div>
                           </SwiperSlide>

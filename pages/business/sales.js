@@ -264,7 +264,74 @@ const ProfileComponent = ({ }) => {
 
             </div>
 
-            <div>
+            <div className="">
+                <h3 className="text-xl text-center font-medium text-primary">Current Sales</h3>
+                {loadingCurrentSales ? (
+                    <div className="sm:flex justify-center pb-10">
+                        <div>
+
+                            <div className="pt-2.5 mt-10">
+                                <Loading size="xl" />
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div>
+                        {currentSales.length !== 0 ? <div className="sm:flex flex-wrap justify-center mt-2">
+
+                            {currentSales.map((row, index) => {
+                                return (
+                                    <div
+                                        className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
+                                        style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
+                                        key={row.id}
+                                    >
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Name of sale:</span> <span className="w-1/2">{row.name}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">{row.items}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Discount amount:</span> <span className="w-1/2">{row.discount_amount}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">Start date:</span> <span className="w-1/2">{moment(row.start_date).format('YYYY/MM/DD')}</span>
+                                        </div>
+                                        <div
+                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                        >
+                                            <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
+                                        </div>
+
+                                    </div>
+
+                                );
+                            })}
+
+                        </div> :
+                            <h3 className="text-center text-lg mt-5">
+                                No Current Sales
+                            </h3>}
+
+                    </div>
+                )}
+            </div>
+
+            <div className="mt-12">
                 <h3 className="text-xl text-center font-medium text-primary">Upcoming Sales</h3>
                 {loadingUpcomingSales ? (
                     <div className="sm:flex justify-center pb-10">
@@ -331,72 +398,7 @@ const ProfileComponent = ({ }) => {
                 )}
             </div>
 
-            <div className="mt-12">
-                <h3 className="text-xl text-center font-medium text-primary">Current Sales</h3>
-                {loadingCurrentSales ? (
-                    <div className="sm:flex justify-center pb-10">
-                        <div>
 
-                            <div className="pt-2.5 mt-10">
-                                <Loading size="xl" />
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div>
-                        {currentSales.length !== 0 ? <div className="sm:flex flex-wrap justify-center mt-2">
-
-                            {currentSales.map((row, index) => {
-                                return (
-                                    <div
-                                        className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
-                                        style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
-                                        key={row.id}
-                                    >
-                                        <div
-                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                        >
-                                            <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
-                                        </div>
-                                        <div
-                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                        >
-                                            <span className="w-1/2">Name of sale:</span> <span className="w-1/2">{row.name}</span>
-                                        </div>
-                                        <div
-                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                        >
-                                            <span className="w-1/2">Type of items on sale:</span> <span className="w-1/2">{row.items}</span>
-                                        </div>
-                                        <div
-                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                        >
-                                            <span className="w-1/2">Discount amount:</span> <span className="w-1/2">{row.discount_amount}</span>
-                                        </div>
-                                        <div
-                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                        >
-                                            <span className="w-1/2">Start date:</span> <span className="w-1/2">{moment(row.start_date).format('YYYY/MM/DD')}</span>
-                                        </div>
-                                        <div
-                                            className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                                        >
-                                            <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
-                                        </div>
-
-                                    </div>
-
-                                );
-                            })}
-
-                        </div> :
-                            <h3 className="text-center text-lg mt-5">
-                                No Current Sales
-                            </h3>}
-
-                    </div>
-                )}
-            </div>
         </div>
     );
 };

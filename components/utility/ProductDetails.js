@@ -3,7 +3,7 @@ import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from 'react-notifications';
 import Link from "next/link";
-function ProductDetails({ open, onClose, data, fetchListings }) {
+function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false }) {
     console.log(data)
     const [showAll, setShowAll] = useState(false);
     const tagsToDisplay = showAll ? data?.tags : data?.tags.slice(0, 3);
@@ -46,7 +46,7 @@ function ProductDetails({ open, onClose, data, fetchListings }) {
                 open ?
                     <ModalComponent
                         open={open}
-                        title="Details"
+                        title={imageOnly ? 'Full view' : 'Details'}
                         onClose={() => onClose()}
                         footer={
                             <div className="flex justify-end w-full">
@@ -88,46 +88,49 @@ function ProductDetails({ open, onClose, data, fetchListings }) {
                                 </button>
                             )}
                         </div>
-                        <h3 className="text-xl">Item Tags</h3>
-                        {tagsToDisplay.map((tag, tagIndex) => (
-                            <div
-                                key={tagIndex}
-                                className={`text-gray-800 font-light ${tagIndex % 2 === 0 ? 'bg-lightprimary' : 'bg-white'} rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
-                            >
-                                <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
-                            </div>
-                        ))}
-                        {!showAll && data?.tags.length > 3 && (
-                            <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
-                        )}
-                        {!data.matches ? (
-                            <div className="flex justify-center !mt-3">
-                                <button onClick={() => onSave()} className={`bg-primary text-white px-5 py-1.5 rounded-lg ${saveLoading ? "opacity-70 pointer-events-none" : ""}`}>Save item</button>
-                            </div>
-                        ) : ''}
+                        {!imageOnly ?
+                            <div>
+                                <h3 className="text-xl">Item Tags</h3>
+                                {tagsToDisplay.map((tag, tagIndex) => (
+                                    <div
+                                        key={tagIndex}
+                                        className={`text-gray-800 font-light ${tagIndex % 2 === 0 ? 'bg-lightprimary' : 'bg-white'} rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
+                                    >
+                                        <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
+                                    </div>
+                                ))}
+                                {!showAll && data?.tags.length > 3 && (
+                                    <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
+                                )}
+                                {!data.matches ? (
+                                    <div className="flex justify-center !mt-3">
+                                        <button onClick={() => onSave()} className={`bg-primary text-white px-5 py-1.5 rounded-lg ${saveLoading ? "opacity-70 pointer-events-none" : ""}`}>Save item</button>
+                                    </div>
+                                ) : ''}
 
-                        <div className="flex items-center">
-                            <Image
-                                src={data?.brandTagPhoto}
-                                className="w-28 rounded-full"
-                                width="150"
-                                height="150"
-                                alt=""
-                            />
+                                <div className="flex items-center">
+                                    <Image
+                                        src={data?.brandTagPhoto}
+                                        className="w-28 rounded-full"
+                                        width="150"
+                                        height="150"
+                                        alt=""
+                                    />
 
-                            <div className="ml-4">
-                                <h3 className="text-base font-light">BiblioPal Inc.</h3>
-                                <h3 className="text-base font-light">Naseer Complex, Miani Road, Sukkur, Pakistan</h3>
-                                <a href="mailto:ibrahim@justibrahim.com" className="text-primary text-base font-light block hover:underline">ibrahim@justibrahim.com</a>
-                                <a href="https://fashionpal.vercel.app/" className="text-primary text-base font-light block hover:underline">https://fashionpal.vercel.app/</a>
-                            </div>
-                        </div>
+                                    <div className="ml-4">
+                                        <h3 className="text-base font-light">BiblioPal Inc.</h3>
+                                        <h3 className="text-base font-light">Naseer Complex, Miani Road, Sukkur, Pakistan</h3>
+                                        <a href="mailto:ibrahim@justibrahim.com" className="text-primary text-base font-light block hover:underline">ibrahim@justibrahim.com</a>
+                                        <a href="https://fashionpal.vercel.app/" className="text-primary text-base font-light block hover:underline">https://fashionpal.vercel.app/</a>
+                                    </div>
+                                </div>
 
-                        <div className="flex justify-center !mt-3">
-                            <Link href="/store/id">
-                                <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
-                            </Link>
-                        </div>
+                                <div className="flex justify-center !mt-3">
+                                    <Link href="/store/id">
+                                        <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
+                                    </Link>
+                                </div>
+                            </div> : ''}
 
 
                     </ModalComponent> : ""
