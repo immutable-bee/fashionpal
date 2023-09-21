@@ -537,7 +537,7 @@ function ImageUploader({ onBack, onFecth }) {
                 </h3>
             </div>
             {tags}
-            <TagsInput value={tags} onChange={(e) => setTags(e)} />
+
             {!uploading ? (
                 <div className="">
 
