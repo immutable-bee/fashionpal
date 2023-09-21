@@ -37,10 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 await supabase.storage.from('listings').remove([imagePath]);
             }
 
-            // Step 3: Delete tags and listing
-            await prisma.tag.deleteMany({
-                where: { listingId: Number(id) },
-            });
+
 
             await prisma.listing.delete({
                 where: {
