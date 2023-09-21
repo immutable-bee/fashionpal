@@ -18,10 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 orderBy: {
                     createdAt: 'desc'  // Assuming 'createdAt' is the field for the creation timestamp
                 },
-                include: {
-                    tags: true,  // Include associated tags for each listing
-                },
             });
+
 
 
             // Get the total count of listings

@@ -96,7 +96,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                         key={tagIndex}
                                         className={`text-gray-800 font-light ${tagIndex % 2 === 0 ? 'bg-lightprimary' : 'bg-white'} rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
                                     >
-                                        <span className="w-1/2">{tag.name}:</span> <span className="w-1/2">{tag.value}</span>
+                                        <span className="w-1/2">{tag}</span>
                                     </div>
                                 ))}
                                 {!showAll && data?.tags.length > 3 && (

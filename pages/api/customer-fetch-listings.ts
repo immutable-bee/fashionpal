@@ -45,9 +45,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 skip,
                 take: limit,
                 where: whereClause,
-                include: {
-                    tags: true,  // Include associated tags for each listing
-                },
             });
 
             // Get the total count of listings with filtering

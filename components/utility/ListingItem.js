@@ -1,6 +1,10 @@
 import Image from 'next/image';
 
 function ListingItem({ mainPhoto, tags, children, clickable = false }) {
+
+  const stopClick = (event) => {
+    event.stopPropagation();
+  }
   return (
     <div
       className={`px-4 py-4 sm:!w-64 w-full relative rounded-3xl mx-2 my-2 ${clickable ? 'cursor-pointer hover:opacity-90 ' : ''} `}
@@ -19,17 +23,14 @@ function ListingItem({ mainPhoto, tags, children, clickable = false }) {
           /> : ''}
 
           <div className="mt-2.5">
-
             {tags.slice(0, 3).map((tag, tagIndex) => (
               <p key={tagIndex} className="text-gray-800 text-base leading-5">
-                {tag.name}: {tag.value}
+                {tag}
               </p>
             ))}
-
-
           </div>
         </div>
-        <div className='mt-1.5'>
+        <div className='mt-1.5' onClick={stopClick}>
           {children}
         </div>
       </div>

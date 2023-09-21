@@ -233,7 +233,7 @@ export default function Home() {
                           <div className="mt-2">
                             {row.tags.slice(0, 3).map((tag, tagIndex) => (
                               <p key={tagIndex} className="text-gray-800 text-base leading-5">
-                                {tag.name}: {tag.value}
+                                {tag}
                               </p>
                             ))}
                           </div>

@@ -3,6 +3,9 @@ import { NotificationManager } from 'react-notifications';
 import Image from "next/image";
 import axios from 'axios';
 import ButtonComponent from "@/components/utility/Button";
+import TagsInput from 'react-tagsinput'
+
+import 'react-tagsinput/react-tagsinput.css'
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
@@ -87,6 +90,7 @@ function ImageUploader({ onBack, onFecth }) {
 
 
     const [category, setCategory] = useState('');
+    const [tags, setTags] = useState([]);
     const [subCategoryOne, setSubCategoryOne] = useState('');
     const [subCategoryTwo, setSubCategoryTwo] = useState('');
 
@@ -332,28 +336,20 @@ function ImageUploader({ onBack, onFecth }) {
                 const tagsArray = [];
 
                 data.forEach(item => {
-                    const tags = item._tags;
-                    for (const category in tags) {
-                        tags[category].forEach(tag => {
-                            tagsArray.push({
-                                name: tag.name,
-                                prob: tag.prob
-                            });
-                        });
+                    const tags = item._tags_simple;
+                    if (Array.isArray(tags)) {
+                        tagsArray.push(...tags); // spread and push the tags into tagsArray
                     }
                 });
 
                 return tagsArray;
             }
 
+
+
             const allTags = getAllTags(response.data.records[0]._objects);
-            const allTagsFilter = allTags.map(tag => {
-                let percentage = (tag.prob * 100).toFixed(1); // Converts 0.99212 to "99.2"
-                if (percentage === "100.0") percentage = "100"; // Adjust for the edge case
-                return { name: tag.name, value: percentage, tagType: imageType };
-            });
-            console.log(allTagsFilter)
-            return allTagsFilter
+            console.log(allTags)
+            return allTags
         }
         else if (imageType === "brandTag") {
             // Using Ximilar's OCR + GPT endpoint
@@ -449,13 +445,7 @@ function ImageUploader({ onBack, onFecth }) {
 
 
 
-    // const triggerToTagsPage = () => {
-    //     if (editGeneratedTags) {
-    //         setStep(6)
-    //     } else {
-    //         handleUploadAll()
-    //     }
-    // }
+
 
     const fileToBase64 = (file) => {
         console.log(file)
@@ -508,44 +498,29 @@ function ImageUploader({ onBack, onFecth }) {
         }
     };
 
-    const handleDeleteTag = (listingIndex, tagIndex) => {
-        console.log(listingIndex, tagIndex)
-        const newListing = cloneDeep(listings)
-        console.log(newListing)
-        newListing[listingIndex].tags.splice(tagIndex, 1);
-        console.log(newListing)
-        setListings(newListing);
-    }
 
-    const handleAddTag = (listingIndex) => {
-        const newTag = {
-            name: "",  // or some default value
-            value: ""  // or some default value
-        };
+
+    const changeTags = (listingIndex, newTags) => {
         const newListing = [...listings];
-        newListing[listingIndex].tags.push(newTag);
+        newListing[listingIndex].tags = newTags
         setListings(newListing);
     }
 
-    const handleUpdateTagName = (listingIndex, tagIndex, newValue) => {
-        const newListing = [...listings];
-        newListing[listingIndex].tags[tagIndex].name = newValue;
-        setListings(newListing);
+
+
+    function onChangeTags(newTags, listingIndex) {
+        // Since newTags is already the array of updated tags
+        const updatedTags = newTags;
+
+        // Create a copy of listings and update the specific listing's tags
+        const updatedListings = [...listings];
+        updatedListings[listingIndex].tags = updatedTags;
+
+        // Update the listings state (assuming you have a setState method for listings)
+        setListings(updatedListings);
     }
 
-    const handleUpdateTagValue = (listingIndex, tagIndex, newValue) => {
-        const newListing = [...listings];
-        newListing[listingIndex].tags[tagIndex].value = newValue;
-        setListings(newListing);
-    }
 
-    const determineColorClass = (value) => {
-        const percentage = parseFloat(value); // Since value is now a string like "99.2%", we need to parse it
-
-        if (percentage >= 80) return "bg-green-200";
-        else if (percentage >= 60 && percentage < 80) return "bg-yellow-200";
-        else return "bg-red-200";
-    }
 
 
 
@@ -561,25 +536,11 @@ function ImageUploader({ onBack, onFecth }) {
                     Add listing
                 </h3>
             </div>
+            {tags}
+            <TagsInput value={tags} onChange={(e) => setTags(e)} />
             {!uploading ? (
                 <div className="">
-                    {/* {step == 0 ?
-                        <div className="mt-8">
-                            <div className=" w-64">
-                                <label>Category</label>
-                                <select value={type} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setType(e.target.value)}>
-                                    <option value="" disabled>Select type</option>
-                                    <option value="Clothing">Clothing</option>
-                                    <option value="Footwear">Footwear</option>
-                                    <option value="Hats">Hats</option>
-                                </select>
-                            </div>
-                            <div className="mt-3">
-                                <ButtonComponent rounded className="!w-32 mt-6" onClick={onNextToImageUploader} >Next</ButtonComponent>
-                            </div>
-                        </div>
-                        : ''
-                    } */}
+
 
                     {[1, 2, 3, 4].includes(step) ?
                         <div className=" mx-auto">
@@ -784,6 +745,7 @@ function ImageUploader({ onBack, onFecth }) {
                         <div>
                             {listings.map((row, index) => (
                                 <div key={index}>
+
                                     <div className="flex flex-wrap justify-center sm:justify-start">
                                         {row.items.main ?
                                             <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
@@ -806,37 +768,15 @@ function ImageUploader({ onBack, onFecth }) {
                                     </div>
 
 
-                                    {
-                                        row.tags.map((tag, tagIndex) => (
-                                            <div key={tagIndex} className="py-1 w-full items-center flex max-w-xl">
-                                                <input
-                                                    className={`w-full mx-1 rounded-lg px-2 py-1 border ${determineColorClass(tag.value)} text-black`}
-                                                    type="text"
-                                                    value={`${tag.name}%`}
-                                                    onChange={(e) => handleUpdateTagName(index, tagIndex, e.target.value)}
-                                                />
-                                                <div className="`w-24 sm:w-32 flex items-center relative">
-                                                    <input
-                                                        className={`w-24 sm:w-32 flex-shrink-0 mx-1 rounded-lg px-2 py-1 border border-gray-600 ${determineColorClass(tag.value)}`}
-                                                        type="text"
-                                                        value={tag.value}
-                                                        onChange={(e) => handleUpdateTagValue(index, tagIndex, e.target.value)}
-                                                    />
-                                                    <h3 className="absolute right-4 text-lg">%</h3>
-                                                </div>
 
-                                                <DeleteModalComponent title='Are you sure you want to delete tag?' onConfirmed={() => handleDeleteTag(index, tagIndex)}>
-                                                    <button className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 px-1 rounded">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                                        </svg>
-                                                    </button>
-                                                </DeleteModalComponent>
-                                            </div>
-                                        ))
-                                    }
 
-                                    <button className=" bg-[#FF9C75] px-4 py-1.5 mt-2 rounded-lg text-white" onClick={() => handleAddTag(index)}>Add Tag</button>
+                                    <div className="mt-6 mb-5">
+                                        <TagsInput value={row.tags} onChange={(e) => onChangeTags(e, index)} />
+                                    </div>
+
+
+
+
                                 </div>
                             ))}
                             <div className="flex justify-center sm:justify-start">
@@ -871,10 +811,7 @@ function ImageUploader({ onBack, onFecth }) {
                     <EditTagsModalOffline
                         open={tagEditModal}
                         onClose={() => setTagEditModal(false)}
-                        handleDeleteTag={(index) => handleDeleteTag(activeTagIndex, index)}
-                        handleAddTag={() => handleAddTag(activeTagIndex)}
-                        editTagName={(index, e) => handleUpdateTagName(activeTagIndex, index, e)}
-                        editTagValue={(index, e) => handleUpdateTagValue(activeTagIndex, index, e)}
+                        setTags={(e) => changeTags(activeTagIndex, e)}
                         data={listings[activeTagIndex] && listings[activeTagIndex].tags}
                     />
 

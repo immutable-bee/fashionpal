@@ -54,14 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 subCategoryTwo: listing.subCategoryTwo,
                 mainImage: mainImagePath,
                 brandImage: brandImagePath,
-                tags: {
-                    create: listing.tags.map(x => {
-                        return {
-                            name: x.name,
-                            value: String(x.value)
-                        }
-                    })
-                }
+                tags: listing.tags
             }
 
 
