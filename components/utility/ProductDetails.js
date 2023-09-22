@@ -11,6 +11,10 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
     const [activeImage, setActiveImage] = useState(0);
 
     const onSave = async () => {
+        if (saveLoading) {
+            return
+        }
+
         setLoadingSave(true);
 
         try {
@@ -21,7 +25,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                 },
                 body: JSON.stringify({
                     id: data.id,
-                    matches: data.matches
+                    matches: !data.matches
                 })
             });
 
@@ -102,11 +106,22 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                 {!showAll && data?.tags.length > 3 && (
                                     <button className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white" onClick={() => setShowAll(true)}>View all</button>
                                 )}
-                                {!data.matches ? (
-                                    <div className="flex justify-center !mt-3">
-                                        <button onClick={() => onSave()} className={`bg-primary text-white px-5 py-1.5 rounded-lg ${saveLoading ? "opacity-70 pointer-events-none" : ""}`}>Save item</button>
-                                    </div>
-                                ) : ''}
+
+                                <div className="flex justify-center !mt-3">
+                                    {/* <button> */}
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
+                                    </svg>
+                                    {/* </button> */}
+                                    <button onClick={() => onSave()} className={`mx-2 ${saveLoading ? "opacity-70 cursor-progress" : ""}`}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class={`w-12 h-12 ${data.matches ? 'stroke-[#E44A1F] ' : ''}`} width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                                        </svg>
+                                    </button>
+                                </div>
+
 
                                 <div className="flex items-center">
                                     <Image

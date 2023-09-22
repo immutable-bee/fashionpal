@@ -14,6 +14,7 @@ const ProfileComponent = ({ }) => {
   const { user, fetchUserData } = {}
 
   const [formData, setFormData] = useState();
+  const [activeRebateTiers, setActiveRebateTiers] = useState(1);
   const [isResetInventoryModalOpen, setIsResetInventoryModalOpen] =
     useState(false);
 
@@ -207,6 +208,49 @@ const ProfileComponent = ({ }) => {
               <h6 className="mb-5 text-2xl font-bold text-center">
                 Upload Credits
               </h6>
+              <h6 className="mb-5 text-2xl font-medium text-center">
+                Rebate Tiers
+              </h6>
+
+              <div className="flex justify-center gap-2">
+                <div onClick={() => setActiveRebateTiers(1)} className={`cursor-pointer ${activeRebateTiers === 1 ? 'bg-green-300' : 'bg-white'}  text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}>
+                  50
+                </div>
+                <div onClick={() => setActiveRebateTiers(2)} className={`cursor-pointer ${activeRebateTiers === 2 ? 'bg-green-300' : 'bg-white'} text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}>
+                  500
+                </div>
+                <div onClick={() => setActiveRebateTiers(3)} className={`cursor-pointer ${activeRebateTiers === 3 ? 'bg-green-300' : 'bg-white'} text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}>
+                  1000
+                </div>
+              </div>
+              <div className="mt-10 mb-8">
+                <div className="flex items-center justify-between my-3">
+                  <h6 className="text-xl font-medium text-center">
+                    Listed this cycle
+                  </h6>
+                  <div className="cursor-pointer ml-4 bg-white text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black">
+                    53
+                  </div>
+                </div>
+                <div className="flex items-center justify-between my-3">
+                  <h6 className="text-xl font-medium text-center">
+                    Days left in cycle
+                  </h6>
+                  <div className="cursor-pointer ml-4 bg-white text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black">
+                    15
+                  </div>
+                </div>
+                <div className="flex items-center justify-between my-3">
+                  <h6 className="text-xl font-medium text-center">
+                    Daily listing average
+                    to meet next goal
+                  </h6>
+                  <div className="cursor-pointer ml-4 bg-white text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black">
+                    29
+                  </div>
+                </div>
+              </div>
+
               <div className="sm:flex gap-5 sm:justify-center">
                 <div className="flex sm:justify-center justify-between items-center mt-5">
                   <h3 class="text-xl font-medium mr-3">Membership</h3>
