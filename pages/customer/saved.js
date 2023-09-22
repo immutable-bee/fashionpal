@@ -8,12 +8,11 @@ import ListingItem from "@/components/utility/ListingItem";
 import Image from "next/image";
 import "swiper/css";
 export default function Home() {
-
   const [filter, setFilter] = useState("");
-  const [zipCode, setZipCode] = useState('');
-  const [radius, setRadius] = useState('');
-  const [size, setSize] = useState('');
-  const [type, setType] = useState('');
+  const [zipCode, setZipCode] = useState("");
+  const [radius, setRadius] = useState("");
+  const [size, setSize] = useState("");
+  const [type, setType] = useState("");
   // add
   const [image, setImage] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
@@ -49,12 +48,12 @@ export default function Home() {
   };
 
   const onChangeType = (e) => {
-    setType(e.target.value)
-  }
+    setType(e.target.value);
+  };
 
   const triggerDetailsModal = (index) => {
-    setDetailsModal(true)
-    setActiveIndex(index)
+    setDetailsModal(true);
+    setActiveIndex(index);
   };
   const handleActiveChange = (newActive) => {
     setActive(newActive);
@@ -110,27 +109,34 @@ export default function Home() {
 
   // pagination
 
-  const fetchListings = useCallback(async (e) => {
-    console.log('fetch');
-    setLoadingListings(true);
+  const fetchListings = useCallback(
+    async (e) => {
+      console.log("fetch");
+      setLoadingListings(true);
 
-    try {
-      const res = await fetch(`/api/customer-fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`);
+      try {
+        const res = await fetch(
+          `/api/fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`
+        );
 
-      if (res.status === 200) {
-        const data = await res.json();
-        setListings(data.results);
-        setPagination(data.pagination);
-      } else {
-        const errorMessage = await res.text();
-        console.error(`Fetch failed with status: ${res.status}, message: ${errorMessage}`);
+        if (res.status === 200) {
+          const data = await res.json();
+          setListings(data.results);
+          setPagination(data.pagination);
+        } else {
+          const errorMessage = await res.text();
+          console.error(
+            `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+          );
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching listings:", error);
+      } finally {
+        setLoadingListings(false);
       }
-    } catch (error) {
-      console.error('An error occurred while fetching listings:', error);
-    } finally {
-      setLoadingListings(false);
-    }
-  }, [filter, type, size]);  // Only re-create if filter, type or size changes
+    },
+    [filter, type, size]
+  ); // Only re-create if filter, type or size changes
 
   useEffect(() => {
     const initialFetch = async () => {
@@ -138,7 +144,6 @@ export default function Home() {
     };
     initialFetch();
   }, [type, size, fetchListings]);
-
 
   const fetchSearchResults = async () => {
     setLoadingSearchResults(true);
@@ -166,16 +171,13 @@ export default function Home() {
   };
 
   const onChangeSize = (e) => {
-    setSize(e.target.value)
-  }
+    setSize(e.target.value);
+  };
 
   const arrayToMap = searchResults.length > 0 ? searchResults : listings;
 
   const resultCount =
     searchResults.length > 0 ? searchResults.length : listings.length;
-
-
-
 
   return (
     <div className="min-h-screen bg-white">
@@ -195,8 +197,6 @@ export default function Home() {
               <p className="text-gray-900 text-base">
                 {resultCount} Results found
               </p>
-
-
             </div>
 
             <div className="">
@@ -211,47 +211,44 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="">
-
                   <div className="sm:flex flex-wrap justify-center mt-2">
-                    {listings && listings.map((row, key) => {
-                      return (
-                        <div
-                          style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
-                          className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full "
-
-                          key={row.id}
-                          onClick={() => triggerDetailsModal(key)}
-                        >
-
-                          <Image
-                            src={row.mainImage?.url}
-                            width={100}
-                            height={100}
-                            className="rounded !w-full !h-64 object-cover"
-                            alt=""
-                          />
-                          <div className="mt-2">
-                            {row.tags.slice(0, 3).map((tag, tagIndex) => (
-                              <p key={tagIndex} className="text-gray-800 text-base leading-5">
-                                {tag}
-                              </p>
-                            ))}
+                    {listings &&
+                      listings.map((row, key) => {
+                        return (
+                          <div
+                            style={{ boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)" }}
+                            className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full "
+                            key={row.id}
+                            onClick={() => triggerDetailsModal(key)}
+                          >
+                            <Image
+                              src={row.mainImage?.url}
+                              width={100}
+                              height={100}
+                              className="rounded !w-full !h-64 object-cover"
+                              alt=""
+                            />
+                            <div className="mt-2">
+                              {row.tags.slice(0, 3).map((tag, tagIndex) => (
+                                <p
+                                  key={tagIndex}
+                                  className="text-gray-800 text-base leading-5"
+                                >
+                                  {tag}
+                                </p>
+                              ))}
+                            </div>
                           </div>
+                          // <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
+                          //   <div className="flex items-center">
+                          //     <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
+                          //       View details
+                          //     </button>
 
-                        </div>
-                        // <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
-                        //   <div className="flex items-center">
-                        //     <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
-                        //       View details
-                        //     </button>
-
-
-                        //   </div>
-                        // </ListingItem>
-
-                      );
-                    })}
-
+                          //   </div>
+                          // </ListingItem>
+                        );
+                      })}
                   </div>
 
                   <div
@@ -268,7 +265,6 @@ export default function Home() {
                       />
                     )}
                   </div>
-
                 </div>
               )}
             </div>
@@ -281,7 +277,6 @@ export default function Home() {
         data={listings[activeTagIndex]}
         fetchListings={() => fetchListings(1)}
       />
-
     </div>
   );
 }
