@@ -212,29 +212,32 @@ export default function Home() {
               ) : (
                 <div className="">
                   <div className="sm:flex flex-wrap justify-center mt-2">
-                    {listings && listings.map((row, key) => {
-                      return (
-                        <div
-                          style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
-                          className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full "
-
-                          key={row.id}
-                          onClick={() => triggerDetailsModal(key)}
-                        >
-
-                          <Image
-                            src={row.mainImage?.url}
-                            width={100}
-                            height={100}
-                            className="rounded !w-full !h-64 object-cover"
-                            alt=""
-                          />
-                          <div className="mt-2">
-                            {row.tags.slice(0, 3).map((tag, tagIndex) => (
-                              <p key={tagIndex} className="text-gray-800 text-base leading-5">
-                                {tag}
-                              </p>
-                            ))}
+                    {listings &&
+                      listings.map((row, key) => {
+                        return (
+                          <div
+                            style={{ boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)" }}
+                            className="px-4 sm:!w-56 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full "
+                            key={row.id}
+                            onClick={() => triggerDetailsModal(key)}
+                          >
+                            <Image
+                              src={row.mainImage?.url}
+                              width={100}
+                              height={100}
+                              className="rounded !w-full !h-64 object-cover"
+                              alt=""
+                            />
+                            <div className="mt-2">
+                              {row.tags.slice(0, 3).map((tag, tagIndex) => (
+                                <p
+                                  key={tagIndex}
+                                  className="text-gray-800 text-base leading-5"
+                                >
+                                  {tag}
+                                </p>
+                              ))}
+                            </div>
                           </div>
                           // <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
                           //   <div className="flex items-center">
