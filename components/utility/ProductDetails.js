@@ -122,8 +122,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                     </button>
                                 </div>
 
-
-                                <div className="flex items-center">
+                                <div className="flex items-center mt-5">
                                     <Image
                                         src={data?.brandTagPhoto}
                                         className="w-28 rounded-full"

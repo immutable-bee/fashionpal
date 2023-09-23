@@ -5,6 +5,7 @@ import CustomerSalesFilters from "@/components/customer/CustomerSalesFilters";
 import Loading from "@/components/utility/loading";
 import moment from 'moment'
 import "swiper/css";
+import Link from "next/link";
 export default function Home() {
   const [loadingUpcomingSales, setLoadingUpcomingSales] = useState(false);
   const [loadingCurrentSales, setLoadingCurrentSales] = useState(false);
@@ -200,6 +201,12 @@ export default function Home() {
                             <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
                           </div>
 
+                          <div className="flex justify-center !mt-3">
+                            <Link href="/store/id">
+                              <button className="bg-primary text-white px-5 py-1.5 mt-2 rounded-lg">View store</button>
+                            </Link>
+                          </div>
+
 
                         </div>
 
@@ -271,6 +278,11 @@ export default function Home() {
                             className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
                           >
                             <span className="w-1/2">End date:</span> <span className="w-1/2">  {moment(row.end_date).format('YYYY/MM/DD')}</span>
+                          </div>
+                          <div className="flex justify-center !mt-3">
+                            <Link href="/store/id">
+                              <button className="bg-primary text-white px-5 py-1.5 mt-2 rounded-lg">View store</button>
+                            </Link>
                           </div>
 
                         </div>

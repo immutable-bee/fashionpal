@@ -115,11 +115,11 @@ function ImageUploader({ onBack, onFecth }) {
 
 
 
-    const handleImageChange = (e, type) => {
+    const handleImageChange = (e) => {
 
 
         const file = e.target.files[0];
-        compressImage(file, type)
+        compressImage(file)
 
     };
     const onNextToImageUploader = (e) => {
@@ -233,7 +233,7 @@ function ImageUploader({ onBack, onFecth }) {
 
     };
 
-    const compressImage = (file, type) => {
+    const compressImage = (file) => {
         // compress file
         const options = {
             quality: 0.6,
@@ -246,7 +246,7 @@ function ImageUploader({ onBack, onFecth }) {
                 })
                 console.log(newFile)
                 const blobURL = URL.createObjectURL(newFile);
-                setImage({ url: blobURL, file: newFile, tag: '', type: type });
+                setImage({ url: blobURL, file: newFile });
                 if (step === 1) {
                     setStep(2);
                 }
@@ -370,21 +370,18 @@ function ImageUploader({ onBack, onFecth }) {
             // Return GPT's result directly
             return tags;
         }
-
-
-
     };
 
     const triggerToTagsPage = async () => {
         const requests = [];
 
         for (let listing of listings) {
-            if (listing.items.main && listing.items.main.image && listing.items.main.type === "ai") {
+            if (listing.items.main && listing.items.main.image) {
                 const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
                 requests.push(getTagsFromXimilar(mainImageBase64, 'main'));
             }
 
-            if (listing.items.brandTag && listing.items.brandTag.image && listing.items.brandTag.type === "ai") {
+            if (listing.items.brandTag && listing.items.brandTag.image) {
                 const brandTagImageBase64 = await convertBlobToBase64(listing.items.brandTag.image);
                 requests.push(getTagsFromXimilar(brandTagImageBase64, 'brandTag'));
             }
@@ -419,33 +416,6 @@ function ImageUploader({ onBack, onFecth }) {
             handleUploadAll();
         }
     };
-
-    function hasAIType(listings) {
-        for (let row of listings) {
-            let typesArray = [];
-
-            // Check if main exists and push its type to typesArray
-            if (row.items.main) {
-                typesArray.push(row.items.main.type);
-            }
-
-            // Check if brandTag exists and push its type to typesArray
-            if (row.items.brandTag) {
-                typesArray.push(row.items.brandTag.type);
-            }
-
-            // If typesArray includes "ai", return true immediately
-            if (typesArray.includes("ai")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-
-
-
 
     const fileToBase64 = (file) => {
         console.log(file)
@@ -546,20 +516,11 @@ function ImageUploader({ onBack, onFecth }) {
                         <div className=" mx-auto">
                             {!image.url && [1, 2, 3].includes(step) ? (
                                 <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
+
                                     <label className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-56 border-2 shadow-md h-56">
                                         <div>
-                                            <input type="file" accept="image/*" capture="user" className="sr-only" onChange={(e) => handleImageChange(e, 'ai')} />
-                                            <h1 className="text-xl text-center font-medium font-mono ">Take AI Photo</h1>
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
-                                            </svg>
-                                        </div>
-                                    </label>
-                                    <label className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-56 border-2 shadow-md h-56">
-                                        <div>
-                                            <input type="file" accept="image/*" capture="user" className="sr-only" onChange={(e) => handleImageChange(e, 'normal')} />
-                                            <h1 className="text-xl text-center font-medium font-mono ">Take Normal Photo</h1>
+                                            <input type="file" accept="image/*" capture="user" className="sr-only" onChange={(e) => handleImageChange(e)} />
+                                            <h1 className="text-xl text-center font-medium font-mono ">Take Photo</h1>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
@@ -706,7 +667,7 @@ function ImageUploader({ onBack, onFecth }) {
                             </div>
 
 
-                            {listings.length > 0 && hasAIType(listings) ? (
+                            {listings.length > 0 ? (
 
                                 <div className="mt-10 ml-3">
 
@@ -731,11 +692,11 @@ function ImageUploader({ onBack, onFecth }) {
                                     </div>
 
                                 </div>
-                            ) : (
-                                <div className="flex justify-center sm:justify-start mt-10 ml-3">
-                                    <ButtonComponent rounded className="!w-48" onClick={() => setStep(7)} >Review All</ButtonComponent>
-                                </div>
-                            )}
+                            ) : ""
+                                // <div className="flex justify-center sm:justify-start mt-10 ml-3">
+                                //     <ButtonComponent rounded className="!w-48" onClick={() => setStep(7)} >Review All</ButtonComponent>
+                                // </div>
+                            }
                         </div>
                         : ''}
 
