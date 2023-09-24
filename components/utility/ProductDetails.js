@@ -35,7 +35,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    id: data.id,
+                    id: data?.id,
                     matches: !data.matches
                 })
             });
@@ -58,7 +58,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
     const triggerOpenShareModal = () => {
         setOpenShareModal(true);
     };
-    const productUrl = `http://fashionpal.vercel.app/store/${data.id}`;
+    const productUrl = `http://fashionpal.vercel.app/store/${data?.id}`;
 
     const handleShare = platform => {
         switch (platform) {
@@ -234,7 +234,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                 </div>
 
                                 <div className="flex justify-center !mt-3">
-                                    <Link href={`/store/${data.id}`}>
+                                    <Link href={`/store/${data?.id}`}>
                                         <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
                                     </Link>
                                 </div>
