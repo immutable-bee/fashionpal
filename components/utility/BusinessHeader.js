@@ -24,16 +24,11 @@ const HeaderComponent = () => {
             src="/images/logo-vertical.jpg"
             width={120}
             height={58}
-            className="w-20 sm:w-48"
+            className="w-36 sm:w-48"
             alt="logo"
           />
         </Link>
       </div>
-
-
-
-
-
 
       <div class={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${open ? '!block' : ''} `} id="navbar-default">
         <ul class="font-medium sm:w-auto w-full text-lg flex flex-col p-4 md:p-0 mt-4 border border-gray-100 sm:border-transparent rounded-lg sm:bg-transparent bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
@@ -61,11 +56,6 @@ const HeaderComponent = () => {
         </ul>
       </div>
 
-
-
-
-
-
       <Link
         href="/business/profile"
         className="flex items-center no-underline"
@@ -84,8 +74,6 @@ const HeaderComponent = () => {
           Hi, Demo User!
         </span>
       </Link>
-
-
     </header>
   );
 };

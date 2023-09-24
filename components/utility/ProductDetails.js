@@ -3,12 +3,23 @@ import Image from 'next/image';
 import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from 'react-notifications';
 import Link from "next/link";
+import {
+    FacebookShareButton, FacebookMessengerShareButton, TwitterShareButton, TelegramShareButton,
+    WhatsappShareButton, LinkedinShareButton, PinterestShareButton, VKShareButton,
+    OKShareButton, RedditShareButton, TumblrShareButton, EmailShareButton,
+
+    FacebookIcon, FacebookMessengerIcon, TwitterIcon, TelegramIcon, WhatsappIcon,
+    LinkedinIcon, PinterestIcon, VKIcon, OKIcon, RedditIcon, TumblrIcon, EmailIcon
+} from 'react-share';
 function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false }) {
     console.log(data)
     const [showAll, setShowAll] = useState(false);
     const tagsToDisplay = showAll ? data?.tags : data?.tags.slice(0, 3);
     const [saveLoading, setLoadingSave] = useState(false);
     const [activeImage, setActiveImage] = useState(0);
+    const [openShareModal, setOpenShareModal] = useState(false);
+
+
 
     const onSave = async () => {
         if (saveLoading) {
@@ -42,6 +53,39 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
         } finally {
             setLoadingSave(false);
         }
+    };
+
+    const triggerOpenShareModal = () => {
+        setOpenShareModal(true);
+    };
+    const productUrl = `http://fashionpal.vercel.app/store/${data.id}`;
+
+    const handleShare = platform => {
+        switch (platform) {
+            case 'url':
+                copyToClipboard();
+                break;
+            case 'textMessage':
+                window.location.href = `sms:?body=${encodeURIComponent(productUrl)}`;
+                break;
+            default:
+                break;
+        }
+    };
+
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText(productUrl).then(() => {
+            NotificationManager.success('URL copied to clipboard!')
+
+        }).catch(err => {
+            NotificationManager.error('Failed to copy URL. Please copy manually.');
+        });
+    };
+
+
+    const closeShareModal = () => {
+        setOpenShareModal(false);
     };
     return (
 
@@ -92,6 +136,56 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                 </button>
                             )}
                         </div>
+                        {
+                            openShareModal &&
+                            <ModalComponent
+                                open={openShareModal}
+                                title="Share product"
+                                onClose={closeShareModal}
+                                footer={
+                                    <div className="flex justify-end w-full">
+                                        <button className="bg-primary px-4 py-1.5 mt-2 rounded-lg text-white" onClick={closeShareModal}>Close</button>
+                                    </div>
+                                }
+                            >
+                                <div className="flex flex-wrap gap-3">
+                                    <FacebookShareButton url={productUrl}><FacebookIcon size={80} round /></FacebookShareButton>
+                                    <FacebookMessengerShareButton url={productUrl}><FacebookMessengerIcon size={80} round /></FacebookMessengerShareButton>
+                                    <TwitterShareButton url={productUrl}><TwitterIcon size={80} round /></TwitterShareButton>
+                                    <TelegramShareButton url={productUrl}><TelegramIcon size={80} round /></TelegramShareButton>
+                                    <WhatsappShareButton url={productUrl}><WhatsappIcon size={80} round /></WhatsappShareButton>
+                                    <LinkedinShareButton url={productUrl}><LinkedinIcon size={80} round /></LinkedinShareButton>
+                                    <PinterestShareButton url={productUrl} media={data?.mainImage?.url}><PinterestIcon size={80} round /></PinterestShareButton>
+                                    <VKShareButton url={productUrl}><VKIcon size={80} round /></VKShareButton>
+                                    <OKShareButton url={productUrl}><OKIcon size={80} round /></OKShareButton>
+                                    <RedditShareButton url={productUrl}><RedditIcon size={80} round /></RedditShareButton>
+                                    <TumblrShareButton url={productUrl}><TumblrIcon size={80} round /></TumblrShareButton>
+                                    <EmailShareButton url={productUrl}><EmailIcon size={80} round /></EmailShareButton>
+
+                                    <button className="bg-pink-400 !m-0 w-20 h-20 rounded-full flex justify-center items-center" onClick={() => handleShare('url')}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-white" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h3m9 -9v-5a2 2 0 0 0 -2 -2h-2" />
+                                            <path d="M13 17v-1a1 1 0 0 1 1 -1h1m3 0h1a1 1 0 0 1 1 1v1m0 3v1a1 1 0 0 1 -1 1h-1m-3 0h-1a1 1 0 0 1 -1 -1v-1" />
+                                            <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
+                                        </svg>
+
+                                    </button>
+                                    <button className="bg-green-400 !m-0 w-20 h-20 rounded-full flex justify-center items-center" onClick={() => handleShare('textMessage')}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-white" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M8 9h8" />
+                                            <path d="M8 13h6" />
+                                            <path d="M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3z" />
+                                        </svg>
+
+                                    </button>
+
+                                </div>
+
+                            </ModalComponent>
+                        }
+
                         {!imageOnly ?
                             <div>
                                 <h3 className="text-xl">Item Tags</h3>
@@ -109,7 +203,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
 
                                 <div className="flex justify-center !mt-3">
                                     {/* <button> */}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg onClick={() => triggerOpenShareModal()} xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-2 cursor-pointer" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                         <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
                                     </svg>
@@ -140,7 +234,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                 </div>
 
                                 <div className="flex justify-center !mt-3">
-                                    <Link href="/store/id">
+                                    <Link href={`/store/${data.id}`}>
                                         <button className="bg-primary text-white px-5 py-1.5 rounded-lg">View store</button>
                                     </Link>
                                 </div>

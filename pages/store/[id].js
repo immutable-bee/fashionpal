@@ -5,13 +5,31 @@ import Link from "next/link";
 import BackArrow from '../../assets/back-arrow.svg'
 import BookStoreImage from '../../assets/bookstore-img.svg'
 import Slidercomponent from "@/components/slidercomponent";
+import { useRouter } from "next/router"; //
+
 const Bookstoredetail = () => {
     const [bookstoresNearYou, setBookstoresNearYou] = useState([]);
+    const router = useRouter();
+
+    const handleBackClick = () => {
+        // If there's more than one entry in the session history
+        if (typeof window !== 'undefined' && window.history.length > 1) {
+            router.back();
+        } else {
+            router.push("/customer");
+        }
+    };
+
     return (
         <div className=" bg-white h-screen px-5 w-screen overflow-hidden">
             <div className="pt-10">
                 <h2 className="flex items-center">
-                    <span className=" text-2xl font-semibold">Bookstore Details</span>
+                    <svg onClick={handleBackClick}
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 cursor-pointer hover:text-gray-600">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+
+                    <span className=" text-2xl font-semibold ml-3">Bookstore Details</span>
                 </h2>
             </div>
 
