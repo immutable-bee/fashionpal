@@ -1,6 +1,9 @@
 import { ImageAnnotatorClient } from '@google-cloud/vision';
 
-const client = new ImageAnnotatorClient();
+const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64, 'base64').toString());
+
+const client = new ImageAnnotatorClient({ credentials });
+
 
 export default async (req, res) => {
     try {
