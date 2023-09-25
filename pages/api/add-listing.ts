@@ -63,14 +63,7 @@ export default async function handler(
         subCategoryTwo: listing.subCategoryTwo,
         mainImage: mainImagePath,
         brandImage: brandImagePath,
-        tags: {
-          create: listing.tags.map((x) => {
-            return {
-              name: x.name,
-              value: String(x.value),
-            };
-          }),
-        },
+        tags: listing.tags,
       };
 
       const createdListing = await prisma.listing.create({
