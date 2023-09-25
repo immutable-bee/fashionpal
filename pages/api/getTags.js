@@ -10,6 +10,8 @@ export default async (req, res) => {
         const base64Image = req.body.image;
         const imageType = req.body.type;
 
+
+
         if (!base64Image || !imageType) {
             return res.status(400).json({ error: "Missing required parameters." });
         }
