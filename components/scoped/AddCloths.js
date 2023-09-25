@@ -7,7 +7,6 @@ import TagsInput from "react-tagsinput";
 
 import "react-tagsinput/react-tagsinput.css";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
-import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
 import cloneDeep from "lodash.clonedeep";
 import Compressor from "compressorjs";
@@ -311,12 +310,12 @@ function ImageUploader({ onBack, onFecth }) {
             tagsArray.push(...tags); // spread and push the tags into tagsArray
           }
         });
-
-        return tagsArray;
+        return tagsArray.map((tag) => camelize(tag));
       }
 
       const allTags = getAllTags(response.data.records[0]._objects);
       console.log(allTags);
+
       return allTags;
     } else if (imageType === "brandTag") {
       // Using Ximilar's OCR + GPT endpoint
@@ -339,10 +338,9 @@ function ImageUploader({ onBack, onFecth }) {
           },
         }
       );
-      const tags = dJSON.parse(response.data.records[0]._gpt.result);
-      console.log(tags);
       // Return GPT's result directly
-      return tags;
+      const gptResult = dJSON.parse(response.data.records[0]._gpt.result);
+      return gptResult.map((tag) => camelize(tag.value));
     }
   };
 
@@ -366,10 +364,10 @@ function ImageUploader({ onBack, onFecth }) {
     }
 
     const responses = await axios.all(requests);
-    console.log(responses);
+
     setListings((prevListings) => {
       let responseIndex = 0;
-      const updatedListings = prevListings.map((listing) => {
+      return prevListings.map((listing) => {
         // Merge tags from 'main' and 'brandTag' (if present).
         listing.tags = [...responses[responseIndex]];
         console.log(listing.tags);
@@ -380,11 +378,8 @@ function ImageUploader({ onBack, onFecth }) {
           console.log(listing.tags);
           responseIndex++;
         }
-
         return listing;
       });
-
-      return updatedListings;
     });
 
     // Execute the additional logic after updating the tags:
@@ -462,6 +457,13 @@ function ImageUploader({ onBack, onFecth }) {
 
     // Update the listings state (assuming you have a setState method for listings)
     setListings(updatedListings);
+  }
+
+  function camelize(text) {
+    const a = text
+      .toLowerCase()
+      .replace(/[-_/\s.]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ""));
+    return a.substring(0, 1).toLowerCase() + a.substring(1);
   }
 
   return (
