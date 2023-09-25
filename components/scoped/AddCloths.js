@@ -13,8 +13,7 @@ import cloneDeep from "lodash.clonedeep";
 import Compressor from 'compressorjs'
 import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
-// 
-const XIMILAR_API_TOKEN = process.env.NEXT_PUBLIC_XIMILAR_API_TOKEN;
+
 console.log(process.env)
 const dJSON = require('dirty-json');
 
@@ -297,78 +296,30 @@ function ImageUploader({ onBack, onFecth }) {
     };
 
 
-    const getTagsFromXimilar = async (base64Image, imageType) => {
-        if (imageType === "main") {
-
-            // Define the Top Category and Category based on the type
-            let topCategory = category; // Assuming the type matches the Top Category exactly
-            let localCategory; // Assuming a default category here, you can modify as needed
-
-            switch (localCategory) {
-                case 'Footware':
-                    localCategory = 'Footware/Boots'; // Modify as per your requirement
-                    break;
-                case 'Clothing':
-                    localCategory = 'Clothing/Upper'; // Modify as per your requirement
-                    break;
-                case 'Hats':
-                    localCategory = 'Hats/Caps'; // Modify as per your requirement
-                    break;
-                default:
-                    break;
-            }
-
-            const response = await axios.post('https://api.ximilar.com/tagging/fashion/v2/detect_tags', {
-                relevance: 0.3,
-                records: [{
-                    _base64: base64Image,
-                    'Top Category': topCategory,
-                    Category: localCategory
-                }],
-            }, {
+    // This function will send the image to the server-side endpoint for processing.
+    const getTagsFromGoogleVision = async (base64Image, imageType) => {
+        try {
+            const response = await fetch('/api/getTags', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Token ${XIMILAR_API_TOKEN}`
-                }
+                },
+                body: JSON.stringify({
+                    image: base64Image,
+                    type: imageType,
+                }),
             });
 
-            function getAllTags(data) {
-                const tagsArray = [];
-
-                data.forEach(item => {
-                    const tags = item._tags_simple;
-                    if (Array.isArray(tags)) {
-                        tagsArray.push(...tags); // spread and push the tags into tagsArray
-                    }
-                });
-
-                return tagsArray;
+            const data = await response.json();
+            if (data && data.tags) {
+                return data.tags;
+            } else {
+                console.error('Error fetching tags:', data.error);
+                return [];
             }
-
-
-
-            const allTags = getAllTags(response.data.records[0]._objects);
-            console.log(allTags)
-            return allTags
-        }
-        else if (imageType === "brandTag") {
-            // Using Ximilar's OCR + GPT endpoint
-            const response = await axios.post('https://api.ximilar.com/ocr/v2/read_gpt', {
-                lang: "en",
-                records: [{
-                    _base64: base64Image,
-                    prompt: "Please extract specific details from the provided text and create an array. Each entry in the array should consist of a name and its corresponding value. for example if image found brand or Made then should return this: {name: 'Made in', value: 'country here....'} {name: 'Brand', value: 'brand here.....'} ..."
-                }],
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${XIMILAR_API_TOKEN}`
-                }
-            });
-            const tags = dJSON.parse(response.data.records[0]._gpt.result)
-            console.log(tags)
-            // Return GPT's result directly
-            return tags;
+        } catch (error) {
+            console.error('Failed to get tags:', error);
+            return [];
         }
     };
 
@@ -378,12 +329,12 @@ function ImageUploader({ onBack, onFecth }) {
         for (let listing of listings) {
             if (listing.items.main && listing.items.main.image) {
                 const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
-                requests.push(getTagsFromXimilar(mainImageBase64, 'main'));
+                requests.push(getTagsFromGoogleVision(mainImageBase64, 'main'));
             }
 
             if (listing.items.brandTag && listing.items.brandTag.image) {
                 const brandTagImageBase64 = await convertBlobToBase64(listing.items.brandTag.image);
-                requests.push(getTagsFromXimilar(brandTagImageBase64, 'brandTag'));
+                requests.push(getTagsFromGoogleVision(brandTagImageBase64, 'brandTag'));
             }
         }
 
