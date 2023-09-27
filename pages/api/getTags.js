@@ -6,11 +6,14 @@ const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_APPLICATION_CREDEN
 const client = new ImageAnnotatorClient({ credentials });
 
 const REMOVE_BG_API_KEY = process.env.REMOVE_BG_API_KEY;
+
 const REMOVE_BG_URL = 'https://api.remove.bg/v1.0/removebg';
 
 const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 
 const removeBgApiCall = async (base64) => {
+
+
     try {
         const formData = new FormData();
         formData.append('image_file_b64', base64);
