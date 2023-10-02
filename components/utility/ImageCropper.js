@@ -6,6 +6,7 @@ import ButtonComponent from "@/components/utility/Button";
 import 'react-image-crop/dist/ReactCrop.css';
 
 
+
 const REMOVE_BG_API_KEY = process.env.NEXT_PUBLIC_REMOVE_BG_API_KEY;
 
 const convertBlobToBase64 = async (blobUrl) => {
