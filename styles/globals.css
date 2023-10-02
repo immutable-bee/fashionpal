@@ -92,3 +92,8 @@ body {
   border-radius: 14px;
   margin-bottom: 39px;
 }
+
+#circle-crop .cropper-view-box,
+#circle-crop .cropper-face {
+  border-radius: 50% !important;
+}

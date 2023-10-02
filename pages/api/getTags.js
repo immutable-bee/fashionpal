@@ -5,7 +5,7 @@ import axios from 'axios';
 const credentials = JSON.parse(Buffer.from(process.env.GOOGLE_APPLICATION_CREDENTIALS_BASE64, 'base64').toString());
 const client = new ImageAnnotatorClient({ credentials });
 
-const REMOVE_BG_API_KEY = process.env.REMOVE_BG_API_KEY;
+const REMOVE_BG_API_KEY = process.env.NEXT_PUBLIC_REMOVE_BG_API_KEY;
 
 const REMOVE_BG_URL = 'https://api.remove.bg/v1.0/removebg';
 
@@ -24,6 +24,7 @@ const removeBgApiCall = async (base64) => {
                 'X-API-Key': REMOVE_BG_API_KEY
             }
         });
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.error("Error with remove.bg API:", error.response && error.response.data);

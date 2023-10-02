@@ -3,6 +3,7 @@ import { NotificationManager } from 'react-notifications';
 import Image from "next/image";
 import axios from 'axios';
 import ButtonComponent from "@/components/utility/Button";
+import ImageCropper from "@/components/utility/ImageCropper";
 import TagsInput from 'react-tagsinput'
 
 import 'react-tagsinput/react-tagsinput.css'
@@ -114,24 +115,42 @@ function ImageUploader({ onBack, onFecth }) {
 
 
 
+    const [cropImage, setCropImage] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+
     const handleImageChange = (e) => {
-
-
         const file = e.target.files[0];
-        compressImage(file)
-
+        compressImage(file);
     };
-    const onNextToImageUploader = (e) => {
 
+    const compressImage = (file) => {
+        const options = {
+            quality: 0.6,
+            maxWidth: 500,
+            success: (compressedFile) => {
+                const newFile = new File([compressedFile], file.name, {
+                    type: compressedFile.type,
+                });
+                const blobURL = URL.createObjectURL(newFile);
+                // setImage({ url: blobURL, file: newFile });
+                setCropImage({ url: blobURL, file: newFile });
+                setShowModal(true);
+            },
+            error: (error) => {
+                console.error(error.message);
+            },
+        };
+        new Compressor(file, options);
+    };
 
-        if (!type) {
-            NotificationManager.error('Type is required!')
-            return
+    const handleCrop = (e) => {
+        setImage(e);
+        setShowModal(false);
+        if (step === 1) {
+            setStep(2);
         }
-
-        setStep(1)
-
     };
+
     const deleteImage = (e) => {
 
 
@@ -232,32 +251,7 @@ function ImageUploader({ onBack, onFecth }) {
 
     };
 
-    const compressImage = (file) => {
-        // compress file
-        const options = {
-            quality: 0.6,
-            maxWidth: 500,
-            // quality: max_size / file.size,
-            success: (compressedFile) => {
-                console.log('compress success in...')
-                const newFile = new File([compressedFile], file.name, {
-                    type: compressedFile.type,
-                })
-                console.log(newFile)
-                const blobURL = URL.createObjectURL(newFile);
-                setImage({ url: blobURL, file: newFile });
-                if (step === 1) {
-                    setStep(2);
-                }
 
-            },
-            error: (error) => {
-                console.error(error.message)
-            },
-        }
-        console.log(options)
-        new Compressor(file, options)
-    }
 
     const handleFinishListing = () => {
 
@@ -458,6 +452,13 @@ function ImageUploader({ onBack, onFecth }) {
                 </h3>
             </div>
             {tags}
+            {showModal && (
+                <ImageCropper
+                    imageSrc={cropImage}
+                    onClose={() => setShowModal(false)}
+                    onCrop={handleCrop}
+                />
+            )}
 
             {!uploading ? (
                 <div className="">
