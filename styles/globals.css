@@ -30,6 +30,10 @@ body {
   background-color: #E44A1F !important;
 }
 
+.hover-bg-primary:hover {
+  background-color: #E44A1F !important;
+}
+
 .border-primary {
   border-color: #E44A1F !important;
 }
