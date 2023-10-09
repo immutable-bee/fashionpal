@@ -656,6 +656,9 @@ function ImageUploader({ onBack, onFecth }) {
                                                     audio={false}
                                                     ref={webcamRef}
                                                     screenshotFormat="image/jpeg"
+                                                    videoConstraints={{
+                                                        facingMode: { exact: "environment" }
+                                                    }}
                                                 />
                                                 <button className="bg-gray-300 px-5 py-2 rounded-lg mt-3" onClick={capture}>
                                                     Capture {currentPhotoType === 'main' ? 'Main Image' : 'BrandTag'}
@@ -663,7 +666,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                                             </div> :
                                             <div>
-                                                <div onClick={() => setShowCamera(true)} className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56">
+                                                <div onClick={() => setShowCamera(true)} className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56">
                                                     <div>
                                                         {/* <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="sr-only" onChange={handleMainAndBrandImage} /> */}
 
@@ -999,7 +1002,7 @@ function ImageUploader({ onBack, onFecth }) {
                                         <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
                                             {listings.map((row, key) => {
                                                 return (
-                                                    <ListingItem key={key} mainPhoto={row.items.main.image} tags={row.tags}>
+                                                    <ListingItem key={key} mainPhoto={row.items.main.image} brandPhoto={row.items.brandTag.image} tags={row.tags}>
 
                                                         <button onClick={() => triggerEditTagsModalOffline(key)} className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded">
                                                             Edit Tags

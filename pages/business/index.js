@@ -225,6 +225,7 @@ export default function Home() {
                           >
                             <ListingItem
                               mainPhoto={row?.mainImage?.url}
+                              brandPhoto={row?.brandImage?.url}
                               tags={row?.tags}
                               clickable={true}
                             >
