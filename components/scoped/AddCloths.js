@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { NotificationManager } from 'react-notifications';
 import Image from "next/image";
 import Webcam from 'react-webcam';
@@ -16,12 +16,21 @@ import cloneDeep from "lodash.clonedeep";
 import Compressor from 'compressorjs'
 import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
+import moment from "moment";
 
 console.log(process.env)
 const dJSON = require('dirty-json');
 
 
 function ImageUploader({ onBack, onFecth }) {
+
+    const [price, setPrice] = useState(59.99)
+    const [floorPrice, setFloorPrice] = useState(0)
+    const [maxPrice, setMaxPrice] = useState(0)
+    const [startTime, setStartTime] = useState('')
+    const [endTime, setEndTime] = useState('')
+    const [dataSource, setDataSource] = useState('')
+    const [isAuctioned, setIsAuctioned] = useState(false)
 
     const subCategoryOptionsClothing = [
         { name: "Men's Wear", value: "mens_wear" },
@@ -30,6 +39,7 @@ function ImageUploader({ onBack, onFecth }) {
         { name: "Activewear", value: "activewear" },
         { name: "Formal Wear", value: "formal_wear" },
     ];
+
     const subCategoryOptionsFootwear = [
         { name: "Running Shoes", value: "running_shoes" },
         { name: "Sandals", value: "sandals" },
@@ -89,13 +99,20 @@ function ImageUploader({ onBack, onFecth }) {
     }
 
 
+    const results = [
+        { price: '59.99' },
+        { price: '29.99' },
+        { price: '19.99' }
+    ]
+
+    const [activeResultIndex, setActiveResultIndex] = useState(0)
 
 
     const [employeeName, setEmployeeName] = useState('');
     const [category, setCategory] = useState('');
     const [tags, setTags] = useState([]);
     const [type, setType] = useState('simple');
-    const [listType, setListType] = useState('simple');
+    const [listType, setListType] = useState('dispose');
     const [subCategoryOne, setSubCategoryOne] = useState('');
     const [subCategoryTwo, setSubCategoryTwo] = useState('');
 
@@ -166,6 +183,17 @@ function ImageUploader({ onBack, onFecth }) {
     // 
 
     const webcamRef = useRef(null);
+    const [facingMode, setFacingMode] = useState("environment");
+
+    useEffect(() => {
+        setStartTime(moment().format('HH:mm:ss'))
+        navigator.mediaDevices
+            .getUserMedia({ video: { facingMode: "environment" } })
+            .catch((error) => {
+                console.log("Back camera not available, switching to front camera.");
+                setFacingMode("user");
+            });
+    }, []);
 
 
 
@@ -343,18 +371,58 @@ function ImageUploader({ onBack, onFecth }) {
 
     };
 
-    const stopListing = () => {
-        setStep(3)
-    }
+    const stopListing = async () => {
+        const requests = [];
+
+        for (let listing of listings) {
+            if (listing.items.main && listing.items.main.image) {
+                const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
+                requests.push(getTagsFromGoogleVision(mainImageBase64, 'main'));
+            }
+
+            if (listing.items.brandTag && listing.items.brandTag.image) {
+                const brandTagImageBase64 = await convertBlobToBase64(listing.items.brandTag.image);
+                requests.push(getTagsFromGoogleVision(brandTagImageBase64, 'brandTag'));
+            }
+        }
+
+        const responses = await axios.all(requests);
+        console.log(responses)
+        setListings(prevListings => {
+            let responseIndex = 0;
+            const updatedListings = prevListings.map(listing => {
+                // Merge tags from 'main' and 'brandTag' (if present).
+                listing.tags = [...responses[responseIndex]];
+                console.log(listing.tags)
+                responseIndex++;
+
+                if (listing.items.brandTag && listing.items.brandTag.image) {
+                    listing.tags = [...listing.tags, ...responses[responseIndex]];
+                    console.log(listing.tags)
+                    responseIndex++;
+                }
+
+                return listing;
+            });
+
+            return updatedListings;
+        });
+
+
+        handleEmployeeUploadAll();
+
+    };
+
+
 
     const handleEmployeeListMore = () => {
-
         console.log(listings)
         console.log(uploadedImages)
         const newListing = listings
         newListing.push({
             employee_name: employeeName,
             type: type,
+            list_type: listType,
             tags: [],
             items: uploadedImages
         })
@@ -518,6 +586,47 @@ function ImageUploader({ onBack, onFecth }) {
 
 
 
+    const handleEmployeeUploadAll = async () => {
+        setUploading(true);
+
+        const convertedListings = await Promise.all(listings.map(async listing => {
+            const mainImageBase64 = await fileToBase64(listing.items.main.file);
+            const brandImageBase64 = listing.items.brandTag
+                ? await fileToBase64(listing.items.brandTag.file)
+                : null;
+
+            return {
+                mainImage: mainImageBase64,
+                brandImage: brandImageBase64,
+                category: category,
+                subCategoryOne: subCategoryOne,
+                subCategoryTwo: subCategoryTwo,
+                tags: listing.tags,
+            };
+        }));
+
+        try {
+            const requests = convertedListings.map(listing =>
+                axios.post('/api/add-listing', { listing })
+            );
+
+            const responses = await axios.all(requests);
+            const results = responses.map(response => response.data);
+
+            console.log(results);
+
+
+            NotificationManager.success('Listing added successfully!');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setEndTime(moment().format('HH:mm:ss'))
+            setStep(3)
+
+            onFecth();
+            setUploading(false);
+        }
+    };
     const handleUploadAll = async () => {
         setUploading(true);
 
@@ -626,6 +735,190 @@ function ImageUploader({ onBack, onFecth }) {
 
                         : ''}
 
+                    {type === 'admin' ?
+                        <div className="">
+                            {step === 1 ?
+                                <div className="w-72 mx-auto">
+                                    <div className="w-72 mx-auto">
+                                        <label>Category</label>
+                                        <select value={category} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setCategory(e.target.value)}>
+                                            <option value="" disabled>Select type</option>
+                                            <option value="Clothing">Clothing</option>
+                                            <option value="Footwear">Footwear</option>
+                                            <option value="Hats">Hats</option>
+                                        </select>
+                                    </div>
+                                    <div className="flex w-72 mx-auto gap-2 mt-5">
+                                        <div className="">
+                                            <label>Floor price</label>
+                                            <input type="number" className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setFloorPrice(e.target.value)} />
+
+                                        </div>
+                                        <div className="">
+                                            <label>Max price</label>
+                                            <input type="number" className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setMaxPrice(e.target.value)} />
+                                        </div>
+                                    </div>
+                                    <div className="w-72 mx-auto mt-5">
+                                        <label>Data source</label>
+                                        <div className="flex items-center mt-2">
+                                            <button onClick={() => setDataSource('store_only')} className={`${dataSource === 'store_only' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                                Store only
+                                            </button>
+                                            <button onClick={() => setDataSource('network')} className={`${dataSource === 'network' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                                Network
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-center sm:justify-start mt-8">
+                                        <label className="relative mb-4 flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                value=""
+                                                className="sr-only peer"
+                                                checked={isAuctioned}
+                                                onChange={() => setIsAuctioned(!isAuctioned)}
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                Option to Auction
+                                            </span>
+
+                                        </label>
+                                    </div>
+
+                                    <div>
+
+                                        <div className="border border-gray-500 mt-8 rounded-xl w-72 px-4 py-3">
+                                            <h3 className="text-xl font-semibold">Instructions</h3>
+
+                                            <ul className=" list-decimal ml-4 text-lg">
+
+                                                <li>Photo of the front</li>
+                                                <li>Photo of the item tag</li>
+                                                <li>Add to the appropriate pile</li>
+                                            </ul>
+                                        </div>
+                                        <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
+                                            {showCamera ?
+                                                <div>
+                                                    <Webcam
+                                                        audio={false}
+                                                        ref={webcamRef}
+                                                        screenshotFormat="image/jpeg"
+                                                        videoConstraints={{
+                                                            facingMode: facingMode
+                                                        }}
+                                                    />
+                                                    <button className="bg-gray-300 px-5 py-2 rounded-lg mt-3" onClick={capture}>
+                                                        Capture {currentPhotoType === 'main' ? 'Main Image' : 'BrandTag'}
+                                                    </button>
+
+                                                </div> :
+                                                <div>
+                                                    <div onClick={() => setShowCamera(true)} className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56">
+                                                        <div>
+
+
+                                                            <h1 className="text-xl text-center font-medium font-mono ">Take Photo</h1>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div> : ''}
+
+                            {step === 2 ?
+                                <div className="px-5 mt-6 w-[480px] mx-auto">
+
+                                    <div className="flex items-center justify-center mt-5">
+                                        <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                            Dispose
+                                        </button>
+                                        <button onClick={() => setListType('list')} className={`${listType === 'list' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                            List
+                                        </button>
+                                    </div>
+
+                                    <div className="flex gap-4 flex-wrap justify-center  mb-4 mt-6">
+
+                                        {uploadedImages.main ?
+                                            <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                <div className="w-full flex items-center justify-center">
+                                                    <img src={uploadedImages.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
+                                                </div>
+                                            </div>
+                                            : ''}
+
+                                        <div>
+                                            <h3 className="text-lg">Online Retail Listings</h3>
+                                            <div className="mt-3">
+                                                {results.map((row, key) => (
+                                                    <div key={key} className="flex justify-between mt-2">
+                                                        <div className={`px-2 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-transparent'}`}>
+                                                            <h3 className='text-xl'>{row.price}</h3>
+                                                        </div>
+                                                        <button onClick={() => {
+                                                            setActiveResultIndex(key)
+                                                            setPrice(row.price)
+                                                        }} className="underline text-xl">View</button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+
+                                    <div className="flex mx-1 justify-between">
+                                        <div>
+                                            <h3 className="text-lg">Displayed Retail Value: ${results[activeResultIndex].price}</h3>
+                                            <div className="mt-3">
+                                                <label className="block text-lg">Price</label>
+                                                <input value={price} type="number" className="w-24 mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setPrice(e.target.value)} />
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-2 justify-center">
+                                            <button onClick={() => setPrice(Number(Number(price) + 1))} className="border-2 border-gray-500 rounded-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-green-500">
+                                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                            <button onClick={() => setPrice(Number(Number(price) - 1))} className="border-2 border-gray-500 rounded-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-red-500">
+                                                    <path fill-rule="evenodd" d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-center mt-5">
+                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                            Dispose
+                                        </button>
+                                        <button onClick={() => handleEmployeeListMore()} className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                            Print SKU
+                                        </button>
+                                    </div>
+
+
+                                </div>
+                                : ''}
+                        </div>
+                        : ''}
+
                     {type === 'employee' ?
 
                         <div className="">
@@ -657,7 +950,7 @@ function ImageUploader({ onBack, onFecth }) {
                                                     ref={webcamRef}
                                                     screenshotFormat="image/jpeg"
                                                     videoConstraints={{
-                                                        facingMode: { exact: "environment" }
+                                                        facingMode: facingMode
                                                     }}
                                                 />
                                                 <button className="bg-gray-300 px-5 py-2 rounded-lg mt-3" onClick={capture}>
@@ -668,7 +961,7 @@ function ImageUploader({ onBack, onFecth }) {
                                             <div>
                                                 <div onClick={() => setShowCamera(true)} className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56">
                                                     <div>
-                                                        {/* <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="sr-only" onChange={handleMainAndBrandImage} /> */}
+
 
                                                         <h1 className="text-xl text-center font-medium font-mono ">Take Photo</h1>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
@@ -676,7 +969,8 @@ function ImageUploader({ onBack, onFecth }) {
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" />
                                                         </svg>
                                                     </div>
-                                                </div> <ButtonComponent full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent></div>}
+                                                </div>
+                                                <ButtonComponent loading={uploading} full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent></div>}
                                     </div>
 
                                 </div> : ''
@@ -737,18 +1031,55 @@ function ImageUploader({ onBack, onFecth }) {
                                 step === 3 ?
                                     <>
                                         <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
-                                            {listings.map((row, key) => {
-                                                return (
-                                                    <ListingItem key={key} mainPhoto={row.items.main.image} brandPhoto={row.items.brandTag.image}  >
 
-                                                        <span className='bg-primary text-white px-2 py-1 capitalize !font-light rounded-full'>{type}</span>
-                                                    </ListingItem>
+                                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                                <table class="w-full text-sm text-left text-gray-500">
+                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                                        <tr>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Disposed
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Listed
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Auctioned
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Start time
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                End time
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="bg-white dark:bg-gray-800">
+                                                            <td class="px-6 py-4">
+                                                                {listings.filter(x => x.list_type === 'dispose').length}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {listings.filter(x => x.list_type === 'list').length}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {listings.filter(x => x.list_type === 'auction').length}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {startTime}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {endTime}
+                                                            </td>
+                                                        </tr>
 
-                                                );
-                                            })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
                                         </div>
                                         <div className="flex justify-center sm:justify-start">
-                                            <ButtonComponent rounded className="!w-48 mt-6" onClick={handleUploadAll} >Upload All</ButtonComponent>
+                                            <ButtonComponent rounded className="!w-48 mt-6" onClick={() => onBack()} >Home page</ButtonComponent>
                                         </div>
                                     </> : ''
                             }
