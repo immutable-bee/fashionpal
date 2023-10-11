@@ -25,7 +25,9 @@ export default async (req, res) => {
 
 
         const requestFeatures = imageType === "main" ?
-            [{ type: 'TEXT_DETECTION' }, { type: 'IMAGE_PROPERTIES' }, { type: 'LOGO_DETECTION' }, { type: 'LABEL_DETECTION' }, { type: 'WEB_DETECTION' }] :
+            [{ type: 'TEXT_DETECTION' }, { type: 'IMAGE_PROPERTIES' }, { type: 'LOGO_DETECTION' }, { type: 'LABEL_DETECTION' },
+                //  { type: 'WEB_DETECTION' }
+            ] :
             [{ type: 'TEXT_DETECTION' }, { type: 'LOGO_DETECTION' }];
 
         const [result] = await client.annotateImage({ image: { content: bufferData }, features: requestFeatures });
@@ -43,7 +45,7 @@ export default async (req, res) => {
         res.status(200).json({
             tags: tags,
 
-            similarProducts: result.webDetection?.webEntities.map(entity => entity.description) || []
+            // similarProducts: result.webDetection?.webEntities.map(entity => entity.description) || []
         });
 
     } catch (error) {

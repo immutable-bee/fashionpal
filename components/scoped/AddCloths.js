@@ -25,12 +25,17 @@ const dJSON = require('dirty-json');
 function ImageUploader({ onBack, onFecth }) {
 
     const [price, setPrice] = useState(59.99)
+    const [auctionFloorPrice, setAuctionFloorPrice] = useState(0)
+    const [auctionMaxPrice, setAuctionMaxPrice] = useState(0)
     const [floorPrice, setFloorPrice] = useState(0)
     const [maxPrice, setMaxPrice] = useState(0)
     const [startTime, setStartTime] = useState('')
     const [endTime, setEndTime] = useState('')
     const [dataSource, setDataSource] = useState('')
+    const [isAuctionedToggle, setIsAuctionedToggle] = useState(false)
     const [isAuctioned, setIsAuctioned] = useState(false)
+    const [auctionTime, setAuctionTime] = useState(24)
+    const [delivery, setDelivery] = useState('')
 
     const subCategoryOptionsClothing = [
         { name: "Men's Wear", value: "mens_wear" },
@@ -718,13 +723,13 @@ function ImageUploader({ onBack, onFecth }) {
                     {step === 0 ?
                         <div>
                             <div className="flex items-center justify-center mt-5">
-                                <button onClick={() => setType('simple')} className={`${type === 'simple' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                <button onClick={() => setType('simple')} className={`${type === 'simple' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                     Simple
                                 </button>
-                                <button onClick={() => setType('employee')} className={`${type === 'employee' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  px-5 py-1.5 border border-gray-300`}>
+                                <button onClick={() => setType('employee')} className={`${type === 'employee' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  px-8 text-xl py-2.5 border border-gray-300`}>
                                     Employee
                                 </button>
-                                <button onClick={() => setType('admin')} className={`${type === 'admin' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                <button onClick={() => setType('admin')} className={`${type === 'admin' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                     Admin
                                 </button>
                             </div>
@@ -738,34 +743,41 @@ function ImageUploader({ onBack, onFecth }) {
                     {type === 'admin' ?
                         <div className="">
                             {step === 1 ?
-                                <div className="w-72 mx-auto">
-                                    <div className="w-72 mx-auto">
+                                <div className="w-96 mx-auto">
+                                    <div className="w-96 mx-auto">
                                         <label>Category</label>
-                                        <select value={category} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setCategory(e.target.value)}>
+                                        <select value={category} className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600" onChange={(e) => setCategory(e.target.value)}>
                                             <option value="" disabled>Select type</option>
                                             <option value="Clothing">Clothing</option>
                                             <option value="Footwear">Footwear</option>
                                             <option value="Hats">Hats</option>
                                         </select>
                                     </div>
-                                    <div className="flex w-72 mx-auto gap-2 mt-5">
+                                    <div className="flex justify-between w-96 mx-auto gap-2 mt-5">
                                         <div className="">
                                             <label>Floor price</label>
-                                            <input type="number" className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setFloorPrice(e.target.value)} />
+                                            <div className="relative flex items-center">
+                                                <h3 className="absolute text-base left-3 mt-1">$</h3>
+                                                <input value={floorPrice} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setFloorPrice(e.target.value)} />
+                                            </div>
+
 
                                         </div>
                                         <div className="">
                                             <label>Max price</label>
-                                            <input type="number" className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setMaxPrice(e.target.value)} />
+                                            <div className="relative flex items-center">
+                                                <h3 className="absolute text-base left-3 mt-1">$</h3>
+                                                <input value={maxPrice} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setMaxPrice(e.target.value)} />
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="w-72 mx-auto mt-5">
+                                    <div className="w-96 mx-auto mt-5">
                                         <label>Data source</label>
                                         <div className="flex items-center mt-2">
-                                            <button onClick={() => setDataSource('store_only')} className={`${dataSource === 'store_only' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                            <button onClick={() => setDataSource('store_only')} className={`${dataSource === 'store_only' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                                 Store only
                                             </button>
-                                            <button onClick={() => setDataSource('network')} className={`${dataSource === 'network' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                            <button onClick={() => setDataSource('network')} className={`${dataSource === 'network' ? 'bg-primary text-white' : 'bg-white'} duration-250 ease-in-out rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                                 Network
                                             </button>
                                         </div>
@@ -777,8 +789,8 @@ function ImageUploader({ onBack, onFecth }) {
                                                 type="checkbox"
                                                 value=""
                                                 className="sr-only peer"
-                                                checked={isAuctioned}
-                                                onChange={() => setIsAuctioned(!isAuctioned)}
+                                                checked={isAuctionedToggle}
+                                                onChange={() => setIsAuctionedToggle(!isAuctionedToggle)}
                                             />
                                             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
                                             <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -800,7 +812,7 @@ function ImageUploader({ onBack, onFecth }) {
                                                 <li>Add to the appropriate pile</li>
                                             </ul>
                                         </div>
-                                        <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
+                                        <div className="flex mt-8 rounded-2xl gap-2">
                                             {showCamera ?
                                                 <div>
                                                     <Webcam
@@ -828,8 +840,8 @@ function ImageUploader({ onBack, onFecth }) {
                                                             </svg>
                                                         </div>
                                                     </div>
-
-
+                                                    {listings.length !== 0 ?
+                                                        <ButtonComponent loading={uploading} full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent> : ''}
                                                 </div>
                                             }
                                         </div>
@@ -842,10 +854,10 @@ function ImageUploader({ onBack, onFecth }) {
                                 <div className="px-5 mt-6 w-[480px] mx-auto">
 
                                     <div className="flex items-center justify-center mt-5">
-                                        <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-red-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Dispose
                                         </button>
-                                        <button onClick={() => setListType('list')} className={`${listType === 'list' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => setListType('list')} className={`${listType === 'list' ? 'bg-green-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             List
                                         </button>
                                     </div>
@@ -865,13 +877,13 @@ function ImageUploader({ onBack, onFecth }) {
                                             <div className="mt-3">
                                                 {results.map((row, key) => (
                                                     <div key={key} className="flex justify-between mt-2">
-                                                        <div className={`px-2 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-transparent'}`}>
-                                                            <h3 className='text-xl'>{row.price}</h3>
-                                                        </div>
-                                                        <button onClick={() => {
+                                                        <div onClick={() => {
                                                             setActiveResultIndex(key)
                                                             setPrice(row.price)
-                                                        }} className="underline text-xl">View</button>
+                                                        }} className={`px-2 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
+                                                            <h3 className='text-xl'>{row.price}</h3>
+                                                        </div>
+                                                        <button className="underline text-xl">View</button>
                                                     </div>
                                                 ))}
                                             </div>
@@ -887,28 +899,88 @@ function ImageUploader({ onBack, onFecth }) {
                                             <h3 className="text-lg">Displayed Retail Value: ${results[activeResultIndex].price}</h3>
                                             <div className="mt-3">
                                                 <label className="block text-lg">Price</label>
-                                                <input value={price} type="number" className="w-24 mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setPrice(e.target.value)} />
+                                                <div className="relative flex items-center">
+                                                    <h3 className="absolute text-base left-3 mt-1">$</h3>
+                                                    <input value={price} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setPrice(e.target.value)} />
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex flex-col gap-2 justify-center">
-                                            <button onClick={() => setPrice(Number(Number(price) + 1))} className="border-2 border-gray-500 rounded-lg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-green-500">
+                                            <button onClick={() => setPrice(Number(Number(price) + 1))} className="border-2 p-1 border-gray-500 rounded-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12 text-green-500">
                                                     <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
                                                 </svg>
                                             </button>
-                                            <button onClick={() => setPrice(Number(Number(price) - 1))} className="border-2 border-gray-500 rounded-lg">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-red-500">
+                                            <button onClick={() => setPrice(Number(Number(price) - 1))} className="border-2 p-1 border-gray-500 rounded-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-12 h-12 text-red-500">
                                                     <path fill-rule="evenodd" d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z" clip-rule="evenodd" />
                                                 </svg>
                                             </button>
                                         </div>
+
+
                                     </div>
 
-                                    <div className="flex items-center justify-center mt-5">
-                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                    <div className="flex justify-center mt-3">
+                                        <button onClick={() => setIsAuctioned(true)} className={`${isAuctioned ? 'border border-gray-300 text-white bg-green-500' : 'border-2 border-green-400 text-green-400'}  duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5`}>
+                                            Auction
+                                        </button>
+                                    </div>
+
+                                    {isAuctioned ?
+                                        <div>
+                                            <div className="flex items-center justify-center mt-5">
+                                                <button onClick={() => setAuctionTime(12)} className={`${auctionTime === 12 ? 'bg-green-500 text-white' : 'bg-white'} duration-250 min-w-[30px] ease-in-out  rounded-l-xl px-6 text-base py-2 border border-gray-300`}>
+                                                    12hrs
+                                                </button>
+                                                <button onClick={() => setAuctionTime(24)} className={`${auctionTime === 24 ? 'bg-green-500 text-white' : 'bg-white'} duration-250 min-w-[30px] ease-in-out px-6 text-base py-2 border border-gray-300`}>
+                                                    24hrs
+                                                </button>
+                                                <button onClick={() => setAuctionTime(48)} className={`${auctionTime === 48 ? 'bg-green-500 text-white' : 'bg-white'} duration-250 min-w-[30px] ease-in-out rounded-r-xl px-6 text-base py-2 border border-gray-300`}>
+                                                    48hrs
+                                                </button>
+                                            </div>
+
+                                            <div className="flex items-center w-96 justify-between mx-auto gap-2 mt-5">
+
+                                                <div>
+                                                    <label className="block text-sm">Floor price</label>
+                                                    <div className="relative flex items-center">
+                                                        <h3 className="absolute text-base left-3 mt-1">$</h3>
+                                                        <input value={auctionFloorPrice} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setAuctionFloorPrice(e.target.value)} />
+                                                    </div>
+                                                </div>
+
+
+                                                <h3 className="mx-3 text-xl">to</h3>
+                                                <div>
+                                                    <label className="block text-sm">Max price</label>
+                                                    <div className="relative flex items-center">
+                                                        <h3 className="absolute text-base left-3 mt-1">$</h3>
+                                                        <input value={auctionMaxPrice} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setAuctionMaxPrice(e.target.value)} />
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div className="w-96 mx-auto mt-4">
+                                                <label>Delivery</label>
+                                                <select value={delivery} className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600" onChange={(e) => setDelivery(e.target.value)}>
+                                                    <option value="" disabled>Select delivery</option>
+                                                    <option value="Clothing">1</option>
+                                                    <option value="Footwear">2</option>
+                                                    <option value="Hats">3</option>
+                                                </select>
+                                            </div>
+                                        </div> : ''
+                                    }
+
+                                    <div className="flex items-center justify-center gap-3 mt-8">
+                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Dispose
                                         </button>
-                                        <button onClick={() => handleEmployeeListMore()} className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Print SKU
                                         </button>
                                     </div>
@@ -916,6 +988,58 @@ function ImageUploader({ onBack, onFecth }) {
 
                                 </div>
                                 : ''}
+
+                            {
+                                step === 3 ?
+                                    <>
+                                        <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
+
+                                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                                <table class="w-full text-sm text-left text-gray-500">
+                                                    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                                        <tr>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Disposed
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Listed
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                Start time
+                                                            </th>
+                                                            <th scope="col" class="px-6 py-3">
+                                                                End time
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="bg-white dark:bg-gray-800">
+                                                            <td class="px-6 py-4">
+                                                                {listings.filter(x => x.list_type === 'dispose').length}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {listings.filter(x => x.list_type === 'list').length}
+                                                            </td>
+
+                                                            <td class="px-6 py-4">
+                                                                {startTime}
+                                                            </td>
+                                                            <td class="px-6 py-4">
+                                                                {endTime}
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                        <div className="flex justify-center sm:justify-start">
+                                            <ButtonComponent rounded className="!w-48 mt-6" onClick={() => onBack()} >Home page</ButtonComponent>
+                                        </div>
+                                    </> : ''
+                            }
                         </div>
                         : ''}
 
@@ -970,7 +1094,9 @@ function ImageUploader({ onBack, onFecth }) {
                                                         </svg>
                                                     </div>
                                                 </div>
-                                                <ButtonComponent loading={uploading} full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent></div>}
+                                                {listings.length !== 0 ?
+                                                    <ButtonComponent loading={uploading} full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent> : ''}
+                                            </div>}
                                     </div>
 
                                 </div> : ''
@@ -982,13 +1108,13 @@ function ImageUploader({ onBack, onFecth }) {
                                 <div className="px-5 mt-6 w-full">
 
                                     <div className="flex items-center justify-center mt-5">
-                                        <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-red-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Dispose
                                         </button>
-                                        <button onClick={() => setListType('list')} className={`${listType === 'list' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => setListType('list')} className={`${listType === 'list' ? 'bg-green-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  px-8 text-xl py-2.5 border border-gray-300`}>
                                             List
                                         </button>
-                                        <button onClick={() => setListType('auction')} className={`${listType === 'auction' ? 'bg-primary text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => setListType('auction')} className={`${listType === 'auction' ? 'bg-green-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Auction
                                         </button>
                                     </div>
@@ -1015,10 +1141,10 @@ function ImageUploader({ onBack, onFecth }) {
                                     </div>
 
                                     <div className="flex items-center justify-center mt-5">
-                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-l-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Dispose
                                         </button>
-                                        <button onClick={() => handleEmployeeListMore()} className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-r-lg px-5 py-1.5 border border-gray-300`}>
+                                        <button onClick={() => handleEmployeeListMore()} className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Keep
                                         </button>
                                     </div>
@@ -1179,7 +1305,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                                             <div className="w-64 mx-auto">
                                                 <label>Category</label>
-                                                <select value={category} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setCategory(e.target.value)}>
+                                                <select value={category} className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600" onChange={(e) => setCategory(e.target.value)}>
                                                     <option value="" disabled>Select type</option>
                                                     <option value="Clothing">Clothing</option>
                                                     <option value="Footwear">Footwear</option>
@@ -1189,7 +1315,7 @@ function ImageUploader({ onBack, onFecth }) {
                                             {/* Sub-category 01 */}
                                             <div className="w-64 mx-auto mt-4">
                                                 <label>Sub-category 01</label>
-                                                <select value={subCategoryOne} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setSubCategoryOne(e.target.value)}>
+                                                <select value={subCategoryOne} className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600" onChange={(e) => setSubCategoryOne(e.target.value)}>
                                                     <option value="" disabled>Select sub-category 01</option>
                                                     {computedCategoryOne().map(option => (
                                                         <option key={option.value} value={option.value}>{option.name}</option>
@@ -1200,7 +1326,7 @@ function ImageUploader({ onBack, onFecth }) {
                                             {/* Sub-category 02 */}
                                             <div className="w-64 !mb-6 mx-auto mt-4">
                                                 <label>Sub-category 02</label>
-                                                <select value={subCategoryTwo} className="w-full mt-1 rounded-lg px-3 py-1.5 border border-gray-600" onChange={(e) => setSubCategoryTwo(e.target.value)}>
+                                                <select value={subCategoryTwo} className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600" onChange={(e) => setSubCategoryTwo(e.target.value)}>
                                                     <option value="" disabled>Select sub-category 02</option>
                                                     {computedCategoryTwo().map(option => (
                                                         <option key={option.value} value={option.value}>{option.name}</option>
