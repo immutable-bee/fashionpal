@@ -230,6 +230,10 @@ function ImageUploader({ onBack, onFecth }) {
                 setShowCamera(false); // Hide the camera
 
                 setStep(2); // Move to the next step
+
+                if (type === 'admin') {
+                    fetchSimilarProducts()
+                }
             }
         }
     };
@@ -358,23 +362,27 @@ function ImageUploader({ onBack, onFecth }) {
 
     };
 
-    const handleImageDeleteInListing = (index, key) => {
-        console.log(key)
-        let newListing = cloneDeep(listings)
-        console.log(newListing)
-        if (key === 'main') {
-            newListing.splice(index, 1)
-            if (newListing.length === 0) {
-                setStep(2)
+    const fetchSimilarProducts = async () => {
+        try {
+
+            const imageURL = 'https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/mainImage-1695323764072.png';
+            const url = `/api/getSimilarProducts?url=${imageURL}`;
+
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const data = await response.json();
+                setSimilarProducts(data.similarProducts);
+            } else {
+                console.error('Failed to fetch similar products:', response.status, response.statusText);
             }
-        } else {
-            newListing[index].items[key] = null
+        } catch (error) {
+            console.error('An error occurred while fetching similar products:', error);
         }
-
-
-        setListings(newListing);
-
     };
+
+
+
 
     const stopListing = async () => {
         const requests = [];
@@ -600,14 +608,38 @@ function ImageUploader({ onBack, onFecth }) {
                 ? await fileToBase64(listing.items.brandTag.file)
                 : null;
 
-            return {
-                mainImage: mainImageBase64,
-                brandImage: brandImageBase64,
-                category: category,
-                subCategoryOne: subCategoryOne,
-                subCategoryTwo: subCategoryTwo,
-                tags: listing.tags,
-            };
+            let JSON = {}
+            if (type === 'employee') {
+                JSON = {
+                    employeeName: employeeName,
+                    type: 'employee',
+                    listType: listType,
+                    mainImage: mainImageBase64,
+                    brandImage: brandImageBase64,
+                    tags: listing.tags,
+                }
+            } else if (type === 'admin') {
+                JSON = {
+                    type: 'admin',
+                    category: category,
+                    floorPrice: parseInt(floorPrice),
+                    maxPrice: parseInt(maxPrice),
+                    dataSource: dataSource,
+                    isAuctioned: isAuctioned,
+                    price: parseInt(price),
+                    listType: listType,
+                    isAuctioned: isAuctioned,
+                    auctionTime: auctionTime,
+                    auctionFloorPrice: parseInt(auctionFloorPrice),
+                    auctionMaxPrice: parseInt(auctionMaxPrice),
+                    delivery: delivery,
+                    mainImage: mainImageBase64,
+                    brandImage: brandImageBase64,
+                    tags: listing.tags,
+                }
+            }
+
+            return JSON;
         }));
 
         try {
@@ -619,7 +651,6 @@ function ImageUploader({ onBack, onFecth }) {
             const results = responses.map(response => response.data);
 
             console.log(results);
-
 
             NotificationManager.success('Listing added successfully!');
         } catch (error) {
@@ -642,6 +673,7 @@ function ImageUploader({ onBack, onFecth }) {
                 : null;
 
             return {
+                type: 'simple',
                 mainImage: mainImageBase64,
                 brandImage: brandImageBase64,
                 category: category,
