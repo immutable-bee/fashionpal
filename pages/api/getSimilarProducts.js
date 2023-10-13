@@ -16,8 +16,11 @@ export default async (req, res) => {
                 name: product.title,
                 link: product.link,
                 image: product.thumbnail,
-                price: product.price ? product.price.value : null,
+                price: product.price ? parseFloat(product.price.value.match(/\d+\.\d+/)[0]) : null,
             }));
+
+            console.log(similarProducts);
+
 
             res.status(200).json(similarProducts);
         } else {

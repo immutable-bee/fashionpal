@@ -957,7 +957,7 @@ function ImageUploader({ onBack, onFecth }) {
                                                                     setActiveResultIndex(key)
                                                                     setPrice(row.price)
                                                                 }} className={`px-2 w-24 max-w-[120px] max-h-8 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
-                                                                    <h3 className='text-xl'>{row.price}</h3>
+                                                                    <h3 className='text-xl'>{'$' + row.price}</h3>
                                                                 </div>
                                                                 <button onClick={() => viewProduct(row.link)} className="underline text-xl">View</button>
                                                             </div>
@@ -1484,16 +1484,12 @@ function ImageUploader({ onBack, onFecth }) {
                                                             <img src={row.items.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
                                                         </div>
 
-
-
                                                     </div> : ''}
                                                 {row.items.brandTag ?
                                                     <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                                                         <div className="w-full flex items-center justify-center">
                                                             <img src={row.items.brandTag.image} alt={'Brand Tag Photo'} className="rounded max-w-full max-h-full" />
                                                         </div>
-
-
                                                     </div>
                                                     : ''}
                                             </div>
