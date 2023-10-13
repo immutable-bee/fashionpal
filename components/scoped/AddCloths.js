@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { NotificationManager } from 'react-notifications';
 import Image from "next/image";
-import Webcam from 'react-webcam';
-
+import TooltipComponent from "@/components/utility/Tooltip";
 import axios from 'axios';
 import ButtonComponent from "@/components/utility/Button";
 import ImageCropper from "@/components/utility/ImageCropper";
+import Capture from "@/components/utility/Capture";
 import TagsInput from 'react-tagsinput'
 
 import 'react-tagsinput/react-tagsinput.css'
@@ -36,6 +36,7 @@ function ImageUploader({ onBack, onFecth }) {
     const [isAuctioned, setIsAuctioned] = useState(false)
     const [auctionTime, setAuctionTime] = useState(24)
     const [delivery, setDelivery] = useState('')
+    const [similarProducts, setSimilarProducts] = useState([])
 
     const subCategoryOptionsClothing = [
         { name: "Men's Wear", value: "mens_wear" },
@@ -144,6 +145,7 @@ function ImageUploader({ onBack, onFecth }) {
 
     const [cropImage, setCropImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
 
 
 
@@ -187,56 +189,100 @@ function ImageUploader({ onBack, onFecth }) {
 
     // 
 
-    const webcamRef = useRef(null);
-    const [facingMode, setFacingMode] = useState("environment");
-
     useEffect(() => {
         setStartTime(moment().format('HH:mm:ss'))
-        navigator.mediaDevices
-            .getUserMedia({ video: { facingMode: "environment" } })
-            .catch((error) => {
-                console.log("Back camera not available, switching to front camera.");
-                setFacingMode("user");
-            });
     }, []);
-
-
 
     const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
 
-
-
-
-    const capture = () => {
-        const imageSrc = webcamRef.current.getScreenshot();
+    const capture = async (e) => {
+        const imageSrc = e
         if (imageSrc) {
             const file = dataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
-            compressMainAndBrandImage(file);
 
-            if (currentPhotoType === 'main') {
-                // Set main image in the uploadedImages state
-                setUploadedImages(prevState => ({
-                    ...prevState,
-                    main: { image: imageSrc, file: file, type: "main" }
-                }));
-                setCurrentPhotoType('brandTag');
-            } else if (currentPhotoType === 'brandTag') {
-                // Set brandTag image in the uploadedImages state
-                setUploadedImages(prevState => ({
-                    ...prevState,
-                    brandTag: { image: imageSrc, file: file, type: "brandTag" }
-                }));
-                // After capturing the brandTag image:
-                setShowCamera(false); // Hide the camera
+            // Set loading to true while uploading
+            setImageUploading(true);
 
-                setStep(2); // Move to the next step
+            try {
+                const response = await fetch('/api/upload-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: currentPhotoType === 'main' ? 'mainImage' : 'brandImage', // Use the currentPhotoType as the image type
+                        image: imageSrc.split(',')[1], // Base64 image data
+                    }),
+                });
 
-                if (type === 'admin') {
-                    fetchSimilarProducts()
+                if (response.ok) {
+                    const data = await response.json();
+
+                    if (currentPhotoType === 'main') {
+                        // Set main image in the uploadedImages state
+                        setUploadedImages((prevState) => ({
+                            ...prevState,
+                            main: { image: imageSrc, file: file, type: "main", url: data.url },
+                        }));
+                        setCurrentPhotoType('brandTag');
+                    } else if (currentPhotoType === 'brandTag') {
+                        // Set brandTag image in the uploadedImages state
+                        setUploadedImages((prevState) => ({
+                            ...prevState,
+                            brandTag: { image: imageSrc, file: file, type: "brandTag", url: data.url },
+                        }));
+                        // After capturing the brandTag image:
+                        setShowCamera(false); // Hide the camera
+                        setStep(2); // Move to the next step
+
+                        if (type === 'admin') {
+                            fetchSimilarProducts();
+                        }
+                    }
+                } else {
+                    // Handle the case when the upload was not successful
+                    console.error('Image upload failed.');
                 }
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            } finally {
+                // Set loading back to false after the upload is complete
+                setImageUploading(false);
             }
         }
     };
+
+
+    // const capture = () => {
+    //     const imageSrc = webcamRef.current.getScreenshot();
+    //     if (imageSrc) {
+    //         const file = dataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
+    //         compressMainAndBrandImage(file);
+
+    //         if (currentPhotoType === 'main') {
+    //             // Set main image in the uploadedImages state
+    //             setUploadedImages(prevState => ({
+    //                 ...prevState,
+    //                 main: { image: imageSrc, file: file, type: "main" }
+    //             }));
+    //             setCurrentPhotoType('brandTag');
+    //         } else if (currentPhotoType === 'brandTag') {
+    //             // Set brandTag image in the uploadedImages state
+    //             setUploadedImages(prevState => ({
+    //                 ...prevState,
+    //                 brandTag: { image: imageSrc, file: file, type: "brandTag" }
+    //             }));
+    //             // After capturing the brandTag image:
+    //             setShowCamera(false); // Hide the camera
+
+    //             setStep(2); // Move to the next step
+
+    //             if (type === 'admin') {
+    //                 fetchSimilarProducts()
+    //             }
+    //         }
+    //     }
+    // };
 
 
 
@@ -364,15 +410,13 @@ function ImageUploader({ onBack, onFecth }) {
 
     const fetchSimilarProducts = async () => {
         try {
-
-            const imageURL = 'https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/mainImage-1695323764072.png';
-            const url = `/api/getSimilarProducts?url=${imageURL}`;
+            const url = `/api/getSimilarProducts?url=${uploadedImages.main.url}`;
 
             const response = await fetch(url);
 
             if (response.ok) {
                 const data = await response.json();
-                setSimilarProducts(data.similarProducts);
+                setSimilarProducts(data);
             } else {
                 console.error('Failed to fetch similar products:', response.status, response.statusText);
             }
@@ -603,9 +647,9 @@ function ImageUploader({ onBack, onFecth }) {
         setUploading(true);
 
         const convertedListings = await Promise.all(listings.map(async listing => {
-            const mainImageBase64 = await fileToBase64(listing.items.main.file);
-            const brandImageBase64 = listing.items.brandTag
-                ? await fileToBase64(listing.items.brandTag.file)
+            const mainImageUrl = listing.items.main.url
+            const brandImageUrl = listing.items.brandTag
+                ? listing.items.brandTag.url
                 : null;
 
             let JSON = {}
@@ -614,8 +658,8 @@ function ImageUploader({ onBack, onFecth }) {
                     employeeName: employeeName,
                     type: 'employee',
                     listType: listType,
-                    mainImage: mainImageBase64,
-                    brandImage: brandImageBase64,
+                    mainImage: mainImageUrl,
+                    brandImage: brandImageUrl,
                     tags: listing.tags,
                 }
             } else if (type === 'admin') {
@@ -633,8 +677,8 @@ function ImageUploader({ onBack, onFecth }) {
                     auctionFloorPrice: parseInt(auctionFloorPrice),
                     auctionMaxPrice: parseInt(auctionMaxPrice),
                     delivery: delivery,
-                    mainImage: mainImageBase64,
-                    brandImage: brandImageBase64,
+                    mainImage: mainImageUrl,
+                    brandImage: brandImageUrl,
                     tags: listing.tags,
                 }
             }
@@ -667,15 +711,15 @@ function ImageUploader({ onBack, onFecth }) {
         setUploading(true);
 
         const convertedListings = await Promise.all(listings.map(async listing => {
-            const mainImageBase64 = await fileToBase64(listing.items.main.file);
-            const brandImageBase64 = listing.items.brandTag
-                ? await fileToBase64(listing.items.brandTag.file)
+            const mainImageUrl = listing.items.main.url
+            const brandImageUrl = listing.items.brandTag
+                ? listing.items.brandTag.url
                 : null;
 
             return {
                 type: 'simple',
-                mainImage: mainImageBase64,
-                brandImage: brandImageBase64,
+                mainImage: mainImageUrl,
+                brandImage: brandImageUrl,
                 category: category,
                 subCategoryOne: subCategoryOne,
                 subCategoryTwo: subCategoryTwo,
@@ -709,6 +753,9 @@ function ImageUploader({ onBack, onFecth }) {
         const newListing = [...listings];
         newListing[listingIndex].tags = newTags
         setListings(newListing);
+    }
+    const viewProduct = (link) => {
+        window.open(link, "blank")
     }
 
 
@@ -846,25 +893,11 @@ function ImageUploader({ onBack, onFecth }) {
                                         </div>
                                         <div className="flex mt-8 rounded-2xl gap-2">
                                             {showCamera ?
-                                                <div>
-                                                    <Webcam
-                                                        audio={false}
-                                                        ref={webcamRef}
-                                                        screenshotFormat="image/jpeg"
-                                                        videoConstraints={{
-                                                            facingMode: facingMode
-                                                        }}
-                                                    />
-                                                    <button className="bg-gray-300 px-5 py-2 rounded-lg mt-3" onClick={capture}>
-                                                        Capture {currentPhotoType === 'main' ? 'Main Image' : 'BrandTag'}
-                                                    </button>
-
-                                                </div> :
+                                                <Capture onCapture={capture} loading={imageUploading} text={currentPhotoType === 'main' ? 'Main Image' : 'BrandTag'} />
+                                                :
                                                 <div>
                                                     <div onClick={() => setShowCamera(true)} className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56">
                                                         <div>
-
-
                                                             <h1 className="text-xl text-center font-medium font-mono ">Take Photo</h1>
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 mt-4 mx-auto">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -883,7 +916,7 @@ function ImageUploader({ onBack, onFecth }) {
                                 </div> : ''}
 
                             {step === 2 ?
-                                <div className="px-5 mt-6 w-[480px] mx-auto">
+                                <div className="px-5 mt-6 w-[580px] mx-auto">
 
                                     <div className="flex items-center justify-center mt-5">
                                         <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-red-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
@@ -904,18 +937,31 @@ function ImageUploader({ onBack, onFecth }) {
                                             </div>
                                             : ''}
 
-                                        <div>
+                                        <div className="w-48">
                                             <h3 className="text-lg">Online Retail Listings</h3>
                                             <div className="mt-3">
-                                                {results.map((row, key) => (
-                                                    <div key={key} className="flex justify-between mt-2">
-                                                        <div onClick={() => {
-                                                            setActiveResultIndex(key)
-                                                            setPrice(row.price)
-                                                        }} className={`px-2 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
-                                                            <h3 className='text-xl'>{row.price}</h3>
-                                                        </div>
-                                                        <button className="underline text-xl">View</button>
+                                                {similarProducts.map((row, key) => (
+                                                    <div key={key} className="w-full">
+                                                        <TooltipComponent
+                                                            rounded
+                                                            placement="rightStart"
+                                                            width="!w-64"
+                                                            id="shipping-status-tooltip"
+                                                            css={{ zIndex: 10000 }}
+                                                            content={
+                                                                row.name
+                                                            }
+                                                        >
+                                                            <div key={key} className="flex !w-48 justify-between mt-2 w-full">
+                                                                <div onClick={() => {
+                                                                    setActiveResultIndex(key)
+                                                                    setPrice(row.price)
+                                                                }} className={`px-2 w-24 max-w-[120px] max-h-8 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
+                                                                    <h3 className='text-xl'>{row.price}</h3>
+                                                                </div>
+                                                                <button onClick={() => viewProduct(row.link)} className="underline text-xl">View</button>
+                                                            </div>
+                                                        </TooltipComponent>
                                                     </div>
                                                 ))}
                                             </div>
@@ -1100,20 +1146,7 @@ function ImageUploader({ onBack, onFecth }) {
                                     </div>
                                     <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
                                         {showCamera ?
-                                            <div>
-                                                <Webcam
-                                                    audio={false}
-                                                    ref={webcamRef}
-                                                    screenshotFormat="image/jpeg"
-                                                    videoConstraints={{
-                                                        facingMode: facingMode
-                                                    }}
-                                                />
-                                                <button className="bg-gray-300 px-5 py-2 rounded-lg mt-3" onClick={capture}>
-                                                    Capture {currentPhotoType === 'main' ? 'Main Image' : 'BrandTag'}
-                                                </button>
-
-                                            </div> :
+                                            <Capture onCapture={capture} loading={imageUploading} text={currentPhotoType === 'main' ? 'Main Image' : 'BrandTag'} /> :
                                             <div>
                                                 <div onClick={() => setShowCamera(true)} className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56">
                                                     <div>

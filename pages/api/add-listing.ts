@@ -17,45 +17,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-      let mainImagePath: any = null;
-      let brandImagePath: any = null;
-
-      if (listing.mainImage) {
-        const uploadResponse = await supabase.storage.from('listings').upload(`mainImage-${Date.now()}.png`, Buffer.from(listing.mainImage, 'base64'), {
-          contentType: 'image/png'
-        });
-        if (uploadResponse.error) {
-          throw new Error(uploadResponse.error.message);
-        }
-        const imagePath = uploadResponse.data.path;
-
-        mainImagePath = {
-          url: `${supabaseUrl}/storage/v1/object/public/${'listings'}/${imagePath}`
-        };
-      }
-
-      if (listing.brandImage) {
-        const uploadResponse = await supabase.storage.from('listings').upload(`brandImage-${Date.now()}.png`, Buffer.from(listing.brandImage, 'base64'), {
-          contentType: 'image/png'
-        });
-        if (uploadResponse.error) {
-          throw new Error(uploadResponse.error.message);
-        }
-        const imagePath = uploadResponse.data.path;
-
-        brandImagePath = {
-          url: `${supabaseUrl}/storage/v1/object/public/${'listings'}/${imagePath}`
-        };
-      }
-
       let payload: any = {};
 
       switch (listing.type) {
         case "simple":
           payload = {
             type: 'simple',
-            mainImage: mainImagePath,
-            brandImage: brandImagePath,
+            mainImage: listing.mainImage,
+            brandImage: listing.brandImage,
             category: listing.category,
             subCategoryOne: listing.subCategoryOne,
             subCategoryTwo: listing.subCategoryTwo,
@@ -68,8 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             type: 'employee',
             employeeName: listing.employeeName,
             listType: listing.listType,
-            mainImage: mainImagePath,
-            brandImage: brandImagePath,
+            mainImage: listing.mainImage,
+            brandImage: listing.brandImage,
             tags: listing.tags
           };
           break;
@@ -88,8 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             auctionFloorPrice: listing.auctionFloorPrice,
             auctionMaxPrice: listing.auctionMaxPrice,
             delivery: listing.delivery,
-            mainImage: mainImagePath,
-            brandImage: brandImagePath,
+            mainImage: listing.mainImage,
+            brandImage: listing.brandImage,
             tags: listing.tags
           };
           break;

@@ -16,7 +16,7 @@ export default async (req, res) => {
                 name: product.title,
                 link: product.link,
                 image: product.thumbnail,
-                price: product.price ? product.price.value : 'Price not available',
+                price: product.price ? product.price.value : null,
             }));
 
             res.status(200).json(similarProducts);

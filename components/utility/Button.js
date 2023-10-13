@@ -94,6 +94,13 @@ function ButtonComponent({
     small: "h-4 w-4",
   };
 
+  const onAction = () => {
+    if (disabled || loading) {
+      return
+    }
+    onClick()
+  }
+
   return (
     <button
       id={id}
@@ -106,9 +113,9 @@ function ButtonComponent({
         ${paddingMap[padding]}
         ${disabled ? "opacity-70 pointer-events-none" : ""}
         ${onlyIcon ? "rounded-xl h-8 w-9 ml-3" : ""}
-        ${loading ? "!opacity-50 !cursor-progress !pointer-events-none" : ""},
+        ${loading ? "!opacity-50 !pointer-events-none" : ""},
         ${className} ${alignMap[align]}`}
-      onClick={onClick}
+      onClick={onAction}
     >
       {loading ? (
         <div

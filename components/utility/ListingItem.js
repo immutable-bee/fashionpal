@@ -7,16 +7,13 @@ function ListingItem({ mainPhoto, brandPhoto, tags = [], children = '', clickabl
   }
   return (
     <div
-
-
       className={`px-4 py-4 sm:!w-64 overflow-hidden w-full relative rounded-3xl group [perspective:1000px] mx-2 my-2 ${clickable ? 'cursor-pointer hover:opacity-90 ' : ''} `}
       style={{ boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)' }}
     >
 
       <div
-        class="relative h-[255px] w-full rounded-xl shadow-xl transition-all duration-500 ease-in-out [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
+        class={`relative h-[255px] w-full rounded-xl shadow-xl transition-all duration-500 ease-in-out ${brandPhoto ? '[transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]' : ''}`}
       >
-
         <div class="absolute inset-0">
           <Image
             src={mainPhoto}
@@ -26,18 +23,18 @@ function ListingItem({ mainPhoto, brandPhoto, tags = [], children = '', clickabl
             alt=""
           />
         </div>
-
-        <div
-          class="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]"
-        >
-          <Image
-            src={brandPhoto}
-            width={100}
-            height={100}
-            className="rounded-xl !w-full !h-64 object-cover"
-            alt=""
-          />
-        </div>
+        {brandPhoto ?
+          <div
+            class="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]"
+          >
+            <Image
+              src={brandPhoto}
+              width={100}
+              height={100}
+              className="rounded-xl !w-full !h-64 object-cover"
+              alt=""
+            />
+          </div> : ''}
       </div>
       <div className="mt-4">
         {tags.length !== 0 && tags.slice(0, 3).map((tag, tagIndex) => (
