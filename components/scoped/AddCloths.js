@@ -34,6 +34,7 @@ function ImageUploader({ onBack, onFecth }) {
     const [dataSource, setDataSource] = useState('')
     const [isAuctionedToggle, setIsAuctionedToggle] = useState(false)
     const [isAuctioned, setIsAuctioned] = useState(false)
+    const [fetchingSimilarProducts, setFetchingSimilarProducts] = useState(false)
     const [auctionTime, setAuctionTime] = useState(24)
     const [delivery, setDelivery] = useState('')
     const [similarProducts, setSimilarProducts] = useState([])
@@ -409,11 +410,12 @@ function ImageUploader({ onBack, onFecth }) {
     };
 
     const fetchSimilarProducts = async () => {
+        setFetchingSimilarProducts(true)
         try {
             const url = `/api/getSimilarProducts?url=${uploadedImages.main.url}`;
 
             const response = await fetch(url);
-
+            setFetchingSimilarProducts(false)
             if (response.ok) {
                 const data = await response.json();
                 setSimilarProducts(data);
@@ -421,6 +423,7 @@ function ImageUploader({ onBack, onFecth }) {
                 console.error('Failed to fetch similar products:', response.status, response.statusText);
             }
         } catch (error) {
+            setFetchingSimilarProducts(false)
             console.error('An error occurred while fetching similar products:', error);
         }
     };
@@ -939,32 +942,33 @@ function ImageUploader({ onBack, onFecth }) {
 
                                         <div className="w-48">
                                             <h3 className="text-lg">Online Retail Listings</h3>
-                                            <div className="mt-3">
-                                                {similarProducts.map((row, key) => (
-                                                    <div key={key} className="w-full">
-                                                        <TooltipComponent
-                                                            rounded
-                                                            placement="rightStart"
-                                                            width="!w-64"
-                                                            id="shipping-status-tooltip"
-                                                            css={{ zIndex: 10000 }}
-                                                            content={
-                                                                row.name
-                                                            }
-                                                        >
-                                                            <div key={key} className="flex !w-48 justify-between mt-2 w-full">
-                                                                <div onClick={() => {
-                                                                    setActiveResultIndex(key)
-                                                                    setPrice(row.price)
-                                                                }} className={`px-2 w-24 max-w-[120px] max-h-8 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
-                                                                    <h3 className='text-xl'>{'$' + row.price}</h3>
+                                            {!fetchingSimilarProducts ?
+                                                <div className="mt-3">
+                                                    {similarProducts.map((row, key) => (
+                                                        <div key={key} className="w-full">
+                                                            <TooltipComponent
+                                                                rounded
+                                                                placement="rightStart"
+                                                                width="!w-64"
+                                                                id="shipping-status-tooltip"
+                                                                css={{ zIndex: 10000 }}
+                                                                content={
+                                                                    row.name
+                                                                }
+                                                            >
+                                                                <div key={key} className="flex !w-48 justify-between mt-2 w-full">
+                                                                    <div onClick={() => {
+                                                                        setActiveResultIndex(key)
+                                                                        setPrice(row.price)
+                                                                    }} className={`px-2 w-24 max-w-[120px] max-h-8 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
+                                                                        <h3 className='text-xl'>{'$' + row.price}</h3>
+                                                                    </div>
+                                                                    <button onClick={() => viewProduct(row.link)} className="underline text-xl">View</button>
                                                                 </div>
-                                                                <button onClick={() => viewProduct(row.link)} className="underline text-xl">View</button>
-                                                            </div>
-                                                        </TooltipComponent>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                                            </TooltipComponent>
+                                                        </div>
+                                                    ))}
+                                                </div> : <LoadingComponent size='sm' />}
                                         </div>
 
 
