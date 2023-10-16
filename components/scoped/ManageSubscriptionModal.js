@@ -37,7 +37,7 @@ const ManageSubscriptionModal = (props) => {
   // const { data: session } = useSession({ required: true });
 
   const planDetailsHandler = (value) => {
-    console.log(value)
+
     let details = {};
     if (value === "Not Subscribed") {
       details = [
@@ -94,7 +94,7 @@ const ManageSubscriptionModal = (props) => {
         currentPlan: subscriptionStatus,
       }),
     });
-    console.log(response);
+
     setConfirmDowngradeView(false);
     setDowngradePlanView(false);
     setRequestResponseLoading(false);
@@ -110,7 +110,7 @@ const ManageSubscriptionModal = (props) => {
         currentPlan: subscriptionStatus,
       }),
     });
-    console.log(response);
+
     setRequestResponseLoading(false);
     setConfirmUpgradeView(false);
     setUpgradePlanView(false);
@@ -161,7 +161,7 @@ const ManageSubscriptionModal = (props) => {
   };
 
   useEffect(() => {
-    console.log(props)
+
     if (props.subscriptionData) {
       setBillingDate(billingDateHandler());
     }

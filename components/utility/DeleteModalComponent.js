@@ -7,7 +7,7 @@ function ProductDetails({ children, title, onConfirmed }) {
 
     const onDeleted = () => {
         setOpenModal(false)
-        console.log(openModal)
+
         onConfirmed()
     }
 

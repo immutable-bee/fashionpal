@@ -89,7 +89,7 @@ const ProfileComponent = ({ }) => {
   const stepValue = (v) => Math.round(v * 10) / 10;
 
   const closeManageSubscriptionModalHandler = () => {
-    console.log("close");
+
     setIsManageSubscriptionModalOpen(false);
   };
 

@@ -2,8 +2,8 @@ import { usePagination, DOTS } from './usePagination';
 
 function Pagination({ total, current, pageSize, siblingCount, onChange, align = 'center' }) {
   const paginationRange = usePagination({ total, current, siblingCount, pageSize });
-  console.log({ total, current, siblingCount, pageSize })
-  console.log(paginationRange)
+
+
   const alignMap = {
     start: 'justify-start',
     center: 'justify-center',

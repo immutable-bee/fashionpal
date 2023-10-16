@@ -126,7 +126,7 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-      console.log("fetch");
+
       setLoadingListings(true);
 
       try {

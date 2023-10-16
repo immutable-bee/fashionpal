@@ -15,7 +15,7 @@
 //             }
 //         });
 
-//         console.log('remove.bg API response:', response.data); // logging the response for debugging
+//         
 //         return response.data;
 //     } catch (error) {
 //         console.error("Error with remove.bg API:", error.response?.data || error.message);
@@ -30,7 +30,7 @@
 
 //     try {
 //         const base64Image = req.body.image;
-//         console.log('Received base64 image length:', base64Image.length); // log the length of the base64 image for debugging
+//         
 //         const bufferData = Buffer.from(base64Image.split('base64,')[1] || base64Image, 'base64');
 //         const bgRemovedImage = await removeBgApiCall(bufferData.toString('base64'));
 

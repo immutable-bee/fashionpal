@@ -14,7 +14,7 @@ function Capture({
         navigator.mediaDevices
             .getUserMedia({ video: { facingMode: "environment" } })
             .catch((error) => {
-                console.log("Back camera not available, switching to front camera.");
+
                 setFacingMode("user");
             });
     }, []);

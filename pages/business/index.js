@@ -32,13 +32,13 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onPaginationChange = (e) => {
-    console.log(e);
+
     setNotMatchesPage(e);
     fetchListings(e);
   };
 
   const triggerDetailsModal = (index) => {
-    console.log(index);
+
     setDetailsModal(true);
     setActiveIndex(index);
   };
@@ -99,7 +99,7 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-      console.log("fetch");
+
       setLoadingListings(true);
 
       try {
@@ -139,14 +139,14 @@ export default function Home() {
     setListings(newListing);
   };
   const editTagName = (tagIndex, name) => {
-    console.log(name);
+
     const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags[tagIndex].name = name;
-    console.log(newListing[activeTagIndex].tags);
+
     setListings(newListing);
   };
   const editTagValue = (tagIndex, value) => {
-    console.log(value);
+
     const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags[tagIndex].value = value;
     setListings(newListing);
@@ -163,7 +163,7 @@ export default function Home() {
   };
 
   const onPageChange = (page) => {
-    console.log(page);
+
   };
   return (
     <div className="min-h-screen bg-white">
@@ -224,8 +224,8 @@ export default function Home() {
                             onClick={() => triggerDetailsModal(key)}
                           >
                             <ListingItem
-                              mainPhoto={row?.mainImage?.url}
-                              brandPhoto={row?.brandImage?.url}
+                              mainPhoto={row?.mainImage}
+                              brandPhoto={row?.brandImage}
                               tags={row?.tags}
                               clickable={true}
                             >

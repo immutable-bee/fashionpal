@@ -21,10 +21,10 @@ export default async function handler(
 
       // Step 2: Delete images from Supabase storage
       const { mainImage, brandImage } = listing;
-      console.log(mainImage);
+
       if (mainImage && (mainImage as any).url) {
         const imagePath = (mainImage as any).url.split("/").pop();
-        console.log(imagePath);
+
         await supabase.storage.from("listings").remove([imagePath]);
       }
 
@@ -41,7 +41,7 @@ export default async function handler(
 
       res
         .status(200)
-        .json({ message: "Listing and images deleted successfully!" });
+        .json({ message: "Listing deleted successfully!" });
     } catch (error) {
       console.error(error);
       res.status(500).json(error);

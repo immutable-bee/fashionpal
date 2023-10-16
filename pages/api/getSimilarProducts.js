@@ -11,16 +11,13 @@ export default async (req, res) => {
         if (response.status === 200) {
             // Extract and construct the desired response
             const { visual_matches } = response.data;
-            const similarProducts = visual_matches.slice(0, 3).map((product, index) => ({
+            const similarProducts = visual_matches.slice(0, 10).map((product, index) => ({
                 id: index + 1,
                 name: product.title,
                 link: product.link,
                 image: product.thumbnail,
                 price: product.price ? parseFloat(product.price.value.match(/\d+\.\d+/)[0]) : null,
             }));
-
-            console.log(similarProducts);
-
 
             res.status(200).json(similarProducts);
         } else {

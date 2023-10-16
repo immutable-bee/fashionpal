@@ -10,7 +10,6 @@ import TagsInput from 'react-tagsinput'
 
 import 'react-tagsinput/react-tagsinput.css'
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
-import ModalComponent from "@/components/utility/Modal";
 import LoadingComponent from "../utility/loading";
 import cloneDeep from "lodash.clonedeep";
 import Compressor from 'compressorjs'
@@ -18,13 +17,11 @@ import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
 import moment from "moment";
 
-console.log(process.env)
-const dJSON = require('dirty-json');
-
 
 function ImageUploader({ onBack, onFecth }) {
 
-    const [price, setPrice] = useState(59.99)
+    const [price, setPrice] = useState(0)
+    const [retailPrice, setRetailPrice] = useState(0)
     const [auctionFloorPrice, setAuctionFloorPrice] = useState(0)
     const [auctionMaxPrice, setAuctionMaxPrice] = useState(0)
     const [floorPrice, setFloorPrice] = useState(0)
@@ -32,12 +29,26 @@ function ImageUploader({ onBack, onFecth }) {
     const [startTime, setStartTime] = useState('')
     const [endTime, setEndTime] = useState('')
     const [dataSource, setDataSource] = useState('')
-    const [isAuctionedToggle, setIsAuctionedToggle] = useState(false)
+    const [isOptionToAuction, setIsOptionToAuction] = useState(false)
+    const [isViewSimilarListings, setIsViewSimilarListings] = useState(false)
+    const [isOptionToEdit, setIsOptionToEdit] = useState(false)
+    const [isGenerateSKULabels, setIsGenerateSKULabels] = useState(false)
+    const [isIncludeRetailPrice, setIsIncludeRetailPrice] = useState(false)
     const [isAuctioned, setIsAuctioned] = useState(false)
     const [fetchingSimilarProducts, setFetchingSimilarProducts] = useState(false)
     const [auctionTime, setAuctionTime] = useState(24)
     const [delivery, setDelivery] = useState('')
     const [similarProducts, setSimilarProducts] = useState([])
+    const [employeeName, setEmployeeName] = useState('');
+    const [category, setCategory] = useState('');
+    const [tags, setTags] = useState([]);
+
+    const [listType, setListType] = useState('dispose');
+    const [subCategoryOne, setSubCategoryOne] = useState('');
+    const [subCategoryTwo, setSubCategoryTwo] = useState('');
+
+    const [type, setType] = useState('simple');
+    const [tagFetching, setTagFetching] = useState(false)
 
     const subCategoryOptionsClothing = [
         { name: "Men's Wear", value: "mens_wear" },
@@ -81,6 +92,35 @@ function ImageUploader({ onBack, onFecth }) {
         { name: "Special Edition", value: "special_edition" },
     ];
 
+    const resetAllVariables = () => {
+        setPrice(0);
+        setRetailPrice(0);
+        setAuctionFloorPrice(0);
+        setAuctionMaxPrice(0);
+        setFloorPrice(0);
+        setMaxPrice(0);
+        setStartTime('');
+        setEndTime('');
+        setDataSource('');
+        setIsOptionToAuction(false);
+        setIsViewSimilarListings(false);
+        setIsOptionToEdit(false);
+        setIsGenerateSKULabels(false);
+        setIsIncludeRetailPrice(false);
+        setIsAuctioned(false);
+        setFetchingSimilarProducts(false);
+        setAuctionTime(24);
+        setDelivery('');
+        setSimilarProducts([]);
+        setEmployeeName('');
+        setCategory('');
+        setTags([]);
+        setListType('dispose');
+        setSubCategoryOne('');
+        setSubCategoryTwo('');
+    };
+
+
 
 
     const computedCategoryOne = () => {
@@ -115,13 +155,7 @@ function ImageUploader({ onBack, onFecth }) {
     const [activeResultIndex, setActiveResultIndex] = useState(0)
 
 
-    const [employeeName, setEmployeeName] = useState('');
-    const [category, setCategory] = useState('');
-    const [tags, setTags] = useState([]);
-    const [type, setType] = useState('simple');
-    const [listType, setListType] = useState('dispose');
-    const [subCategoryOne, setSubCategoryOne] = useState('');
-    const [subCategoryTwo, setSubCategoryTwo] = useState('');
+
 
 
 
@@ -142,15 +176,9 @@ function ImageUploader({ onBack, onFecth }) {
     const [uploading, setUploading] = useState(false);
     const [step, setStep] = useState(0);
 
-
-
     const [cropImage, setCropImage] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [imageUploading, setImageUploading] = useState(false);
-
-
-
-
 
 
     const [currentPhotoType, setCurrentPhotoType] = useState('main');
@@ -196,6 +224,13 @@ function ImageUploader({ onBack, onFecth }) {
 
     const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
 
+    const changeTagsAdmin = (e) => {
+        setUploadedImages((prevState) => ({
+            ...prevState,
+            tags: e, // Update 'tags' with combined tags from both 'main' and 'brandTag'
+        }));
+    }
+
     const capture = async (e) => {
         const imageSrc = e
         if (imageSrc) {
@@ -219,6 +254,7 @@ function ImageUploader({ onBack, onFecth }) {
                 if (response.ok) {
                     const data = await response.json();
 
+
                     if (currentPhotoType === 'main') {
                         // Set main image in the uploadedImages state
                         setUploadedImages((prevState) => ({
@@ -236,10 +272,26 @@ function ImageUploader({ onBack, onFecth }) {
                         setShowCamera(false); // Hide the camera
                         setStep(2); // Move to the next step
 
-                        if (type === 'admin') {
-                            fetchSimilarProducts();
+
+                        const tags = [];
+
+                        if (uploadedImages.main && uploadedImages.main.url) {
+                            const mainTags = await getTagsFromGoogleVision(uploadedImages.main.url, 'main');
+                            tags.push(...mainTags);
                         }
+
+                        if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
+                            const brandTagTags = await getTagsFromGoogleVision(uploadedImages.brandTag.url, 'brandTag');
+                            tags.push(...brandTagTags);
+                        }
+
+                        setUploadedImages((prevState) => ({
+                            ...prevState,
+                            tags: tags, // Update 'tags' with combined tags from both 'main' and 'brandTag'
+                        }));
+
                     }
+
                 } else {
                     // Handle the case when the upload was not successful
                     console.error('Image upload failed.');
@@ -278,9 +330,7 @@ function ImageUploader({ onBack, onFecth }) {
 
     //             setStep(2); // Move to the next step
 
-    //             if (type === 'admin') {
-    //                 fetchSimilarProducts()
-    //             }
+
     //         }
     //     }
     // };
@@ -374,30 +424,33 @@ function ImageUploader({ onBack, onFecth }) {
         setTagEditModal(true)
         setActiveTagIndex(index)
     };
+    const onManageTags = () => {
+        setTagEditModal(true)
+    };
 
     const handleDelete = (key) => {
-        console.log(key)
+
         let newUploadedImages = cloneDeep(uploadedImages)
-        console.log(newUploadedImages)
+
         newUploadedImages[key] = null
-        console.log(newUploadedImages)
+
         setUploadedImages(newUploadedImages);
         if (key === 'main') {
             setStep(2)
         }
     };
     const handleListingImageDelete = (index, key) => {
-        console.log(listings)
-        console.log(index)
-        console.log(key)
+
+
+
         let newListings = cloneDeep(listings)
-        console.log(newListings)
+
         if (newListings[index] && newListings[index].items) {
-            console.log(newListings[index].items[key])
+
             newListings[index].items[key] = null
-            console.log(newListings[index].items[key])
+
         }
-        console.log(newListings)
+
         if (key === 'main') {
             newListings.splice(index, 1)
         }
@@ -431,53 +484,15 @@ function ImageUploader({ onBack, onFecth }) {
 
 
 
-    const stopListing = async () => {
-        const requests = [];
-
-        for (let listing of listings) {
-            if (listing.items.main && listing.items.main.image) {
-                const mainImageBase64 = await convertBlobToBase64(listing.items.main.image);
-                requests.push(getTagsFromGoogleVision(mainImageBase64, 'main'));
-            }
-
-            if (listing.items.brandTag && listing.items.brandTag.image) {
-                const brandTagImageBase64 = await convertBlobToBase64(listing.items.brandTag.image);
-                requests.push(getTagsFromGoogleVision(brandTagImageBase64, 'brandTag'));
-            }
-        }
-
-        const responses = await axios.all(requests);
-        console.log(responses)
-        setListings(prevListings => {
-            let responseIndex = 0;
-            const updatedListings = prevListings.map(listing => {
-                // Merge tags from 'main' and 'brandTag' (if present).
-                listing.tags = [...responses[responseIndex]];
-                console.log(listing.tags)
-                responseIndex++;
-
-                if (listing.items.brandTag && listing.items.brandTag.image) {
-                    listing.tags = [...listing.tags, ...responses[responseIndex]];
-                    console.log(listing.tags)
-                    responseIndex++;
-                }
-
-                return listing;
-            });
-
-            return updatedListings;
-        });
 
 
-        handleEmployeeUploadAll();
 
-    };
 
 
 
     const handleEmployeeListMore = () => {
-        console.log(listings)
-        console.log(uploadedImages)
+
+
         const newListing = listings
         newListing.push({
             employee_name: employeeName,
@@ -486,7 +501,7 @@ function ImageUploader({ onBack, onFecth }) {
             tags: [],
             items: uploadedImages
         })
-        console.log(newListing)
+
         setListings(newListing);
         setUploadedImages({
             main: null,
@@ -494,22 +509,41 @@ function ImageUploader({ onBack, onFecth }) {
         });
         setCurrentPhotoType('main');
         setStep(1);
-        setTimeout(() => {
-            console.log(listings)
-        }, 100);
-
+        resetAllVariables()
 
     };
+
+    const handleAdminListMore = () => {
+
+
+        const newListing = listings
+        newListing.push({
+            type: type,
+            list_type: listType,
+            tags: [],
+            items: uploadedImages
+        })
+
+        setListings(newListing);
+        setUploadedImages({
+            main: null,
+            brandTag: null,
+        });
+        setCurrentPhotoType('main');
+        setStep(1);
+        resetAllVariables()
+    };
+
     const handleListMore = () => {
 
-        console.log(listings)
-        console.log(uploadedImages)
+
+
         const newListing = listings
         newListing.push({
             tags: [],
             items: uploadedImages
         })
-        console.log(newListing)
+
         setListings(newListing);
         setUploadedImages({
             main: null,
@@ -517,7 +551,7 @@ function ImageUploader({ onBack, onFecth }) {
         });
         setStep(1);
         setTimeout(() => {
-            console.log(listings)
+
         }, 100);
 
 
@@ -527,23 +561,23 @@ function ImageUploader({ onBack, onFecth }) {
 
     const handleFinishListing = () => {
 
-        console.log(listings)
-        console.log(uploadedImages)
+
+
         const newListing = listings
         newListing.push({
             tags: [],
             items: uploadedImages
         })
-        console.log(newListing)
+
         setListings(newListing);
         setUploadedImages({
             main: null,
             brandTag: null,
         });
         setStep(5);
-        console.log(step)
+
         setTimeout(() => {
-            console.log(listings)
+
         }, 100);
 
 
@@ -564,6 +598,7 @@ function ImageUploader({ onBack, onFecth }) {
 
     // This function will send the image to the server-side endpoint for processing.
     const getTagsFromGoogleVision = async (base64Image, imageType) => {
+        setTagFetching(true)
         try {
             const response = await fetch('/api/getTags', {
                 method: 'POST',
@@ -575,7 +610,7 @@ function ImageUploader({ onBack, onFecth }) {
                     type: imageType,
                 }),
             });
-
+            setTagFetching(false)
             const data = await response.json();
             if (data && data.tags) {
                 return data.tags;
@@ -584,6 +619,7 @@ function ImageUploader({ onBack, onFecth }) {
                 return [];
             }
         } catch (error) {
+            setTagFetching(false)
             console.error('Failed to get tags:', error);
             return [];
         }
@@ -605,18 +641,18 @@ function ImageUploader({ onBack, onFecth }) {
         }
 
         const responses = await axios.all(requests);
-        console.log(responses)
+
         setListings(prevListings => {
             let responseIndex = 0;
             const updatedListings = prevListings.map(listing => {
                 // Merge tags from 'main' and 'brandTag' (if present).
                 listing.tags = [...responses[responseIndex]];
-                console.log(listing.tags)
+
                 responseIndex++;
 
                 if (listing.items.brandTag && listing.items.brandTag.image) {
                     listing.tags = [...listing.tags, ...responses[responseIndex]];
-                    console.log(listing.tags)
+
                     responseIndex++;
                 }
 
@@ -635,7 +671,7 @@ function ImageUploader({ onBack, onFecth }) {
     };
 
     const fileToBase64 = (file) => {
-        console.log(file)
+
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -655,36 +691,15 @@ function ImageUploader({ onBack, onFecth }) {
                 ? listing.items.brandTag.url
                 : null;
 
-            let JSON = {}
-            if (type === 'employee') {
-                JSON = {
-                    employeeName: employeeName,
-                    type: 'employee',
-                    listType: listType,
-                    mainImage: mainImageUrl,
-                    brandImage: brandImageUrl,
-                    tags: listing.tags,
-                }
-            } else if (type === 'admin') {
-                JSON = {
-                    type: 'admin',
-                    category: category,
-                    floorPrice: parseInt(floorPrice),
-                    maxPrice: parseInt(maxPrice),
-                    dataSource: dataSource,
-                    isAuctioned: isAuctioned,
-                    price: parseInt(price),
-                    listType: listType,
-                    isAuctioned: isAuctioned,
-                    auctionTime: auctionTime,
-                    auctionFloorPrice: parseInt(auctionFloorPrice),
-                    auctionMaxPrice: parseInt(auctionMaxPrice),
-                    delivery: delivery,
-                    mainImage: mainImageUrl,
-                    brandImage: brandImageUrl,
-                    tags: listing.tags,
-                }
+            let JSON = {
+                employeeName: employeeName,
+                type: 'employee',
+                listType: listType,
+                mainImage: mainImageUrl,
+                brandImage: brandImageUrl,
+                tags: listing.items.tags,
             }
+
 
             return JSON;
         }));
@@ -697,7 +712,7 @@ function ImageUploader({ onBack, onFecth }) {
             const responses = await axios.all(requests);
             const results = responses.map(response => response.data);
 
-            console.log(results);
+
 
             NotificationManager.success('Listing added successfully!');
         } catch (error) {
@@ -710,6 +725,61 @@ function ImageUploader({ onBack, onFecth }) {
             setUploading(false);
         }
     };
+
+    const handleAdminUploadAll = async () => {
+        setUploading(true);
+
+        const convertedListings = await Promise.all(listings.map(async listing => {
+            const mainImageUrl = listing.items.main.url
+            const brandImageUrl = listing.items.brandTag
+                ? listing.items.brandTag.url
+                : null;
+
+            let JSON = {
+                type: 'admin',
+                category: category,
+                floorPrice: parseInt(floorPrice),
+                maxPrice: parseInt(maxPrice),
+                dataSource: dataSource,
+                isAuctioned: isAuctioned,
+                price: parseInt(price),
+                listType: listType,
+                isAuctioned: isAuctioned,
+                auctionTime: auctionTime,
+                auctionFloorPrice: parseInt(auctionFloorPrice),
+                auctionMaxPrice: parseInt(auctionMaxPrice),
+                delivery: delivery,
+                mainImage: mainImageUrl,
+                brandImage: brandImageUrl,
+                tags: listing.items.tags,
+            }
+
+
+            return JSON;
+        }));
+
+        try {
+            const requests = convertedListings.map(listing =>
+                axios.post('/api/add-listing', { listing })
+            );
+
+            const responses = await axios.all(requests);
+            const results = responses.map(response => response.data);
+
+
+
+            NotificationManager.success('Listing added successfully!');
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setEndTime(moment().format('HH:mm:ss'))
+            setStep(3)
+
+            onFecth();
+            setUploading(false);
+        }
+    };
+
     const handleUploadAll = async () => {
         setUploading(true);
 
@@ -738,7 +808,7 @@ function ImageUploader({ onBack, onFecth }) {
             const responses = await axios.all(requests);
             const results = responses.map(response => response.data);
 
-            console.log(results);
+
 
             onFecth();
             NotificationManager.success('Listing added successfully!');
@@ -865,26 +935,92 @@ function ImageUploader({ onBack, onFecth }) {
                                         </div>
                                     </div>
 
-                                    <div className="flex justify-center sm:justify-start mt-8">
-                                        <label className="relative mb-4 flex items-center cursor-pointer">
-                                            <input
-                                                type="checkbox"
-                                                value=""
-                                                className="sr-only peer"
-                                                checked={isAuctionedToggle}
-                                                onChange={() => setIsAuctionedToggle(!isAuctionedToggle)}
-                                            />
-                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Option to Auction
-                                            </span>
+                                    <div className="mt-8">
+                                        <div className="flex justify-center sm:justify-start mt-1">
+                                            <label className="relative mb-4 flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    value=""
+                                                    className="sr-only peer"
+                                                    checked={isOptionToAuction}
+                                                    onChange={() => setIsOptionToAuction(!isOptionToAuction)}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    Option to Auction
+                                                </span>
 
-                                        </label>
+                                            </label>
+                                        </div>
+                                        <div className="flex justify-center sm:justify-start mt-1">
+                                            <label className="relative mb-4 flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    value=""
+                                                    className="sr-only peer"
+                                                    checked={isViewSimilarListings}
+                                                    onChange={() => setIsViewSimilarListings(!isViewSimilarListings)}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    View Similar Listings
+                                                </span>
+
+                                            </label>
+                                        </div>
+                                        <div className="flex justify-center sm:justify-start mt-1">
+                                            <label className="relative mb-4 flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    value=""
+                                                    className="sr-only peer"
+                                                    checked={isOptionToEdit}
+                                                    onChange={() => setIsOptionToEdit(!isOptionToEdit)}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    Option to Edit Tags
+                                                </span>
+
+                                            </label>
+                                        </div>
+                                        <div className="flex justify-center sm:justify-start mt-1">
+                                            <label className="relative mb-4 flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    value=""
+                                                    className="sr-only peer"
+                                                    checked={isGenerateSKULabels}
+                                                    onChange={() => setIsGenerateSKULabels(!isGenerateSKULabels)}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    Generate SKU Labels
+                                                </span>
+
+                                            </label>
+                                        </div>
+                                        <div className="flex justify-center sm:justify-start mt-1">
+                                            <label className="relative mb-4 flex items-center cursor-pointer">
+                                                <input
+                                                    type="checkbox"
+                                                    value=""
+                                                    className="sr-only peer"
+                                                    checked={isIncludeRetailPrice}
+                                                    onChange={() => setIsIncludeRetailPrice(!isIncludeRetailPrice)}
+                                                />
+                                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                                                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                    Include Retail Price
+                                                </span>
+
+                                            </label>
+                                        </div>
                                     </div>
 
                                     <div>
-
-                                        <div className="border border-gray-500 mt-8 rounded-xl w-72 px-4 py-3">
+                                        <h3 className="text-2xl font-semibold mt-8 mb-2">Start Listing!</h3>
+                                        <div className="border border-gray-500 rounded-xl w-72 px-4 py-3">
                                             <h3 className="text-xl font-semibold">Instructions</h3>
 
                                             <ul className=" list-decimal ml-4 text-lg">
@@ -909,7 +1045,7 @@ function ImageUploader({ onBack, onFecth }) {
                                                         </div>
                                                     </div>
                                                     {listings.length !== 0 ?
-                                                        <ButtonComponent loading={uploading} full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent> : ''}
+                                                        <ButtonComponent loading={uploading} full onClick={() => handleAdminUploadAll()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent> : ''}
                                                 </div>
                                             }
                                         </div>
@@ -919,7 +1055,7 @@ function ImageUploader({ onBack, onFecth }) {
                                 </div> : ''}
 
                             {step === 2 ?
-                                <div className="px-5 mt-6 w-[580px] mx-auto">
+                                <div className="px-5 mt-6 w-[480px] mx-auto">
 
                                     <div className="flex items-center justify-center mt-5">
                                         <button onClick={() => setListType('dispose')} className={`${listType === 'dispose' ? 'bg-red-500 text-white' : 'bg-white'} duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}>
@@ -930,57 +1066,75 @@ function ImageUploader({ onBack, onFecth }) {
                                         </button>
                                     </div>
 
-                                    <div className="flex gap-4 flex-wrap justify-center  mb-4 mt-6">
-
-                                        {uploadedImages.main ?
-                                            <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
-                                                <div className="w-full flex items-center justify-center">
-                                                    <img src={uploadedImages.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
+                                    <div className="mt-6 mb-4">
+                                        <div className="flex gap-4 flex-wrap justify-center items-center ">
+                                            {uploadedImages.main ?
+                                                <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
+                                                    <div className="w-full flex items-center justify-center">
+                                                        <img src={uploadedImages.main.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            : ''}
+                                                : ''}
+                                            {isOptionToEdit ?
+                                                <>
+                                                    {!tagFetching ?
+                                                        <>
+                                                            <EditTagsModalOffline
+                                                                open={tagEditModal}
+                                                                onClose={() => setTagEditModal(false)}
+                                                                setTags={(e) => changeTagsAdmin(e)}
+                                                                data={uploadedImages?.tags}
+                                                            />
+                                                            <button onClick={() => onManageTags()} className="underline text-xl ml-3">Manage Tags</button>
+                                                        </> : <LoadingComponent size='sm' />}
+                                                </>
+                                                : ''}
+                                        </div>
 
-                                        <div className="w-48">
-                                            <h3 className="text-lg">Online Retail Listings</h3>
+                                        {isViewSimilarListings ? <div className="mt-6">
+                                            <div className="flex items-center">
+                                                <h3 className="text-lg">Similar Online Listings: </h3>
+                                                {!fetchingSimilarProducts ?
+                                                    <button onClick={() => fetchSimilarProducts()} className="underline text-xl ml-3">View</button> : ''}
+                                            </div>
+
                                             {!fetchingSimilarProducts ?
-                                                <div className="mt-3">
+                                                <div className="mt-3 flex overflow-x-auto">
                                                     {similarProducts.map((row, key) => (
-                                                        <div key={key} className="w-full">
-                                                            <TooltipComponent
-                                                                rounded
-                                                                placement="rightStart"
-                                                                width="!w-64"
-                                                                id="shipping-status-tooltip"
-                                                                css={{ zIndex: 10000 }}
-                                                                content={
-                                                                    row.name
-                                                                }
-                                                            >
-                                                                <div key={key} className="flex !w-48 justify-between mt-2 w-full">
-                                                                    <div onClick={() => {
-                                                                        setActiveResultIndex(key)
-                                                                        setPrice(row.price)
-                                                                    }} className={`px-2 w-24 max-w-[120px] max-h-8 py-0 rounded-full border-2 ${activeResultIndex === key ? 'border-green-600' : 'border-gray-300 cursor-pointer'}`}>
-                                                                        <h3 className='text-xl'>{'$' + row.price}</h3>
-                                                                    </div>
+                                                        <div key={key} className="mx-2 w-48 cursor-pointer" onClick={() => {
+                                                            setActiveResultIndex(key)
+                                                            setPrice(row.price ? row.price : 0)
+                                                            setRetailPrice(row.price ? row.price : 0)
+                                                        }} >
+                                                            <div className={`${activeResultIndex === key ? 'border-[3px] border-green-600' : 'border-2 border-primary'} flex items-center justify-center rounded-2xl px-4 py-5 !w-48 !h-48 flex-shrink-0 my-1 relative`}>
+                                                                <img src={row.image} alt={'Main Photo'} className="rounded max-w-full max-h-full" />
+                                                            </div>
+                                                            <div key={key} className="mt-2 mx-1 w-full">
+                                                                <h3 className='text-xl text-center truncate'>{row.name}</h3>
+                                                                <h3 className='text-xl text-center'>{row.price ? '$' + row.price : 'No price'}</h3>
+                                                                <div className="flex justify-center">
                                                                     <button onClick={() => viewProduct(row.link)} className="underline text-xl">View</button>
                                                                 </div>
-                                                            </TooltipComponent>
+                                                            </div>
                                                         </div>
                                                     ))}
                                                 </div> : <LoadingComponent size='sm' />}
-                                        </div>
-
-
-
-
+                                        </div> : ''}
                                     </div>
 
                                     <div className="flex mx-1 justify-between">
                                         <div>
-                                            <h3 className="text-lg">Displayed Retail Value: ${results[activeResultIndex].price}</h3>
+
+                                            {isIncludeRetailPrice ?
+                                                <div className="mt-3">
+                                                    <label className="block text-lg">Retail Compare</label>
+                                                    <div className="relative flex items-center">
+                                                        <h3 className="absolute text-base left-3 mt-1">$</h3>
+                                                        <input value={retailPrice} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setRetailPrice(e.target.value)} />
+                                                    </div>
+                                                </div> : ''}
                                             <div className="mt-3">
-                                                <label className="block text-lg">Price</label>
+                                                <label className="block text-lg">Your Price</label>
                                                 <div className="relative flex items-center">
                                                     <h3 className="absolute text-base left-3 mt-1">$</h3>
                                                     <input value={price} type="number" className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600" onChange={(e) => setPrice(e.target.value)} />
@@ -1003,11 +1157,11 @@ function ImageUploader({ onBack, onFecth }) {
 
                                     </div>
 
-                                    <div className="flex justify-center mt-3">
+                                    {isOptionToAuction ? <div className="flex justify-center mt-3">
                                         <button onClick={() => setIsAuctioned(true)} className={`${isAuctioned ? 'border border-gray-300 text-white bg-green-500' : 'border-2 border-green-400 text-green-400'}  duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5`}>
                                             Auction
                                         </button>
-                                    </div>
+                                    </div> : ''}
 
                                     {isAuctioned ?
                                         <div>
@@ -1059,15 +1213,13 @@ function ImageUploader({ onBack, onFecth }) {
                                     }
 
                                     <div className="flex items-center justify-center gap-3 mt-8">
-                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
+                                        <button onClick={() => handleAdminListMore()} className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Dispose
                                         </button>
-                                        <button onClick={() => handleEmployeeListMore()} className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
-                                            Print SKU
+                                        <button onClick={() => handleAdminListMore()} className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
+                                            {isGenerateSKULabels ? 'Print SKU' : 'List'}
                                         </button>
                                     </div>
-
-
                                 </div>
                                 : ''}
 
@@ -1117,7 +1269,7 @@ function ImageUploader({ onBack, onFecth }) {
 
 
                                         </div>
-                                        <div className="flex justify-center sm:justify-start">
+                                        <div className="flex justify-center sm:justify-start mt-1">
                                             <ButtonComponent rounded className="!w-48 mt-6" onClick={() => onBack()} >Home page</ButtonComponent>
                                         </div>
                                     </> : ''
@@ -1164,7 +1316,7 @@ function ImageUploader({ onBack, onFecth }) {
                                                     </div>
                                                 </div>
                                                 {listings.length !== 0 ?
-                                                    <ButtonComponent loading={uploading} full onClick={() => stopListing()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent> : ''}
+                                                    <ButtonComponent loading={uploading} full onClick={() => handleEmployeeUploadAll()} className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}>Stop</ButtonComponent> : ''}
                                             </div>}
                                     </div>
 
@@ -1273,7 +1425,7 @@ function ImageUploader({ onBack, onFecth }) {
 
 
                                         </div>
-                                        <div className="flex justify-center sm:justify-start">
+                                        <div className="flex justify-center sm:justify-start mt-1">
                                             <ButtonComponent rounded className="!w-48 mt-6" onClick={() => onBack()} >Home page</ButtonComponent>
                                         </div>
                                     </> : ''
@@ -1445,7 +1597,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                                         <div className="mt-10 ml-3">
 
-                                            <div className="flex justify-center sm:justify-start">
+                                            <div className="flex justify-center sm:justify-start mt-1">
                                                 <label className="relative mb-4 flex items-center cursor-pointer">
                                                     <input
                                                         type="checkbox"
@@ -1461,7 +1613,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                                                 </label>
                                             </div>
-                                            <div className="flex justify-center sm:justify-start">
+                                            <div className="flex justify-center sm:justify-start mt-1">
                                                 <ButtonComponent rounded className="!w-48" onClick={() => triggerToTagsPage()} >Generate Tags</ButtonComponent>
                                             </div>
 
@@ -1510,7 +1662,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                                         </div>
                                     ))}
-                                    <div className="flex justify-center sm:justify-start">
+                                    <div className="flex justify-center sm:justify-start mt-1">
                                         <ButtonComponent rounded className="!w-48 !mt-6" onClick={() => setStep(7)} >Review All</ButtonComponent>
                                     </div>
                                 </div>
@@ -1524,17 +1676,15 @@ function ImageUploader({ onBack, onFecth }) {
                                         <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
                                             {listings.map((row, key) => {
                                                 return (
-                                                    <ListingItem key={key} mainPhoto={row.items.main.image} brandPhoto={row.items.brandTag.image} tags={row.tags}>
-
+                                                    <ListingItem key={key} mainPhoto={row.items?.main?.image} brandPhoto={row.items?.brandTag?.image} tags={row.tags}>
                                                         <button onClick={() => triggerEditTagsModalOffline(key)} className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded">
                                                             Edit Tags
                                                         </button>
                                                     </ListingItem>
-
                                                 );
                                             })}
                                         </div>
-                                        <div className="flex justify-center sm:justify-start">
+                                        <div className="flex justify-center sm:justify-start mt-1">
                                             <ButtonComponent rounded className="!w-48 mt-6" onClick={handleUploadAll} >Upload All</ButtonComponent>
                                         </div>
                                     </> : ''

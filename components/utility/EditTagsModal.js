@@ -36,10 +36,10 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
                 }
             );
 
-            console.log(response)
+
 
             const res = await response.json();
-            console.log(res);
+
             if (!response.ok) {
                 throw new Error('Failed to save tags.');
             }

@@ -12,7 +12,7 @@ import {
     LinkedinIcon, PinterestIcon, VKIcon, OKIcon, RedditIcon, TumblrIcon, EmailIcon
 } from 'react-share';
 function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false }) {
-    console.log(data)
+
     const [showAll, setShowAll] = useState(false);
     const tagsToDisplay = showAll ? data?.tags : data?.tags.slice(0, 3);
     const [saveLoading, setLoadingSave] = useState(false);
