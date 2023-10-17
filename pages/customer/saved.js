@@ -222,7 +222,7 @@ export default function Home() {
                             onClick={() => triggerDetailsModal(key)}
                           >
                             <Image
-                              src={row.mainImage?.url}
+                              src={row.mainImage}
                               width={100}
                               height={100}
                               className="rounded !w-full !h-64 object-cover"
@@ -239,7 +239,7 @@ export default function Home() {
                               ))}
                             </div>
                           </div>
-                          // <ListingItem key={key} mainPhoto={row?.mainImage?.url} tags={row?.tags}>
+                          // <ListingItem key={key} mainPhoto={row?.mainImage} tags={row?.tags}>
                           //   <div className="flex items-center">
                           //     <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
                           //       View details

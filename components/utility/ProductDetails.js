@@ -113,7 +113,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                             )}
                             {activeImage === 0 ?
                                 <Image
-                                    src={data?.mainImage?.url}
+                                    src={data?.mainImage}
                                     className="rounded-lg w-full"
                                     width="150"
                                     height="150"
@@ -155,7 +155,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                     <TelegramShareButton url={productUrl}><TelegramIcon size={80} round /></TelegramShareButton>
                                     <WhatsappShareButton url={productUrl}><WhatsappIcon size={80} round /></WhatsappShareButton>
                                     <LinkedinShareButton url={productUrl}><LinkedinIcon size={80} round /></LinkedinShareButton>
-                                    <PinterestShareButton url={productUrl} media={data?.mainImage?.url}><PinterestIcon size={80} round /></PinterestShareButton>
+                                    <PinterestShareButton url={productUrl} media={data?.mainImage}><PinterestIcon size={80} round /></PinterestShareButton>
                                     <VKShareButton url={productUrl}><VKIcon size={80} round /></VKShareButton>
                                     <OKShareButton url={productUrl}><OKIcon size={80} round /></OKShareButton>
                                     <RedditShareButton url={productUrl}><RedditIcon size={80} round /></RedditShareButton>

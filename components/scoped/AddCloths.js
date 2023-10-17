@@ -7,6 +7,7 @@ import ButtonComponent from "@/components/utility/Button";
 import ImageCropper from "@/components/utility/ImageCropper";
 import Capture from "@/components/utility/Capture";
 import TagsInput from 'react-tagsinput'
+import { QRCode } from 'react-qrcode-logo';
 
 import 'react-tagsinput/react-tagsinput.css'
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
@@ -47,7 +48,7 @@ function ImageUploader({ onBack, onFecth }) {
     const [subCategoryOne, setSubCategoryOne] = useState('');
     const [subCategoryTwo, setSubCategoryTwo] = useState('');
 
-    const [type, setType] = useState('simple');
+    const [type, setType] = useState('admin');
     const [tagFetching, setTagFetching] = useState(false)
 
     const subCategoryOptionsClothing = [
@@ -118,6 +119,11 @@ function ImageUploader({ onBack, onFecth }) {
         setListType('dispose');
         setSubCategoryOne('');
         setSubCategoryTwo('');
+        setCurrentPhotoType('main');
+        setUploadedImages({
+            main: null,
+            brandTag: null,
+        });
     };
 
 
@@ -513,26 +519,49 @@ function ImageUploader({ onBack, onFecth }) {
 
     };
 
-    const handleAdminListMore = () => {
-
-
-        const newListing = listings
-        newListing.push({
+    const uploadListingOrPrintSKU = async () => {
+        setUploading(true);
+        let JSON = {
             type: type,
             list_type: listType,
-            tags: [],
-            items: uploadedImages
-        })
+            tags: uploadedImages.tags,
+            mainImageUrl: uploadedImages.main.url,
+            mainImageUrl: uploadedImages.brandTag.url,
+            items: uploadedImages.main.url
+        }
 
-        setListings(newListing);
-        setUploadedImages({
-            main: null,
-            brandTag: null,
-        });
-        setCurrentPhotoType('main');
-        setStep(1);
-        resetAllVariables()
-    };
+
+        try {
+
+            const response = await axios.post('/api/add-listing', { listing: JSON })
+            const result = response.data
+
+            const newListing = listings
+            newListing.push(result)
+
+            setListings(newListing);
+
+            resetAllVariables()
+            if (isGenerateSKULabels) {
+                setStep(3);
+            } else {
+                setStep(1);
+            }
+
+            NotificationManager.success('Listing added successfully!');
+        } catch (error) {
+            console.error(error);
+        } finally {
+
+
+
+
+
+            setUploading(false);
+        }
+    }
+
+
 
     const handleListMore = () => {
 
@@ -594,7 +623,6 @@ function ImageUploader({ onBack, onFecth }) {
             reader.readAsDataURL(blob);
         });
     };
-
 
     // This function will send the image to the server-side endpoint for processing.
     const getTagsFromGoogleVision = async (base64Image, imageType) => {
@@ -830,6 +858,30 @@ function ImageUploader({ onBack, onFecth }) {
     const viewProduct = (link) => {
         window.open(link, "blank")
     }
+
+    const downloadCustomerQRCode = () => {
+        const canvas = document.querySelector('#customer-qrcode');
+
+        if (canvas) {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL();
+            link.download = 'customer-qrcode.png';
+            link.click();
+        }
+    };
+
+    const downloadAdminQRCode = () => {
+        const canvas = document.querySelector('#admin-qrcode');
+
+        if (canvas) {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL();
+            link.download = 'admin-qrcode.png';
+            link.click();
+        }
+    };
+
+
 
 
 
@@ -1213,18 +1265,76 @@ function ImageUploader({ onBack, onFecth }) {
                                     }
 
                                     <div className="flex items-center justify-center gap-3 mt-8">
-                                        <button onClick={() => handleAdminListMore()} className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
+                                        <button onClick={() => uploadListingOrPrintSKU()} className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             Dispose
                                         </button>
-                                        <button onClick={() => handleAdminListMore()} className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
+                                        <button onClick={() => uploadListingOrPrintSKU()} className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5 border border-gray-300`}>
                                             {isGenerateSKULabels ? 'Print SKU' : 'List'}
                                         </button>
                                     </div>
                                 </div>
                                 : ''}
 
+                            {step === 3 && (
+                                <div className="mt-5">
+
+                                    <div className="flex justify-center">
+
+                                        <div className="border-[5px] border-gray-700 rounded-3xl px-8 py-2">
+                                            <h3 className="text-5xl font-normal text-gray-700">Our Price: $8.99</h3>
+                                        </div>
+                                    </div>
+                                    <h3 className="text-center text-lg italic text-gray-600"> Check FashionPal for the updated price</h3>
+                                    <div className="flex items-center justify-center mt-5">
+                                        <div className="w-[260px] mr-20">
+                                            <h3 className="text-2xl text-center">Follow us on FashionPal</h3>
+                                            <QRCode
+                                                id="customer-qrcode" // Set a unique id for this QR code
+                                                value={`https://fashionpal.vercel.app/store/customer-${listings[listings.length - 1]?.id}`}
+                                                logoImage={'https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/fav.jpg'}
+                                                enableCORS={true}
+                                                size="250"
+                                                qrStyle="dots"
+                                                bgColor="#FFFFFF"
+                                                fgColor="#808080"
+                                                eyeColor="#FF5733"
+                                            />
+
+                                            <div className="flex justify-center">
+                                                <button className="underline text-lg" onClick={downloadCustomerQRCode}>
+                                                    Download QR Code (Customer)
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="w-[260px]">
+                                            <h3 className="text-2xl text-center">Product SKU</h3>
+                                            <QRCode
+                                                id="admin-qrcode" // Set a unique id for this QR code
+                                                value={`https://fashionpal.vercel.app/store/admin-${listings[listings.length - 1]?.id}`}
+                                                logoImage={'https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/fav.jpg'}
+                                                enableCORS={true}
+                                                size="250"
+                                                bgColor="#FFFFFF"
+                                                fgColor="#808080"
+                                                eyeColor="#FF5733"
+                                            />
+
+                                            <div className="flex justify-center">
+                                                <button className="underline text-lg" onClick={downloadAdminQRCode}>
+                                                    Download QR Code (Admin)
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex justify-center  mt-1">
+                                        <ButtonComponent rounded className="!w-48 mt-6" onClick={() => setStep(1)}>List</ButtonComponent>
+                                    </div>
+                                </div>
+                            )}
+
                             {
-                                step === 3 ?
+                                step === 4 ?
                                     <>
                                         <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
 

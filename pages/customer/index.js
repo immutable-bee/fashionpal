@@ -303,7 +303,7 @@ export default function Home() {
                               onClick={() => triggerDetailsModal(index)}
                             >
                               <Image
-                                src={row.mainImage?.url}
+                                src={row.mainImage}
                                 width={100}
                                 height={100}
                                 className="rounded !w-full !h-64 object-cover"
