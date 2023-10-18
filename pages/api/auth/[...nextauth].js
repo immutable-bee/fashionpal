@@ -15,16 +15,17 @@ const options = {
                     password: credentials.password,
                 };
                 console.log(1)
-                const res = await fetch(
-                    `/api/user/login`,
-                    {
-                        method: "POST",
-                        body: JSON.stringify(userCredentials),
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
+                const currentUrl = window.location.href;
+                const loginUrl = `${currentUrl}/api/user/login`;
+
+                const res = await fetch(loginUrl, {
+                    method: "POST",
+                    body: JSON.stringify(userCredentials),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+
                 console.log(res.status); // Log the HTTP status code
                 console.log(res.statusText); // Log the status text (e.g., "Not Found" for a 404 error)
 
