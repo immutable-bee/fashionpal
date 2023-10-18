@@ -525,9 +525,8 @@ function ImageUploader({ onBack, onFecth }) {
             type: type,
             list_type: listType,
             tags: uploadedImages.tags,
-            mainImageUrl: uploadedImages.main.url,
-            mainImageUrl: uploadedImages.brandTag.url,
-            items: uploadedImages.main.url
+            mainImage: uploadedImages.main.url,
+            brandImage: uploadedImages.brandTag.url,
         }
 
 
@@ -755,57 +754,7 @@ function ImageUploader({ onBack, onFecth }) {
     };
 
     const handleAdminUploadAll = async () => {
-        setUploading(true);
-
-        const convertedListings = await Promise.all(listings.map(async listing => {
-            const mainImageUrl = listing.items.main.url
-            const brandImageUrl = listing.items.brandTag
-                ? listing.items.brandTag.url
-                : null;
-
-            let JSON = {
-                type: 'admin',
-                category: category,
-                floorPrice: parseInt(floorPrice),
-                maxPrice: parseInt(maxPrice),
-                dataSource: dataSource,
-                isAuctioned: isAuctioned,
-                price: parseInt(price),
-                listType: listType,
-                isAuctioned: isAuctioned,
-                auctionTime: auctionTime,
-                auctionFloorPrice: parseInt(auctionFloorPrice),
-                auctionMaxPrice: parseInt(auctionMaxPrice),
-                delivery: delivery,
-                mainImage: mainImageUrl,
-                brandImage: brandImageUrl,
-                tags: listing.items.tags,
-            }
-
-
-            return JSON;
-        }));
-
-        try {
-            const requests = convertedListings.map(listing =>
-                axios.post('/api/add-listing', { listing })
-            );
-
-            const responses = await axios.all(requests);
-            const results = responses.map(response => response.data);
-
-
-
-            NotificationManager.success('Listing added successfully!');
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setEndTime(moment().format('HH:mm:ss'))
-            setStep(3)
-
-            onFecth();
-            setUploading(false);
-        }
+        setStep(4)
     };
 
     const handleUploadAll = async () => {

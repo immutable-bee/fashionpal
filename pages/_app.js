@@ -1,9 +1,11 @@
 import "../styles/globals.css";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
+
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer } from "react-notifications";
-function App({ Component, pageProps }) {
+function App({ Component, pageProps: { session, ...pageProps }, }) {
   const router = useRouter();
 
   useEffect(() => {
@@ -17,8 +19,11 @@ function App({ Component, pageProps }) {
 
   return (
     <>
-      {" "}
-      <Component {...pageProps} /> <NotificationContainer />
+
+      <SessionProvider >
+
+        <Component {...pageProps} /> <NotificationContainer />
+      </SessionProvider>
     </>
   );
 }

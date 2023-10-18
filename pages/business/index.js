@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/customer/BusinessFilters";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import { NotificationManager } from "react-notifications";
 import Loading from "@/components/utility/loading";
@@ -13,6 +16,17 @@ import AddCloths from "@/components/scoped/AddCloths";
 import cloneDeep from "lodash.clonedeep";
 export default function Home() {
   // add
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   console.log(session)
+  //   // Check if the user is not authenticated, and if not, redirect them to the login page.
+  //   if (!session) {
+  //     router.push("/login"); // Replace "/login" with the actual login page route.
+  //   }
+  // }, [session]);
+
 
   const [filter, setFilter] = useState("");
 
