@@ -27,7 +27,7 @@ function SignIn() {
         };
 
         // Make call to backend to create user
-        const currentUrl = window.location.href;
+        const currentUrl = window.location.origin;
         console.log(currentUrl)
         const res = await fetch(`${currentUrl}/api/user/create`, {
             method: "POST",

@@ -15,7 +15,7 @@ const options = {
                     password: credentials.password,
                 };
                 console.log(1)
-                const currentUrl = window.location.href;
+                const currentUrl = window.location.origin;
                 console.log(currentUrl)
                 const loginUrl = `${currentUrl}/api/user/login`;
 
