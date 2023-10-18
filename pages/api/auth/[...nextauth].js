@@ -16,6 +16,7 @@ const options = {
                 };
                 console.log(1)
                 const currentUrl = window.location.href;
+                console.log(currentUrl)
                 const loginUrl = `${currentUrl}/api/user/login`;
 
                 const res = await fetch(loginUrl, {
