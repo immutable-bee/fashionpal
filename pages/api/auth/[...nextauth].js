@@ -16,7 +16,7 @@ const options = {
                 };
                 console.log(1)
                 const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/login`,
+                    `/api/user/login`,
                     {
                         method: "POST",
                         body: JSON.stringify(userCredentials),
