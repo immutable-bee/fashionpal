@@ -173,7 +173,7 @@ export default function Home() {
                           <div
                             className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
                           >
-                            <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
+                            <span className="w-1/2">Business name:</span> <span className="w-1/2">FashionPal</span>
                           </div>
                           <div
                             className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
@@ -252,7 +252,7 @@ export default function Home() {
                           <div
                             className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}
                           >
-                            <span className="w-1/2">Business name:</span> <span className="w-1/2">BiblioPal</span>
+                            <span className="w-1/2">Business name:</span> <span className="w-1/2">FashionPal</span>
                           </div>
                           <div
                             className={`text-gray-800 font-light bg-white rounded px-2 py-1 w-full flex text-base leading-5 !mt-1.5`}

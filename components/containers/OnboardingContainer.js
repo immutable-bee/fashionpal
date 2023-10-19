@@ -141,12 +141,12 @@ const OnboardingContainer = () => {
             <div className="flex flex-col items-center">
               <h2 className="pt-5 text-lg font-medium text-center">
                 Your account has been confirmed! You can now start using
-                BiblioPal. You will be redirected in 10 seconds or you can click
-                the button below to enter BiblioPal
+                FashionPal. You will be redirected in 10 seconds or you can click
+                the button below to enter FashionPal
               </h2>
               <Link href={userType === "consumer" ? "/consumer" : "/business"}>
                 <Button className="mt-5" type="submit">
-                  Enter BiblioPal
+                  Enter FashionPal
                 </Button>
               </Link>
             </div>

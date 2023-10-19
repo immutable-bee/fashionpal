@@ -1,77 +1,87 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from '../../../prisma/client';
+import GoogleProvider from "next-auth/providers/google";
+import EmailProvider from "next-auth/providers/email";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "../../../db/prismaDB";
+import signInEmail from "../../../emails/signin";
+import { createTransport } from "nodemailer";
 
-const options = {
+const logo = "https://fashionpal.vercel.app/_next/image?url=%2Fimages%2Flogo-vertical.jpg&w=256&q=75";
+
+const transporter = createTransport({
+    host: process.env.EMAIL_SERVER_HOST,
+    port: process.env.EMAIL_SERVER_PORT,
+    auth: {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD,
+    },
+});
+
+export const authOptions = {
+    adapter: PrismaAdapter(prisma),
     providers: [
-        CredentialsProvider({
-            id: "credentials",
-            name: "Credentials",
-            async authorize(credentials, req) {
-                console.log(credentials)
-                const userCredentials = {
-                    email: credentials.email,
-                    password: credentials.password,
-                };
-                console.log(1)
-                const currentUrl = window.location.origin;
-                console.log(currentUrl)
-                const loginUrl = `${currentUrl}/api/user/login`;
-
-                const res = await fetch(loginUrl, {
-                    method: "POST",
-                    body: JSON.stringify(userCredentials),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                console.log(res.status); // Log the HTTP status code
-                console.log(res.statusText); // Log the status text (e.g., "Not Found" for a 404 error)
-
-                console.log(2)
-                console.log(res)
-                const user = await res.json();
-                console.log(res)
-                if (res.ok && user) {
-                    return user;
-                } else {
-                    return null;
-                }
+        EmailProvider({
+            server: {
+                host: process.env.EMAIL_SERVER_HOST,
+                port: process.env.EMAIL_SERVER_PORT,
+                auth: {
+                    user: process.env.EMAIL_SERVER_USER,
+                    pass: process.env.EMAIL_SERVER_PASSWORD,
+                },
             },
+            from: process.env.EMAIL_FROM,
+
+            sendVerificationRequest: async ({
+                identifier: email,
+                url,
+                provider: { server, from },
+            }) => {
+                const emailBody = signInEmail.compiledHtml
+                    .replace(/{{c1}}/g, email)
+                    .replace(/{{cta1}}/g, url)
+                    .replace("{{logo}}", logo);
+
+                // now you should send the email using your transporter
+                await transporter.sendMail({
+                    from: `"BiblioPal" <${process.env.EMAIL_FROM}>`,
+                    to: email,
+                    subject: "Sign in link",
+                    html: emailBody,
+                });
+            },
+        }),
+
+        GoogleProvider({
+            allowDangerousEmailAccountLinking: true,
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
     ],
 
-    adapter: PrismaAdapter(prisma),
-    secret: process.env.NEXTAUTH_SECRET,
-    session: { strategy: "jwt", maxAge: 24 * 60 * 60 },
-
-    jwt: {
-        secret: process.env.NEXTAUTH_SECRET,
-        maxAge: 60 * 60 * 24 * 30,
-        encryption: true,
+    session: {
+        strategy: "jwt",
     },
-
     pages: {
-        signIn: "/login",
-        signOut: "/login",
-        error: "/login",
+        signIn: "/auth",
+        newUser: "/auth/onboarding",
     },
 
     callbacks: {
-        async session(session, user, token) {
-            if (user !== null) {
-
-                session.user = user;
+        async signIn({ user, account, profile, email, credentials }) {
+            if (account && account.provider === "google") {
+                const emailUser = await prisma.user.findUnique({
+                    where: {
+                        email: user.email,
+                    },
+                });
+                if (emailUser) {
+                    user.id = emailUser.id;
+                }
             }
-            return await session;
-        },
 
-        async jwt({ token, user }) {
-            return await token;
+            return true;
         },
     },
 };
 
-export default (req, res) => NextAuth(req, res, options);
+export default NextAuth(authOptions);

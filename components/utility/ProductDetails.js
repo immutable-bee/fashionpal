@@ -226,7 +226,7 @@ function ProductDetails({ open, onClose, data, fetchListings, imageOnly = false 
                                     />
 
                                     <div className="ml-4">
-                                        <h3 className="text-base font-light">BiblioPal Inc.</h3>
+                                        <h3 className="text-base font-light">FashionPal Inc.</h3>
                                         <h3 className="text-base font-light">Naseer Complex, Miani Road, Sukkur, Pakistan</h3>
                                         <a href="mailto:ibrahim@justibrahim.com" className="text-primary text-base font-light block hover:underline">ibrahim@justibrahim.com</a>
                                         <a href="https://fashionpal.vercel.app/" className="text-primary text-base font-light block hover:underline">https://fashionpal.vercel.app/</a>
