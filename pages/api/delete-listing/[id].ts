@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "DELETE") {
-    const { id } = req.query;
+    const { id }: any = req.query;
 
     try {
       // Step 1: Fetch the listing to get image URLs
