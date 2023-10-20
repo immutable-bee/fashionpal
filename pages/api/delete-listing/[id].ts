@@ -12,7 +12,7 @@ export default async function handler(
     try {
       // Step 1: Fetch the listing to get image URLs
       const listing = await prisma.listing.findUnique({
-        where: { id: Number(id) },
+        where: { id: id },
       });
 
       if (!listing) {
@@ -35,7 +35,7 @@ export default async function handler(
 
       await prisma.listing.delete({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
 
