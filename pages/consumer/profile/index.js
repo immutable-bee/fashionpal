@@ -6,9 +6,9 @@ import HeaderComponent from "@/components/utility/Header";
 import { signOut } from "next-auth/react";
 import StoresModal from "@/components/scoped/StoresModal";
 import { useUser } from "../../../context/UserContext";
-import UsernameInput from "../../../components/customer/profile/UsernameInput";
-import Alerts from "../../../components/customer/profile/Alerts";
-import AlertPreferences from "../../../components/customer/profile/AlertPreferences";
+import UsernameInput from "../../../components/consumer/profile/UsernameInput";
+import Alerts from "../../../components/consumer/profile/Alerts";
+import AlertPreferences from "../../../components/consumer/profile/AlertPreferences";
 
 const Profilecomponent = () => {
   // const { user, updateUserUsername, fetchUserData } = useUser();

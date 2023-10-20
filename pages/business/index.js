@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import BusinessFilters from "@/components/customer/BusinessFilters";
+import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
@@ -19,14 +19,7 @@ export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  // useEffect(() => {
-  //   console.log(session)
-  //   // Check if the user is not authenticated, and if not, redirect them to the login page.
-  //   if (!session) {
-  //     router.push("/login"); // Replace "/login" with the actual login page route.
-  //   }
-  // }, [session]);
-
+  console.log(session)
 
   const [filter, setFilter] = useState("");
 

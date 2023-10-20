@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import BookWorm from '../../assets/worm.webp'
+import { useSession } from "next-auth/react";
+
 const HeaderComponent = () => {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false)
   const router = useRouter();
   const linkColor = (path) => {
@@ -47,9 +50,9 @@ const HeaderComponent = () => {
             </Link>
           </li>
           <li>
-            <Link style={{ color: linkColor("/customer") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 " href="/customer">
+            <Link style={{ color: linkColor("/consumer") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 " href="/consumer">
 
-              Customer
+              Consumer
 
             </Link>
           </li>
@@ -71,7 +74,7 @@ const HeaderComponent = () => {
           />
         </div>
         <span className="!ml-3 hidden sm:block text-black font-semibold text-lg">
-          Hi, Demo User!
+          Hi, {session && session.user && session.user.email ? session.user.email : 'Demo User!'}
         </span>
       </Link>
     </header>

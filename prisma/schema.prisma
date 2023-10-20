@@ -55,11 +55,62 @@ model User {
   sessions            Session[]
   onboarding_complete Boolean   @default(false)
 
-  Listing Listing[]
+  business Business?
+  consumer Consumer?
+  Listing  Listing[]
+}
+
+model Business {
+  id                      String       @id @default(uuid())
+  user                    User         @relation(fields: [uid], references: [id])
+  uid                     String       @unique
+  type                    BUSINESSTYPE
+  business_name           String
+  email                   String       @unique
+  business_state          String
+  business_city           String
+  business_street         String
+  business_zip            String
+  url                     String?
+  phone_number            String?
+  membership              MEMBERSHIP   @default(FREE)
+  upload_cycle_start_date DateTime     @default(now())
+  current_cycle_uploads   Int          @default(0)
+  upload_credits          Int          @default(0)
+  listings                Listing[]
+  subscriptionId          String?
+}
+
+model Consumer {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [uid], references: [id])
+  uid             String   @unique
+  username        String
+  email           String   @unique
+  alerts_paused   Boolean  @default(false)
+  email_alerts_on Boolean  @default(true)
+  tracked_titles  String[]
+  tracked_authors String[]
+  tracked_zips    String[]
+  isbnAlerts      String[]
+  paid_alerts     Int      @default(25)
+  subscriptionId  String?
+}
+
+enum BUSINESSTYPE {
+  CLOTHING
+  FOOTWEAR
+  HATS
+}
+
+enum MEMBERSHIP {
+  FREE
+  BASIC
+  PREMIUM
 }
 
 model Listing {
-  id                Int       @id @default(autoincrement())
+  id                String    @id @default(cuid())
   mainImage         Json?
   brandImage        Json?
   category          String?
@@ -85,10 +136,12 @@ model Listing {
   updatedAt         DateTime? @updatedAt
   User              User?     @relation(fields: [userId], references: [id])
   userId            String?
+  Business          Business? @relation(fields: [businessId], references: [id])
+  businessId        String?
 }
 
 model Sale {
-  id              Int       @id @default(autoincrement())
+  id              String    @id @default(cuid())
   name            String
   items           String[]
   discount_amount String

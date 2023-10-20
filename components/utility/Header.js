@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import BookWorm from '../../assets/worm.webp'
+import { useSession } from "next-auth/react";
+
 const HeaderComponent = () => {
+  const { data: session } = useSession();
+
   const [open, setOpen] = useState(false)
   const router = useRouter();
   const linkColor = (path) => {
@@ -33,14 +37,14 @@ const HeaderComponent = () => {
       <div class={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${open ? '!block' : ''} `} id="navbar-default">
         <ul class="font-medium sm:w-auto w-full text-lg flex flex-col p-4 md:p-0 mt-4 border border-gray-100 sm:border-transparent rounded-lg sm:bg-transparent bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
           <li>
-            <Link href="/customer" style={{ color: linkColor("/customer") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 " aria-current="page">Home</Link>
+            <Link href="/consumer" style={{ color: linkColor("/consumer") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 " aria-current="page">Home</Link>
           </li>
 
           <li>
-            <Link href="/customer/saved" style={{ color: linkColor("/customer/saved") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Saved</Link>
+            <Link href="/consumer/saved" style={{ color: linkColor("/consumer/saved") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Saved</Link>
           </li>
           <li>
-            <Link href="/customer/sales" style={{ color: linkColor("/customer/sales") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Sales</Link>
+            <Link href="/consumer/sales" style={{ color: linkColor("/consumer/sales") }} class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ">Sales</Link>
           </li>
 
           <li>
@@ -50,7 +54,7 @@ const HeaderComponent = () => {
       </div>
 
       <Link
-        href="/customer/profile"
+        href="/consumer/profile"
         className="flex items-center no-underline"
       >
         {" "}
@@ -64,7 +68,7 @@ const HeaderComponent = () => {
           />
         </div>
         <span className="!ml-3 hidden sm:block text-black font-semibold text-lg">
-          Hi, Demo User!
+          Hi, {session && session.user && session.user.email ? session.user.email : 'Demo User!'}
         </span>
       </Link>
 

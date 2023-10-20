@@ -25,11 +25,10 @@ const ProfileComponent = ({ }) => {
 
     const [selectedItems, setSelectedItems] = useState([]);
 
-
     const options = [
-        { value: 'Thrift', label: 'Thrift' },
-        { value: 'Library', label: 'Library' },
-        { value: 'Bookstore', label: 'Bookstore' }
+        { value: 'Clothing', label: 'Clothing' },
+        { value: 'Footwear', label: 'Footwear' },
+        { value: 'HATS', label: 'HATS' }
     ];
 
 

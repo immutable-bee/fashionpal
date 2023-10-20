@@ -145,9 +145,9 @@ const ProfileComponent = ({ }) => {
                 className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-select border border-gray-500 w-full rounded-lg  px-3 my-1 py-2"
                 onChange={handleChange}
               >
-                <option value="THRIFT">Thrift</option>
-                <option value="LIBRARY">Library</option>
-                <option value="BOOKSTORE">Bookstore</option>
+                <option value="CLOTHING">Clothing</option>
+                <option value="FOOTWEAR">Footwear</option>
+                <option value="HATS">Hats</option>
               </select>
             </div>
 

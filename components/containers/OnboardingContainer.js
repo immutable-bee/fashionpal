@@ -7,11 +7,9 @@ import Link from "next/link";
 
 const OnboardingContainer = () => {
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
   const [userType, setUserType] = useState(null);
-
   const [username, setUsername] = useState("");
 
   const handleConsumerOnboard = () => {

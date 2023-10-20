@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import HeaderComponent from "@/components/utility/Header";
-import CustomerSalesFilters from "@/components/customer/CustomerSalesFilters";
+import CustomerSalesFilters from "@/components/consumer/CustomerSalesFilters";
 import Loading from "@/components/utility/loading";
 import moment from 'moment'
 import "swiper/css";

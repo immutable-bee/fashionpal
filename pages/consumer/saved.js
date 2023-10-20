@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import HeaderComponent from "@/components/utility/Header";
-import CustomerFilters from "@/components/customer/CustomerFilters";
+import CustomerFilters from "@/components/consumer/CustomerFilters";
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
 import ProductDetails from "@/components/utility/ProductDetails";
