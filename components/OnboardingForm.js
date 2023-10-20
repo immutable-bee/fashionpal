@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Checkbox, Input, Button, Modal } from "@nextui-org/react";
-import * as notify from "../../../bibliopal-nextjs/pages/api/notifier/notify";
+// import * as notify from "../../../bibliopal-nextjs/pages/api/notifier/notify";
 
 const stateOptions = [
   { key: "al", value: "AL", text: "Alabama" },
