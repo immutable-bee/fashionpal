@@ -11,7 +11,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    setData(tags);
+    setData(tags || []);
   }, [tags]);
 
   const onSave = async () => {

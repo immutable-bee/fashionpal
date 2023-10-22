@@ -38,6 +38,7 @@ function ProductDetails({
 }) {
   const [showAll, setShowAll] = useState(false);
   const tagsToDisplay = showAll ? data?.tags : data?.tags.slice(0, 3);
+
   const [saveLoading, setLoadingSave] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [openShareModal, setOpenShareModal] = useState(false);
@@ -278,6 +279,7 @@ function ProductDetails({
                       d="M0 0h24v24H0z"
                       fill="none"
                     />
+
                     <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h3m9 -9v-5a2 2 0 0 0 -2 -2h-2" />
                     <path d="M13 17v-1a1 1 0 0 1 1 -1h1m3 0h1a1 1 0 0 1 1 1v1m0 3v1a1 1 0 0 1 -1 1h-1m-3 0h-1a1 1 0 0 1 -1 -1v-1" />
                     <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
@@ -304,6 +306,7 @@ function ProductDetails({
                       d="M0 0h24v24H0z"
                       fill="none"
                     />
+
                     <path d="M8 9h8" />
                     <path d="M8 13h6" />
                     <path d="M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3z" />
@@ -326,6 +329,7 @@ function ProductDetails({
                   <span className="w-1/2">{tag}</span>
                 </div>
               ))}
+
               {!showAll && data?.tags.length > 3 && (
                 <button
                   className=" bg-primary px-3 py-1 text-sm !mt-3 rounded-md text-white"
@@ -356,6 +360,7 @@ function ProductDetails({
                   />
                   <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
                 </svg>
+
                 <button
                   onClick={() => onSave()}
                   className={`mx-2 ${
@@ -381,6 +386,7 @@ function ProductDetails({
                       d="M0 0h24v24H0z"
                       fill="none"
                     />
+
                     <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
                   </svg>
                 </button>

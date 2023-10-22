@@ -21,11 +21,11 @@ export default async function handler(
       // Construct the where clause for filtering based on tags' value only
       const filters = [];
       if (searchText) {
-        filters.push({ value: { contains: searchText } });
+        filters.push(searchText);
       }
 
       if (size) {
-        filters.push({ value: { contains: size } });
+        filters.push(size);
       }
 
       let whereClause: any =
@@ -40,7 +40,7 @@ export default async function handler(
           : {};
 
       if (apparel) {
-        whereClause.type = apparel;
+        whereClause.category = apparel;
       }
       if (matches) {
         whereClause.matches = true;
@@ -52,6 +52,8 @@ export default async function handler(
         take: limit,
         where: whereClause,
       });
+
+      console.log(">>>>> ", whereClause);
 
       // Get the total count of listings with filtering
       const total = await prisma.listing.count({
