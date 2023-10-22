@@ -246,7 +246,11 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
           </div>
         )}
 
-        <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
+        <form
+          id="onboarding-form"
+          className="mt-6"
+          onSubmit={handleSubmit}
+        >
           {isStepOne ? (
             <>
               <>
@@ -262,7 +266,11 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                           my-2 px-2
                         "
                 >
-                  <option value="" disabled selected>
+                  <option
+                    value=""
+                    disabled
+                    selected
+                  >
                     Business type
                   </option>
                   <option value="CLOTHING">Clothing</option>
@@ -273,7 +281,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   required={true}
                   onChange={handleChange}
                   className="onboard-fields my-2"
-                  placeholder="Bookstore Business Name"
+                  placeholder="Store Business Name"
                   name="business_name"
                 />
                 <Input
@@ -282,7 +290,11 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   placeholder="Website Url"
                   name="url"
                 />
-                <Button rounded id="form-step-btn" onClick={formStepHandler}>
+                <Button
+                  rounded
+                  id="form-step-btn"
+                  onClick={formStepHandler}
+                >
                   Next
                 </Button>
               </>
@@ -317,7 +329,10 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                       "
                 >
                   {stateOptions.map((state) => (
-                    <option key={state.key} value={state.value}>
+                    <option
+                      key={state.key}
+                      value={state.value}
+                    >
                       {state.text}
                     </option>
                   ))}
@@ -354,7 +369,11 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
             </div>
           )}
         </form>
-        <Modal open={isTCModalOpen} closeButton onClose={tcModalCloseHandler}>
+        <Modal
+          open={isTCModalOpen}
+          closeButton
+          onClose={tcModalCloseHandler}
+        >
           <TCModalContent />
         </Modal>
       </div>

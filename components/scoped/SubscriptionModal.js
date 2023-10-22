@@ -23,8 +23,14 @@ const SubscriptionModal = (props) => {
       onClose={props.closeSubscriptionModal}
     >
       <form id="stripe-subscription-form">
-        <div id="subscription-options-details" className="flex">
-          <div id="sliders-container" className=" w-32 flex-shrink-0">
+        <div
+          id="subscription-options-details"
+          className="flex"
+        >
+          <div
+            id="sliders-container"
+            className=" w-32 flex-shrink-0"
+          >
             <label
               id="sliders-plan"
               className="relative mx-2 my-2 inline-flex items-center cursor-pointer"

@@ -1,10 +1,9 @@
-// import styles from "../../styles/components/managesubscriptionmodal.module.css";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import ButtonComponent from '@/components/utility/Button'
-import LoadingComponent from '@/components/utility/loading';
-import ModalComponent from '@/components/utility/Modal';
-import { useCallback } from 'react';
+import ButtonComponent from "@/components/utility/Button";
+import LoadingComponent from "@/components/utility/loading";
+import ModalComponent from "@/components/utility/Modal";
+import { useCallback } from "react";
 
 const ManageSubscriptionModal = (props) => {
   const [subscriptionStatus, setSubscriptionStatus] = useState(
@@ -16,9 +15,7 @@ const ManageSubscriptionModal = (props) => {
 
   const [billingDate, setBillingDate] = useState();
 
-  // data returned from route
   const [upgradePlanData, setUpgradePlanData] = useState();
-  // data sent to route
   const [upgradeRequest, setUpgradeRequest] = useState();
   const [downgradeRequest, setDowngradeRequest] = useState();
 
@@ -37,7 +34,6 @@ const ManageSubscriptionModal = (props) => {
   // const { data: session } = useSession({ required: true });
 
   const planDetailsHandler = (value) => {
-
     let details = {};
     if (value === "Not Subscribed") {
       details = [
@@ -45,29 +41,22 @@ const ManageSubscriptionModal = (props) => {
         "Buy and sell in state",
         "Request books in state",
         "Platform closing fee ($2 flat fee + 10% over $10)",
-      ]
+      ];
     } else if (
       value === "Monthly Plan (State)" ||
       value === "Yearly Plan (State)"
     ) {
-      details = [
-        "List up to 1000 per month",
-        "3-7 day inventory visibility",
-      ]
+      details = ["List up to 1000 per month", "3-7 day inventory visibility"];
     } else if (
       value === "Monthly Plan (National)" ||
       value === "Yearly Plan (National)"
     ) {
-      details = [
-        "List up to 5000 per month",
-        "3-30 day inventory visibility",
-      ]
+      details = ["List up to 5000 per month", "3-30 day inventory visibility"];
     }
     return details;
   };
 
   const upgradePlanDataHandler = useCallback(async () => {
-
     setAmountDueLoading(true);
     const response = await fetch(
       "api/stripe/get-subscription-upgrade-details",
@@ -83,7 +72,6 @@ const ManageSubscriptionModal = (props) => {
     setUpgradePlanData(data);
     setAmountDueLoading(false);
   }, [upgradeRequest, subscriptionStatus]);
-
 
   const downgradeSubscription = async () => {
     setRequestResponseLoading(true);
@@ -135,7 +123,7 @@ const ManageSubscriptionModal = (props) => {
         const errorData = await response.json();
         setCancelMessage(
           errorData.message ||
-          "An error occurred while canceling the subscription"
+            "An error occurred while canceling the subscription"
         );
       }
     } catch (error) {
@@ -155,19 +143,17 @@ const ManageSubscriptionModal = (props) => {
     const nextBillingDate = new Date(
       props.subscriptionData[0]?.current_period_end * 1000
     );
-    const formattedDate = `${nextBillingDate.getMonth() + 1
-      }/${nextBillingDate.getDate()}/${nextBillingDate.getFullYear()}`;
+    const formattedDate = `${
+      nextBillingDate.getMonth() + 1
+    }/${nextBillingDate.getDate()}/${nextBillingDate.getFullYear()}`;
     return formattedDate;
   };
 
   useEffect(() => {
-
     if (props.subscriptionData) {
       setBillingDate(billingDateHandler());
     }
   }, [props.subscriptionData]);
-
-
 
   useEffect(() => {
     if (props.subscriptionStatus) {
@@ -180,7 +166,6 @@ const ManageSubscriptionModal = (props) => {
       await upgradePlanDataHandler();
     })();
   }, [upgradeRequest, upgradePlanDataHandler]);
-
 
   const upgradePlanViewHandler = () => {
     setUpgradePlanView(!upgradePlanView);
@@ -231,24 +216,34 @@ const ManageSubscriptionModal = (props) => {
   const PlanDetails = ({ plan, details }) => (
     <>
       <h6 className="text-sm font-semibold">{plan}</h6>
-      <ul id="plan-details" className="text-sm text-black list-disc !mt-2">
+      <ul
+        id="plan-details"
+        className="text-sm text-black list-disc !mt-2"
+      >
         Plan Features:
         {details.map((item, index) => (
-          <li key={index} className="text-xs ml-4 !mt-1 text-gray-600 font-normal">{item}</li>
+          <li
+            key={index}
+            className="text-xs ml-4 !mt-1 text-gray-600 font-normal"
+          >
+            {item}
+          </li>
         ))}
       </ul>
     </>
   );
 
-
-
   const SubscriptionTypeHandler = () => {
     if (subscriptionStatus === "Monthly Plan (State)") {
       return (
         <>
-          <h6 className="text-base font-semibold text-center">Amount: $15.00</h6>
+          <h6 className="text-base font-semibold text-center">
+            Amount: $15.00
+          </h6>
           <ButtonComponent
-            color="blue" full rounded
+            color="blue"
+            full
+            rounded
             onClick={upgradePlanViewHandler}
           >
             Upgrade Plan
@@ -266,13 +261,12 @@ const ManageSubscriptionModal = (props) => {
           ) : (
             <h6 className="text-sm font-semibold">Amount: $49.99.00</h6>
           )}
-          <ButtonComponent
-            onClick={upgradePlanViewHandler}
-          >
+          <ButtonComponent onClick={upgradePlanViewHandler}>
             Upgrade Plan
           </ButtonComponent>
           <ButtonComponent
-            full rounded
+            full
+            rounded
             onClick={downgradePlanViewHandler}
           >
             Downgrade Plan
@@ -284,7 +278,8 @@ const ManageSubscriptionModal = (props) => {
         <>
           <h6 className="text-sm font-semibold">Amount: $99.99.00</h6>
           <ButtonComponent
-            full rounded
+            full
+            rounded
             onClick={downgradePlanViewHandler}
           >
             Downgrade Plan
@@ -307,7 +302,8 @@ const ManageSubscriptionModal = (props) => {
       const backButton = () => {
         return (
           <ButtonComponent
-            full rounded
+            full
+            rounded
             onClick={upgradePlanViewHandler}
           >
             Go Back
@@ -320,13 +316,17 @@ const ManageSubscriptionModal = (props) => {
           <>
             {upgradeMessage()}
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() => confirmUpgradeViewHandler("Yearly Plan (State)")}
             >
               Yearly (State) $49.99
             </ButtonComponent>
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmUpgradeViewHandler("Monthly Plan (National)")
               }
@@ -334,7 +334,9 @@ const ManageSubscriptionModal = (props) => {
               Monthly (National) $11.99
             </ButtonComponent>
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmUpgradeViewHandler("Yearly Plan (National)")
               }
@@ -348,7 +350,9 @@ const ManageSubscriptionModal = (props) => {
         return (
           <>
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmUpgradeViewHandler("Yearly Plan (National)")
               }
@@ -363,7 +367,9 @@ const ManageSubscriptionModal = (props) => {
           <>
             {upgradeMessage()}
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmUpgradeViewHandler("Yearly Plan (National)")
               }
@@ -386,7 +392,10 @@ const ManageSubscriptionModal = (props) => {
     const backButton = () => {
       return (
         <ButtonComponent
-          full rounded onClick={goBackHandler}>
+          full
+          rounded
+          onClick={goBackHandler}
+        >
           Go Back
         </ButtonComponent>
       );
@@ -412,9 +421,10 @@ const ManageSubscriptionModal = (props) => {
               <LoadingComponent />
             ) : (
               <ButtonComponent
-                full rounded color="blue"
+                full
+                rounded
+                color="blue"
                 onClick={upgradeSubscription}
-
               >
                 Confirm
               </ButtonComponent>
@@ -441,9 +451,10 @@ const ManageSubscriptionModal = (props) => {
               <LoadingComponent />
             ) : (
               <ButtonComponent
-                color="blue" full rounded
+                color="blue"
+                full
+                rounded
                 onClick={upgradeSubscription}
-
               >
                 Confirm
               </ButtonComponent>
@@ -470,9 +481,10 @@ const ManageSubscriptionModal = (props) => {
               <LoadingComponent />
             ) : (
               <ButtonComponent
-                color="blue" full rounded
+                color="blue"
+                full
+                rounded
                 onClick={upgradeSubscription}
-
               >
                 Confirm
               </ButtonComponent>
@@ -497,7 +509,10 @@ const ManageSubscriptionModal = (props) => {
       };
       const backButton = () => {
         return (
-          <ButtonComponent color="blue" full rounded
+          <ButtonComponent
+            color="blue"
+            full
+            rounded
             onClick={downgradePlanViewHandler}
           >
             Go Back
@@ -510,7 +525,9 @@ const ManageSubscriptionModal = (props) => {
           <>
             {downgradeMessage()}
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmDowngradeViewHandler("Monthly Plan (State)")
               }
@@ -525,13 +542,17 @@ const ManageSubscriptionModal = (props) => {
           <>
             {downgradeMessage()}
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() => confirmDowngradeViewHandler("Yearly Plan (State)")}
             >
               Yearly (State) $49.99
             </ButtonComponent>
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmDowngradeViewHandler("Monthly Plan (State)")
               }
@@ -546,7 +567,9 @@ const ManageSubscriptionModal = (props) => {
           <>
             {downgradeMessage()}
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmDowngradeViewHandler("Monthly Plan (National)")
               }
@@ -554,13 +577,17 @@ const ManageSubscriptionModal = (props) => {
               Monthly (National) $11.99
             </ButtonComponent>
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() => confirmDowngradeViewHandler("Yearly Plan (State)")}
             >
               Yearly (State) $49.99
             </ButtonComponent>
             <ButtonComponent
-              color="blue" full rounded
+              color="blue"
+              full
+              rounded
               onClick={() =>
                 confirmDowngradeViewHandler("Monthly Plan (State)")
               }
@@ -584,7 +611,11 @@ const ManageSubscriptionModal = (props) => {
     const backButton = () => {
       return (
         <ButtonComponent
-          color="blue" full rounded onClick={goBackHandler}>
+          color="blue"
+          full
+          rounded
+          onClick={goBackHandler}
+        >
           Go Back
         </ButtonComponent>
       );
@@ -603,9 +634,10 @@ const ManageSubscriptionModal = (props) => {
               <LoadingComponent />
             ) : (
               <ButtonComponent
-                color="blue" full rounded
+                color="blue"
+                full
+                rounded
                 onClick={downgradeSubscription}
-
               >
                 Confirm
               </ButtonComponent>
@@ -626,9 +658,10 @@ const ManageSubscriptionModal = (props) => {
               <LoadingComponent />
             ) : (
               <ButtonComponent
-                color="blue" full rounded
+                color="blue"
+                full
+                rounded
                 onClick={downgradeSubscription}
-
               >
                 Confirm
               </ButtonComponent>
@@ -648,9 +681,10 @@ const ManageSubscriptionModal = (props) => {
               <LoadingComponent />
             ) : (
               <ButtonComponent
-                color="blue" full rounded
+                color="blue"
+                full
+                rounded
                 onClick={downgradeSubscription}
-
               >
                 Confirm
               </ButtonComponent>
@@ -667,7 +701,9 @@ const ManageSubscriptionModal = (props) => {
   const CancelView = () => {
     return (
       <>
-        <h6 className="text-sm font-semibold">Are you sure you want to cancel your Subscription?</h6>
+        <h6 className="text-sm font-semibold">
+          Are you sure you want to cancel your Subscription?
+        </h6>
         <h6 className="text-sm font-semibold">
           You will retain all plan features until the end of your current
           billing cycle on: {billingDate}
@@ -677,15 +713,20 @@ const ManageSubscriptionModal = (props) => {
         ) : !subLoading && cancelMessage ? (
           <h6 className="text-sm font-semibold">{cancelMessage}</h6>
         ) : (
-          <ButtonComponent className="!mx-1"
-            color="blue" full rounded onClick={handleUnsubscribe} >
+          <ButtonComponent
+            className="!mx-1"
+            color="blue"
+            full
+            rounded
+            onClick={handleUnsubscribe}
+          >
             Yes I am Sure
           </ButtonComponent>
         )}
         <ButtonComponent
-          full rounded
+          full
+          rounded
           disabled={subLoading}
-
           onClick={confirmCancelViewHandler}
         >
           Wait go back
@@ -694,10 +735,12 @@ const ManageSubscriptionModal = (props) => {
     );
   };
 
-
   return (
-    <ModalComponent open={props.visible} title="Manage Subscription" onClose={props.onClose}>
-
+    <ModalComponent
+      open={props.visible}
+      title="Manage Subscription"
+      onClose={props.onClose}
+    >
       {(() => {
         if (!upgradePlanView && !downgradePlanView && !confirmCancelView) {
           return (
@@ -707,7 +750,9 @@ const ManageSubscriptionModal = (props) => {
               </h6>
               <SubscriptionTypeHandler />
               <ButtonComponent
-                color="red" full rounded
+                color="red"
+                full
+                rounded
                 onClick={confirmCancelViewHandler}
               >
                 Cancel Subscription

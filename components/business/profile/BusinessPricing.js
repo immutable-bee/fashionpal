@@ -48,7 +48,7 @@ const BusinessPricing = () => {
     }
   };
 
-  useEffect(() => { }, [value]);
+  useEffect(() => {}, [value]);
 
   const getIndex = () => {
     if (value === 0) {
@@ -88,7 +88,9 @@ const BusinessPricing = () => {
   return (
     <div className="pb-4 sm:pb-8">
       <div className="flex items-center sm:mt-12 mb-4 mt-5">
-        <h3 className="text-lg sm:text-2xl font-semibold">Buy More Upload Credits</h3>
+        <h3 className="text-lg sm:text-2xl font-semibold">
+          Buy More Upload Credits
+        </h3>
         <TooltipComponent
           rounded
           placement="rightStart"

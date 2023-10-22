@@ -19,7 +19,7 @@ export default function Home() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  console.log(session)
+  console.log(session);
 
   const [filter, setFilter] = useState("");
 
@@ -39,13 +39,11 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onPaginationChange = (e) => {
-
     setNotMatchesPage(e);
     fetchListings(e);
   };
 
   const triggerDetailsModal = (index) => {
-
     setDetailsModal(true);
     setActiveIndex(index);
   };
@@ -106,7 +104,6 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-
       setLoadingListings(true);
 
       try {
@@ -146,14 +143,12 @@ export default function Home() {
     setListings(newListing);
   };
   const editTagName = (tagIndex, name) => {
-
     const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags[tagIndex].name = name;
 
     setListings(newListing);
   };
   const editTagValue = (tagIndex, value) => {
-
     const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags[tagIndex].value = value;
     setListings(newListing);
@@ -169,9 +164,7 @@ export default function Home() {
     setListings(newListing);
   };
 
-  const onPageChange = (page) => {
-
-  };
+  const onPageChange = (page) => {};
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />

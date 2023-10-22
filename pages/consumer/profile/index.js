@@ -12,27 +12,32 @@ import AlertPreferences from "../../../components/consumer/profile/AlertPreferen
 
 const Profilecomponent = () => {
   // const { user, updateUserUsername, fetchUserData } = useUser();
-  const { user, updateUserUsername, fetchUserData } = {}
-  const [storeModalOpen, setStoreModalOpen] = useState(false)
+  const { user, updateUserUsername, fetchUserData } = {};
+  const [storeModalOpen, setStoreModalOpen] = useState(false);
 
   return (
     <div className="bg-white min-h-screen">
       <Head>
-        <link rel="shortcut icon" href="/images/fav.png" />
+        <link
+          rel="shortcut icon"
+          href="/images/fav.png"
+        />
       </Head>
 
       <div>
         <HeaderComponent />
 
-        {storeModalOpen ?
+        {storeModalOpen ? (
           <StoresModal
             open={storeModalOpen}
             onClose={() => setStoreModalOpen(false)}
-          /> : ''}
+          />
+        ) : (
+          ""
+        )}
 
         <section className="px-5 ">
           <div className="max-w-xl mx-auto">
-
             <UsernameInput
               props={{
                 email: user?.email,
@@ -44,9 +49,12 @@ const Profilecomponent = () => {
             <div className="mt-3">
               <h3 className="text-lg font-medium">Stores following: 78</h3>
 
-
-              <button onClick={() => setStoreModalOpen(true)} className="bg-primary mt-3 text-white px-5 py-1.5 rounded-lg">View store</button>
-
+              <button
+                onClick={() => setStoreModalOpen(true)}
+                className="bg-primary mt-3 text-white px-5 py-1.5 rounded-lg"
+              >
+                View store
+              </button>
             </div>
             <AlertPreferences
               props={{
@@ -55,8 +63,6 @@ const Profilecomponent = () => {
                 email: user?.email,
               }}
             />
-
-
           </div>
         </section>
       </div>

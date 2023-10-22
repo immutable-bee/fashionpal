@@ -111,7 +111,6 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-
       setLoadingListings(true);
 
       try {
@@ -239,14 +238,6 @@ export default function Home() {
                               ))}
                             </div>
                           </div>
-                          // <ListingItem key={key} mainPhoto={row?.mainImage} tags={row?.tags}>
-                          //   <div className="flex items-center">
-                          //     <button onClick={() => triggerDetailsModal(key)} className="bg-secondary mr-2 text-white hover:opacity-90 px-3 py-1 text-xs mt-1 rounded">
-                          //       View details
-                          //     </button>
-
-                          //   </div>
-                          // </ListingItem>
                         );
                       })}
                   </div>

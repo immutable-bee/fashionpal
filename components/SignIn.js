@@ -1,25 +1,16 @@
 import Image from "next/image";
 import PeopleSVG from "../assets/svg/people.svg";
-import Logo from '../public/images/logo-vertical.jpg';
+import Logo from "../public/images/logo-vertical.jpg";
 import { Button, Input, Loading } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import IconGoogle from "../assets/svg/icon-google.svg";
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import IconEnvelope from "../assets/svg/icons_envelope.svg";
-import Link from "next/link";
 
 const providers = [
   {
     name: "google",
     icon: IconGoogle,
-  },
-  {
-    name: "facebook",
-    icon: "/icons/icon-fb.svg",
-  },
-  {
-    name: "apple",
-    icon: "/icons/icon-apple.svg",
   },
 ];
 
@@ -81,8 +72,15 @@ const SignIn = ({ props }) => {
       >
         <div className="bg-white sm:pt-12 sm:pb-3 sm:border rounded-3xl sm:border-gray-700 min-h-screen sm:min-h-[auto] sm:block flex items-center sm:max-w-lg w-full mx-auto px-4 sm:px-12">
           <div className="w-full">
-            <div id="logo-container" className="flex justify-center mb-4">
-              <Image src={Logo} alt="Logo" className="!w-56" />
+            <div
+              id="logo-container"
+              className="flex justify-center mb-4"
+            >
+              <Image
+                src={Logo}
+                alt="Logo"
+                className="!w-56"
+              />
             </div>
 
             <div className="auth-content-container">
@@ -124,7 +122,11 @@ const SignIn = ({ props }) => {
                 ) : loading ? (
                   <Loading className="self-center mt-4" />
                 ) : (
-                  <Button id="login-btn" className="w-full" type="submit">
+                  <Button
+                    id="login-btn"
+                    className="w-full"
+                    type="submit"
+                  >
                     Continue with email
                   </Button>
                 )}
