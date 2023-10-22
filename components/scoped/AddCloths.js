@@ -604,7 +604,6 @@ function ImageUploader({ onBack, onFecth }) {
       });
 
       return updatedListings;
-
     });
 
     // Execute the additional logic after updating the tags:
@@ -624,9 +623,7 @@ function ImageUploader({ onBack, onFecth }) {
     });
   };
 
-
   const handleEmployeeUploadAll = async () => {
-
     setUploading(true);
 
     const convertedListings = await Promise.all(
@@ -1096,7 +1093,6 @@ function ImageUploader({ onBack, onFecth }) {
                           <div className="w-full flex items-center justify-center">
                             <img
                               src={uploadedImages.main.image}
-
                               alt={"Main Photo"}
                               className="rounded max-w-full max-h-full"
                             />
@@ -2275,54 +2271,11 @@ function ImageUploader({ onBack, onFecth }) {
                 setTags={(e) => changeTags(activeTagIndex, e)}
                 data={listings[activeTagIndex] && listings[activeTagIndex].tags}
               />
-
             </div>
           ) : (
             ""
           )}
-
-
-          {step === 7 ? (
-            <>
-              <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
-                {listings.map((row, key) => {
-                  return (
-                    <ListingItem
-                      key={key}
-                      mainPhoto={row.items.main.image}
-                      tags={row.tags}
-                    >
-                      <button
-                        onClick={() => triggerEditTagsModalOffline(key)}
-                        className=" bg-lightprimary px-3 py-1 text-xs mt-1 rounded"
-                      >
-                        Edit Tags
-                      </button>
-                    </ListingItem>
-                  );
-                })}
-              </div>
-              <div className="flex justify-center sm:justify-start">
-                <ButtonComponent
-                  rounded
-                  className="!w-48 mt-6"
-                  onClick={handleUploadAll}
-                >
-                  Upload All
-                </ButtonComponent>
-              </div>
-            </>
-          ) : (
-            ""
-          )}
-          <EditTagsModalOffline
-            open={tagEditModal}
-            onClose={() => setTagEditModal(false)}
-            setTags={(e) => changeTags(activeTagIndex, e)}
-            data={listings[activeTagIndex] && listings[activeTagIndex].tags}
-          />
-        </div>
->>>>>>> d4817303f5ed76b5f3e4f058497739b2e11cffad
+        </>
       ) : (
         <div className="mt-16">
           <LoadingComponent size="xl" />
