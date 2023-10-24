@@ -169,34 +169,6 @@ function ImageUploader({ onBack, onFecth }) {
 
   const fileInputRef = useRef(null);
 
-  const compressMainAndBrandImage = (file) => {
-    const options = {
-      quality: 0.6,
-      maxWidth: 500,
-      success: (compressedFile) => {
-        const newFile = new File([compressedFile], file.name, {
-          type: compressedFile.type,
-        });
-        const blobURL = URL.createObjectURL(newFile);
-        if (type === "main") {
-          setUploadedImages((prevState) => ({
-            ...prevState,
-            main: { image: blobURL, file: newFile, type: "main" },
-          }));
-        } else if (type === "brandTag") {
-          setUploadedImages((prevState) => ({
-            ...prevState,
-            brandTag: { image: blobURL, file: newFile, type: "brandTag" },
-          }));
-        }
-      },
-      error: (error) => {
-        console.error(error.message);
-      },
-    };
-    new Compressor(file, options);
-  };
-
   //
 
   useEffect(() => {
@@ -310,45 +282,66 @@ function ImageUploader({ onBack, onFecth }) {
     return new File([u8arr], filename, { type: mime });
   };
 
-  const handleMainAndBrandImage = (e) => {
-    const file = e.target.files[0];
-    compressMainAndBrandImage(file);
-    e.target.value = null; // Reset the file input
-
-    // If it's the main image that was captured, automatically prompt to capture the brandTag image.
-    if (currentPhotoType === "main") {
-      if (fileInputRef.current) {
-        fileInputRef.current.click();
-      }
-    }
-  };
-
   //
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
+    console.log(e);
     const file = e.target.files[0];
-    compressImage(file);
+    console.log(file);
+
+    try {
+      const mainImageBase64 = await fileToBase64(file);
+      console.log(mainImageBase64);
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: step === 2 ? "mainImage" : "brandImage", //
+          image: mainImageBase64,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setImage({ url: data.url, file: file });
+        if (step === 1) {
+          setStep(2);
+        }
+      } else {
+        // Handle the case when the upload was not successful
+        console.error("Image upload failed.");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      // Set loading back to false after the upload is complete
+      setImageUploading(false);
+    }
+
+    // compressImage(file);
   };
 
-  const compressImage = (file) => {
-    const options = {
-      quality: 0.6,
-      maxWidth: 500,
-      success: (compressedFile) => {
-        const newFile = new File([compressedFile], file.name, {
-          type: compressedFile.type,
-        });
-        const blobURL = URL.createObjectURL(newFile);
-        // setImage({ url: blobURL, file: newFile });
-        setCropImage({ url: blobURL, file: newFile });
-        setShowModal(true);
-      },
-      error: (error) => {
-        console.error(error.message);
-      },
-    };
-    new Compressor(file, options);
-  };
+  // const compressImage = (file) => {
+  //   const options = {
+  //     quality: 0.6,
+  //     maxWidth: 500,
+  //     success: (compressedFile) => {
+  //       const newFile = new File([compressedFile], file.name, {
+  //         type: compressedFile.type,
+  //       });
+  //       const blobURL = URL.createObjectURL(newFile);
+  //       // setImage({ url: blobURL, file: newFile });
+  //       setCropImage({ url: blobURL, file: newFile });
+  //       setShowModal(true);
+  //     },
+  //     error: (error) => {
+  //       console.error(error.message);
+  //     },
+  //   };
+  //   new Compressor(file, options);
+  // };
 
   const handleCrop = (e) => {
     setImage(e);
@@ -467,6 +460,11 @@ function ImageUploader({ onBack, onFecth }) {
       brandImage: uploadedImages.brandTag.url,
     };
 
+    const newListing = listings;
+    newListing.push(JSON);
+
+    setListings(newListing);
+
     try {
       const response = await axios.post("/api/add-listing", { listing: JSON });
       const result = response.data;
@@ -569,17 +567,16 @@ function ImageUploader({ onBack, onFecth }) {
     const requests = [];
 
     for (let listing of listings) {
+      console.log(listing.items.main);
       if (listing.items.main && listing.items.main.image) {
-        const mainImageBase64 = await convertBlobToBase64(
-          listing.items.main.image
-        );
+        const mainImageBase64 = listing.items.main.image;
+
         requests.push(getTagsFromGoogleVision(mainImageBase64, "main"));
       }
 
       if (listing.items.brandTag && listing.items.brandTag.image) {
-        const brandTagImageBase64 = await convertBlobToBase64(
-          listing.items.brandTag.image
-        );
+        const brandTagImageBase64 = listing.items.brandTag.image;
+
         requests.push(getTagsFromGoogleVision(brandTagImageBase64, "brandTag"));
       }
     }
@@ -675,9 +672,9 @@ function ImageUploader({ onBack, onFecth }) {
 
     const convertedListings = await Promise.all(
       listings.map(async (listing) => {
-        const mainImageUrl = listing.items.main.url;
+        const mainImageUrl = listing.items.main.image;
         const brandImageUrl = listing.items.brandTag
-          ? listing.items.brandTag.url
+          ? listing.items.brandTag.image
           : null;
 
         return {
@@ -1013,7 +1010,7 @@ function ImageUploader({ onBack, onFecth }) {
                         <div>
                           <div
                             onClick={() => setShowCamera(true)}
-                            className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56"
+                            className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
                           >
                             <div>
                               <h1 className="text-xl text-center font-medium font-mono ">
@@ -1598,7 +1595,7 @@ function ImageUploader({ onBack, onFecth }) {
                       <div>
                         <div
                           onClick={() => setShowCamera(true)}
-                          className="rounded-2xl px-2 w-full  cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-72 border-2 shadow-md h-56"
+                          className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
                         >
                           <div>
                             <h1 className="text-xl text-center font-medium font-mono ">
@@ -1820,7 +1817,7 @@ function ImageUploader({ onBack, onFecth }) {
                 <div className=" mx-auto">
                   {!image.url && [1, 2, 3].includes(step) ? (
                     <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
-                      <label className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-1/2 sm:w-56 border-2 shadow-md h-56">
+                      <label className="rounded-2xl px-2   cursor-pointer hover:opacity-70 flex items-center justify-center w-56 border-2 shadow-md h-56">
                         <div>
                           <input
                             type="file"
