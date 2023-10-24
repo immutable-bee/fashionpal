@@ -103,7 +103,7 @@ const Pricing = () => {
     setIsSubscription(newValue);
   };
 
-  useEffect(() => { }, [value]);
+  useEffect(() => {}, [value]);
 
   const priceDataHandler = () => {
     return isSubscription ? subscriptionPricingData : pricingData;

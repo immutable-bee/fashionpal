@@ -1,10 +1,9 @@
 import Image from "next/image";
 import PeopleSVG from '../../assets/svg/people.svg'
-import Logo from '../../public/logo.png'
+import Logo from '../../public/images/logo-vertical.jpg'
 const AuthContainer = (props) => {
   return (
     <div className="sm:flex min-h-screen bg-[#FEFBE8] onboarding-page-container">
-
       <div className="sm:w-1/2 hidden sm:flex items-center justify-center" id="people-svg-container">
         <Image
           id="people-svg"

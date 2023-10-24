@@ -21,7 +21,10 @@ function ProductDetails({ open, onClose, data, setTags }) {
             </div>
           }
         >
-          <TagsInput value={data} onChange={(e) => setTags(e)} />
+          <TagsInput
+            value={data}
+            onChange={(e) => setTags(e)}
+          />
         </ModalComponent>
       ) : (
         ""

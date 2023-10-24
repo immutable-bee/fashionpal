@@ -24,9 +24,7 @@ const Table = ({
       setSortDescriptor({
         ...sortDescriptor,
         direction:
-          sortDescriptor.direction === "ascending"
-            ? "descending"
-            : "ascending",
+          sortDescriptor.direction === "ascending" ? "descending" : "ascending",
       });
     } else {
       setSortDescriptor({
@@ -42,9 +40,14 @@ const Table = ({
         <thead className="text-xs text-gray-500 rounded-lg font-semibold bg-gray-100">
           <tr>
             {isCheckbox && (
-              <th scope="row" className="px-3 py-1.5 whitespace-nowrap">
+              <th
+                scope="row"
+                className="px-3 py-1.5 whitespace-nowrap"
+              >
                 <CheckboxComponent
-                  isSelected={rows.length !== 0 && selectedRows.length === rows.length}
+                  isSelected={
+                    rows.length !== 0 && selectedRows.length === rows.length
+                  }
                   boolean={true}
                   onChange={(e) => {
                     const { checked } = e.target;
@@ -64,32 +67,36 @@ const Table = ({
               <th
                 key={header.key}
                 scope="row"
-                className={`px-3 py-1.5 whitespace-nowrap ${header.allowsSorting ? 'cursor-pointer hover:bg-gray-200' : ''}`}
+                className={`px-3 py-1.5 whitespace-nowrap ${
+                  header.allowsSorting ? "cursor-pointer hover:bg-gray-200" : ""
+                }`}
                 onClick={() => header.allowsSorting && handleSortChange(header)}
               >
                 <div className="flex justify-between items-center min-w-[4rem]">
                   <span>{header.label}</span>
-                  {header.allowsSorting && sortDescriptor.column === header.key && (
-                    <div className="bg-sky-600 rounded-full w-4 h-4 cursor-pointer hover:bg-opacity-90 flex-shrink-0 flex items-center justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className={`w-2.5 h-3.5 text-white ${sortDescriptor.direction === "ascending"
-                          ? "transform rotate-180"
-                          : ""
+                  {header.allowsSorting &&
+                    sortDescriptor.column === header.key && (
+                      <div className="bg-sky-600 rounded-full w-4 h-4 cursor-pointer hover:bg-opacity-90 flex-shrink-0 flex items-center justify-center">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className={`w-2.5 h-3.5 text-white ${
+                            sortDescriptor.direction === "ascending"
+                              ? "transform rotate-180"
+                              : ""
                           }`}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                        />
-                      </svg>
-                    </div>
-                  )}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                          />
+                        </svg>
+                      </div>
+                    )}
                 </div>
               </th>
             ))}

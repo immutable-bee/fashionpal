@@ -7,12 +7,11 @@ const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
 
 const ACCESS_RULES = {
-  consumer: ["/consumer", "/consumer/profile", "/consumer/matches"],
+  consumer: ["/consumer", "/consumer/profile", "/consumer/saved", "/consumer/sales"],
   business: [
     "/business",
+    "/business/sales",
     "/business/profile",
-    "/business/uploadlistings",
-    "/business/uploadlistings/future",
   ],
 };
 
@@ -72,7 +71,6 @@ export const UserProvider = ({ children }) => {
 
     setUser((prevUser) => ({
       ...prevUser,
-      booksale: data.book_sale,
     }));
   };
 

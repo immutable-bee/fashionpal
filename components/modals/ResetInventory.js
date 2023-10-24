@@ -16,7 +16,10 @@ const ResetInventoryModal = ({ visible, closeHandler }) => {
 
   return (
     <div>
-      <Modal open={visible} onClose={closeHandler}>
+      <Modal
+        open={visible}
+        onClose={closeHandler}
+      >
         <Modal.Header>
           <h1>Reset Inventory</h1>
         </Modal.Header>

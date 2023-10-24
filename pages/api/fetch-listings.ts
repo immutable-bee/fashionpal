@@ -31,10 +31,12 @@ export default async function handler(
       let whereClause: any =
         filters.length > 0
           ? {
-              tags: {
-                hasSome: filters,
+            tags: {
+              some: {
+                OR: filters,
               },
-            }
+            },
+          }
           : {};
 
       if (apparel) {

@@ -1,14 +1,15 @@
 import "../styles/globals.css";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { SessionProvider } from "next-auth/react";
+import { UserProvider } from "../context/UserContext";
+
 import "react-notifications/lib/notifications.css";
 import { NotificationContainer } from "react-notifications";
-function App({ Component, pageProps }) {
+function App({ Component, pageProps: { session, ...pageProps } }) {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("hello");
-    console.log(router.pathname);
     // If the current path is '/', redirect to '/business'
     if (router.pathname === "/_error") {
       router.push("/business");
@@ -17,8 +18,11 @@ function App({ Component, pageProps }) {
 
   return (
     <>
-      {" "}
-      <Component {...pageProps} /> <NotificationContainer />
+      <SessionProvider session={session}>
+        <UserProvider>
+          <Component {...pageProps} /> <NotificationContainer />
+        </UserProvider>
+      </SessionProvider>
     </>
   );
 }

@@ -17,8 +17,6 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
   const onSave = async () => {
     setLoading(true);
 
-    console.log("id:", listingId, "tags:", data);
-
     try {
       const response = await fetch(`/api/edit-listing`, {
         method: "PUT",
@@ -31,10 +29,8 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
         }),
       });
 
-      console.log(response);
-
       const res = await response.json();
-      console.log(res);
+
       if (!response.ok) {
         throw new Error("Failed to save tags.");
       }
@@ -77,7 +73,10 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
             </div>
           }
         >
-          <TagsInput value={data} onChange={(e) => setData(e)} />
+          <TagsInput
+            value={data}
+            onChange={(e) => setData(e)}
+          />
         </ModalComponent>
       ) : (
         ""

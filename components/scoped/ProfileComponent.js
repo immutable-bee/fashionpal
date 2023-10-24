@@ -9,9 +9,8 @@ import { signOut } from "next-auth/react";
 import BusinessPricing from "@/components/business/profile/BusinessPricing";
 import TooltipComponent from "@/components/utility/Tooltip";
 import ResetInventoryModal from "@/components/modals/ResetInventory";
-const ProfileComponent = ({ }) => {
-  // const { user, fetchUserData } = useUser();
-  const { user, fetchUserData } = {}
+const ProfileComponent = ({}) => {
+  const { user, fetchUserData } = {};
 
   const [formData, setFormData] = useState();
   const [activeRebateTiers, setActiveRebateTiers] = useState(1);
@@ -30,7 +29,7 @@ const ProfileComponent = ({ }) => {
         body: JSON.stringify({ email: user.email, data: formData }),
       });
       fetchUserData();
-    } catch (error) { }
+    } catch (error) {}
   };
 
   const handleChange = (e) => {
@@ -71,7 +70,7 @@ const ProfileComponent = ({ }) => {
         const errorData = await response.json();
         setCancelMessage(
           errorData.message ||
-          "An error occurred while canceling the subscription"
+            "An error occurred while canceling the subscription"
         );
       }
     } catch (error) {
@@ -89,7 +88,6 @@ const ProfileComponent = ({ }) => {
   const stepValue = (v) => Math.round(v * 10) / 10;
 
   const closeManageSubscriptionModalHandler = () => {
-    console.log("close");
     setIsManageSubscriptionModalOpen(false);
   };
 
@@ -122,7 +120,10 @@ const ProfileComponent = ({ }) => {
           <h1 className="text-lg sm:text-2xl font-medium text-center ">
             Profile Page
           </h1>
-          <form onSubmit={handleSubmit} className="mt-2 sm:mt-6">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-2 sm:mt-6"
+          >
             <div className="py-2">
               <label className="text-sm text-gray-700">Store name</label>
               <input
@@ -145,9 +146,9 @@ const ProfileComponent = ({ }) => {
                 className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-select border border-gray-500 w-full rounded-lg  px-3 my-1 py-2"
                 onChange={handleChange}
               >
-                <option value="THRIFT">Thrift</option>
-                <option value="LIBRARY">Library</option>
-                <option value="BOOKSTORE">Bookstore</option>
+                <option value="CLOTHING">Clothing</option>
+                <option value="FOOTWEAR">Footwear</option>
+                <option value="HATS">Hats</option>
               </select>
             </div>
 
@@ -177,7 +178,11 @@ const ProfileComponent = ({ }) => {
             </div>
 
             <div className="mt-5">
-              <ButtonComponent rounded full type="submit">
+              <ButtonComponent
+                rounded
+                full
+                type="submit"
+              >
                 Update
               </ButtonComponent>
             </div>
@@ -213,13 +218,19 @@ const ProfileComponent = ({ }) => {
               </h6>
 
               <div className="flex justify-center gap-2">
-                <div className={`bg-green-300   text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}>
+                <div
+                  className={`bg-green-300   text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}
+                >
                   50
                 </div>
-                <div className={`bg-white  text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}>
+                <div
+                  className={`bg-white  text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}
+                >
                   500
                 </div>
-                <div className={`bg-white  text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}>
+                <div
+                  className={`bg-white  text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black`}
+                >
                   1000
                 </div>
               </div>
@@ -242,8 +253,7 @@ const ProfileComponent = ({ }) => {
                 </div>
                 <div className="flex items-center justify-between my-3">
                   <h6 className="text-xl font-medium text-center">
-                    Daily listing average
-                    to meet next goal
+                    Daily listing average to meet next goal
                   </h6>
                   <div className=" ml-4 bg-white text-black font-medium w-16 h-10 flex items-center justify-center rounded-[0.95rem] border-4 border-black">
                     29
@@ -278,14 +288,17 @@ const ProfileComponent = ({ }) => {
             <ButtonComponent
               rounded
               full
-
               className="!my-1"
               id="manage-payment-btn"
             >
               Manage Payment Methods
             </ButtonComponent>
             <div className="">
-              <ButtonComponent rounded full type="button">
+              <ButtonComponent
+                rounded
+                full
+                type="button"
+              >
                 Manage Subscription
               </ButtonComponent>
             </div>
@@ -294,7 +307,6 @@ const ProfileComponent = ({ }) => {
             <ButtonComponent
               full
               rounded
-
               onClick={() => signOut()}
             >
               Sign Out
