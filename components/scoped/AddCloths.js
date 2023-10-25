@@ -25,11 +25,14 @@ function ImageUploader({ onBack, onFecth }) {
   const [auctionMaxPrice, setAuctionMaxPrice] = useState(0);
   const [floorPrice, setFloorPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(0);
+  const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(0);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [dataSource, setDataSource] = useState("");
   const [isOptionToAuction, setIsOptionToAuction] = useState(false);
   const [isViewSimilarListings, setIsViewSimilarListings] = useState(false);
+  const [isAutoUploadSimilarListings, setIsAutoUploadSimilarListings] =
+    useState(false);
   const [isOptionToEdit, setIsOptionToEdit] = useState(false);
   const [isGenerateSKULabels, setIsGenerateSKULabels] = useState(false);
   const [isIncludeRetailPrice, setIsIncludeRetailPrice] = useState(false);
@@ -98,7 +101,7 @@ function ImageUploader({ onBack, onFecth }) {
     setEndTime("");
     setDataSource("");
     setIsOptionToAuction(false);
-    setIsViewSimilarListings(false);
+    setIsAutoUploadSimilarListings(false);
     setIsOptionToEdit(false);
     setIsGenerateSKULabels(false);
     setIsIncludeRetailPrice(false);
@@ -184,7 +187,7 @@ function ImageUploader({ onBack, onFecth }) {
     }));
   };
 
-  const capture = async (e) => {
+  const onCapture = async (e) => {
     const imageSrc = e;
     if (imageSrc) {
       const file = dataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
@@ -267,6 +270,32 @@ function ImageUploader({ onBack, onFecth }) {
         // Set loading back to false after the upload is complete
         setImageUploading(false);
       }
+    } else if (currentPhotoType === "brandTag") {
+      setShowCamera(false); // Hide the camera
+      setStep(2); // Move to the next step
+
+      const tags = [];
+
+      if (uploadedImages.main && uploadedImages.main.url) {
+        const mainTags = await getTagsFromGoogleVision(
+          uploadedImages.main.url,
+          "main"
+        );
+        tags.push(...mainTags);
+      }
+
+      if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
+        const brandTagTags = await getTagsFromGoogleVision(
+          uploadedImages.brandTag.url,
+          "brandTag"
+        );
+        tags.push(...brandTagTags);
+      }
+
+      setUploadedImages((prevState) => ({
+        ...prevState,
+        tags: tags, // Update 'tags' with combined tags from both 'main' and 'brandTag'
+      }));
     }
   };
 
@@ -783,12 +812,12 @@ function ImageUploader({ onBack, onFecth }) {
         <>
           {step === 0 ? (
             <div>
-              <div className="flex items-center justify-center mt-5">
+              <div className="flex flex-wrap gap-3 items-center justify-center mt-5">
                 <button
                   onClick={() => setType("simple")}
                   className={`${
                     type === "simple" ? "bg-primary text-white" : "bg-white"
-                  } duration-250 ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}
+                  } duration-250 ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                 >
                   Simple
                 </button>
@@ -796,7 +825,7 @@ function ImageUploader({ onBack, onFecth }) {
                   onClick={() => setType("employee")}
                   className={`${
                     type === "employee" ? "bg-primary text-white" : "bg-white"
-                  } duration-250 ease-in-out  px-8 text-xl py-2.5 border border-gray-300`}
+                  } duration-250 ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                 >
                   Employee
                 </button>
@@ -804,7 +833,7 @@ function ImageUploader({ onBack, onFecth }) {
                   onClick={() => setType("admin")}
                   className={`${
                     type === "admin" ? "bg-primary text-white" : "bg-white"
-                  } duration-250 ease-in-out  rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}
+                  } duration-250 ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                 >
                   Admin
                 </button>
@@ -825,8 +854,8 @@ function ImageUploader({ onBack, onFecth }) {
           {type === "admin" ? (
             <div className="">
               {step === 1 ? (
-                <div className="w-96 mx-auto">
-                  <div className="w-96 mx-auto">
+                <div className="sm:w-96 mx-auto">
+                  <div className="sm:w-96 mx-auto">
                     <label>Category</label>
                     <select
                       value={category}
@@ -844,9 +873,9 @@ function ImageUploader({ onBack, onFecth }) {
                       <option value="Hats">Hats</option>
                     </select>
                   </div>
-                  <div className="flex justify-between w-96 mx-auto gap-2 mt-5">
+                  <div className="flex justify-between sm:w-96 mx-auto gap-2 mt-5">
                     <div className="">
-                      <label>Floor price</label>
+                      <label>Starting price</label>
                       <div className="relative flex items-center">
                         <h3 className="absolute text-base left-3 mt-1">$</h3>
                         <input
@@ -858,7 +887,7 @@ function ImageUploader({ onBack, onFecth }) {
                       </div>
                     </div>
                     <div className="">
-                      <label>Max price</label>
+                      <label>End price</label>
                       <div className="relative flex items-center">
                         <h3 className="absolute text-base left-3 mt-1">$</h3>
                         <input
@@ -870,16 +899,16 @@ function ImageUploader({ onBack, onFecth }) {
                       </div>
                     </div>
                   </div>
-                  <div className="w-96 mx-auto mt-5">
-                    <label>Data source</label>
-                    <div className="flex items-center mt-2">
+                  <div className="sm:w-96 mx-auto sm:max-w-none max-w-fit mt-5">
+                    <label className="text-center">Data source</label>
+                    <div className="flex flex-wrap gap-3 items-center mt-2">
                       <button
                         onClick={() => setDataSource("store_only")}
                         className={`${
                           dataSource === "store_only"
                             ? "bg-primary text-white"
                             : "bg-white"
-                        } duration-250 ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}
+                        } duration-250 ease-in-out  rounded-xl px-3 sm:px-8 text-xl py-2 sm:py-2.5 border border-gray-300`}
                       >
                         Store only
                       </button>
@@ -889,81 +918,116 @@ function ImageUploader({ onBack, onFecth }) {
                           dataSource === "network"
                             ? "bg-primary text-white"
                             : "bg-white"
-                        } duration-250 ease-in-out rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}
+                        } duration-250 ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                       >
                         Network
                       </button>
                     </div>
                   </div>
 
-                  <div className="mt-8">
-                    <div className="flex justify-center sm:justify-start mt-1">
-                      <label className="relative mb-4 flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          checked={isOptionToAuction}
-                          onChange={() =>
-                            setIsOptionToAuction(!isOptionToAuction)
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Option to Auction
-                        </span>
-                      </label>
-                    </div>
-                    <div className="flex justify-center sm:justify-start mt-1">
-                      <label className="relative mb-4 flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          checked={isViewSimilarListings}
-                          onChange={() =>
-                            setIsViewSimilarListings(!isViewSimilarListings)
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                          View Similar Listings
-                        </span>
-                      </label>
-                    </div>
-                    <div className="flex justify-center sm:justify-start mt-1">
-                      <label className="relative mb-4 flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          checked={isOptionToEdit}
-                          onChange={() => setIsOptionToEdit(!isOptionToEdit)}
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Option to Edit Tags
-                        </span>
-                      </label>
-                    </div>
-                    <div className="flex justify-center sm:justify-start mt-1">
-                      <label className="relative mb-4 flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          checked={isGenerateSKULabels}
-                          onChange={() =>
-                            setIsGenerateSKULabels(!isGenerateSKULabels)
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Generate SKU Labels
-                        </span>
-                      </label>
-                    </div>
-                    <div className="flex justify-center sm:justify-start mt-1">
+                  <div className="mt-5">
+                    <label>Default price suggestion</label>
+
+                    <input
+                      value={defaultPriceSuggestion}
+                      type="number"
+                      className="w-full mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
+                      onChange={(e) => setMaxPrice(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="max-w-fit mx-auto mt-5">
+                    <label className="relative mb-4 flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={isOptionToAuction}
+                        onChange={() =>
+                          setIsOptionToAuction(!isOptionToAuction)
+                        }
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Option to Auction
+                      </span>
+                    </label>
+                    <label className="relative mb-4 flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={isOptionToAuction}
+                        onChange={() =>
+                          setIsOptionToAuction(!isOptionToAuction)
+                        }
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Option to Auction
+                      </span>
+                    </label>
+                    <label className="relative mb-4 flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={isAutoUploadSimilarListings}
+                        onChange={() =>
+                          setIsAutoUploadSimilarListings(
+                            !isAutoUploadSimilarListings
+                          )
+                        }
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Auto upload similar listings
+                      </span>
+                    </label>
+                    <label className="relative mb-4 flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={isViewSimilarListings}
+                        onChange={() =>
+                          setIsViewSimilarListings(!isViewSimilarListings)
+                        }
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Search similar listings
+                      </span>
+                    </label>
+                    <label className="relative mb-4 flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={isOptionToEdit}
+                        onChange={() => setIsOptionToEdit(!isOptionToEdit)}
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Option to Edit Tags
+                      </span>
+                    </label>
+                    <label className="relative mb-4 flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={isGenerateSKULabels}
+                        onChange={() =>
+                          setIsGenerateSKULabels(!isGenerateSKULabels)
+                        }
+                      />
+                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                        Generate SKU Labels
+                      </span>
+                    </label>
+                    {isGenerateSKULabels ? (
                       <label className="relative mb-4 flex items-center cursor-pointer">
                         <input
                           type="checkbox"
@@ -979,14 +1043,16 @@ function ImageUploader({ onBack, onFecth }) {
                           Include Retail Price
                         </span>
                       </label>
-                    </div>
+                    ) : (
+                      ""
+                    )}
                   </div>
 
-                  <div>
-                    <h3 className="text-2xl font-semibold mt-8 mb-2">
+                  <div className="mx-auto">
+                    <h3 className="text-2xl text-center font-semibold mt-8 mb-2">
                       Start Listing!
                     </h3>
-                    <div className="border border-gray-500 rounded-xl w-72 px-4 py-3">
+                    <div className="border border-gray-500 rounded-xl w-72 mx-auto px-4 py-3">
                       <h3 className="text-xl font-semibold">Instructions</h3>
 
                       <ul className=" list-decimal ml-4 text-lg">
@@ -995,11 +1061,12 @@ function ImageUploader({ onBack, onFecth }) {
                         <li>Add to the appropriate pile</li>
                       </ul>
                     </div>
-                    <div className="flex mt-8 rounded-2xl gap-2">
+                    <div className="flex justify-center mt-8 rounded-2xl gap-2">
                       {showCamera ? (
                         <Capture
-                          onCapture={capture}
+                          onCapture={onCapture}
                           loading={imageUploading}
+                          skip={currentPhotoType === "main" ? false : true}
                           text={
                             currentPhotoType === "main"
                               ? "Main Image"
@@ -1060,14 +1127,14 @@ function ImageUploader({ onBack, onFecth }) {
 
               {step === 2 ? (
                 <div className="px-5 mt-6 w-[480px] mx-auto">
-                  <div className="flex items-center justify-center mt-5">
+                  <div className="flex flex-wrap items-center gap-3 justify-center mt-5">
                     <button
                       onClick={() => setListType("dispose")}
                       className={`${
                         listType === "dispose"
                           ? "bg-red-500 text-white"
                           : "bg-white"
-                      } duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      } duration-250 min-w-[100px] ease-in-out  rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       Dispose
                     </button>
@@ -1077,7 +1144,7 @@ function ImageUploader({ onBack, onFecth }) {
                         listType === "list"
                           ? "bg-green-500 text-white"
                           : "bg-white"
-                      } duration-250 min-w-[100px] ease-in-out rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      } duration-250 min-w-[100px] ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       List
                     </button>
@@ -1198,7 +1265,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                   <div className="flex mx-1 justify-between">
                     <div>
-                      {isIncludeRetailPrice ? (
+                      {/* {isIncludeRetailPrice ? (
                         <div className="mt-3">
                           <label className="block text-lg">
                             Retail Compare
@@ -1217,30 +1284,32 @@ function ImageUploader({ onBack, onFecth }) {
                         </div>
                       ) : (
                         ""
-                      )}
+                      )} */}
                       <div className="mt-3">
-                        <label className="block text-lg">Your Price</label>
+                        <label className="block text-gray-600 text-4xl mb-2">
+                          Your Price
+                        </label>
                         <div className="relative flex items-center">
-                          <h3 className="absolute text-base left-3 mt-1">$</h3>
+                          <h3 className="absolute text-4xl left-3 mt-1">$</h3>
                           <input
                             value={price}
                             type="number"
-                            className="w-24 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
+                            className="w-48 mt-1 !text-4xl rounded-2xl pl-10 pr-2  !py-3 border-4 border-gray-400"
                             onChange={(e) => setPrice(e.target.value)}
                           />
                         </div>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2 justify-center">
+                    <div className="flex flex-col gap-4 justify-center">
                       <button
                         onClick={() => setPrice(Number(Number(price) + 1))}
-                        className="border-2 p-1 border-gray-500 rounded-lg"
+                        className="border-4 p-1 border-gray-400 rounded-2xl"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
-                          class="w-12 h-12 text-green-500"
+                          class="w-36 h-36 text-green-500"
                         >
                           <path
                             fill-rule="evenodd"
@@ -1251,13 +1320,13 @@ function ImageUploader({ onBack, onFecth }) {
                       </button>
                       <button
                         onClick={() => setPrice(Number(Number(price) - 1))}
-                        className="border-2 p-1 border-gray-500 rounded-lg"
+                        className="border-4 p-1 border-gray-400 rounded-2xl"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="currentColor"
-                          class="w-12 h-12 text-red-500"
+                          class="w-36 h-36 text-red-500"
                         >
                           <path
                             fill-rule="evenodd"
@@ -1288,14 +1357,14 @@ function ImageUploader({ onBack, onFecth }) {
 
                   {isAuctioned ? (
                     <div>
-                      <div className="flex items-center justify-center mt-5">
+                      <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
                         <button
                           onClick={() => setAuctionTime(12)}
                           className={`${
                             auctionTime === 12
                               ? "bg-green-500 text-white"
                               : "bg-white"
-                          } duration-250 min-w-[30px] ease-in-out  rounded-l-xl px-6 text-base py-2 border border-gray-300`}
+                          } duration-250 min-w-[30px] ease-in-out  rounded-xl px-6 text-base py-2 border border-gray-300`}
                         >
                           12hrs
                         </button>
@@ -1305,7 +1374,7 @@ function ImageUploader({ onBack, onFecth }) {
                             auctionTime === 24
                               ? "bg-green-500 text-white"
                               : "bg-white"
-                          } duration-250 min-w-[30px] ease-in-out px-6 text-base py-2 border border-gray-300`}
+                          } duration-250 min-w-[30px] ease-in-out rounded-xl px-6 text-base py-2 border border-gray-300`}
                         >
                           24hrs
                         </button>
@@ -1315,7 +1384,7 @@ function ImageUploader({ onBack, onFecth }) {
                             auctionTime === 48
                               ? "bg-green-500 text-white"
                               : "bg-white"
-                          } duration-250 min-w-[30px] ease-in-out rounded-r-xl px-6 text-base py-2 border border-gray-300`}
+                          } duration-250 min-w-[30px] ease-in-out rounded-xl px-6 text-base py-2 border border-gray-300`}
                         >
                           48hrs
                         </button>
@@ -1323,7 +1392,9 @@ function ImageUploader({ onBack, onFecth }) {
 
                       <div className="flex items-center w-96 justify-between mx-auto gap-2 mt-5">
                         <div>
-                          <label className="block text-sm">Floor price</label>
+                          <label className="block text-sm">
+                            Starting price
+                          </label>
                           <div className="relative flex items-center">
                             <h3 className="absolute text-base left-3 mt-1">
                               $
@@ -1341,7 +1412,7 @@ function ImageUploader({ onBack, onFecth }) {
 
                         <h3 className="mx-3 text-xl">to</h3>
                         <div>
-                          <label className="block text-sm">Max price</label>
+                          <label className="block text-sm">End price</label>
                           <div className="relative flex items-center">
                             <h3 className="absolute text-base left-3 mt-1">
                               $
@@ -1358,7 +1429,7 @@ function ImageUploader({ onBack, onFecth }) {
                         </div>
                       </div>
 
-                      <div className="w-96 mx-auto mt-4">
+                      <div className="sm:w-96 mx-auto mt-4">
                         <label>Delivery</label>
                         <select
                           value={delivery}
@@ -1384,13 +1455,13 @@ function ImageUploader({ onBack, onFecth }) {
                   <div className="flex items-center justify-center gap-3 mt-8">
                     <button
                       onClick={() => uploadListingOrPrintSKU()}
-                      className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      className={` hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       Dispose
                     </button>
                     <button
                       onClick={() => uploadListingOrPrintSKU()}
-                      className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       {isGenerateSKULabels ? "Print SKU" : "List"}
                     </button>
@@ -1583,8 +1654,9 @@ function ImageUploader({ onBack, onFecth }) {
                   <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
                     {showCamera ? (
                       <Capture
-                        onCapture={capture}
+                        onCapture={onCapture}
                         loading={imageUploading}
+                        skip={currentPhotoType === "main" ? false : true}
                         text={
                           currentPhotoType === "main"
                             ? "Main Image"
@@ -1644,14 +1716,14 @@ function ImageUploader({ onBack, onFecth }) {
 
               {step === 2 ? (
                 <div className="px-5 mt-6 w-full">
-                  <div className="flex items-center justify-center mt-5">
+                  <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
                     <button
                       onClick={() => setListType("dispose")}
                       className={`${
                         listType === "dispose"
                           ? "bg-red-500 text-white"
                           : "bg-white"
-                      } duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      } duration-250 min-w-[100px] ease-in-out  rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       Dispose
                     </button>
@@ -1661,7 +1733,7 @@ function ImageUploader({ onBack, onFecth }) {
                         listType === "list"
                           ? "bg-green-500 text-white"
                           : "bg-white"
-                      } duration-250 min-w-[100px] ease-in-out  px-8 text-xl py-2.5 border border-gray-300`}
+                      } duration-250 min-w-[100px] ease-in-out  rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       List
                     </button>
@@ -1671,20 +1743,20 @@ function ImageUploader({ onBack, onFecth }) {
                         listType === "auction"
                           ? "bg-green-500 text-white"
                           : "bg-white"
-                      } duration-250 min-w-[100px] ease-in-out  rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      } duration-250 min-w-[100px] ease-in-out  rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       Auction
                     </button>
                   </div>
 
-                  <div className="flex gap-4 flex-wrap justify-center  mb-4 mt-6">
+                  <div className="flex gap-4 justify-center  mb-4 mt-6">
                     {uploadedImages.main ? (
-                      <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
+                      <div className=" border-2 border-primary rounded-2xl px-2 sm:px-4 py-2 sm:py-5 sm:w-64 my-1 relative">
                         <div className="w-full flex items-center justify-center">
                           <img
                             src={uploadedImages.main.image}
                             alt={"Main Photo"}
-                            className="rounded max-w-full max-h-full"
+                            className="rounded-xl max-w-full max-h-full"
                           />
                         </div>
                       </div>
@@ -1692,12 +1764,12 @@ function ImageUploader({ onBack, onFecth }) {
                       ""
                     )}
                     {uploadedImages.brandTag ? (
-                      <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
+                      <div className=" border-2 border-primary rounded-2xl px-2 sm:px-4 py-2 sm:py-5 sm:w-64 my-1 relative">
                         <div className="w-full flex items-center justify-center">
                           <img
                             src={uploadedImages.brandTag.image}
                             alt={"Brand Tag Photo"}
-                            className="rounded max-w-full max-h-full"
+                            className="rounded-xl max-w-full max-h-full"
                           />
                         </div>
                       </div>
@@ -1706,16 +1778,16 @@ function ImageUploader({ onBack, onFecth }) {
                     )}
                   </div>
 
-                  <div className="flex items-center justify-center mt-5">
+                  <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
                     <button
                       onClick={() => handleEmployeeListMore()}
-                      className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-l-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       Dispose
                     </button>
                     <button
                       onClick={() => handleEmployeeListMore()}
-                      className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-r-xl px-8 text-xl py-2.5 border border-gray-300`}
+                      className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-xl px-7 sm:px-8 text-lg sm:text-xl py-2.5 sm:py-2.5 border border-gray-300`}
                     >
                       Keep
                     </button>
