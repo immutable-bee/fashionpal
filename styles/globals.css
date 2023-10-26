@@ -6,51 +6,44 @@ body {
   @apply bg-white text-black;
 }
 
-
 .text-primary {
-  color: #E44A1F !important;
+  color: #e44a1f !important;
 }
-
 
 .text-secondary {
-  color: #FF9C75 !important;
+  color: #ff9c75 !important;
 }
-
 
 .text-lightprimary {
-  color: #FEDDBC !important;
+  color: #feddbc !important;
 }
 
-
 .text-white {
-  color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .bg-primary {
-  background-color: #E44A1F !important;
+  background-color: #e44a1f !important;
 }
 
 .hover-bg-primary:hover {
-  background-color: #E44A1F !important;
+  background-color: #e44a1f !important;
 }
 
 .border-primary {
-  border-color: #E44A1F !important;
+  border-color: #e44a1f !important;
 }
-
 
 .bg-secondary {
-  background-color: #FF9C75 !important;
+  background-color: #ff9c75 !important;
 }
-
 
 .bg-lightprimary {
-  background-color: #FEDDBC !important;
+  background-color: #feddbc !important;
 }
 
-
 .bg-white {
-  background-color: #FFFFFF !important;
+  background-color: #ffffff !important;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&family=Raleway:wght@100;200;300;400;500;600;700;800&display=swap");
@@ -100,4 +93,8 @@ body {
 #circle-crop .cropper-view-box,
 #circle-crop .cropper-face {
   border-radius: 50% !important;
+}
+
+.react-tagsinput-tag {
+  font-size: 20px !important;
 }
