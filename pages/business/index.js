@@ -12,7 +12,7 @@ import ProductDetails from "@/components/utility/ProductDetails";
 import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
-import AddCloths from "@/components/scoped/AddCloths";
+import AddListing from "@/components/scoped/AddListing";
 import cloneDeep from "lodash.clonedeep";
 export default function Home() {
   // add
@@ -288,7 +288,7 @@ export default function Home() {
           </section>
         </div>
       ) : (
-        <AddCloths
+        <AddListing
           onBack={() => setMode("view")}
           onFecth={() => fetchListings(1)}
         />

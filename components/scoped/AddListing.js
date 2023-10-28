@@ -488,8 +488,11 @@ function ImageUploader({ onBack, onFecth }) {
       list_type: listType,
       tags: uploadedImages.tags,
       mainImage: uploadedImages.main.url,
-      brandImage: uploadedImages.brandTag.url,
     };
+
+    if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
+      JSON.brandImage = uploadedImages.brandTag.url;
+    }
 
     const newListing = listings;
     newListing.push(JSON);
@@ -506,11 +509,8 @@ function ImageUploader({ onBack, onFecth }) {
       setListings(newListing);
 
       resetAllVariables();
-      if (isGenerateSKULabels) {
-        setStep(3);
-      } else {
-        setStep(1);
-      }
+
+      setStep(3);
 
       NotificationManager.success("Listing added successfully!");
     } catch (error) {
@@ -747,13 +747,7 @@ function ImageUploader({ onBack, onFecth }) {
   };
 
   const openCameraForAdmin = () => {
-    if (!category) {
-      NotificationManager.error("Category is required!");
-    } else if (!dataSource) {
-      NotificationManager.error("Data source is required!");
-    } else {
-      setShowCamera(true);
-    }
+    setShowCamera(true);
   };
 
   const changeTags = (listingIndex, newTags) => {
@@ -876,188 +870,35 @@ function ImageUploader({ onBack, onFecth }) {
               {step === 1 ? (
                 <div className="sm:w-96 mx-auto">
                   <div className="sm:w-96 mx-auto">
-                    <label>Category</label>
+                    <label className="text-lg">Category</label>
                     <select
                       value={category}
                       className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                       onChange={(e) => setCategory(e.target.value)}
                     >
-                      <option
-                        value=""
-                        disabled
-                      >
-                        Select type
-                      </option>
+                      <option value="">All</option>
                       <option value="Clothing">Clothing</option>
                       <option value="Footwear">Footwear</option>
                       <option value="Hats">Hats</option>
+                      <option value="Bags">Bags</option>
                     </select>
                   </div>
-                  <div className="flex justify-between sm:w-96 mx-auto gap-2 mt-5">
-                    <div className="">
-                      <label>Starting price</label>
-                      <div className="relative flex items-center">
-                        <h3 className="absolute text-base left-3 mt-1">$</h3>
-                        <input
-                          value={floorPrice}
-                          type="number"
-                          className="w-32 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
-                          onChange={(e) => setFloorPrice(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="">
-                      <label>End price</label>
-                      <div className="relative flex items-center">
-                        <h3 className="absolute text-base left-3 mt-1">$</h3>
-                        <input
-                          value={maxPrice}
-                          type="number"
-                          className="w-32 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
-                          onChange={(e) => setMaxPrice(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="sm:w-96 mx-auto sm:max-w-none max-w-fit mt-5">
-                    <label className="text-center">Data source</label>
-                    <div className="flex flex-wrap gap-3 items-center mt-2">
-                      <button
-                        onClick={() => setDataSource("store_only")}
-                        className={`${
-                          dataSource === "store_only"
-                            ? "bg-primary text-white"
-                            : "bg-white"
-                        } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
-                      >
-                        Store only
-                      </button>
-                      <button
-                        onClick={() => setDataSource("network")}
-                        className={`${
-                          dataSource === "network"
-                            ? "bg-primary text-white"
-                            : "bg-white"
-                        } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
-                      >
-                        Network
-                      </button>
-                    </div>
-                  </div>
 
-                  <div className="mt-5">
-                    <label>Default price suggestion</label>
-
-                    <input
-                      value={defaultPriceSuggestion}
-                      type="number"
-                      className="w-full mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
-                      onChange={(e) =>
-                        setDefaultPriceSuggestion(e.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div className="max-w-fit sm:!mx-0 mx-auto mt-5">
-                    <label className="relative mb-4 flex items-center cursor-pointer">
+                  <div className=" flex items-center mt-5">
+                    <label className="text-lg">
+                      Default price suggestion %
+                    </label>
+                    <div className="relative w-32 flex items-center ml-3">
+                      <h3 className="absolute text-base right-8 mt-1">%</h3>
                       <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={isOptionToAuction}
-                        onChange={() =>
-                          setIsOptionToAuction(!isOptionToAuction)
+                        value={defaultPriceSuggestion}
+                        type="number"
+                        className="w-32 mt-1 rounded-xl px-3  py-2 border border-gray-600"
+                        onChange={(e) =>
+                          setDefaultPriceSuggestion(e.target.value)
                         }
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Option to Auction
-                      </span>
-                    </label>
-                    <label className="relative mb-4 flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={isViewSimilarListings}
-                        onChange={() =>
-                          setIsViewSimilarListings(!isViewSimilarListings)
-                        }
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                      <label className="ml-3 !text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Search similar listings
-                      </label>
-                    </label>
-                    {isViewSimilarListings ? (
-                      <label className="relative mb-4 flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          checked={isAutoUploadSimilarListings}
-                          onChange={() =>
-                            setIsAutoUploadSimilarListings(
-                              !isAutoUploadSimilarListings
-                            )
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Auto upload similar listings
-                        </span>
-                      </label>
-                    ) : (
-                      ""
-                    )}
-
-                    <label className="relative mb-4 flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={isOptionToEdit}
-                        onChange={() => setIsOptionToEdit(!isOptionToEdit)}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Option to Edit Tags
-                      </span>
-                    </label>
-                    <label className="relative mb-4 flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={isGenerateSKULabels}
-                        onChange={() =>
-                          setIsGenerateSKULabels(!isGenerateSKULabels)
-                        }
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                      <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Generate SKU Labels
-                      </span>
-                    </label>
-                    {isGenerateSKULabels ? (
-                      <label className="relative mb-4 flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          value=""
-                          className="sr-only peer"
-                          checked={isIncludeRetailPrice}
-                          onChange={() =>
-                            setIsIncludeRetailPrice(!isIncludeRetailPrice)
-                          }
-                        />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#FF9C75]"></div>
-                        <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                          Include Retail Price
-                        </span>
-                      </label>
-                    ) : (
-                      ""
-                    )}
+                    </div>
                   </div>
 
                   <div className="mx-auto">
@@ -1139,7 +980,7 @@ function ImageUploader({ onBack, onFecth }) {
 
               {step === 2 ? (
                 <div className="px-5 mt-6 w-[480px] mx-auto">
-                  <div className="flex flex-wrap items-center gap-3 justify-center mt-5">
+                  {/* <div className="flex flex-wrap items-center gap-3 justify-center mt-5">
                     <button
                       onClick={() => setListType("dispose")}
                       className={`${
@@ -1160,7 +1001,7 @@ function ImageUploader({ onBack, onFecth }) {
                     >
                       List
                     </button>
-                  </div>
+                  </div> */}
 
                   <div className="mt-6 mb-4">
                     <div className="flex gap-4 flex-wrap justify-center items-center ">
@@ -1170,14 +1011,14 @@ function ImageUploader({ onBack, onFecth }) {
                             <img
                               src={uploadedImages.main.image}
                               alt={"Main Photo"}
-                              className="rounded max-w-full max-h-full"
+                              className="rounded-xl max-w-full max-h-full"
                             />
                           </div>
                         </div>
                       ) : (
                         ""
                       )}
-                      {isOptionToEdit ? (
+                      {/* {isOptionToEdit ? (
                         <>
                           {!tagFetching ? (
                             <>
@@ -1200,92 +1041,75 @@ function ImageUploader({ onBack, onFecth }) {
                         </>
                       ) : (
                         ""
-                      )}
+                      )} */}
                     </div>
 
-                    {isViewSimilarListings ? (
-                      <div className="mt-6">
-                        <div className="flex items-center">
-                          <h3 className="!text-2xl">
-                            Similar Online Listings:{" "}
-                          </h3>
-                          {!fetchingSimilarProducts ? (
-                            <button
-                              onClick={() => fetchSimilarProducts()}
-                              className="underline text-2xl ml-3"
-                            >
-                              View
-                            </button>
-                          ) : (
-                            ""
-                          )}
-                        </div>
+                    <div className="mt-6">
+                      <div className="flex items-center">
+                        <h3 className="!text-2xl">Similar Online Listings: </h3>
+                      </div>
 
-                        {!fetchingSimilarProducts ? (
-                          <div className="mt-3 flex overflow-x-auto">
-                            {similarProducts.map((row, key) => (
+                      {!fetchingSimilarProducts ? (
+                        <div className="mt-3 flex overflow-x-auto">
+                          {similarProducts.map((row, key) => (
+                            <div
+                              key={key}
+                              className="mx-2 w-48 cursor-pointer"
+                              onClick={() => {
+                                setActiveResultIndex(key);
+
+                                setPrice(
+                                  (
+                                    Math.round(
+                                      (row.price
+                                        ? row.price +
+                                          (row.price * defaultPriceSuggestion) /
+                                            100
+                                        : 0) * 100
+                                    ) / 100
+                                  ).toFixed(2)
+                                );
+                              }}
+                            >
+                              <div
+                                className={`${
+                                  activeResultIndex === key
+                                    ? "border-[3px] border-green-600"
+                                    : "border-2 border-primary"
+                                } flex items-center justify-center rounded-2xl px-4 py-5 !w-48 !h-48 flex-shrink-0 my-1 relative`}
+                              >
+                                <img
+                                  src={row.image}
+                                  alt={"Main Photo"}
+                                  className="rounded max-w-full max-h-full"
+                                />
+                              </div>
                               <div
                                 key={key}
-                                className="mx-2 w-48 cursor-pointer"
-                                onClick={() => {
-                                  setActiveResultIndex(key);
-
-                                  setPrice(
-                                    (
-                                      Math.round(
-                                        (row.price
-                                          ? row.price +
-                                            (row.price *
-                                              defaultPriceSuggestion) /
-                                              100
-                                          : 0) * 100
-                                      ) / 100
-                                    ).toFixed(2)
-                                  );
-                                }}
+                                className="mt-2 mx-1 w-full"
                               >
-                                <div
-                                  className={`${
-                                    activeResultIndex === key
-                                      ? "border-[3px] border-green-600"
-                                      : "border-2 border-primary"
-                                  } flex items-center justify-center rounded-2xl px-4 py-5 !w-48 !h-48 flex-shrink-0 my-1 relative`}
-                                >
-                                  <img
-                                    src={row.image}
-                                    alt={"Main Photo"}
-                                    className="rounded max-w-full max-h-full"
-                                  />
-                                </div>
-                                <div
-                                  key={key}
-                                  className="mt-2 mx-1 w-full"
-                                >
-                                  <h3 className="text-2xl text-center truncate">
-                                    {row.name}
-                                  </h3>
-                                  <h3 className="text-2xl text-center">
-                                    {row.price ? "$" + row.price : "No price"}
-                                  </h3>
-                                  <div className="flex justify-center">
-                                    <button
-                                      onClick={() => viewProduct(row.link)}
-                                      className="underline text-2xl"
-                                    >
-                                      View
-                                    </button>
-                                  </div>
+                                <h3 className="text-2xl text-center truncate">
+                                  {row.name}
+                                </h3>
+                                <h3 className="text-2xl text-center">
+                                  {row.price ? "$" + row.price : "No price"}
+                                </h3>
+                                <div className="flex justify-center">
+                                  <button
+                                    onClick={() => viewProduct(row.link)}
+                                    className="underline text-2xl"
+                                  >
+                                    View
+                                  </button>
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <LoadingComponent size="sm" />
-                        )}
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <LoadingComponent size="sm" />
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex mx-1 justify-between">
@@ -1304,19 +1128,22 @@ function ImageUploader({ onBack, onFecth }) {
                           />
                         </div>
                       </div> */}
-                      <div className="mt-5">
-                        <label className="block text-gray-600 text-2xl mb-2">
-                          Default price suggestion
-                        </label>
 
-                        <input
-                          value={defaultPriceSuggestion}
-                          type="number"
-                          className="w-48 mt-1 !text-4xl rounded-2xl pl-4 pr-2  !py-3 border-4 border-gray-400"
-                          onChange={(e) =>
-                            setDefaultPriceSuggestion(e.target.value)
-                          }
-                        />
+                      <div className="">
+                        <label className="block text-gray-600 text-3xl mb-2">
+                          % Off
+                        </label>
+                        <div className="relative w-32 flex items-center">
+                          <h3 className="absolute text-4xl right-8 mt-1">%</h3>
+                          <input
+                            value={defaultPriceSuggestion}
+                            type="number"
+                            className="w-48 mt-1 !text-4xl rounded-2xl pl-4 pr-2  !py-3 border-4 border-gray-400"
+                            onChange={(e) =>
+                              setDefaultPriceSuggestion(e.target.value)
+                            }
+                          />
+                        </div>
                       </div>
                       <div className="mt-3">
                         <label className="block text-gray-600 text-3xl mb-2">
@@ -1337,7 +1164,7 @@ function ImageUploader({ onBack, onFecth }) {
                       <button
                         onClick={() =>
                           setDefaultPriceSuggestion(
-                            Number(Number(defaultPriceSuggestion) + 1)
+                            Number(Number(defaultPriceSuggestion) + 5)
                           )
                         }
                         className="border-4 p-1 border-gray-400 rounded-2xl"
@@ -1358,7 +1185,7 @@ function ImageUploader({ onBack, onFecth }) {
                       <button
                         onClick={() =>
                           setDefaultPriceSuggestion(
-                            Number(Number(defaultPriceSuggestion) - 1)
+                            Number(Number(defaultPriceSuggestion) - 5)
                           )
                         }
                         className="border-4 p-1 border-gray-400 rounded-2xl"
@@ -1379,120 +1206,6 @@ function ImageUploader({ onBack, onFecth }) {
                     </div>
                   </div>
 
-                  {isOptionToAuction ? (
-                    <div className="flex justify-center mt-3">
-                      <button
-                        onClick={() => setIsAuctioned(true)}
-                        className={`${
-                          isAuctioned
-                            ? "border border-gray-300 text-white bg-green-500"
-                            : "border-2 border-green-400 text-green-400"
-                        }  duration-300 min-w-[100px] ease-in-out rounded-xl px-12 text-xl py-3 mt-3`}
-                      >
-                        Auction
-                      </button>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-
-                  {isAuctioned ? (
-                    <div>
-                      <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
-                        <button
-                          onClick={() => setAuctionTime(12)}
-                          className={`${
-                            auctionTime === 12
-                              ? "bg-green-500 text-white"
-                              : "bg-white"
-                          } duration-250 min-w-[30px] ease-in-out  rounded-xl px-8 text-base py-2.5 border border-gray-300`}
-                        >
-                          12hrs
-                        </button>
-                        <button
-                          onClick={() => setAuctionTime(24)}
-                          className={`${
-                            auctionTime === 24
-                              ? "bg-green-500 text-white"
-                              : "bg-white"
-                          } duration-250 min-w-[30px] ease-in-out rounded-xl px-8 text-base py-2.5 border border-gray-300`}
-                        >
-                          24hrs
-                        </button>
-                        <button
-                          onClick={() => setAuctionTime(48)}
-                          className={`${
-                            auctionTime === 48
-                              ? "bg-green-500 text-white"
-                              : "bg-white"
-                          } duration-250 min-w-[30px] ease-in-out rounded-xl px-8 text-base py-2.5 border border-gray-300`}
-                        >
-                          48hrs
-                        </button>
-                      </div>
-
-                      <div className="flex items-center w-96 justify-between mx-auto gap-2 mt-5">
-                        <div>
-                          <label className="block text-lg">
-                            Starting price
-                          </label>
-                          <div className="relative flex items-center">
-                            <h3 className="absolute text-base left-3 mt-1">
-                              $
-                            </h3>
-                            <input
-                              value={auctionFloorPrice}
-                              type="number"
-                              className="w-32 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
-                              onChange={(e) =>
-                                setAuctionFloorPrice(e.target.value)
-                              }
-                            />
-                          </div>
-                        </div>
-
-                        <h3 className="mx-3 text-xl">to</h3>
-                        <div>
-                          <label className="block text-lg">End price</label>
-                          <div className="relative flex items-center">
-                            <h3 className="absolute text-base left-3 mt-1">
-                              $
-                            </h3>
-                            <input
-                              value={auctionMaxPrice}
-                              type="number"
-                              className="w-32 mt-1 rounded-xl pl-6 pr-2  py-2 border border-gray-600"
-                              onChange={(e) =>
-                                setAuctionMaxPrice(e.target.value)
-                              }
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="sm:w-96 mx-auto mt-4">
-                        <label className="block text-lg">Delivery</label>
-                        <select
-                          value={delivery}
-                          className="w-full mt-1 rounded-xl px-3 py-3 border border-gray-600"
-                          onChange={(e) => setDelivery(e.target.value)}
-                        >
-                          <option
-                            value=""
-                            disabled
-                          >
-                            Select delivery
-                          </option>
-                          <option value="Clothing">1</option>
-                          <option value="Footwear">2</option>
-                          <option value="Hats">3</option>
-                        </select>
-                      </div>
-                    </div>
-                  ) : (
-                    ""
-                  )}
-
                   <div className="flex items-center justify-center gap-3 mt-8">
                     <button
                       onClick={() => uploadListingOrPrintSKU()}
@@ -1504,7 +1217,7 @@ function ImageUploader({ onBack, onFecth }) {
                       onClick={() => uploadListingOrPrintSKU()}
                       className={` hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded px-10 text-xl py-2.5  border border-gray-300`}
                     >
-                      {isGenerateSKULabels ? "Print SKU" : "List"}
+                      Sell
                     </button>
                   </div>
                 </div>
