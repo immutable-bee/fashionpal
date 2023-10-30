@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PeopleSVG from "../assets/svg/people.svg";
-import Logo from '../public/images/logo-vertical.jpg';
+import Logo from "../public/images/logo-vertical.jpg";
 import { Button, Input, Loading } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import IconGoogle from "../assets/svg/icon-google.svg";
@@ -12,14 +12,6 @@ const providers = [
   {
     name: "google",
     icon: IconGoogle,
-  },
-  {
-    name: "facebook",
-    icon: "/icons/icon-fb.svg",
-  },
-  {
-    name: "apple",
-    icon: "/icons/icon-apple.svg",
   },
 ];
 
@@ -124,7 +116,7 @@ const SignIn = ({ props }) => {
                 ) : loading ? (
                   <Loading className="self-center mt-4" />
                 ) : (
-                  <Button id="login-btn" className="w-full" type="submit">
+                  <Button id="login-btn" className="w-full mt-5" type="submit">
                     Continue with email
                   </Button>
                 )}
@@ -142,14 +134,17 @@ const SignIn = ({ props }) => {
                   </span>
                 </div>
               </div>
-              <div id="social-auth-container">
+              <div
+                id="social-auth-container"
+                className="w-full flex justify-center"
+              >
                 <Button
                   size={""}
-                  className="social-provider-btn"
+                  className="social-provider-btn rounded-full"
                   onClick={handle0AuthSignIn(providers[0].name)}
                   icon={
                     <Image
-                      className="w-6"
+                      className=""
                       src={providers[0].icon}
                       alt={`${providers[0].name} icon`}
                       width="35"
@@ -159,8 +154,7 @@ const SignIn = ({ props }) => {
                 ></Button>
               </div>
               <p className="text-center pt-2 text-sm">
-                You will be able to choose your account type (Reader, Seller)
-                after signup.
+                You will be able to choose your account type after signup.
               </p>
               {/* Add terms of service */}
               <h6 className="text-xs text-center text-gray-500 mt-3"></h6>

@@ -53,32 +53,24 @@ model User {
   image               String?
   accounts            Account[]
   sessions            Session[]
-  onboarding_complete Boolean   @default(false)
-
+  onboardingComplete Boolean   @default(false)
   business Business?
   consumer Consumer?
-  Listing  Listing[]
 }
 
 model Business {
   id                      String       @id @default(uuid())
   user                    User         @relation(fields: [uid], references: [id])
   uid                     String       @unique
-  type                    BUSINESSTYPE
-  business_name           String
+  businessName           String
   email                   String       @unique
-  business_state          String
-  business_city           String
-  business_street         String
-  business_zip            String
+  businessState          String
+  businessCity           String
+  businessStreet         String
+  businessZip            String
   url                     String?
-  phone_number            String?
-  membership              MEMBERSHIP   @default(FREE)
-  upload_cycle_start_date DateTime     @default(now())
-  current_cycle_uploads   Int          @default(0)
-  upload_credits          Int          @default(0)
+  phoneNumber            String?
   listings                Listing[]
-  subscriptionId          String?
 }
 
 model Consumer {
@@ -87,67 +79,58 @@ model Consumer {
   uid             String   @unique
   username        String
   email           String   @unique
-  alerts_paused   Boolean  @default(false)
-  email_alerts_on Boolean  @default(true)
-  tracked_titles  String[]
-  tracked_authors String[]
-  tracked_zips    String[]
-  isbnAlerts      String[]
-  paid_alerts     Int      @default(25)
-  subscriptionId  String?
+  emailAlertsOn Boolean  @default(true)
+  votes Vote[]
+
 }
 
-enum BUSINESSTYPE {
-  CLOTHING
-  FOOTWEAR
-  HATS
+model Vote {
+  id String @id @default(uuid())
+  user Consumer @relation(fields: [userId], references: [id])
+  userId String
+  listing Listing @relation(fields: [listingId], references: [id])
+  listingId String
+  date DateTime @default(now())
+  type VoteType @default(UP)
 }
 
-enum MEMBERSHIP {
-  FREE
-  BASIC
-  PREMIUM
+
+model Category {
+  id String @id @default(uuid())
+  name String
+  listings CategoriesOnListings []
 }
+
+model CategoriesOnListings {
+  id String @id @default(uuid())
+  listing Listing @relation(fields: [listingId], references: [id])
+  listingId String
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+}
+
 
 model Listing {
   id                String    @id @default(cuid())
   mainImage         Json?
   brandImage        Json?
-  category          String?
-  type              String?
-  employeeName      String?
-  listType          String?
-  subCategoryOne    String?
-  subCategoryTwo    String?
-  floorPrice        Int?
-  maxPrice          Int?
   dataSource        String?
-  isAuctioned       Boolean   @default(false)
   price             Int?
-  auctionTime       Int?
-  auctionFloorPrice Int?
-  auctionMaxPrice   Int?
   delivery          String?
-  matches           Boolean   @default(false)
-  isLiked           Boolean   @default(false)
-  isUnLiked         Boolean   @default(false)
   tags              String[]
+  isDisposed Boolean @default(false)
+  isActive Boolean @default(true)
   createdAt         DateTime? @default(now())
-  updatedAt         DateTime? @updatedAt
-  User              User?     @relation(fields: [userId], references: [id])
-  userId            String?
+  updatedAt         DateTime?
+  daysToExpiry Int @default(7)
   Business          Business? @relation(fields: [businessId], references: [id])
   businessId        String?
+  categories CategoriesOnListings[]
+  votes Vote[]
+
 }
 
-model Sale {
-  id              String    @id @default(cuid())
-  name            String
-  items           String[]
-  discount_amount String
-  start_date      DateTime
-  end_date        DateTime
-  is_liked        Boolean   @default(false)
-  createdAt       DateTime? @default(now())
-  updatedAt       DateTime? @updatedAt
+enum VoteType {
+  UP
+  DOWN
 }

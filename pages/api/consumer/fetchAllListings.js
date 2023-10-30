@@ -3,6 +3,7 @@ import { prisma } from "../../../db/prismaDB";
 const handler = async (req, res) => {
   try {
     const listings = await prisma.listing.findMany({
+      where: { isActive: true },
       orderBy: {
         createdAt: "desc",
       },

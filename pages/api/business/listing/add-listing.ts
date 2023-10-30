@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '../../prisma/client';
-import { createClient } from '@supabase/supabase-js';
+import { NextApiRequest, NextApiResponse } from "next";
+import prisma from "../../../../prisma/client";
+import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
@@ -8,12 +8,15 @@ const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: { persistSession: false },
 });
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method === "POST") {
     const listing = req.body.listing;
 
     if (!listing) {
-      return res.status(400).json({ message: 'No listing provided!' });
+      return res.status(400).json({ message: "No listing provided!" });
     }
 
     try {
@@ -22,30 +25,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       switch (listing.type) {
         case "simple":
           payload = {
-            type: 'simple',
+            type: "simple",
             mainImage: listing.mainImage,
             brandImage: listing.brandImage,
             category: listing.category,
             subCategoryOne: listing.subCategoryOne,
             subCategoryTwo: listing.subCategoryTwo,
-            tags: listing.tags
+            tags: listing.tags,
           };
           break;
 
         case "employee":
           payload = {
-            type: 'employee',
+            type: "employee",
             employeeName: listing.employeeName,
             listType: listing.listType,
             mainImage: listing.mainImage,
             brandImage: listing.brandImage,
-            tags: listing.tags
+            tags: listing.tags,
           };
           break;
 
         case "admin":
           payload = {
-            type: 'admin',
+            type: "admin",
             category: listing.category,
             floorPrice: listing.floorPrice,
             maxPrice: listing.maxPrice,
@@ -59,17 +62,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             delivery: listing.delivery,
             mainImage: listing.mainImage,
             brandImage: listing.brandImage,
-            tags: listing.tags
+            tags: listing.tags,
           };
           break;
 
         default:
-          return res.status(400).json({ message: 'Invalid listing type!' });
+          return res.status(400).json({ message: "Invalid listing type!" });
       }
 
-
       const createdListing = await prisma.listing.create({
-        data: payload
+        data: payload,
       });
 
       res.status(200).json(createdListing);
@@ -78,6 +80,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(500).json({ message: error.message });
     }
   } else {
-    res.status(405).json({ message: 'Method not allowed.' });
+    res.status(405).json({ message: "Method not allowed." });
   }
 }
