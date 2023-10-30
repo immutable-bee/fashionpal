@@ -268,9 +268,12 @@ export default function Home() {
 
         <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
           <div className="">
-            <div className="flex justify-between items-center">
+            <div className="">
               <p className="text-gray-900 text-base">
                 {resultCount} Results found
+              </p>
+              <p className="text-gray-900 mt-1 text-base">
+                ({resultCount} of 745) voted
               </p>
             </div>
 
@@ -286,8 +289,6 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="w-screen overflow-hidden">
-                  {/* Clothing */}
-
                   <div className="sm:flex flex-wrap justify-center mt-2">
                     <Swiper
                       slidesPerView="auto"
