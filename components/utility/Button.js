@@ -44,7 +44,9 @@ function ButtonComponent({
     if (disabled || loading) {
       return;
     }
-    onClick();
+    if (onClick) {
+      onClick();
+    }
   };
 
   return (
