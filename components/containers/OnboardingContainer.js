@@ -96,13 +96,13 @@ const OnboardingContainer = () => {
               </h2>
               <div className="flex flex-col items-center">
                 <button
-                  onClick={handleConsumerOnboard}
+                  onClick={handleBusinessOnboard}
                   className=" text-white w-4/5 py-5 my-10 border border-black bg-blbBlue rounded"
                 >
                   Business
                 </button>
                 <button
-                  onClick={handleBusinessOnboard}
+                  onClick={handleConsumerOnboard}
                   className="text-white w-4/5 py-5 my-5 border border-black bg-biblioGreen rounded"
                 >
                   Consumer

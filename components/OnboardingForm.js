@@ -158,7 +158,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
   const formStepHandler = () => {
     if (isStepOne) {
       // Check if required fields in step one are filled
-      if (formData?.business_name && formData?.type) {
+      if (formData?.businessName && formData?.url) {
         setIsStepOne(false);
       } else {
         alert("Please fill out all required fields before proceeding.");
@@ -237,45 +237,45 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
 
         <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
           {isStepOne ? (
-            <>
-              <>
+            <div className="w-full flex flex-col items-center">
+              <Input
+                required={true}
+                onChange={handleChange}
+                className="onboard-fields my-2"
+                placeholder="Store Business Name"
+                name="businessName"
+              />
+              <Input
+                onChange={handleChange}
+                className="onboard-fields my-2"
+                placeholder="Website Url"
+                name="url"
+              />
+              <Button rounded className="mt-5" onClick={formStepHandler}>
+                Next
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <div className="grid grid-cols-2 gap-3">
                 <Input
                   required={true}
                   onChange={handleChange}
-                  className="onboard-fields my-2"
-                  placeholder="Store Business Name"
-                  name="business_name"
+                  className="onboard-fields  my-2"
+                  name="businessStreet"
+                  placeholder="Business Address"
                 />
                 <Input
+                  required={true}
                   onChange={handleChange}
-                  className="onboard-fields my-2"
-                  placeholder="Website Url"
-                  name="url"
+                  className="onboard-fields  my-2"
+                  name="businessCity"
+                  placeholder="Business City"
                 />
-                <Button rounded id="form-step-btn" onClick={formStepHandler}>
-                  Next
-                </Button>
-              </>
-            </>
-          ) : (
-            <div id="onboarding-step-two-container">
-              <Input
-                required={true}
-                onChange={handleChange}
-                className="onboard-fields  my-2"
-                name="business_street"
-                placeholder="Business Address"
-              />
-              <Input
-                required={true}
-                onChange={handleChange}
-                className="onboard-fields  my-2"
-                name="business_city"
-                placeholder="Business City"
-              />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <select
-                  name="business_state"
+                  name="businessState"
                   onChange={handleChange}
                   className="
                       border-[#f1f3f5]
@@ -296,7 +296,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   required={true}
                   onChange={handleChange}
                   className="small-onboard-fields  my-2"
-                  name="business_zip"
+                  name="businessZip"
                   placeholder="Zip Code"
                 />
               </div>
@@ -320,7 +320,11 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   Terms and Conditions
                 </h6>
               </div>
-              <Button type="submit">Submit</Button>
+              <div className="flex justify-center">
+                <Button className="mt-5" type="submit">
+                  Submit
+                </Button>
+              </div>
             </div>
           )}
         </form>
