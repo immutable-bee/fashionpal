@@ -8,6 +8,7 @@ const handler = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  // Currently defaults to lifetime data, use "new Date(today.getFullYear(), today.getMonth(), 1);"
   const dateFrom = new Date(req.query.dateFrom || "2000-01-01");
   const dateTo = new Date(req.query.dateTo || new Date());
 
@@ -75,15 +76,24 @@ const handler = async (req, res) => {
       (a, b) => b[1] - a[1]
     )[0];
 
+    const percentageDisposed =
+      totalListings !== 0 ? (disposedListings / totalListings) * 100 : 0;
+    const percentageToSell =
+      totalListings !== 0 ? (listingsToSell / totalListings) * 100 : 0;
+    const percentageDownVoted =
+      totalListings !== 0 ? (downVotes / totalListings) * 100 : 0;
+    const percentageUpVoted =
+      totalListings !== 0 ? (upVotes / totalListings) * 100 : 0;
+
     const stats = {
       totalListings,
-      mostCommonCategory: mostCommonCategory ? mostCommonCategory[0] : null,
+      mostCommonCategory: mostCommonCategory ? mostCommonCategory[0] : "None",
       disposedListings,
       listingsToSell,
-      percentageDisposed: (disposedListings / totalListings) * 100,
-      percentageToSell: (listingsToSell / totalListings) * 100,
-      percentageDownVoted: (downVotes / totalListings) * 100,
-      percentageUpVoted: (upVotes / totalListings) * 100,
+      percentageDisposed,
+      percentageToSell,
+      percentageDownVoted,
+      percentageUpVoted,
     };
 
     res.status(200).json(stats);
