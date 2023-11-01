@@ -12,14 +12,14 @@ import ProductDetails from "@/components/utility/ProductDetails";
 import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
-import AddCloths from "@/components/scoped/AddCloths";
+import AddListing from "@/components/scoped/AddListing";
 import cloneDeep from "lodash.clonedeep";
 export default function Home() {
   // add
   const { data: session } = useSession();
   const router = useRouter();
 
-  console.log(session)
+  console.log(session);
 
   const [filter, setFilter] = useState("");
 
@@ -39,13 +39,11 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onPaginationChange = (e) => {
-
     setNotMatchesPage(e);
     fetchListings(e);
   };
 
   const triggerDetailsModal = (index) => {
-
     setDetailsModal(true);
     setActiveIndex(index);
   };
@@ -106,7 +104,6 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-
       setLoadingListings(true);
 
       try {
@@ -146,14 +143,12 @@ export default function Home() {
     setListings(newListing);
   };
   const editTagName = (tagIndex, name) => {
-
     const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags[tagIndex].name = name;
 
     setListings(newListing);
   };
   const editTagValue = (tagIndex, value) => {
-
     const newListing = cloneDeep(listings);
     newListing[activeTagIndex].tags[tagIndex].value = value;
     setListings(newListing);
@@ -169,9 +164,7 @@ export default function Home() {
     setListings(newListing);
   };
 
-  const onPageChange = (page) => {
-
-  };
+  const onPageChange = (page) => {};
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -295,7 +288,7 @@ export default function Home() {
           </section>
         </div>
       ) : (
-        <AddCloths
+        <AddListing
           onBack={() => setMode("view")}
           onFecth={() => fetchListings(1)}
         />

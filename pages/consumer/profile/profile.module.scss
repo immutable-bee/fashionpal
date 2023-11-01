@@ -2,7 +2,7 @@
 
 .profile_component {
     border-bottom: 2px solid #828282;
-    margin-top:40px;
+    margin-top: 40px;
     .profile_icon {
         .icon_img {
             text-align: center;
@@ -59,35 +59,34 @@
             display: flex;
             justify-content: space-between;
             .form_input {
-                width:100%;
+                width: 100%;
             }
-            a{ background-color: #2eaaed;
+            a {
+                background-color: #2eaaed;
                 width: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 border-radius: 8px;
-                
-
             }
         }
-        .select_option{
+        .select_option {
             display: flex;
             margin-top: 11px;
-            gap:10px;
-           .select_option1{
-               p{
-                font-family: Inter;
-                font-size: 14px;
-                font-weight: 500;
-                line-height: 17px;
-                letter-spacing: 0em;
-                text-align: left;
-                color: #000;  
-                border: 1px solid #2eaaed; 
-                padding: 5px 8px;             
-               }
-           }
+            gap: 10px;
+            .select_option1 {
+                p {
+                    font-family: Inter;
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 17px;
+                    letter-spacing: 0em;
+                    text-align: left;
+                    color: #000;
+                    border: 1px solid #2eaaed;
+                    padding: 5px 8px;
+                }
+            }
         }
     }
     .label_input1 {
@@ -177,8 +176,8 @@
                     font-size: 16px;
                     font-weight: 600;
                     line-height: 19px;
-                    transition: all .5s ease;
-                    &:hover{
+                    transition: all 0.5s ease;
+                    &:hover {
                         background-color: #eb5757;
                         color: #fff;
                     }
@@ -186,22 +185,21 @@
             }
             .upgrade_btn {
                 button {
-                    border: 1px solid #2EAAED;
+                    border: 1px solid #2eaaed;
                     border-radius: 18px;
                     padding: 8px 20px;
                     color: #fff;
-                    background-color: #2EAAED;
+                    background-color: #2eaaed;
                     font-family: Inter;
                     font-size: 16px;
                     font-weight: 600;
                     line-height: 19px;
-                    &:hover{
+                    &:hover {
                         background-color: transparent;
-                        color: #2EAAED;
+                        color: #2eaaed;
                     }
                 }
             }
         }
     }
 }
-

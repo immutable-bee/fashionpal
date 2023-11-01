@@ -10,7 +10,7 @@ const TCModal = (props) => {
       width="40vw"
     >
       <Modal.Header className="modal-header">
-      <h4 className="modal-title">Terms &amp; Conditions</h4>
+        <h4 className="modal-title">Terms &amp; Conditions</h4>
       </Modal.Header>
       <Modal.Body className="modal-body">
         <p>
@@ -112,7 +112,10 @@ const TCModal = (props) => {
       </Modal.Body>
       <Modal.Footer className="modal-footer">
         {" "}
-        <Button onClick={props.closebtn} id="modal-close-btn">
+        <Button
+          onClick={props.closebtn}
+          id="modal-close-btn"
+        >
           Close
         </Button>
       </Modal.Footer>

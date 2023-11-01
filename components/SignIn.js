@@ -4,9 +4,8 @@ import Logo from "../public/images/logo-vertical.jpg";
 import { Button, Input, Loading } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import IconGoogle from "../assets/svg/icon-google.svg";
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import IconEnvelope from "../assets/svg/icons_envelope.svg";
-import Link from "next/link";
 
 const providers = [
   {

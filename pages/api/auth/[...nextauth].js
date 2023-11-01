@@ -8,8 +8,16 @@ import { createTransport } from "nodemailer";
 
 const logo =
   "https://fashionpal.vercel.app/_next/image?url=%2Fimages%2Flogo-vertical.jpg&w=256&q=75";
+const logo =
+  "https://fashionpal.vercel.app/_next/image?url=%2Fimages%2Flogo-vertical.jpg&w=256&q=75";
 
 const transporter = createTransport({
+  host: process.env.EMAIL_SERVER_HOST,
+  port: process.env.EMAIL_SERVER_PORT,
+  auth: {
+    user: process.env.EMAIL_SERVER_USER,
+    pass: process.env.EMAIL_SERVER_PASSWORD,
+  },
   host: process.env.EMAIL_SERVER_HOST,
   port: process.env.EMAIL_SERVER_PORT,
   auth: {
@@ -31,7 +39,28 @@ export const authOptions = {
         },
       },
       from: process.env.EMAIL_FROM,
+  adapter: PrismaAdapter(prisma),
+  providers: [
+    EmailProvider({
+      server: {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: process.env.EMAIL_SERVER_PORT,
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD,
+        },
+      },
+      from: process.env.EMAIL_FROM,
 
+      sendVerificationRequest: async ({
+        identifier: email,
+        url,
+        provider: { server, from },
+      }) => {
+        const emailBody = signInEmail.compiledHtml
+          .replace(/{{c1}}/g, email)
+          .replace(/{{cta1}}/g, url)
+          .replace("{{logo}}", logo);
       sendVerificationRequest: async ({
         identifier: email,
         url,
@@ -58,7 +87,20 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+    GoogleProvider({
+      allowDangerousEmailAccountLinking: true,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+  ],
 
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/auth",
+    newUser: "/auth/onboarding",
+  },
   session: {
     strategy: "jwt",
   },
@@ -79,7 +121,22 @@ export const authOptions = {
           user.id = emailUser.id;
         }
       }
+  callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      if (account && account.provider === "google") {
+        const emailUser = await prisma.user.findUnique({
+          where: {
+            email: user.email,
+          },
+        });
+        if (emailUser) {
+          user.id = emailUser.id;
+        }
+      }
 
+      return true;
+    },
+  },
       return true;
     },
   },

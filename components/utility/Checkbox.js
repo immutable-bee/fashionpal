@@ -1,11 +1,20 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const CheckboxComponent = ({ isSelected, onChange, children, name, className, value, boolean = false, align }) => {
+const CheckboxComponent = ({
+  isSelected,
+  onChange,
+  children,
+  name,
+  className,
+  value,
+  boolean = false,
+  align,
+}) => {
   const alignMap = {
-    start: 'justify-start',
-    center: 'justify-center',
-    end: 'justify-end',
-  }
+    start: "justify-start",
+    center: "justify-center",
+    end: "justify-end",
+  };
   return (
     <div className={`${alignMap[align]} flex items-center`}>
       <input

@@ -126,7 +126,6 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-
       setLoadingListings(true);
 
       try {
@@ -269,9 +268,12 @@ export default function Home() {
 
         <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
           <div className="">
-            <div className="flex justify-between items-center">
+            <div className="">
               <p className="text-gray-900 text-base">
                 {resultCount} Results found
+              </p>
+              <p className="text-gray-900 mt-1 text-base">
+                ({resultCount} of 745) voted
               </p>
             </div>
 
@@ -287,13 +289,18 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="w-screen overflow-hidden">
-                  {/* Clothing */}
-
                   <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper slidesPerView="auto" spaceBetween={14} navigation>
+                    <Swiper
+                      slidesPerView="auto"
+                      spaceBetween={14}
+                      navigation
+                    >
                       {listings.map((row, index) => {
                         return (
-                          <SwiperSlide key={index} className="!w-64">
+                          <SwiperSlide
+                            key={index}
+                            className="!w-64"
+                          >
                             <div
                               style={{
                                 boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
@@ -315,22 +322,54 @@ export default function Home() {
                                   onClick={(e) => toggleLike(index, e)}
                                   className=" cursor-pointer hover:opacity-90 w-16 h-16 rounded-full flex items-center justify-center"
                                 >
-                                  <svg xmlns="http://www.w3.org/2000/svg" class={`w-12 h-12 ${row.isLiked ? 'stroke-yellow-400 ' : ''}`} width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class={`w-12 h-12 ${
+                                      row.isLiked ? "stroke-yellow-400 " : ""
+                                    }`}
+                                    width="44"
+                                    height="44"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="#2c3e50"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  >
+                                    <path
+                                      stroke="none"
+                                      d="M0 0h24v24H0z"
+                                      fill="none"
+                                    />
                                     <path d="M10.363 20.405l-8.106 -13.534a1.914 1.914 0 0 1 1.636 -2.871h16.214a1.914 1.914 0 0 1 1.636 2.871l-8.106 13.534a1.914 1.914 0 0 1 -3.274 0z" />
                                   </svg>
-
                                 </button>
 
                                 <button
                                   onClick={(e) => toggleUnLike(index, e)}
                                   className=" cursor-pointer hover:opacity-90 w-16 h-16 rounded-full flex items-center justify-center"
                                 >
-                                  <svg xmlns="http://www.w3.org/2000/svg" class={`w-12 h-12 ${row.isUnLiked ? 'stroke-green-400 ' : ''}`} width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class={`w-12 h-12 ${
+                                      row.isUnLiked ? "stroke-green-400 " : ""
+                                    }`}
+                                    width="44"
+                                    height="44"
+                                    viewBox="0 0 24 24"
+                                    stroke-width="1.5"
+                                    stroke="#2c3e50"
+                                    fill="none"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  >
+                                    <path
+                                      stroke="none"
+                                      d="M0 0h24v24H0z"
+                                      fill="none"
+                                    />
                                     <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
                                   </svg>
-
                                 </button>
                                 <h3 className="text-gray-500 font-base absolute right-4 bottom-2">
                                   {moment(row.createdAt).fromNow()}
