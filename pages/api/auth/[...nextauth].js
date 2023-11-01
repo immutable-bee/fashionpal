@@ -42,9 +42,8 @@ export const authOptions = {
           .replace(/{{cta1}}/g, url)
           .replace("{{logo}}", logo);
 
-        // now you should send the email using your transporter
         await transporter.sendMail({
-          from: `"BiblioPal" <${process.env.EMAIL_FROM}>`,
+          from: `"FashionPal" <${process.env.EMAIL_FROM}>`,
           to: email,
           subject: "Sign in link",
           html: emailBody,
@@ -58,7 +57,6 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-
   session: {
     strategy: "jwt",
   },
@@ -79,7 +77,6 @@ export const authOptions = {
           user.id = emailUser.id;
         }
       }
-
       return true;
     },
   },

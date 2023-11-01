@@ -7,29 +7,127 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Listing {
-  id             Int       @id @default(autoincrement())
-  mainImage      Json?
-  brandImage     Json?
-  createdAt      DateTime? @default(now())
-  updatedAt      DateTime? @updatedAt
-  matches        Boolean   @default(false)
-  category       String
-  subCategoryOne String
-  subCategoryTwo String
-  isLiked        Boolean   @default(false)
-  isUnLiked      Boolean   @default(false)
-  tags           String[]
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
-model Sale {
-  id              Int       @id @default(autoincrement())
-  name            String
-  discount_amount String
-  start_date      DateTime
-  end_date        DateTime
-  is_liked        Boolean   @default(false)
-  createdAt       DateTime? @default(now())
-  updatedAt       DateTime? @updatedAt
-  items           String[]
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  name                String?
+  email               String?   @unique
+  emailVerified       DateTime?
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  onboardingComplete Boolean   @default(false)
+  business Business?
+  consumer Consumer?
+}
+
+model Business {
+  id                      String       @id @default(uuid())
+  user                    User         @relation(fields: [uid], references: [id])
+  uid                     String       @unique
+  businessName           String
+  email                   String       @unique
+  businessState          String
+  businessCity           String
+  businessStreet         String
+  businessZip            String
+  url                     String?
+  phoneNumber            String?
+  listings                Listing[]
+}
+
+model Consumer {
+  id              String   @id @default(uuid())
+  user            User     @relation(fields: [uid], references: [id])
+  uid             String   @unique
+  username        String
+  email           String   @unique
+  emailAlertsOn Boolean  @default(true)
+  votes Vote[]
+
+}
+
+model Vote {
+  id String @id @default(uuid())
+  user Consumer @relation(fields: [userId], references: [id])
+  userId String
+  listing Listing @relation(fields: [listingId], references: [id])
+  listingId String
+  date DateTime @default(now())
+  type VoteType @default(UP)
+}
+
+
+model Category {
+  id String @id @default(uuid())
+  name String
+  listings CategoriesOnListings []
+}
+
+model CategoriesOnListings {
+  id String @id @default(uuid())
+  listing Listing @relation(fields: [listingId], references: [id])
+  listingId String
+  category Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+}
+
+
+model Listing {
+  id                String    @id @default(cuid())
+  mainImage         Json?
+  brandImage        Json?
+  dataSource        String?
+  price             Int?
+  delivery          String?
+  tags              String[]
+  isDisposed Boolean @default(false)
+  isActive Boolean @default(true)
+  createdAt         DateTime? @default(now())
+  updatedAt         DateTime?
+  daysToExpiry Int @default(7)
+  Business          Business? @relation(fields: [businessId], references: [id])
+  businessId        String?
+  categories CategoriesOnListings[]
+  votes Vote[]
+
+}
+
+enum VoteType {
+  UP
+  DOWN
 }

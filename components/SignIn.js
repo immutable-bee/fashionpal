@@ -72,15 +72,8 @@ const SignIn = ({ props }) => {
       >
         <div className="bg-white sm:pt-12 sm:pb-3 sm:border rounded-3xl sm:border-gray-700 min-h-screen sm:min-h-[auto] sm:block flex items-center sm:max-w-lg w-full mx-auto px-4 sm:px-12">
           <div className="w-full">
-            <div
-              id="logo-container"
-              className="flex justify-center mb-4"
-            >
-              <Image
-                src={Logo}
-                alt="Logo"
-                className="!w-56"
-              />
+            <div id="logo-container" className="flex justify-center mb-4">
+              <Image src={Logo} alt="Logo" className="!w-56" />
             </div>
 
             <div className="auth-content-container">
@@ -122,11 +115,7 @@ const SignIn = ({ props }) => {
                 ) : loading ? (
                   <Loading className="self-center mt-4" />
                 ) : (
-                  <Button
-                    id="login-btn"
-                    className="w-full"
-                    type="submit"
-                  >
+                  <Button id="login-btn" className="w-full mt-5" type="submit">
                     Continue with email
                   </Button>
                 )}
@@ -144,14 +133,17 @@ const SignIn = ({ props }) => {
                   </span>
                 </div>
               </div>
-              <div id="social-auth-container">
+              <div
+                id="social-auth-container"
+                className="w-full flex justify-center"
+              >
                 <Button
                   size={""}
-                  className="social-provider-btn"
+                  className="social-provider-btn rounded-full"
                   onClick={handle0AuthSignIn(providers[0].name)}
                   icon={
                     <Image
-                      className="w-6"
+                      className=""
                       src={providers[0].icon}
                       alt={`${providers[0].name} icon`}
                       width="35"
@@ -161,8 +153,7 @@ const SignIn = ({ props }) => {
                 ></Button>
               </div>
               <p className="text-center pt-2 text-sm">
-                You will be able to choose your account type (Reader, Seller)
-                after signup.
+                You will be able to choose your account type after signup.
               </p>
               {/* Add terms of service */}
               <h6 className="text-xs text-center text-gray-500 mt-3"></h6>
