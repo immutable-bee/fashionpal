@@ -99,13 +99,13 @@ const OnboardingContainer = () => {
                   onClick={handleConsumerOnboard}
                   className=" text-white w-4/5 py-5 my-10 border border-black bg-blbBlue rounded"
                 >
-                  Reader
+                  Business
                 </button>
                 <button
                   onClick={handleBusinessOnboard}
                   className="text-white w-4/5 py-5 my-5 border border-black bg-biblioGreen rounded"
                 >
-                  Seller
+                  Consumer
                 </button>
               </div>
             </>
@@ -139,8 +139,8 @@ const OnboardingContainer = () => {
             <div className="flex flex-col items-center">
               <h2 className="pt-5 text-lg font-medium text-center">
                 Your account has been confirmed! You can now start using
-                FashionPal. You will be redirected in 10 seconds or you can click
-                the button below to enter FashionPal
+                FashionPal. You will be redirected in 10 seconds or you can
+                click the button below to enter FashionPal
               </h2>
               <Link href={userType === "consumer" ? "/consumer" : "/business"}>
                 <Button className="mt-5" type="submit">
