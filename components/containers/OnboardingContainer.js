@@ -4,8 +4,10 @@ import { Button, Loading, Input } from "@nextui-org/react";
 import OnboardingForm from "../OnboardingForm";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useUser } from "../../context/UserContext";
 
 const OnboardingContainer = () => {
+  const { user } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
@@ -61,21 +63,23 @@ const OnboardingContainer = () => {
   };
 
   useEffect(() => {
-    if (isOnboardingCompleted) {
-      if (userType === "consumer") {
-        setTimeout(() => {
-          router.push("/consumer");
-        }, [10000]);
-      }
+    if (user) {
+      if (isOnboardingCompleted || user.onboardingComplete) {
+        if (userType === "consumer" || user.consumer) {
+          setTimeout(() => {
+            router.push("/consumer");
+          }, [10000]);
+        }
 
-      if (userType === "business") {
-        setTimeout(() => {
-          router.push("/business");
-        }, [10000]);
+        if (userType === "business" || user.business) {
+          setTimeout(() => {
+            router.push("/business");
+          }, [10000]);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOnboardingCompleted, userType]);
+  }, [isOnboardingCompleted, userType, user]);
 
   return (
     <AuthContainer

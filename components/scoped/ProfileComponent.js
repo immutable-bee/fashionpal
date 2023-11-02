@@ -44,7 +44,7 @@ const Profilecomponent = () => {
     if (response.ok) {
       setBusinessStats(data);
     } else {
-      console.error("Failed to fetch business stats:", data.error);
+      return console.error("Failed to fetch business stats:", data.error);
     }
   };
 
