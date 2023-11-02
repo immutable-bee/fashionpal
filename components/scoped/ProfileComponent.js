@@ -4,6 +4,7 @@ import Head from "next/head";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import ButtonComponent from "@/components/utility/Button";
 import { Loading } from "@nextui-org/react";
+import { signOut } from "next-auth/react";
 
 const Profilecomponent = () => {
   // const { user, updateUserUsername, fetchUserData } = useUser();
@@ -20,6 +21,7 @@ const Profilecomponent = () => {
   };
 
   const handleSubmit = (e) => {
+    // add check for empty input on store name or email
     e.preventDefault();
     console.log(user);
   };
