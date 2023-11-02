@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeaderComponent from "@/components/utility/Header";
 import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import ButtonComponent from "@/components/utility/Button";
@@ -9,6 +9,7 @@ import { Loading } from "@nextui-org/react";
 const ProfileComponent = ({}) => {
   const [user, setUser] = useState({});
   const [consumerStats, setConsumerStats] = useState();
+  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,7 +128,7 @@ const ProfileComponent = ({}) => {
                       </td>
                       {consumerStats ? (
                         <td class="px-6 py-4">
-                          {consumerStats.mostCommonUpVoteCategory}
+                          {consumerStats.mostCommonUpvoteCategory}
                         </td>
                       ) : (
                         <td class="px-6 py-4">
