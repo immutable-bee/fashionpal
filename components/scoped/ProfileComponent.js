@@ -110,7 +110,9 @@ const Profilecomponent = () => {
                       {businessStats ? (
                         <td class="px-6 py-4">{businessStats.totalListings}</td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -123,7 +125,9 @@ const Profilecomponent = () => {
                           {businessStats.mostCommonCategory}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -133,7 +137,9 @@ const Profilecomponent = () => {
                           {businessStats.disposedListings}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -143,7 +149,9 @@ const Profilecomponent = () => {
                           {businessStats.listingsToSell}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -153,7 +161,9 @@ const Profilecomponent = () => {
                           {businessStats.percentageDownVoted}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -163,7 +173,9 @@ const Profilecomponent = () => {
                           {businessStats.percentageUpVoted}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                   </tbody>

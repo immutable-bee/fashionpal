@@ -115,7 +115,9 @@ const ProfileComponent = ({}) => {
                           {consumerStats.votesInDateRange}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -128,7 +130,9 @@ const ProfileComponent = ({}) => {
                           {consumerStats.mostCommonUpVoteCategory}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -138,7 +142,9 @@ const ProfileComponent = ({}) => {
                           {consumerStats.upvotedListings}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -148,7 +154,9 @@ const ProfileComponent = ({}) => {
                           {consumerStats.downvotedListings}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -158,7 +166,9 @@ const ProfileComponent = ({}) => {
                           {consumerStats.percentUpvotedListings}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
@@ -168,7 +178,9 @@ const ProfileComponent = ({}) => {
                           {consumerStats.percentDownvotedListings}
                         </td>
                       ) : (
-                        <Loading />
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
                       )}
                     </tr>
                   </tbody>
