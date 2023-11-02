@@ -76,6 +76,10 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!session && router.pathname !== "localhost:3000/") {
+      router.push("/auth");
+    }
+
     if (session) {
       fetchUserData();
       if (user) {
