@@ -147,7 +147,7 @@ const Profilecomponent = () => {
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> % down voted10</td>
+                      <td class="text-black px-6 py-4"> % down voted</td>
                       {businessStats ? (
                         <td class="px-6 py-4">
                           {businessStats.percentageDownVoted}
