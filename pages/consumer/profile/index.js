@@ -4,8 +4,11 @@ import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import ButtonComponent from "@/components/utility/Button";
 import { useUser } from "@/context/UserContext";
 import { signOut } from "next-auth/react";
+import { Loading } from "@nextui-org/react";
+
 const ProfileComponent = ({}) => {
   const [user, setUser] = useState({});
+  const [consumerStats, setConsumerStats] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,19 +33,31 @@ const ProfileComponent = ({}) => {
     setUser({ ...user, [name]: value });
   };
 
-  const manageSubscriptionModalHandler = () => {
-    setIsManageSubscriptionModalOpen(!isManageSubscriptionModalOpen);
+  const fetchConsumerStats = async (dateTo = null, dateFrom = null) => {
+    const path =
+      dateTo && dateFrom
+        ? `/api/consumer/fetchStats?dateTo=${dateTo}&dateFrom=${dateFrom}`
+        : "/api/consumer/fetchStats";
+
+    const response = await fetch(path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setConsumerStats(data);
+    } else {
+      return console.error("Failed to fetch business stats:", data.error);
+    }
   };
 
-  const handleSubscriptionModal = () => {
-    // subscriptionStatus === "Not Subscribed"
-    //     ?
-    setIsSubscriptionModalOpen(!isSubscriptionModalOpen);
-    // :
-    // setIsManageSubscriptionModalOpen(!isManageSubscriptionModalOpen);
-  };
-
-  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+  useEffect(() => {
+    fetchConsumerStats();
+  }, []);
 
   return (
     <div className="min-h-screen bg-white ">
@@ -52,10 +67,7 @@ const ProfileComponent = ({}) => {
           <h1 className="text-lg sm:text-2xl font-medium text-center ">
             Profile Page
           </h1>
-          <form
-            onSubmit={handleSubmit}
-            className="mt-2 sm:mt-6"
-          >
+          <form onSubmit={handleSubmit} className="mt-2 sm:mt-6">
             <div className="py-2">
               <label className="text-sm text-gray-700">Username</label>
               <input
@@ -75,11 +87,7 @@ const ProfileComponent = ({}) => {
               />
             </div>
 
-            <ButtonComponent
-              rounded
-              full
-              type="submit"
-            >
+            <ButtonComponent rounded full type="submit">
               Update
             </ButtonComponent>
 
@@ -88,17 +96,11 @@ const ProfileComponent = ({}) => {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Label
                       </th>
 
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Value
                       </th>
                     </tr>
@@ -106,32 +108,68 @@ const ProfileComponent = ({}) => {
                   <tbody>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4">
-                        This months # of scans
+                        This months # of votes
                       </td>
-                      <td class="px-6 py-4">10</td>
+                      {consumerStats ? (
+                        <td class="px-6 py-4">
+                          {consumerStats.votesInDateRange}
+                        </td>
+                      ) : (
+                        <Loading />
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4">
                         {" "}
                         Most common category
                       </td>
-                      <td class="px-6 py-4">10</td>
+                      {consumerStats ? (
+                        <td class="px-6 py-4">
+                          {consumerStats.mostCommonUpVoteCategory}
+                        </td>
+                      ) : (
+                        <Loading />
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # disposed</td>
-                      <td class="px-6 py-4">10</td>
+                      <td class="text-black px-6 py-4"> # up voted</td>
+                      {consumerStats ? (
+                        <td class="px-6 py-4">
+                          {consumerStats.upvotedListings}
+                        </td>
+                      ) : (
+                        <Loading />
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # to sell</td>
-                      <td class="px-6 py-4">10</td>
+                      <td class="text-black px-6 py-4"> # down voted</td>
+                      {consumerStats ? (
+                        <td class="px-6 py-4">
+                          {consumerStats.downvotedListings}
+                        </td>
+                      ) : (
+                        <Loading />
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> % down voted10</td>
-                      <td class="px-6 py-4">10</td>
+                      <td class="text-black px-6 py-4"> % up voted</td>
+                      {consumerStats ? (
+                        <td class="px-6 py-4">
+                          {consumerStats.percentUpvotedListings}
+                        </td>
+                      ) : (
+                        <Loading />
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4">% up voted</td>
-                      <td class="px-6 py-4">10</td>
+                      {consumerStats ? (
+                        <td class="px-6 py-4">
+                          {consumerStats.percentDownvotedListings}
+                        </td>
+                      ) : (
+                        <Loading />
+                      )}
                     </tr>
                   </tbody>
                 </table>
@@ -139,22 +177,13 @@ const ProfileComponent = ({}) => {
             </div>
 
             <div className="mt-5">
-              <ButtonComponent
-                className="my-7"
-                color="secondary"
-                rounded
-                full
-              >
+              <ButtonComponent className="my-7" color="secondary" rounded full>
                 Connect venmo/paypal
               </ButtonComponent>
             </div>
           </form>
           <div className="mt-4 w-full max-w-lg">
-            <ButtonComponent
-              full
-              rounded
-              onClick={() => signOut()}
-            >
+            <ButtonComponent full rounded onClick={() => signOut()}>
               Sign Out
             </ButtonComponent>
           </div>
