@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import ButtonComponent from "@/components/utility/Button";
+import SimilarProducts from "@/components/scoped/SimilarProducts";
 import Capture from "@/components/utility/Capture";
 import { QRCode } from "react-qrcode-logo";
-import LoadingComponent from "../utility/loading";
 import moment from "moment";
 function ImageUploader({ onBack, onFecth }) {
   const [price, setPrice] = useState(0);
@@ -45,8 +45,6 @@ function ImageUploader({ onBack, onFecth }) {
       brandTag: null,
     });
   };
-
-  const [activeResultIndex, setActiveResultIndex] = useState(0);
 
   const [uploadedImages, setUploadedImages] = useState({
     main: null,
@@ -119,7 +117,6 @@ function ImageUploader({ onBack, onFecth }) {
             // After capturing the brandTag image:
             setShowCamera(false); // Hide the camera
             setStep(2); // Move to the next step
-            fetchSimilarProducts();
 
             const tags = [];
 
@@ -157,7 +154,6 @@ function ImageUploader({ onBack, onFecth }) {
     } else if (currentPhotoType === "brandTag") {
       setShowCamera(false); // Hide the camera
       setStep(2); // Move to the next step
-      fetchSimilarProducts();
 
       const tags = [];
 
@@ -375,10 +371,7 @@ function ImageUploader({ onBack, onFecth }) {
       link.click();
     }
   };
-  const onSelectSimilarProduct = (key) => {
-    const row = similarProducts[key];
-    setActiveResultIndex(key);
-    console.log(row);
+  const onSelectSimilarProduct = (row) => {
     setPrice(
       (
         Math.round(
@@ -569,52 +562,10 @@ function ImageUploader({ onBack, onFecth }) {
                   <h3 className="!text-2xl">Similar Online Listings: </h3>
                 </div>
 
-                {!fetchingSimilarProducts ? (
-                  <div className="mt-3 flex overflow-x-auto">
-                    {similarProducts.map((row, key) => (
-                      <div
-                        key={key}
-                        className="mx-2 w-48 cursor-pointer"
-                        onClick={() => onSelectSimilarProduct(key)}
-                      >
-                        <div
-                          className={`${
-                            activeResultIndex === key
-                              ? "border-[3px] border-green-600"
-                              : "border-2 border-primary"
-                          } flex items-center justify-center rounded-2xl px-4 py-5 !w-48 !h-48 flex-shrink-0 my-1 relative`}
-                        >
-                          <img
-                            src={row.image}
-                            alt={"Main Photo"}
-                            className="rounded max-w-full max-h-full"
-                          />
-                        </div>
-                        <div
-                          key={key}
-                          className="mt-2 mx-1 w-full"
-                        >
-                          <h3 className="text-2xl text-center truncate">
-                            {row.name}
-                          </h3>
-                          <h3 className="text-2xl text-center">
-                            {row.price ? "$" + row.price : "No price"}
-                          </h3>
-                          <div className="flex justify-center">
-                            <button
-                              onClick={() => viewProduct(row.link)}
-                              className="underline text-2xl"
-                            >
-                              View
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <LoadingComponent size="sm" />
-                )}
+                <SimilarProducts
+                  imageUrl={uploadedImages.main.url}
+                  onSelect={onSelectSimilarProduct}
+                />
               </div>
             </div>
 
@@ -712,14 +663,14 @@ function ImageUploader({ onBack, onFecth }) {
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-3 mt-8">
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
               <button
                 onClick={() => uploadListingOrPrintSKU()}
                 className={`${
                   fetchingSimilarProducts || tagFetching
                     ? " pointer-events-none bg-gray-300"
                     : ""
-                } hover:bg-red-500 hover:text-white duration-300 min-w-[100px] ease-in-out  rounded px-10 text-xl py-2.5  border border-gray-300`}
+                } hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
               >
                 Dispose
               </button>
@@ -730,7 +681,7 @@ function ImageUploader({ onBack, onFecth }) {
                   fetchingSimilarProducts || tagFetching
                     ? " pointer-events-none bg-gray-300"
                     : ""
-                } hover:bg-green-500 hover:text-white duration-300 min-w-[100px] ease-in-out rounded px-10 text-xl py-2.5  border border-gray-300`}
+                } hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
               >
                 Sell
               </button>

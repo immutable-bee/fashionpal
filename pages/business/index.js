@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import { NotificationManager } from "react-notifications";
@@ -17,7 +16,6 @@ import cloneDeep from "lodash.clonedeep";
 export default function Home() {
   // add
   const { data: session } = useSession();
-  const router = useRouter();
 
   console.log(session);
 
@@ -99,9 +97,6 @@ export default function Home() {
 
   const [mode, setMode] = useState("view");
 
-  const [loadingSearchResults, setLoadingSearchResults] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-
   const fetchListings = useCallback(
     async (e) => {
       setLoadingListings(true);
@@ -164,7 +159,6 @@ export default function Home() {
     setListings(newListing);
   };
 
-  const onPageChange = (page) => {};
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -206,7 +200,7 @@ export default function Home() {
               </div>
 
               <div className="w-full">
-                {loadingListings || loadingSearchResults ? (
+                {loadingListings ? (
                   <div className="sm:flex justify-center pb-10">
                     <div>
                       <div className="pt-2.5 mt-10">

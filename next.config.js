@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    GOOGLE_APPLICATION_CREDENTIALS: './google-cloud-key.json',
+    GOOGLE_APPLICATION_CREDENTIALS: "./google-cloud-key.json",
   },
   images: {
-    domains: ['afmipzwmfcoduhcmwowr.supabase.co'],
+    domains: ["afmipzwmfcoduhcmwowr.supabase.co"],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;

@@ -4,8 +4,6 @@ import axios from "axios";
 import ButtonComponent from "@/components/utility/Button";
 import Capture from "@/components/utility/Capture";
 import Image from "next/image";
-import LoadingComponent from "@/components/utility/loading";
-
 import moment from "moment";
 
 function ImageUploader({ onBack, onFecth }) {
