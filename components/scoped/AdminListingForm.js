@@ -5,59 +5,23 @@ import ButtonComponent from "@/components/utility/Button";
 import SimilarProducts from "@/components/scoped/SimilarProducts";
 import Capture from "@/components/utility/Capture";
 import { QRCode } from "react-qrcode-logo";
+import Image from "next/image";
 import moment from "moment";
-function ImageUploader({ onBack, onFecth }) {
+function AdminListingForm({ onBack, onFecth }) {
   const [price, setPrice] = useState(0);
-
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-1);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-
-  const [fetchingSimilarProducts, setFetchingSimilarProducts] = useState(false);
-
-  const [similarProducts, setSimilarProducts] = useState([]);
   const [category, setCategory] = useState("");
-  const [tags, setTags] = useState([]);
-
-  const [listType, setListType] = useState("dispose");
-  const [subCategoryOne, setSubCategoryOne] = useState("");
-  const [subCategoryTwo, setSubCategoryTwo] = useState("");
-
   const [tagFetching, setTagFetching] = useState(false);
-
-  const resetAllVariables = () => {
-    setPrice(0);
-
-    setStartTime("");
-    setEndTime("");
-
-    setFetchingSimilarProducts(false);
-
-    setSimilarProducts([]);
-    setCategory("");
-    setTags([]);
-    setListType("dispose");
-    setSubCategoryOne("");
-    setSubCategoryTwo("");
-    setCurrentPhotoType("main");
-    setUploadedImages({
-      main: null,
-      brandTag: null,
-    });
-  };
-
   const [uploadedImages, setUploadedImages] = useState({
     main: null,
     brandTag: null,
   });
-
   const [listings, setListings] = useState([]);
-
   const [uploading, setUploading] = useState(false);
   const [step, setStep] = useState(1);
-
   const [imageUploading, setImageUploading] = useState(false);
-
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
 
   //
@@ -68,10 +32,26 @@ function ImageUploader({ onBack, onFecth }) {
 
   const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
 
+  const resetAllVariables = () => {
+    setPrice(0);
+    setStartTime("");
+    setEndTime("");
+    setFetchingSimilarProducts(false);
+    setCategory("");
+    setListType("dispose");
+    setSubCategoryOne("");
+    setSubCategoryTwo("");
+    setCurrentPhotoType("main");
+    setUploadedImages({
+      main: null,
+      brandTag: null,
+    });
+  };
+
   const onCapture = async (e) => {
     const imageSrc = e;
     if (imageSrc) {
-      const file = dataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
+      const file = convertDataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
 
       // Set loading to true while uploading
       setImageUploading(true);
@@ -180,7 +160,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const dataURLtoFile = (dataurl, filename) => {
+  const convertDataURLtoFile = (dataurl, filename) => {
     let arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
@@ -192,40 +172,10 @@ function ImageUploader({ onBack, onFecth }) {
     return new File([u8arr], filename, { type: mime });
   };
 
-  const fetchSimilarProducts = async () => {
-    setFetchingSimilarProducts(true);
-    try {
-      const url = `/api/getSimilarProducts?url=${uploadedImages.main.url}`;
-
-      const response = await fetch(url);
-      setFetchingSimilarProducts(false);
-      if (response.ok) {
-        const data = await response.json();
-        setSimilarProducts(data);
-        if (similarProducts.length !== 0) {
-          onSelectSimilarProduct(0);
-        }
-      } else {
-        console.error(
-          "Failed to fetch similar products:",
-          response.status,
-          response.statusText
-        );
-      }
-    } catch (error) {
-      setFetchingSimilarProducts(false);
-      console.error(
-        "An error occurred while fetching similar products:",
-        error
-      );
-    }
-  };
-
-  const uploadListingOrPrintSKU = async () => {
+  const onUploadAll = async () => {
     setUploading(true);
     let JSON = {
       type: "admin",
-      list_type: listType,
       tags: uploadedImages.tags,
       mainImage: uploadedImages.main.url,
     };
@@ -248,14 +198,16 @@ function ImageUploader({ onBack, onFecth }) {
 
       setListings(newListing);
 
-      resetAllVariables();
-
-      setStep(3);
-
       NotificationManager.success("Listing added successfully!");
     } catch (error) {
       console.error(error);
     } finally {
+      setEndTime(moment().format("HH:mm:ss"));
+      onFecth();
+
+      resetAllVariables();
+
+      setStep(3);
       setUploading(false);
     }
   };
@@ -289,65 +241,12 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result.split(",")[1]); // split to get only Base64 value
-      reader.onerror = (error) => reject(error);
-    });
-  };
-
-  const handleAdminUploadAll = async () => {
+  const onStop = async () => {
     setStep(4);
   };
 
-  const handleUploadAll = async () => {
-    setUploading(true);
-
-    const convertedListings = await Promise.all(
-      listings.map(async (listing) => {
-        const mainImageUrl = listing.items.main.image;
-        const brandImageUrl = listing.items.brandTag
-          ? listing.items.brandTag.image
-          : null;
-
-        return {
-          type: "simple",
-          mainImage: mainImageUrl,
-          brandImage: brandImageUrl,
-          category: category,
-          subCategoryOne: subCategoryOne,
-          subCategoryTwo: subCategoryTwo,
-          tags: listing.tags,
-        };
-      })
-    );
-
-    try {
-      const requests = convertedListings.map((listing) =>
-        axios.post("/api/add-listing", { listing })
-      );
-
-      const responses = await axios.all(requests);
-      const results = responses.map((response) => response.data);
-
-      onFecth();
-      NotificationManager.success("Listing added successfully!");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setUploading(false);
-      onBack();
-    }
-  };
-
-  const openCameraForAdmin = () => {
+  const openCamera = () => {
     setShowCamera(true);
-  };
-
-  const viewProduct = (link) => {
-    window.open(link, "blank");
   };
 
   const downloadCustomerQRCode = () => {
@@ -361,7 +260,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const downloadAdminQRCode = () => {
+  const downloadQRCode = () => {
     const canvas = document.querySelector("#admin-qrcode");
 
     if (canvas) {
@@ -371,6 +270,7 @@ function ImageUploader({ onBack, onFecth }) {
       link.click();
     }
   };
+
   const onSelectSimilarProduct = (row) => {
     setPrice(
       (
@@ -442,7 +342,7 @@ function ImageUploader({ onBack, onFecth }) {
                 ) : (
                   <div>
                     <div
-                      onClick={() => openCameraForAdmin()}
+                      onClick={() => openCamera()}
                       className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
                     >
                       <div>
@@ -474,7 +374,7 @@ function ImageUploader({ onBack, onFecth }) {
                       <ButtonComponent
                         loading={uploading}
                         full
-                        onClick={() => handleAdminUploadAll()}
+                        onClick={() => onStop()}
                         className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}
                       >
                         Stop
@@ -521,9 +421,11 @@ function ImageUploader({ onBack, onFecth }) {
                 {uploadedImages.main ? (
                   <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                     <div className="w-full flex items-center justify-center">
-                      <img
+                      <Image
                         src={uploadedImages.main.image}
                         alt={"Main Photo"}
+                        width={250}
+                        height={250}
                         className="rounded-xl max-w-full max-h-full"
                       />
                     </div>
@@ -531,6 +433,7 @@ function ImageUploader({ onBack, onFecth }) {
                 ) : (
                   ""
                 )}
+
                 {/* {isOptionToEdit ? (
                         <>
                           {!tagFetching ? (
@@ -665,22 +568,18 @@ function ImageUploader({ onBack, onFecth }) {
 
             <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
               <button
-                onClick={() => uploadListingOrPrintSKU()}
+                onClick={() => onUploadAll()}
                 className={`${
-                  fetchingSimilarProducts || tagFetching
-                    ? " pointer-events-none bg-gray-300"
-                    : ""
+                  tagFetching ? " pointer-events-none bg-gray-300" : ""
                 } hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
               >
                 Dispose
               </button>
               <button
-                disabled={fetchingSimilarProducts || tagFetching}
-                onClick={() => uploadListingOrPrintSKU()}
+                disabled={tagFetching}
+                onClick={() => onUploadAll()}
                 className={`${
-                  fetchingSimilarProducts || tagFetching
-                    ? " pointer-events-none bg-gray-300"
-                    : ""
+                  tagFetching ? " pointer-events-none bg-gray-300" : ""
                 } hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
               >
                 Sell
@@ -753,7 +652,7 @@ function ImageUploader({ onBack, onFecth }) {
                 <div className="flex justify-center">
                   <button
                     className="underline text-lg"
-                    onClick={downloadAdminQRCode}
+                    onClick={downloadQRCode}
                   >
                     Download QR Code (Admin)
                   </button>
@@ -842,4 +741,4 @@ function ImageUploader({ onBack, onFecth }) {
   );
 }
 
-export default ImageUploader;
+export default AdminListingForm;

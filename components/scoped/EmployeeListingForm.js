@@ -6,13 +6,26 @@ import Capture from "@/components/utility/Capture";
 import Image from "next/image";
 import moment from "moment";
 
-function ImageUploader({ onBack, onFecth }) {
+function EmployeeListingForm({ onBack, onFecth }) {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-
   const [employeeName, setEmployeeName] = useState("");
-
   const [listType, setListType] = useState("dispose");
+  const [uploadedImages, setUploadedImages] = useState({
+    main: null,
+    brandTag: null,
+  });
+  const [listings, setListings] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [step, setStep] = useState(1);
+  const [photoUploading, setphotoUploading] = useState(false);
+  const [currentPhotoType, setCurrentPhotoType] = useState("main");
+  const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
+
+  //
+  useEffect(() => {
+    setStartTime(moment().format("HH:mm:ss"));
+  }, []);
 
   const resetAllVariables = () => {
     setStartTime("");
@@ -26,35 +39,13 @@ function ImageUploader({ onBack, onFecth }) {
     });
   };
 
-  const [uploadedImages, setUploadedImages] = useState({
-    main: null,
-    brandTag: null,
-  });
-
-  const [listings, setListings] = useState([]);
-
-  const [uploading, setUploading] = useState(false);
-  const [step, setStep] = useState(1);
-
-  const [imageUploading, setImageUploading] = useState(false);
-
-  const [currentPhotoType, setCurrentPhotoType] = useState("main");
-
-  //
-
-  useEffect(() => {
-    setStartTime(moment().format("HH:mm:ss"));
-  }, []);
-
-  const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
-
-  const onCapture = async (e) => {
+  const uploadMainOrBrandTagPhoto = async (e) => {
     const imageSrc = e;
     if (imageSrc) {
-      const file = dataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
+      const file = convertDataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
 
       // Set loading to true while uploading
-      setImageUploading(true);
+      setphotoUploading(true);
 
       try {
         const response = await fetch("/api/upload-image", {
@@ -129,7 +120,7 @@ function ImageUploader({ onBack, onFecth }) {
         console.error("Error uploading image:", error);
       } finally {
         // Set loading back to false after the upload is complete
-        setImageUploading(false);
+        setphotoUploading(false);
       }
     } else if (currentPhotoType === "brandTag") {
       setShowCamera(false); // Hide the camera
@@ -160,7 +151,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const dataURLtoFile = (dataurl, filename) => {
+  const convertDataURLtoFile = (dataurl, filename) => {
     let arr = dataurl.split(","),
       mime = arr[0].match(/:(.*?);/)[1],
       bstr = atob(arr[1]),
@@ -172,7 +163,7 @@ function ImageUploader({ onBack, onFecth }) {
     return new File([u8arr], filename, { type: mime });
   };
 
-  const handleEmployeeListMore = () => {
+  const onListMore = () => {
     const newListing = listings;
     newListing.push({
       employee_name: employeeName,
@@ -219,7 +210,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const handleEmployeeUploadAll = async () => {
+  const onUploadAll = async () => {
     setUploading(true);
 
     const convertedListings = await Promise.all(
@@ -247,8 +238,7 @@ function ImageUploader({ onBack, onFecth }) {
         axios.post("/api/add-listing", { listing })
       );
 
-      const responses = await axios.all(requests);
-      const results = responses.map((response) => response.data);
+      await axios.all(requests);
 
       NotificationManager.success("Listing added successfully!");
     } catch (error) {
@@ -262,7 +252,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const openCameraForEmployee = () => {
+  const openCamera = () => {
     if (employeeName) {
       setShowCamera(true);
     } else {
@@ -299,15 +289,15 @@ function ImageUploader({ onBack, onFecth }) {
             <div className="flex justify-center mt-8 rounded-2xl mx-auto gap-2">
               {showCamera ? (
                 <Capture
-                  onCapture={onCapture}
-                  loading={imageUploading}
+                  onCapture={uploadMainOrBrandTagPhoto}
+                  loading={photoUploading}
                   skip={currentPhotoType === "main" ? false : true}
                   text={currentPhotoType === "main" ? "Main Image" : "BrandTag"}
                 />
               ) : (
                 <div>
                   <div
-                    onClick={() => openCameraForEmployee()}
+                    onClick={() => openCamera()}
                     className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
                   >
                     <div>
@@ -339,7 +329,7 @@ function ImageUploader({ onBack, onFecth }) {
                     <ButtonComponent
                       loading={uploading}
                       full
-                      onClick={() => handleEmployeeUploadAll()}
+                      onClick={() => onUploadAll()}
                       className={`!mt-12 mx-auto !w-64 rounded-lg !text-black`}
                     >
                       Stop
@@ -421,13 +411,13 @@ function ImageUploader({ onBack, onFecth }) {
 
             <div className="flex flex-wrap items-center justify-center gap-3 mt-5">
               <button
-                onClick={() => handleEmployeeListMore()}
+                onClick={() => onListMore()}
                 className={` hover:bg-red-400 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
               >
                 Dispose
               </button>
               <button
-                onClick={() => handleEmployeeListMore()}
+                onClick={() => onListMore()}
                 className={` hover-bg-primary hover:text-white duration-250 min-w-[100px] ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
               >
                 Keep
@@ -519,4 +509,4 @@ function ImageUploader({ onBack, onFecth }) {
   );
 }
 
-export default ImageUploader;
+export default EmployeeListingForm;

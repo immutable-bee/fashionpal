@@ -1,45 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NotificationManager } from "react-notifications";
 import Image from "next/image";
 import axios from "axios";
 import ButtonComponent from "@/components/utility/Button";
 import LoadingComponent from "@/components/utility/loading";
 import TagsInput from "react-tagsinput";
-import "react-tagsinput/react-tagsinput.css";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
-
 import cloneDeep from "lodash.clonedeep";
-
 import EditTagsModalOffline from "@/components/utility/EditTagsModalOffline";
 import ListingItem from "@/components/utility/ListingItem";
-import moment from "moment";
 
-function ImageUploader({ onBack, onFecth }) {
-  const [startTime, setStartTime] = useState("");
+import "react-tagsinput/react-tagsinput.css";
+
+function SimpleListingForm({ onBack, onFecth }) {
   const [tagFetching, setTagFetching] = useState(false);
-
   const [photoUploading, setPhotoUploading] = useState(false);
-
   const [category, setCategory] = useState("");
-
   const [subCategoryOne, setSubCategoryOne] = useState("");
   const [subCategoryTwo, setSubCategoryTwo] = useState("");
 
-  const subCategoryOptionsClothing = [
+  const subCategoryClothingOptions = [
     { name: "Men's Wear", value: "mens_wear" },
     { name: "Women's Wear", value: "womens_wear" },
     { name: "Kid's Wear", value: "kids_wear" },
     { name: "Activewear", value: "activewear" },
     { name: "Formal Wear", value: "formal_wear" },
   ];
-  const subCategoryOptionsFootwear = [
+  const subCategoryFootwearOptions = [
     { name: "Running Shoes", value: "running_shoes" },
     { name: "Sandals", value: "sandals" },
     { name: "Boots", value: "boots" },
     { name: "Formal Shoes", value: "formal_shoes" },
     { name: "Heels", value: "heels" },
   ];
-  const subCategoryOptionsHats = [
+  const subCategoryHatsOptions = [
     { name: "Baseball Caps", value: "baseball_caps" },
     { name: "Beanies", value: "beanies" },
     { name: "Fedora", value: "fedora" },
@@ -47,71 +41,64 @@ function ImageUploader({ onBack, onFecth }) {
     { name: "Berets", value: "berets" },
   ];
 
-  const subCategoryOptionsTwoClothing = [
+  const subCategoryTwoClothingOptions = [
     { name: "Winter Collection", value: "winter_collection" },
     { name: "Summer Collection", value: "summer_collection" },
     { name: "Fall Collection", value: "fall_collection" },
   ];
-  const subCategoryOptionsTwoFootwear = [
+  const subCategoryTwoFootwearOptions = [
     { name: "Sneakers Edition", value: "sneakers_edition" },
     { name: "Formal Edition", value: "formal_edition" },
     { name: "Limited Edition", value: "limited_edition" },
   ];
-  const subCategoryOptionsTwoHats = [
+  const subCategoryTwoHatsOptions = [
     { name: "Vintage Hats", value: "vintage_hats" },
     { name: "Modern Caps", value: "modern_caps" },
     { name: "Special Edition", value: "special_edition" },
   ];
-
-  const computedCategoryOne = () => {
-    if (category === "Hats") {
-      return subCategoryOptionsHats;
-    } else if (category === "Clothing") {
-      return subCategoryOptionsClothing;
-    } else if (category === "Footwear") {
-      return subCategoryOptionsFootwear;
-    }
-    return []; // or some default value
-  };
-
-  const computedCategoryTwo = () => {
-    if (category === "Hats") {
-      return subCategoryOptionsTwoHats;
-    } else if (category === "Clothing") {
-      return subCategoryOptionsTwoClothing;
-    } else if (category === "Footwear") {
-      return subCategoryOptionsTwoFootwear;
-    }
-    return []; // or some default value
-  };
 
   const [image, setImage] = useState({ url: null, file: null });
   const [uploadedImages, setUploadedImages] = useState({
     main: null,
     brandTag: null,
   });
-
   const [listings, setListings] = useState([]);
-  const [tagEditModal, setTagEditModal] = useState(false);
+  const [activeTagEditModal, setActiveTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
   const [editGeneratedTags, setEditGeneratedTags] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [step, setStep] = useState(1);
-  //
 
-  useEffect(() => {
-    setStartTime(moment().format("HH:mm:ss"));
-  }, []);
+  // Computed
+  const computedSubCategoryOneOptions = () => {
+    if (category === "Hats") {
+      return subCategoryHatsOptions;
+    } else if (category === "Clothing") {
+      return subCategoryClothingOptions;
+    } else if (category === "Footwear") {
+      return subCategoryFootwearOptions;
+    }
+    return []; // or some default value
+  };
 
-  //
+  const computedSubCategoryTwoOptions = () => {
+    if (category === "Hats") {
+      return subCategoryTwoHatsOptions;
+    } else if (category === "Clothing") {
+      return subCategoryTwoClothingOptions;
+    } else if (category === "Footwear") {
+      return subCategoryTwoFootwearOptions;
+    }
+    return []; // or some default value
+  };
 
-  const uploadPhoto = async (e) => {
+  // Methods
+  const uploadMainOrBrandTagPhoto = async (e) => {
     const file = e.target.files[0];
     setPhotoUploading(true);
 
     try {
-      const mainImageBase64 = await fileToBase64(file);
-      console.log(mainImageBase64);
+      const mainImageBase64 = await convertFileToBase64(file);
       const response = await fetch("/api/upload-image", {
         method: "POST",
         headers: {
@@ -141,11 +128,11 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const deleteImage = (e) => {
+  const deleteMainOrBrandTagPhoto = (e) => {
     setImage({ url: null, file: null });
   };
 
-  const handleAdd = (key) => {
+  const onAddPhoto = (key) => {
     if (image.url && key) {
       let newUploadedImages = uploadedImages;
       newUploadedImages[key] = {
@@ -160,11 +147,11 @@ function ImageUploader({ onBack, onFecth }) {
   };
 
   const triggerEditTagsModalOffline = (index) => {
-    setTagEditModal(true);
+    setActiveTagEditModal(true);
     setActiveTagIndex(index);
   };
 
-  const handleDelete = (key) => {
+  const deleteMainOrBrandTagPhotoFromUploadedImages = (key) => {
     let newUploadedImages = cloneDeep(uploadedImages);
 
     newUploadedImages[key] = null;
@@ -175,33 +162,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const fetchSimilarProducts = async () => {
-    setFetchingSimilarProducts(true);
-    try {
-      const url = `/api/getSimilarProducts?url=${uploadedImages.main.url}`;
-
-      const response = await fetch(url);
-      setFetchingSimilarProducts(false);
-      if (response.ok) {
-        const data = await response.json();
-        setSimilarProducts(data);
-      } else {
-        console.error(
-          "Failed to fetch similar products:",
-          response.status,
-          response.statusText
-        );
-      }
-    } catch (error) {
-      setFetchingSimilarProducts(false);
-      console.error(
-        "An error occurred while fetching similar products:",
-        error
-      );
-    }
-  };
-
-  const handleListMore = () => {
+  const onListMore = () => {
     const newListing = listings;
     newListing.push({
       tags: [],
@@ -214,10 +175,9 @@ function ImageUploader({ onBack, onFecth }) {
       brandTag: null,
     });
     setStep(1);
-    setTimeout(() => {}, 100);
   };
 
-  const handleFinishListing = () => {
+  const onFinishListing = () => {
     const newListing = listings;
     newListing.push({
       tags: [],
@@ -230,8 +190,6 @@ function ImageUploader({ onBack, onFecth }) {
       brandTag: null,
     });
     setStep(5);
-
-    setTimeout(() => {}, 100);
   };
 
   // This function will send the image to the server-side endpoint for processing.
@@ -261,7 +219,7 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const triggerToTagsPage = async () => {
+  const triggerToTagsScreen = async () => {
     setTagFetching(true);
     const requests = [];
 
@@ -310,11 +268,11 @@ function ImageUploader({ onBack, onFecth }) {
     if (editGeneratedTags) {
       setStep(6);
     } else {
-      handleUploadAll();
+      onUploadAll();
     }
   };
 
-  const fileToBase64 = (file) => {
+  const convertFileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -323,7 +281,7 @@ function ImageUploader({ onBack, onFecth }) {
     });
   };
 
-  const handleUploadAll = async () => {
+  const onUploadAll = async () => {
     setUploading(true);
 
     const convertedListings = await Promise.all(
@@ -350,8 +308,7 @@ function ImageUploader({ onBack, onFecth }) {
         axios.post("/api/add-listing", { listing })
       );
 
-      const responses = await axios.all(requests);
-      const results = responses.map((response) => response.data);
+      await axios.all(requests);
 
       onFecth();
       NotificationManager.success("Listing added successfully!");
@@ -363,13 +320,13 @@ function ImageUploader({ onBack, onFecth }) {
     }
   };
 
-  const changeTags = (listingIndex, newTags) => {
+  const onTagsEdited = (listingIndex, newTags) => {
     const newListing = [...listings];
     newListing[listingIndex].tags = newTags;
     setListings(newListing);
   };
 
-  function onChangeTags(newTags, listingIndex) {
+  function onSetTags(newTags, listingIndex) {
     // Since newTags is already the array of updated tags
     const updatedTags = newTags;
 
@@ -396,7 +353,7 @@ function ImageUploader({ onBack, onFecth }) {
                         accept="image/*"
                         capture="user"
                         className="sr-only"
-                        onChange={(e) => uploadPhoto(e)}
+                        onChange={(e) => uploadMainOrBrandTagPhoto(e)}
                       />
                       <h1 className="text-xl text-center font-medium font-mono ">
                         Take Photo
@@ -442,7 +399,7 @@ function ImageUploader({ onBack, onFecth }) {
                     />
                     <DeleteModalComponent
                       title="Are you sure you want to delete image?"
-                      onConfirmed={() => deleteImage()}
+                      onConfirmed={() => deleteMainOrBrandTagPhoto()}
                     >
                       <button className="mt-4 bg-red-600 hover:bg-opacity-90 text-white font-bold py-1.5 absolute -top-2 right-2 z-10 px-1.5 rounded">
                         <svg
@@ -469,7 +426,7 @@ function ImageUploader({ onBack, onFecth }) {
                   {step === 2 ? (
                     <ButtonComponent
                       full
-                      onClick={() => handleAdd("main")}
+                      onClick={() => onAddPhoto("main")}
                       className={`!my-2 mx-auto !w-64 rounded-lg  !text-black`}
                     >
                       Main Photo
@@ -482,7 +439,7 @@ function ImageUploader({ onBack, onFecth }) {
                       <ButtonComponent
                         disabled={!image.url}
                         full
-                        onClick={() => handleAdd("brandTag")}
+                        onClick={() => onAddPhoto("brandTag")}
                         className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}
                       >
                         Brand Tag Photo
@@ -522,7 +479,9 @@ function ImageUploader({ onBack, onFecth }) {
 
                       <DeleteModalComponent
                         title="Are you sure you want to delete image?"
-                        onConfirmed={() => handleDelete("main")}
+                        onConfirmed={() =>
+                          deleteMainOrBrandTagPhotoFromUploadedImages("main")
+                        }
                       >
                         <button className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 absolute top-2 right-2 z-10 px-1 rounded">
                           <svg
@@ -559,7 +518,11 @@ function ImageUploader({ onBack, onFecth }) {
 
                       <DeleteModalComponent
                         title="Are you sure you want to delete image?"
-                        onConfirmed={() => handleDelete("brandTag")}
+                        onConfirmed={() =>
+                          deleteMainOrBrandTagPhotoFromUploadedImages(
+                            "brandTag"
+                          )
+                        }
                       >
                         <button className="bg-red-600 hover:bg-opacity-90 text-white font-bold py-1 absolute top-2 right-2 z-10 px-1 rounded">
                           <svg
@@ -616,7 +579,7 @@ function ImageUploader({ onBack, onFecth }) {
                     >
                       Select sub-category 01
                     </option>
-                    {computedCategoryOne().map((option) => (
+                    {computedSubCategoryOneOptions().map((option) => (
                       <option
                         key={option.value}
                         value={option.value}
@@ -641,7 +604,7 @@ function ImageUploader({ onBack, onFecth }) {
                     >
                       Select sub-category 02
                     </option>
-                    {computedCategoryTwo().map((option) => (
+                    {computedSubCategoryTwoOptions().map((option) => (
                       <option
                         key={option.value}
                         value={option.value}
@@ -654,14 +617,14 @@ function ImageUploader({ onBack, onFecth }) {
                 <ButtonComponent
                   color="secondary"
                   full
-                  onClick={() => handleListMore()}
+                  onClick={() => onListMore()}
                   className={`!my-2 mx-auto !w-64 rounded-lg !bg-green-600 !text-black`}
                 >
                   List More
                 </ButtonComponent>
                 <ButtonComponent
                   full
-                  onClick={() => handleFinishListing()}
+                  onClick={() => onFinishListing()}
                   className={`!my-2 mx-auto !w-64 rounded-lg !text-black`}
                 >
                   Finish Listing
@@ -686,9 +649,11 @@ function ImageUploader({ onBack, onFecth }) {
                     {row.items.main ? (
                       <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                         <div className="w-full flex items-center justify-center">
-                          <img
+                          <Image
                             src={row.items.main.image}
                             alt={"Main Photo"}
+                            width={250}
+                            height={250}
                             className="rounded max-w-full max-h-full"
                           />
                         </div>
@@ -699,9 +664,11 @@ function ImageUploader({ onBack, onFecth }) {
                     {row.items.brandTag ? (
                       <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                         <div className="w-full flex items-center justify-center">
-                          <img
+                          <Image
                             src={row.items.brandTag.image}
                             alt={"Brand Tag Photo"}
+                            width={250}
+                            height={250}
                             className="rounded max-w-full max-h-full"
                           />
                         </div>
@@ -736,7 +703,7 @@ function ImageUploader({ onBack, onFecth }) {
                     rounded
                     loading={tagFetching}
                     className="!w-48"
-                    onClick={() => triggerToTagsPage()}
+                    onClick={() => triggerToTagsScreen()}
                   >
                     Generate Tags
                   </ButtonComponent>
@@ -757,9 +724,11 @@ function ImageUploader({ onBack, onFecth }) {
                   {row.items.main ? (
                     <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                       <div className="w-full flex items-center justify-center">
-                        <img
+                        <Image
                           src={row.items.main.image}
                           alt={"Main Photo"}
+                          width={250}
+                          height={250}
                           className="rounded max-w-full max-h-full"
                         />
                       </div>
@@ -770,9 +739,11 @@ function ImageUploader({ onBack, onFecth }) {
                   {row.items.brandTag ? (
                     <div className="mx-1 border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                       <div className="w-full flex items-center justify-center">
-                        <img
+                        <Image
                           src={row.items.brandTag.image}
                           alt={"Brand Tag Photo"}
+                          width={250}
+                          height={250}
                           className="rounded max-w-full max-h-full"
                         />
                       </div>
@@ -785,7 +756,7 @@ function ImageUploader({ onBack, onFecth }) {
                 <div className="mt-6 mb-5">
                   <TagsInput
                     value={row.tags}
-                    onChange={(e) => onChangeTags(e, index)}
+                    onChange={(e) => onSetTags(e, index)}
                   />
                 </div>
               </div>
@@ -829,7 +800,7 @@ function ImageUploader({ onBack, onFecth }) {
                 rounded
                 className="!w-48 mt-6"
                 loading={uploading}
-                onClick={handleUploadAll}
+                onClick={onUploadAll}
               >
                 Upload All
               </ButtonComponent>
@@ -839,9 +810,9 @@ function ImageUploader({ onBack, onFecth }) {
           ""
         )}
         <EditTagsModalOffline
-          open={tagEditModal}
-          onClose={() => setTagEditModal(false)}
-          setTags={(e) => changeTags(activeTagIndex, e)}
+          open={activeTagEditModal}
+          onClose={() => setActiveTagEditModal(false)}
+          setTags={(e) => onTagsEdited(activeTagIndex, e)}
           data={listings[activeTagIndex] && listings[activeTagIndex].tags}
         />
       </>
@@ -849,4 +820,4 @@ function ImageUploader({ onBack, onFecth }) {
   );
 }
 
-export default ImageUploader;
+export default SimpleListingForm;
