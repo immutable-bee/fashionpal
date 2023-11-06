@@ -3,18 +3,12 @@ import Webcam from "react-webcam";
 import ButtonComponent from "@/components/utility/Button";
 import Image from "next/image";
 import LoadingComponent from "@/components/utility/loading";
-
 import { NotificationManager } from "react-notifications";
 
 function Capture({ text, onCapture, skip = false, loading = false }) {
   const webcamRef = useRef(null);
   const [facingMode, setFacingMode] = useState("environment");
   const [capturedImage, setCapturedImage] = useState("");
-
-  const capture = () => {
-    setCapturedImage(webcamRef.current.getScreenshot());
-    onCapture(webcamRef.current.getScreenshot());
-  };
 
   useEffect(() => {
     navigator.mediaDevices
@@ -24,6 +18,11 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
         NotificationManager.error(error);
       });
   }, []);
+
+  const capture = () => {
+    setCapturedImage(webcamRef.current.getScreenshot());
+    onCapture(webcamRef.current.getScreenshot());
+  };
 
   return (
     <div>

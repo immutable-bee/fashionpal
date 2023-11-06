@@ -3,13 +3,12 @@ import LoadingComponent from "../utility/loading";
 
 function ButtonComponent({ imageUrl = "", onSelect }) {
   const [fetchingSimilarProducts, setFetchingSimilarProducts] = useState(false);
-
   const [similarProducts, setSimilarProducts] = useState([]);
   const [activeResultIndex, setActiveResultIndex] = useState(0);
 
   useEffect(() => {
     fetchSimilarProducts();
-  }, []);
+  });
 
   const fetchSimilarProducts = async () => {
     setFetchingSimilarProducts(true);

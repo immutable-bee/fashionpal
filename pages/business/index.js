@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
-
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import { NotificationManager } from "react-notifications";
 import Loading from "@/components/utility/loading";
@@ -12,75 +11,24 @@ import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
 import AddListing from "@/components/scoped/AddListing";
-import cloneDeep from "lodash.clonedeep";
+
 export default function Home() {
-  // add
   const { data: session } = useSession();
 
   console.log(session);
 
   const [filter, setFilter] = useState("");
-
   const [size, setSize] = useState("");
   const [type, setType] = useState("");
-
+  const [mode, setMode] = useState("view");
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activeDeleteIndex, setActiveDeleteIndex] = useState(null);
-
   const [tagEditModal, setTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
   const [notMatchesPage, setNotMatchesPage] = useState(1);
-
   const [detailsModal, setDetailsModal] = useState(false);
-
   const [activeIndex, setActiveIndex] = useState(0);
-
-  const onPaginationChange = (e) => {
-    setNotMatchesPage(e);
-    fetchListings(e);
-  };
-
-  const triggerDetailsModal = (index) => {
-    setDetailsModal(true);
-    setActiveIndex(index);
-  };
-
-  const triggerDeleteModal = (index) => {
-    setActiveDeleteIndex(index);
-    setDeleteModal(true);
-  };
-
-  const triggerEditTagsModal = (index) => {
-    setTagEditModal(true);
-    setActiveTagIndex(index);
-  };
-
-  const onDeleteListing = async () => {
-    setDeleteLoading(true);
-    const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id;
-    try {
-      const res = await fetch(`/api/delete-listing/${id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-      });
-      const errorData = await res.json();
-      setDeleteLoading(false);
-      if (res.status === 200) {
-        setDeleteModal(false);
-        fetchListings();
-        NotificationManager.success(errorData.message);
-      } else {
-        // Handle error
-        const errorData = await res.json();
-        NotificationManager.error(errorData);
-      }
-    } catch (error) {
-      console.error("An error occurred while deleting the listing", error);
-    }
-  };
-
-  // add end
   const [loadingListings, setLoadingListings] = useState(false);
   const [listings, setListings] = useState([]);
   const [pagination, setPagination] = useState({
@@ -95,7 +43,12 @@ export default function Home() {
     has_next_page: false,
   });
 
-  const [mode, setMode] = useState("view");
+  useEffect(() => {
+    const initialFetch = async () => {
+      await fetchListings(1);
+    };
+    initialFetch();
+  }, [type, size, fetchListings]);
 
   const fetchListings = useCallback(
     async (e) => {
@@ -123,40 +76,50 @@ export default function Home() {
       }
     },
     [filter, type, size]
-  ); // Only re-create if filter, type or size changes
+  );
 
-  useEffect(() => {
-    const initialFetch = async () => {
-      await fetchListings(1);
-    };
-    initialFetch();
-  }, [type, size, fetchListings]);
-
-  const handleDeleteTag = (tagIndex) => {
-    const newListing = cloneDeep(listings);
-    newListing[activeTagIndex].tags.splice(tagIndex, 1);
-    setListings(newListing);
-  };
-  const editTagName = (tagIndex, name) => {
-    const newListing = cloneDeep(listings);
-    newListing[activeTagIndex].tags[tagIndex].name = name;
-
-    setListings(newListing);
-  };
-  const editTagValue = (tagIndex, value) => {
-    const newListing = cloneDeep(listings);
-    newListing[activeTagIndex].tags[tagIndex].value = value;
-    setListings(newListing);
+  const onPaginationChange = (e) => {
+    setNotMatchesPage(e);
+    fetchListings(e);
   };
 
-  const handleAddTag = () => {
-    const newTag = {
-      name: "", // or some default value
-      value: "", // or some default value
-    };
-    const newListing = [...listings];
-    newListing[activeTagIndex].tags.push(newTag);
-    setListings(newListing);
+  const triggerDetailsModal = (index) => {
+    setDetailsModal(true);
+    setActiveIndex(index);
+  };
+
+  const triggerDeleteModal = (index) => {
+    setActiveDeleteIndex(index);
+    setDeleteModal(true);
+  };
+
+  const triggerEditTagsModal = (index) => {
+    setTagEditModal(true);
+    setActiveTagIndex(index);
+  };
+
+  const onConfirmDeleteListing = async () => {
+    setDeleteLoading(true);
+    const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id;
+    try {
+      const res = await fetch(`/api/delete-listing/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+      });
+      const errorData = await res.json();
+      setDeleteLoading(false);
+      if (res.status === 200) {
+        setDeleteModal(false);
+        fetchListings();
+        NotificationManager.success(errorData.message);
+      } else {
+        // Handle error
+        const errorData = await res.json();
+        NotificationManager.error(errorData);
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the listing", error);
+    }
   };
 
   return (
@@ -299,7 +262,7 @@ export default function Home() {
               id="close-unsubscribe-modal-btn"
               className="!mx-1 !px-5"
               loading={deleteLoading}
-              onClick={() => onDeleteListing()}
+              onClick={() => onConfirmDeleteListing()}
             >
               Delete
             </ButtonComponent>
@@ -312,16 +275,13 @@ export default function Home() {
           </h4>
         </>
       </ModalComponent>
+
       <EditTagsModal
         open={tagEditModal}
-        onClose={() => setTagEditModal(false)}
-        handleDeleteTag={(index) => handleDeleteTag(index)}
-        handleAddTag={() => handleAddTag()}
-        editTagName={(index, e) => editTagName(index, e)}
-        editTagValue={(index, e) => editTagValue(index, e)}
         listingId={listings[activeTagIndex]?.id}
-        onFecth={() => fetchListings(1)}
         tags={listings[activeTagIndex] && listings[activeTagIndex].tags}
+        onFecth={() => fetchListings(1)}
+        onClose={() => setTagEditModal(false)}
       />
     </div>
   );
