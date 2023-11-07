@@ -17,9 +17,9 @@ export default function Home() {
 
   console.log(session);
 
-  const [filter, setFilter] = useState("");
+  const [searchText, setSearchText] = useState("");
   const [size, setSize] = useState("");
-  const [type, setType] = useState("");
+  const [appreal, setAppreal] = useState("");
   const [mode, setMode] = useState("view");
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -42,21 +42,13 @@ export default function Home() {
     limit_per_page: 15,
     has_next_page: false,
   });
-
-  useEffect(() => {
-    const initialFetch = async () => {
-      await fetchListings(1);
-    };
-    initialFetch();
-  }, [type, size, fetchListings]);
-
   const fetchListings = useCallback(
     async (e) => {
       setLoadingListings(true);
 
       try {
         const res = await fetch(
-          `/api/fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`
+          `/api/fetch-listings?limit=15&page=${e}&searchText=${searchText}&apparel=${appreal}&size=${size}`
         );
 
         if (res.status === 200) {
@@ -75,8 +67,15 @@ export default function Home() {
         setLoadingListings(false);
       }
     },
-    [filter, type, size]
+    [searchText, appreal, size]
   );
+
+  useEffect(() => {
+    const initialFetch = async () => {
+      await fetchListings(1);
+    };
+    initialFetch();
+  }, [appreal, size, fetchListings]);
 
   const onPaginationChange = (e) => {
     setNotMatchesPage(e);
@@ -142,8 +141,8 @@ export default function Home() {
         <div>
           <BusinessFilters
             fetchListings={() => fetchListings(1)}
-            changeFilter={(e) => setFilter(e)}
-            changeType={(e) => setType(e)}
+            changeSearchText={(e) => setSearchText(e)}
+            changeAppreal={(e) => setAppreal(e)}
             changeSize={(e) => setSize(e)}
           />
           <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">

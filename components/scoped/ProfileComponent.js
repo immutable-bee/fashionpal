@@ -5,24 +5,21 @@ import HeaderComponent from "@/components/utility/BusinessHeader";
 import ButtonComponent from "@/components/utility/Button";
 
 const Profilecomponent = () => {
-  // const { user, updateUserUsername, fetchUserData } = useUser();
   const [user, setUser] = useState({});
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
 
-  const [formData, setFormData] = useState();
-
-  const handleChange = (e) => {
+  const onInputChange = (e) => {
     const { name, value } = e.target;
 
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     console.log(user);
   };
 
-  const handleEmailAlertChange = async (e) => {
+  const onVotingToggleChange = async (e) => {
     const newValue = e.target.checked;
     setIsViewableForVoting(newValue);
 
@@ -40,7 +37,7 @@ const Profilecomponent = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to update email alert preferences");
+        throw new Error("Failed to update voting toggle!");
       }
     } catch (error) {
       console.error(error.message);
@@ -61,14 +58,14 @@ const Profilecomponent = () => {
 
         <section className="px-5 ">
           <div className="max-w-lg mx-auto">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={onSubmit}>
               <div className="py-2">
                 <label className="text-sm text-gray-700">Store name</label>
                 <input
                   name="store_name"
                   type="text"
                   className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={handleChange}
+                  onChange={onInputChange}
                 />
               </div>
               <div className="py-2">
@@ -77,7 +74,7 @@ const Profilecomponent = () => {
                   name="email"
                   type="text"
                   className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={handleChange}
+                  onChange={onInputChange}
                 />
               </div>
 
@@ -161,7 +158,7 @@ const Profilecomponent = () => {
                   value=""
                   className="sr-only peer"
                   checked={isViewableForVoting}
-                  onChange={handleEmailAlertChange}
+                  onChange={onVotingToggleChange}
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#E44A1F]"></div>
                 <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">

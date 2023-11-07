@@ -2,7 +2,7 @@ import { useState } from "react";
 import HeaderComponent from "@/components/utility/Header";
 import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import ButtonComponent from "@/components/utility/Button";
-import { useUser } from "@/context/UserContext";
+// import { useUser } from "@/context/UserContext";
 import { signOut } from "next-auth/react";
 const ProfileComponent = ({}) => {
   const [user, setUser] = useState({});

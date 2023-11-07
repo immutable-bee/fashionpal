@@ -2,49 +2,47 @@ import { useState, useEffect } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import axios from "axios";
-import "react-datepicker/dist/react-datepicker.css";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-
 import Loading from "@/components/utility/loading";
 import { NotificationManager } from "react-notifications";
 import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
+
 const ProfileComponent = ({}) => {
   const [loadingUpcomingSales, setLoadingUpcomingSales] = useState(false);
   const [loadingCurrentSales, setLoadingCurrentSales] = useState(false);
   const [submittingSale, setSubmittingSale] = useState(false);
-
   const [data, setData] = useState({
     name: "",
-
     discount_amount: "",
     start_date: "",
     end_date: "",
   });
-
   const [selectedItems, setSelectedItems] = useState([]);
-
   const options = [
     { value: "Clothing", label: "Clothing" },
     { value: "Footwear", label: "Footwear" },
-    { value: "HATS", label: "HATS" },
+    { value: "HATS", label: "Hats" },
   ];
-
   const [currentSales, setCurrentSales] = useState([]);
   const [upcomingSales, setUpcomingSales] = useState([]);
 
-  const handleItemChange = (selectedOptions) => {
-    setSelectedItems(selectedOptions);
-  };
+  useEffect(() => {
+    loadSales();
+  }, []);
 
-  const handleStartDateChange = (date) => {
-    setData((prevData) => ({ ...prevData, start_date: date }));
-  };
+  const loadSales = async () => {
+    const current = await fetchSales("current");
+    if (current) {
+      setCurrentSales(current);
+    }
 
-  // Custom handler for end date
-  const handleEndDateChange = (date) => {
-    setData((prevData) => ({ ...prevData, end_date: date }));
+    const upcoming = await fetchSales("upcoming");
+    if (upcoming) {
+      setUpcomingSales(upcoming);
+    }
   };
 
   const fetchSales = async (type) => {
@@ -73,19 +71,16 @@ const ProfileComponent = ({}) => {
     }
   };
 
-  const loadSales = async () => {
-    const current = await fetchSales("current");
-    setCurrentSales(current);
-
-    const upcoming = await fetchSales("upcoming");
-    setUpcomingSales(upcoming);
+  const onStartDateChange = (date) => {
+    setData((prevData) => ({ ...prevData, start_date: date }));
   };
 
-  useEffect(() => {
-    loadSales();
-  }, []);
+  // Custom handler for end date
+  const onEndDateChange = (date) => {
+    setData((prevData) => ({ ...prevData, end_date: date }));
+  };
 
-  const handleChange = (e) => {
+  const onInputChange = (e) => {
     const { name, value } = e.target;
 
     setData({ ...data, [name]: value });
@@ -117,7 +112,7 @@ const ProfileComponent = ({}) => {
     const newSelectedItems = selectedItems.map((option) => option.value);
 
     try {
-      const res = await axios.post("/api/add-sale", {
+      await axios.post("/api/add-sale", {
         name: data.name,
         items: newSelectedItems,
         discount_amount: data.discount_amount,
@@ -158,7 +153,7 @@ const ProfileComponent = ({}) => {
                 value={data?.name}
                 type="text"
                 className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
-                onChange={handleChange}
+                onChange={onInputChange}
               />
             </div>
 
@@ -173,7 +168,7 @@ const ProfileComponent = ({}) => {
                 className="basic-multi-select"
                 classNamePrefix="select"
                 value={selectedItems}
-                onChange={handleItemChange}
+                onChange={setSelectedItems}
               />
             </div>
             <div className="py-2">
@@ -185,7 +180,7 @@ const ProfileComponent = ({}) => {
                 value={data?.discount_amount}
                 type="text"
                 className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
-                onChange={handleChange}
+                onChange={onInputChange}
               />
             </div>
             <div className="py-2">
@@ -193,7 +188,7 @@ const ProfileComponent = ({}) => {
               <div className="relative">
                 <DatePicker
                   selected={data.start_date}
-                  onChange={handleStartDateChange}
+                  onChange={onStartDateChange}
                   dateFormat="yyyy/MM/dd"
                   className="bg-white sm:w-[500px] w-[90vw] form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 rounded-lg  px-4 my-1 py-2"
                 />
@@ -218,7 +213,7 @@ const ProfileComponent = ({}) => {
               <div className="relative">
                 <DatePicker
                   selected={data.end_date}
-                  onChange={handleEndDateChange}
+                  onChange={onEndDateChange}
                   minDate={data.start_date}
                   dateFormat="yyyy/MM/dd"
                   className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg bg-transparent  px-4 my-1 py-2 "
@@ -269,9 +264,9 @@ const ProfileComponent = ({}) => {
           </div>
         ) : (
           <div>
-            {currentSales.length !== 0 ? (
+            {currentSales && currentSales.length !== 0 ? (
               <div className="sm:flex flex-wrap justify-center mt-2">
-                {currentSales.map((row, index) => {
+                {currentSales.map((row) => {
                   return (
                     <div
                       className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
@@ -376,7 +371,7 @@ const ProfileComponent = ({}) => {
           <div>
             {upcomingSales.length !== 0 ? (
               <div className="sm:flex flex-wrap justify-center mt-2">
-                {upcomingSales.map((row, index) => {
+                {upcomingSales.map((row) => {
                   return (
                     <div
                       className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
