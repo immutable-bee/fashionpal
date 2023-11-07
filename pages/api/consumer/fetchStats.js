@@ -9,6 +9,7 @@ const handler = async (req, res) => {
   }
 
   const dateTo = req.query.dateTo ? new Date(req.query.dateTo) : new Date();
+  // Currently defaults to lifetime data, use "new Date(today.getFullYear(), today.getMonth(), 1);"
   const defaultDateFrom = new Date(2000, 0, 1);
   const dateFrom = req.query.dateFrom
     ? new Date(req.query.dateFrom)
@@ -66,18 +67,27 @@ const handler = async (req, res) => {
       }
     });
 
-    const mostCommonUpvoteCategory = Object.entries(categoryCounts).sort(
+    const sortedCategoryCounts = Object.entries(categoryCounts).sort(
       (a, b) => b[1] - a[1]
-    )[0][0];
+    );
+    const mostCommonUpvoteCategory = sortedCategoryCounts.length
+      ? sortedCategoryCounts[0][0]
+      : "None";
+
     const totalVotes = upvotes + downvotes;
+
+    const percentUpvotedListings =
+      totalVotes !== 0 ? (upvotes / totalVotes) * 100 : 0;
+    const percentDownvotedListings =
+      totalVotes !== 0 ? (downvotes / totalVotes) * 100 : 0;
 
     const stats = {
       votesInDateRange: consumer.votes.length,
       mostCommonUpvoteCategory: mostCommonUpvoteCategory,
       upvotedListings: upvotes,
       downvotedListings: downvotes,
-      percentUpvotedListings: (upvotes / totalVotes) * 100,
-      percentDownvotedListings: (downvotes / totalVotes) * 100,
+      percentUpvotedListings,
+      percentDownvotedListings,
     };
 
     res.json(stats);

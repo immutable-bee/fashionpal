@@ -66,9 +66,9 @@ const TCModalContent = () => {
         <div>
           <h1 className="text-lg">1. Introduction</h1>
           <p>
-            1.1. Welcome to BiblioPal. These Terms and Conditions
+            1.1. Welcome to FashionPal. These Terms and Conditions
             &quot;Terms&quot; govern your use of our website, available at
-            bibliopal.com, and the services provided therein.
+            Fashionpal.com, and the services provided therein.
           </p>
           <p>
             1.2. By using our website, you accept these Terms in full. If you
@@ -79,11 +79,11 @@ const TCModalContent = () => {
           <h1 className="text-lg">2. Definitions</h1>
           <p>
             &quot;Consumer User&quot; refers to individuals using our platform
-            to search for books.
+            to search for clothing.
           </p>
           <p>
             &quot;Business User&quot; refers to businesses or individuals adding
-            books to our database.
+            clothing to our database.
           </p>
 
           <h1 className="text-lg">3. Use of the Website</h1>
@@ -92,66 +92,55 @@ const TCModalContent = () => {
             when setting up an account or setting alerts.
           </p>
           <p>
-            3.2. Our platform provides information about books available based
-            on the data input by Business Users. BiblioPal is not responsible
-            for any discrepancies between the data provided by the Business User
-            and the actual book availability or condition.
+            3.2. Our platform provides information about clothing items
+            available based on the data input by Business Users. FashionPal is
+            not responsible for any discrepancies between the data provided by
+            the Business User and the actual item availability or condition.
           </p>
 
-          <h1 className="text-lg">4. Alerts</h1>
+          <h1 className="text-lg">4. Payments</h1>
           <p>
-            4.1. Consumer Users can set up alerts based on title, author, and
-            zip code.
-          </p>
-          <p>
-            4.2. By setting up alerts, the Consumer User expressly agrees to be
-            contacted via email by BiblioPal when a new match to their alert
-            conditions is found.
-          </p>
-
-          <h1 className="text-lg">5. Payments</h1>
-          <p>
-            5.1. All payments made on BiblioPal are processed securely through
+            4.1. All payments made on FashionPal are processed securely through
             our payment partner, Stripe. Please refer to Stripe&#39;s terms of
             service and privacy policy for more details on payment processing.
           </p>
 
-          <h1 className="text-lg">6. Limitation of Liability</h1>
+          <h1 className="text-lg">5. Limitation of Liability</h1>
           <p>
-            6.1. BiblioPal will not be held responsible for any errors,
+            5.1. FashionPal will not be held responsible for any errors,
             inaccuracies, or discrepancies in the data provided by Business
             Users.
           </p>
           <p>
-            6.2. Consumer Users acknowledge that book availability, prices, and
-            conditions are subject to change without notice, and BiblioPal will
-            not be held liable for any inconveniences or losses stemming from
-            these changes.
+            5.2. Consumer Users acknowledge that clothing availability, prices,
+            and conditions are subject to change without notice, and FashionPal
+            will not be held liable for any inconveniences or losses stemming
+            from these changes
           </p>
 
-          <h1 className="text-lg">7. Intellectual Property</h1>
+          <h1 className="text-lg">6. Intellectual Property</h1>
           <p>
-            7.1. All content, graphics, user and visual interfaces, and the
+            6.1. All content, graphics, user and visual interfaces, and the
             selection and coordination thereof, and all software, products,
             works, and services offered on or through our website, including,
             but not limited to, the design, structure, &quot;look and
-            feel&quot;, are owned by BiblioPal, its licensors, vendors, agents,
+            feel&quot;, are owned by FashionPal, its licensors, vendors, agents,
             or its content providers.
           </p>
 
-          <h1 className="text-lg">8. Termination</h1>
+          <h1 className="text-lg">7. Termination</h1>
           <p>
-            8.1. BiblioPal reserves the right to terminate or suspend any
+            7.1. FasionPal reserves the right to terminate or suspend any
             account at its sole discretion, without notice, for conduct that it
             believes violates these Terms or is harmful to other users,
-            BiblioPal, third parties, or for any other reason.
+            FashionPal, third parties, or for any other reason.
           </p>
 
-          <h1 className="text-lg">9. Changes to the Terms</h1>
+          <h1 className="text-lg">8. Changes to the Terms</h1>
           <p>
-            9.1. BiblioPal reserves the right to change these Terms from time to
-            time at its sole discretion. The updated version will be effective
-            as soon as it is accessible.
+            8.1. FashionPal reserves the right to change these Terms from time
+            to time at its sole discretion. The updated version will be
+            effective as soon as it is accessible.
           </p>
         </div>
       </Modal.Body>
@@ -169,7 +158,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
   const formStepHandler = () => {
     if (isStepOne) {
       // Check if required fields in step one are filled
-      if (formData?.business_name && formData?.type) {
+      if (formData?.businessName && formData?.url) {
         setIsStepOne(false);
       } else {
         alert("Please fill out all required fields before proceeding.");
@@ -246,78 +235,47 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
           </div>
         )}
 
-        <form
-          id="onboarding-form"
-          className="mt-6"
-          onSubmit={handleSubmit}
-        >
+        <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
           {isStepOne ? (
-            <>
-              <>
-                <select
-                  name="type"
-                  onChange={handleChange}
-                  className="
-                          border-[#f1f3f5] w-full
-                          rounded-xl
-                          bg-[#f1f3f5]
-                          !placeholder-gray-400 text-gray-900 text-sm
-                          h-10
-                          my-2 px-2
-                        "
-                >
-                  <option
-                    value=""
-                    disabled
-                    selected
-                  >
-                    Business type
-                  </option>
-                  <option value="CLOTHING">Clothing</option>
-                  <option value="FOOTWEAR">Footwear</option>
-                  <option value="HATS">Hats</option>
-                </select>
+            <div className="w-full flex flex-col items-center">
+              <Input
+                required={true}
+                onChange={handleChange}
+                className="onboard-fields my-2"
+                placeholder="Store Business Name"
+                name="businessName"
+              />
+              <Input
+                onChange={handleChange}
+                className="onboard-fields my-2"
+                placeholder="Website Url"
+                name="url"
+              />
+              <Button rounded className="mt-5" onClick={formStepHandler}>
+                Next
+              </Button>
+            </div>
+          ) : (
+            <div>
+              <div className="grid grid-cols-2 gap-3">
                 <Input
                   required={true}
                   onChange={handleChange}
-                  className="onboard-fields my-2"
-                  placeholder="Store Business Name"
-                  name="business_name"
+                  className="onboard-fields  my-2"
+                  name="businessStreet"
+                  placeholder="Business Address"
                 />
                 <Input
+                  required={true}
                   onChange={handleChange}
-                  className="onboard-fields my-2"
-                  placeholder="Website Url"
-                  name="url"
+                  className="onboard-fields  my-2"
+                  name="businessCity"
+                  placeholder="Business City"
                 />
-                <Button
-                  rounded
-                  id="form-step-btn"
-                  onClick={formStepHandler}
-                >
-                  Next
-                </Button>
-              </>
-            </>
-          ) : (
-            <div id="onboarding-step-two-container">
-              <Input
-                required={true}
-                onChange={handleChange}
-                className="onboard-fields  my-2"
-                name="business_street"
-                placeholder="Business Address"
-              />
-              <Input
-                required={true}
-                onChange={handleChange}
-                className="onboard-fields  my-2"
-                name="business_city"
-                placeholder="Business City"
-              />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <select
-                  name="business_state"
+                  name="businessState"
                   onChange={handleChange}
                   className="
                       border-[#f1f3f5]
@@ -329,10 +287,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                       "
                 >
                   {stateOptions.map((state) => (
-                    <option
-                      key={state.key}
-                      value={state.value}
-                    >
+                    <option key={state.key} value={state.value}>
                       {state.text}
                     </option>
                   ))}
@@ -341,7 +296,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   required={true}
                   onChange={handleChange}
                   className="small-onboard-fields  my-2"
-                  name="business_zip"
+                  name="businessZip"
                   placeholder="Zip Code"
                 />
               </div>
@@ -365,15 +320,15 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   Terms and Conditions
                 </h6>
               </div>
-              <Button type="submit">Submit</Button>
+              <div className="flex justify-center">
+                <Button className="mt-5" type="submit">
+                  Submit
+                </Button>
+              </div>
             </div>
           )}
         </form>
-        <Modal
-          open={isTCModalOpen}
-          closeButton
-          onClose={tcModalCloseHandler}
-        >
+        <Modal open={isTCModalOpen} closeButton onClose={tcModalCloseHandler}>
           <TCModalContent />
         </Modal>
       </div>

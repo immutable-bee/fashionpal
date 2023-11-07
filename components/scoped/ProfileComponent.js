@@ -1,56 +1,66 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TooltipComponent from "@/components/utility/Tooltip";
 import Head from "next/head";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import ButtonComponent from "@/components/utility/Button";
+import { Loading, Dropdown } from "@nextui-org/react";
+import { signOut } from "next-auth/react";
+import useDateRangePicker from "../../hooks/useDateRangePicker";
 
 const Profilecomponent = () => {
+  // const { user, updateUserUsername, fetchUserData } = useUser();
+
+  const { selectedRange, setSelectedRange, getRange } = useDateRangePicker();
+
   const [user, setUser] = useState({});
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
 
-  const onInputChange = (e) => {
+  const [formData, setFormData] = useState();
+  const [businessStats, setBusinessStats] = useState();
+
+  const handleChange = (e) => {
     const { name, value } = e.target;
 
     setUser({ ...user, [name]: value });
   };
 
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
+    // add check for empty input on store name or email
     e.preventDefault();
     console.log(user);
   };
 
-  const onVotingToggleChange = async (e) => {
-    const newValue = e.target.checked;
-    setIsViewableForVoting(newValue);
+  const fetchBusinessStats = async (dateTo = null, dateFrom = null) => {
+    const path =
+      dateTo && dateFrom
+        ? `/api/business/fetchStats?dateTo=${dateTo}&dateFrom=${dateFrom}`
+        : "/api/business/fetchStats";
 
-    try {
-      const res = await fetch("/api/consumer/update/alertPreferences", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: props.email,
-          field: "viewable_for_voting",
-          value: newValue,
-        }),
-      });
+    const response = await fetch(path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!res.ok) {
-        throw new Error("Failed to update voting toggle!");
-      }
-    } catch (error) {
-      console.error(error.message);
+    const data = await response.json();
+
+    if (response.ok) {
+      setBusinessStats(data);
+    } else {
+      return console.error("Failed to fetch business stats:", data.error);
     }
   };
+
+  useEffect(() => {
+    const range = getRange(selectedRange);
+    fetchBusinessStats(range.dateTo, range.dateFrom);
+  }, [selectedRange]);
 
   return (
     <div className="bg-white min-h-screen">
       <Head>
-        <link
-          rel="shortcut icon"
-          href="/images/fav.png"
-        />
+        <link rel="shortcut icon" href="/images/fav.png" />
       </Head>
 
       <div>
@@ -58,14 +68,14 @@ const Profilecomponent = () => {
 
         <section className="px-5 ">
           <div className="max-w-lg mx-auto">
-            <form onSubmit={onSubmit}>
+            <form onSubmit={handleSubmit}>
               <div className="py-2">
                 <label className="text-sm text-gray-700">Store name</label>
                 <input
                   name="store_name"
                   type="text"
                   className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={onInputChange}
+                  onChange={handleChange}
                 />
               </div>
               <div className="py-2">
@@ -74,16 +84,11 @@ const Profilecomponent = () => {
                   name="email"
                   type="text"
                   className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={onInputChange}
+                  onChange={handleChange}
                 />
               </div>
 
-              <ButtonComponent
-                className="mt-3"
-                rounded
-                full
-                type="submit"
-              >
+              <ButtonComponent className="mt-3" rounded full type="submit">
                 Update
               </ButtonComponent>
             </form>
@@ -93,18 +98,48 @@ const Profilecomponent = () => {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
-                        Label
+                      <th scope="col" class="px-6 py-3">
+                        {
+                          <Dropdown>
+                            <Dropdown.Button light>
+                              {selectedRange}
+                            </Dropdown.Button>
+                            <Dropdown.Menu
+                              selectionMode="single"
+                              disallowEmptySelection
+                              selectedKeys={selectedRange}
+                              onSelectionChange={(keys) => {
+                                const selectedKey = Array.from(keys)[0];
+                                console.log("Selected key:", selectedKey);
+                                setSelectedRange(selectedKey);
+                              }}
+                            >
+                              <Dropdown.Item key={"Current Month"}>
+                                Current Month
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Previous Month"}>
+                                Previous Month
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Last 30 Days"}>
+                                Last 30 Days
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Last 60 Days"}>
+                                Last 60 Days
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Last 90 Days"}>
+                                Last 90 Days
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Current Year"}>
+                                Current Year
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"All"}>All</Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        }
                       </th>
 
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
-                        Value
+                      <th scope="col" class="px-6 py-3">
+                        Total
                       </th>
                     </tr>
                   </thead>
@@ -113,40 +148,83 @@ const Profilecomponent = () => {
                       <td class="text-black px-6 py-4">
                         This months # of scans
                       </td>
-                      <td class="px-6 py-4">10</td>
+                      {businessStats ? (
+                        <td class="px-6 py-4">{businessStats.totalListings}</td>
+                      ) : (
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4">
                         {" "}
                         Most common category
                       </td>
-                      <td class="px-6 py-4">10</td>
+                      {businessStats ? (
+                        <td class="px-6 py-4">
+                          {businessStats.mostCommonCategory}
+                        </td>
+                      ) : (
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4"> # disposed</td>
-                      <td class="px-6 py-4">10</td>
+                      {businessStats ? (
+                        <td class="px-6 py-4">
+                          {businessStats.disposedListings}
+                        </td>
+                      ) : (
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4"> # to sell</td>
-                      <td class="px-6 py-4">10</td>
+                      {businessStats ? (
+                        <td class="px-6 py-4">
+                          {businessStats.listingsToSell}
+                        </td>
+                      ) : (
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> % down voted10</td>
-                      <td class="px-6 py-4">10</td>
+                      <td class="text-black px-6 py-4"> % down voted</td>
+                      {businessStats ? (
+                        <td class="px-6 py-4">
+                          {businessStats.percentageDownVoted}
+                        </td>
+                      ) : (
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
+                      )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4">% up voted</td>
-                      <td class="px-6 py-4">10</td>
+                      {businessStats ? (
+                        <td class="px-6 py-4">
+                          {businessStats.percentageUpVoted}
+                        </td>
+                      ) : (
+                        <td class="px-6 py-4">
+                          <Loading />
+                        </td>
+                      )}
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <div className="flex justify-center mt-5">
-              <ButtonComponent
-                full
-                rounded
-              >
+              <ButtonComponent full rounded>
                 Download Excel report
               </ButtonComponent>
             </div>
@@ -158,7 +236,6 @@ const Profilecomponent = () => {
                   value=""
                   className="sr-only peer"
                   checked={isViewableForVoting}
-                  onChange={onVotingToggleChange}
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#E44A1F]"></div>
                 <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -193,20 +270,13 @@ const Profilecomponent = () => {
             </div>
 
             <div className="flex justify-center mt-5">
-              <ButtonComponent
-                full
-                rounded
-              >
+              <ButtonComponent full rounded>
                 Invite a customer
               </ButtonComponent>
             </div>
 
             <div className="mt-4 w-full flex justify-center">
-              <ButtonComponent
-                full
-                rounded
-                onClick={() => signOut()}
-              >
+              <ButtonComponent full rounded onClick={() => signOut()}>
                 Sign Out
               </ButtonComponent>
             </div>
@@ -217,3 +287,4 @@ const Profilecomponent = () => {
   );
 };
 export default Profilecomponent;
+

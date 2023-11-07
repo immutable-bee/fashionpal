@@ -13,7 +13,7 @@ const client = new ImageAnnotatorClient({ credentials });
 const rgbToHex = (r, g, b) =>
   "#" + [r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("");
 
-export default async (req, res) => {
+const handler = async (req, res) => {
   try {
     const imageUrl = req.body.image;
     const imageType = req.body.type;
@@ -61,3 +61,5 @@ export default async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export default handler;

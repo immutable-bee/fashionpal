@@ -7,12 +7,13 @@ const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
 
 const ACCESS_RULES = {
-  consumer: ["/consumer", "/consumer/profile", "/consumer/saved", "/consumer/sales"],
-  business: [
-    "/business",
-    "/business/sales",
-    "/business/profile",
+  consumer: [
+    "/consumer",
+    "/consumer/profile",
+    "/consumer/saved",
+    "/consumer/sales",
   ],
+  business: ["/business", "/business/sales", "/business/profile"],
 };
 
 export const UserProvider = ({ children }) => {
@@ -34,7 +35,7 @@ export const UserProvider = ({ children }) => {
   const fetchUserData = async () => {
     if (!session) return;
 
-    const res = await fetch("/api/fetchuser", {
+    const res = await fetch("/api/user/fetch", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,18 +76,22 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (!session && router.pathname !== "localhost:3000/") {
+      router.push("/auth");
+    }
+
     if (session) {
       fetchUserData();
       if (user) {
-        if (!user.onboarding_complete) {
+        if (!user.onboardingComplete) {
           router.push("/auth/onboarding");
         }
 
         const role = user.consumer
           ? "consumer"
           : user.business
-            ? "business"
-            : null;
+          ? "business"
+          : null;
         const allowedRoutes = ACCESS_RULES[role] || [];
 
         if (role && !allowedRoutes.includes(router.pathname)) {
@@ -94,7 +99,7 @@ export const UserProvider = ({ children }) => {
         }
       }
     }
-  }, [session, user?.onboarding_complete]);
+  }, [session, user?.onboardingComplete]);
 
   return (
     <UserContext.Provider value={{ user, updateUserUsername, fetchUserData }}>
