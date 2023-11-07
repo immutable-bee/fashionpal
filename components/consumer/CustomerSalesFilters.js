@@ -1,72 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Inputcomponent from "@/components/utility/Input";
 import ShareFashionPal from "@/components/consumer/ShareFashionPal";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 export default function CustomerFilters({
-  fetchListings,
-  changeFilter,
-  changeType,
-  changeSize,
+  onFetch,
+  changeSearchText,
+  changeStartDate,
+  changeEndDate,
   changeZipCode,
-  changeRadius,
+  changeMileRadius,
 }) {
   const [showFilters, setShowFilters] = useState(false);
-
-  const [filter, setFilter] = useState("");
-
+  const [searchText, setSearchText] = useState("");
   const [zipCode, setZipCode] = useState("");
-  const [radius, setRadius] = useState("");
-  const [size, setSize] = useState("");
-  const [type, setType] = useState("");
-  const [sizes, setSizes] = useState([
-    { value: "XS", type: "" },
-    { value: "S", type: "" },
-    { value: "M", type: "" },
-    { value: "L", type: "" },
-    { value: "XL", type: "" },
-    { value: "XXL", type: "" },
-    { value: 1, type: "Footwear" },
-    { value: 2, type: "Footwear" },
-    { value: 3, type: "Footwear" },
-    { value: 4, type: "Footwear" },
-    { value: 5, type: "Footwear" },
-    { value: 6, type: "Footwear" },
-    { value: 7, type: "Footwear" },
-    { value: 8, type: "Footwear" },
-    { value: 9, type: "Footwear" },
-    { value: 10, type: "Footwear" },
-    { value: 11, type: "Footwear" },
-    { value: 12, type: "Footwear" },
-    { value: 13, type: "Footwear" },
-    { value: 14, type: "Footwear" },
-    { value: 15, type: "Footwear" },
-  ]);
+  const [mileRadius, setMileRadius] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
 
-  const onChangeFilter = (e) => {
+  const onChangeSearchText = (e) => {
     const value = e.target.value;
-    setFilter(value);
-    changeFilter(value);
+    setSearchText(value);
+    changeSearchText(value);
   };
-  const onChangeType = (e) => {
+  const onChangeStartDate = (e) => {
     const value = e;
-    setType(value);
-    changeType(value);
+    setStartDate(value);
+    changeStartDate(value);
   };
-  const onChangeSize = (e) => {
+  const onChangeEndDate = (e) => {
     const value = e;
-    setSize(value);
-    changeSize(value);
+    setEndDate(value);
+    changeEndDate(value);
   };
   const onChangeZipCode = (e) => {
     const value = e.target.value;
     setZipCode(value);
     changeZipCode(value);
   };
-  const onChangeRadius = (e) => {
+  const onChangeMileRadius = (e) => {
     const value = e.target.value;
-    setRadius(value);
-    changeRadius(value);
+    setMileRadius(value);
+    changeMileRadius(value);
   };
 
   return (
@@ -74,8 +49,8 @@ export default function CustomerFilters({
       <ShareFashionPal />
       <div class=" flex justify-between px-5 max-w-7xl mx-auto">
         <Inputcomponent
-          value={filter}
-          onChange={(e) => onChangeFilter(e)}
+          value={searchText}
+          onChange={(e) => onChangeSearchText(e)}
         />
 
         <div className="flex flex-shrink-0 items-center justify-end">
@@ -83,7 +58,7 @@ export default function CustomerFilters({
             <button
               type="button"
               class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
-              onClick={() => fetchListings()}
+              onClick={() => onFetch()}
             >
               <div>
                 <svg
@@ -110,8 +85,8 @@ export default function CustomerFilters({
           <label className="block">Start date</label>
           <div className="relative">
             <DatePicker
-              selected={type}
-              onChange={(e) => onChangeType(e)}
+              selected={startDate}
+              onChange={(e) => onChangeStartDate(e)}
               dateFormat="yyyy/MM/dd"
               className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
             />
@@ -135,9 +110,9 @@ export default function CustomerFilters({
           <label className="block">End date</label>
           <div className="relative">
             <DatePicker
-              selected={size}
-              onChange={(e) => onChangeSize(e)}
-              minDate={type}
+              selected={endDate}
+              onChange={(e) => onChangeEndDate(e)}
+              minDate={startDate}
               dateFormat="yyyy/MM/dd"
               className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
             />
@@ -196,6 +171,7 @@ export default function CustomerFilters({
         >
           <label className="block">Zip Code</label>
           <input
+            value={zipCode}
             className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
             type="number"
             onChange={(e) => onChangeZipCode(e)}
@@ -208,8 +184,9 @@ export default function CustomerFilters({
         >
           <label className="block">Mile Radius</label>
           <select
+            value={mileRadius}
             className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
-            onChange={(e) => onChangeRadius(e)}
+            onChange={(e) => onChangeMileRadius(e)}
           >
             <option value="">All</option>
             <option value="25">25 miles</option>

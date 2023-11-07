@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import { NotificationManager } from "react-notifications";
 import Loading from "@/components/utility/loading";
@@ -13,30 +11,71 @@ import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
 import AddListing from "@/components/scoped/AddListing";
-import cloneDeep from "lodash.clonedeep";
+
 export default function Home() {
-  // add
   const { data: session } = useSession();
-  const router = useRouter();
 
   console.log(session);
 
-  const [filter, setFilter] = useState("");
-
+  const [searchText, setSearchText] = useState("");
   const [size, setSize] = useState("");
-  const [type, setType] = useState("");
-
+  const [appreal, setAppreal] = useState("");
+  const [mode, setMode] = useState("view");
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activeDeleteIndex, setActiveDeleteIndex] = useState(null);
-
   const [tagEditModal, setTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
   const [notMatchesPage, setNotMatchesPage] = useState(1);
-
   const [detailsModal, setDetailsModal] = useState(false);
-
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loadingListings, setLoadingListings] = useState(false);
+  const [listings, setListings] = useState([]);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    previous_page: 1,
+    current_page: 1,
+    next_page: 0,
+    items: [1],
+    total_pages: 2,
+    has_prev_page: true,
+    limit_per_page: 15,
+    has_next_page: false,
+  });
+  const fetchListings = useCallback(
+    async (e) => {
+      setLoadingListings(true);
+
+      try {
+        const res = await fetch(
+          `/api/fetch-listings?limit=15&page=${e}&searchText=${searchText}&apparel=${appreal}&size=${size}`
+        );
+
+        if (res.status === 200) {
+          const data = await res.json();
+          setListings(data.results);
+          setPagination(data.pagination);
+        } else {
+          const errorMessage = await res.text();
+          console.error(
+            `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+          );
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching listings:", error);
+      } finally {
+        setLoadingListings(false);
+      }
+    },
+    [searchText, appreal, size]
+  );
+
+  useEffect(() => {
+    const initialFetch = async () => {
+      await fetchListings(1);
+    };
+    initialFetch();
+  }, [appreal, size, fetchListings]);
 
   const onPaginationChange = (e) => {
     setNotMatchesPage(e);
@@ -58,7 +97,7 @@ export default function Home() {
     setActiveTagIndex(index);
   };
 
-  const onDeleteListing = async () => {
+  const onConfirmDeleteListing = async () => {
     setDeleteLoading(true);
     const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id;
     try {
@@ -82,89 +121,6 @@ export default function Home() {
     }
   };
 
-  // add end
-  const [loadingListings, setLoadingListings] = useState(false);
-  const [listings, setListings] = useState([]);
-  const [pagination, setPagination] = useState({
-    total: 0,
-    previous_page: 1,
-    current_page: 1,
-    next_page: 0,
-    items: [1],
-    total_pages: 2,
-    has_prev_page: true,
-    limit_per_page: 15,
-    has_next_page: false,
-  });
-
-  const [mode, setMode] = useState("view");
-
-  const [loadingSearchResults, setLoadingSearchResults] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-
-  const fetchListings = useCallback(
-    async (e) => {
-      setLoadingListings(true);
-
-      try {
-        const res = await fetch(
-          `/api/fetch-listings?limit=15&page=${e}&searchText=${filter}&apparel=${type}&size=${size}`
-        );
-
-        if (res.status === 200) {
-          const data = await res.json();
-          setListings(data.results);
-          setPagination(data.pagination);
-        } else {
-          const errorMessage = await res.text();
-          console.error(
-            `Fetch failed with status: ${res.status}, message: ${errorMessage}`
-          );
-        }
-      } catch (error) {
-        console.error("An error occurred while fetching listings:", error);
-      } finally {
-        setLoadingListings(false);
-      }
-    },
-    [filter, type, size]
-  ); // Only re-create if filter, type or size changes
-
-  useEffect(() => {
-    const initialFetch = async () => {
-      await fetchListings(1);
-    };
-    initialFetch();
-  }, [type, size, fetchListings]);
-
-  const handleDeleteTag = (tagIndex) => {
-    const newListing = cloneDeep(listings);
-    newListing[activeTagIndex].tags.splice(tagIndex, 1);
-    setListings(newListing);
-  };
-  const editTagName = (tagIndex, name) => {
-    const newListing = cloneDeep(listings);
-    newListing[activeTagIndex].tags[tagIndex].name = name;
-
-    setListings(newListing);
-  };
-  const editTagValue = (tagIndex, value) => {
-    const newListing = cloneDeep(listings);
-    newListing[activeTagIndex].tags[tagIndex].value = value;
-    setListings(newListing);
-  };
-
-  const handleAddTag = () => {
-    const newTag = {
-      name: "", // or some default value
-      value: "", // or some default value
-    };
-    const newListing = [...listings];
-    newListing[activeTagIndex].tags.push(newTag);
-    setListings(newListing);
-  };
-
-  const onPageChange = (page) => {};
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -185,8 +141,8 @@ export default function Home() {
         <div>
           <BusinessFilters
             fetchListings={() => fetchListings(1)}
-            changeFilter={(e) => setFilter(e)}
-            changeType={(e) => setType(e)}
+            changeSearchText={(e) => setSearchText(e)}
+            changeAppreal={(e) => setAppreal(e)}
             changeSize={(e) => setSize(e)}
           />
           <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">
@@ -206,7 +162,7 @@ export default function Home() {
               </div>
 
               <div className="w-full">
-                {loadingListings || loadingSearchResults ? (
+                {loadingListings ? (
                   <div className="sm:flex justify-center pb-10">
                     <div>
                       <div className="pt-2.5 mt-10">
@@ -305,7 +261,7 @@ export default function Home() {
               id="close-unsubscribe-modal-btn"
               className="!mx-1 !px-5"
               loading={deleteLoading}
-              onClick={() => onDeleteListing()}
+              onClick={() => onConfirmDeleteListing()}
             >
               Delete
             </ButtonComponent>
@@ -318,16 +274,13 @@ export default function Home() {
           </h4>
         </>
       </ModalComponent>
+
       <EditTagsModal
         open={tagEditModal}
-        onClose={() => setTagEditModal(false)}
-        handleDeleteTag={(index) => handleDeleteTag(index)}
-        handleAddTag={() => handleAddTag()}
-        editTagName={(index, e) => editTagName(index, e)}
-        editTagValue={(index, e) => editTagValue(index, e)}
         listingId={listings[activeTagIndex]?.id}
-        onFecth={() => fetchListings(1)}
         tags={listings[activeTagIndex] && listings[activeTagIndex].tags}
+        onFecth={() => fetchListings(1)}
+        onClose={() => setTagEditModal(false)}
       />
     </div>
   );

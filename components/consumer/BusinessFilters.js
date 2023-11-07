@@ -1,21 +1,12 @@
-import { useState, useEffect } from "react";
-import { NotificationManager } from "react-notifications";
+import { useState } from "react";
 import Inputcomponent from "@/components/utility/Input";
 export default function CustomerFilters({
   fetchListings,
-  changeFilter,
-  changeType,
+  changeSearchText,
+  changeAppreal,
   changeSize,
-  changeZipCode,
-  changeRadius,
 }) {
-  const [filter, setFilter] = useState("");
-
-  const [zipCode, setZipCode] = useState("");
-  const [radius, setRadius] = useState("");
-  const [size, setSize] = useState("");
-  const [type, setType] = useState("");
-  const [sizes, setSizes] = useState([
+  const sizes = [
     { value: "XS", type: "" },
     { value: "S", type: "" },
     { value: "M", type: "" },
@@ -37,44 +28,34 @@ export default function CustomerFilters({
     { value: 13, type: "Footwear" },
     { value: 14, type: "Footwear" },
     { value: 15, type: "Footwear" },
-  ]);
+  ];
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText("https://fashionpal.vercel.app/");
-    NotificationManager.success("Link Copied!");
-  };
+  const [filter, setFilter] = useState("");
+  const [size, setSize] = useState("");
+  const [type, setType] = useState("");
 
-  const onChangeFilter = (e) => {
+  const onChangeSearchText = (e) => {
     const value = e.target.value;
     setFilter(value);
-    changeFilter(value);
+    changeSearchText(value);
   };
-  const onChangeType = (e) => {
+  const onChangeAppreal = (e) => {
     const value = e.target.value;
     setType(value);
-    changeType(value);
+    changeAppreal(value);
   };
   const onChangeSize = (e) => {
     const value = e.target.value;
     setSize(value);
     changeSize(value);
   };
-  const onChangeZipCode = (e) => {
-    const value = e.target.value;
-    setZipCode(value);
-    changeZipCode(value);
-  };
-  const onChangeRadius = (e) => {
-    const value = e.target.value;
-    setRadius(value);
-    changeRadius(value);
-  };
+
   return (
     <div>
       <div class=" flex justify-between px-5 max-w-7xl mx-auto">
         <Inputcomponent
           value={filter}
-          onChange={(e) => onChangeFilter(e)}
+          onChange={(e) => onChangeSearchText(e)}
         />
 
         <div className="flex flex-shrink-0 items-center justify-end">
@@ -109,7 +90,7 @@ export default function CustomerFilters({
           <label className="block">Apparel</label>
           <select
             className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
-            onChange={(e) => onChangeType(e)}
+            onChange={(e) => onChangeAppreal(e)}
           >
             <option value="">All</option>
             <option value="Clothing">Clothing</option>
@@ -121,6 +102,7 @@ export default function CustomerFilters({
         <div className="mx-2 sm:mt-0 mt-3 ">
           <label className="block">Size</label>
           <select
+            value={size}
             className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
             onChange={(e) => onChangeSize(e)}
           >

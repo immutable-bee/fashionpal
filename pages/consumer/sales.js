@@ -8,58 +8,13 @@ import Link from "next/link";
 export default function Home() {
   const [loadingUpcomingSales, setLoadingUpcomingSales] = useState(false);
   const [loadingCurrentSales, setLoadingCurrentSales] = useState(false);
-
   const [currentSales, setCurrentSales] = useState([]);
   const [upcomingSales, setUpcomingSales] = useState([]);
-
-  const [filter, setFilter] = useState("");
+  const [serachText, setSearchText] = useState("");
   const [zipCode, setZipCode] = useState("");
-  const [radius, setRadius] = useState("");
-  const [size, setSize] = useState("");
-  const [type, setType] = useState("");
-  // add
-  const [image, setImage] = useState(null);
-  const [selectedTag, setSelectedTag] = useState(null);
-  const [inputVisible, setInputVisible] = useState(true);
-  const [uploadedImages, setUploadedImages] = useState([]);
-
-  const [detailsModal, setDetailsModal] = useState(false);
-  const [activeTagIndex, setActiveIndex] = useState(0);
-  const [active, setActive] = useState("clothing");
-
-  // add end
-
-  const [pagination, setPagination] = useState({
-    total: 0,
-    previous_page: 1,
-    current_page: 1,
-    next_page: 0,
-    items: [1],
-    total_pages: 2,
-    has_prev_page: true,
-    limit_per_page: 15,
-    has_next_page: false,
-  });
-  const [notMatchesPage, setNotMatchesPage] = useState(1);
-
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const [loadingSearchResults, setLoadingSearchResults] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-
-  // pagination
-
-  const [inventoryMatchesPage, setInventoryMatchesPage] = useState(1);
-
-  const openRequestsItemsPerPage = 7;
-
-  const paginateData = (data, currentPage, itemsPerPage) => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    return data.slice(startIndex, endIndex);
-  };
-  // pagination end
+  const [mileRadius, setMileRadius] = useState("");
+  const [startDate, setEndDate] = useState("");
+  const [endDate, setStartDate] = useState("");
 
   const fetchSales = async (saleType) => {
     if (saleType === "current") {
@@ -70,7 +25,7 @@ export default function Home() {
 
     try {
       const res = await fetch(
-        `/api/fetch-sales?type=${saleType}&name=${filter}&start_date=${type}&end_date=${size}`
+        `/api/fetch-sales?type=${saleType}&serachText=${serachText}&start_date=${startDate}&end_date=${endDate}&mile_radius=${mileRadius}&zip_code=${zipCode}`
       );
       if (res.status === 200) {
         const sales = await res.json();
@@ -92,17 +47,21 @@ export default function Home() {
   const loadSales = useCallback(
     async (e) => {
       const current = await fetchSales("current");
-      setCurrentSales(current);
+      if (current) {
+        setCurrentSales(current);
+      }
 
       const upcoming = await fetchSales("upcoming");
-      setUpcomingSales(upcoming);
+      if (upcoming) {
+        setUpcomingSales(upcoming);
+      }
     },
-    [type, size]
+    [serachText, startDate, endDate, zipCode, mileRadius]
   ); // Only re-create if filter, type or size changes
 
   useEffect(() => {
     loadSales();
-  }, [type, size, loadSales]);
+  }, [serachText, startDate, endDate, zipCode, mileRadius, loadSales]);
 
   const toggleLike = (index, event) => {
     event.stopPropagation();
@@ -125,12 +84,12 @@ export default function Home() {
 
       <div>
         <CustomerSalesFilters
-          fetchListings={() => loadSales()}
-          changeFilter={(e) => setFilter(e)}
-          changeType={(e) => setType(e)}
-          changeSize={(e) => setSize(e)}
+          changeSearchText={(e) => setSearchText(e)}
+          changeStartDate={(e) => setStartDate(e)}
+          changeEndDate={(e) => setEndDate(e)}
           changeZipCode={(e) => setZipCode(e)}
-          changeRadius={(e) => setRadius(e)}
+          changeMileRadius={(e) => setMileRadius(e)}
+          onFetch={() => loadSales()}
         />
 
         <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
