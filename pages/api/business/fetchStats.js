@@ -24,7 +24,7 @@ const handler = async (req, res) => {
             },
           },
           select: {
-            isDisposed: true,
+            status: true,
             isActive: true,
             votes: {
               select: {
