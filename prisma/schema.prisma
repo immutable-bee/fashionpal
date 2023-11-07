@@ -107,6 +107,7 @@ model CategoriesOnListings {
 }
 
 
+
 model Listing {
   id                String    @id @default(cuid())
   mainImage         Json?
@@ -115,19 +116,25 @@ model Listing {
   price             Int?
   delivery          String?
   tags              String[]
-  isDisposed Boolean @default(false)
+  status StatusType @default(SALE)
   isActive Boolean @default(true)
   createdAt         DateTime? @default(now())
   updatedAt         DateTime?
   daysToExpiry Int @default(7)
   Business          Business? @relation(fields: [businessId], references: [id])
   businessId        String?
+  Barcode String
   categories CategoriesOnListings[]
   votes Vote[]
-
 }
 
 enum VoteType {
   UP
   DOWN
+}
+
+enum StatusType {
+  SALE
+  DISPOSED
+  DAMAGED
 }
