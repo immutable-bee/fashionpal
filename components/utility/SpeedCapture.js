@@ -33,7 +33,7 @@ function Capture({ onCapture, loading = false, onDone, totalAmount }) {
       </div>
 
       <div
-        className={`border-2 rounded-2xl px-2 sm:px-4 py-2 sm:py-5 sm:w-64 my-1 relative ${
+        className={`border-4 rounded-2xl px-2 sm:px-4 py-2 sm:py-5 sm:w-64 my-1 relative ${
           loading ? "border-green-400" : "border-black"
         }`}
       >

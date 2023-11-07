@@ -84,7 +84,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
           setDamagedAmount(damagedAmount + 1);
           break;
       }
-      NotificationManager.success("Listing added successfully!");
+      NotificationManager.success("Complete");
     } catch (error) {
       console.error(error);
     } finally {
