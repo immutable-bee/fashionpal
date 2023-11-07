@@ -75,6 +75,13 @@ export default function Home() {
       await fetchListings(1);
     };
     initialFetch();
+  }, [type, size, fetchListings]);
+
+  useEffect(() => {
+    const initialFetch = async () => {
+      await fetchListings(1);
+    };
+    initialFetch();
   }, [appreal, size, fetchListings]);
 
   const onPaginationChange = (e) => {
