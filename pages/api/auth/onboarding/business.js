@@ -39,12 +39,12 @@ const handler = async (req, res) => {
         email: session.user.email,
         user: {
           connect: {
-            uid: user.id,
+            id: user.id,
           },
         },
       },
     });
-    const user = await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { email: session.user.email },
       data: {
         onboardingComplete: true,
