@@ -75,7 +75,7 @@ export default function Home() {
       await fetchListings(1);
     };
     initialFetch();
-  }, [type, size, fetchListings]);
+  }, [size, fetchListings]);
 
   useEffect(() => {
     const initialFetch = async () => {
