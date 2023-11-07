@@ -3,11 +3,15 @@ import TooltipComponent from "@/components/utility/Tooltip";
 import Head from "next/head";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import ButtonComponent from "@/components/utility/Button";
-import { Loading } from "@nextui-org/react";
+import { Loading, Dropdown } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
+import useDateRangePicker from "../../hooks/useDateRangePicker";
 
 const Profilecomponent = () => {
   // const { user, updateUserUsername, fetchUserData } = useUser();
+
+  const { selectedRange, setSelectedRange, getRange } = useDateRangePicker();
+
   const [user, setUser] = useState({});
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
 
@@ -49,8 +53,9 @@ const Profilecomponent = () => {
   };
 
   useEffect(() => {
-    fetchBusinessStats();
-  }, []);
+    const range = getRange(selectedRange);
+    fetchBusinessStats(range.dateTo, range.dateFrom);
+  }, [selectedRange]);
 
   return (
     <div className="bg-white min-h-screen">
@@ -94,11 +99,47 @@ const Profilecomponent = () => {
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                       <th scope="col" class="px-6 py-3">
-                        Label
+                        {
+                          <Dropdown>
+                            <Dropdown.Button light>
+                              {selectedRange}
+                            </Dropdown.Button>
+                            <Dropdown.Menu
+                              selectionMode="single"
+                              disallowEmptySelection
+                              selectedKeys={selectedRange}
+                              onSelectionChange={(keys) => {
+                                const selectedKey = Array.from(keys)[0];
+                                console.log("Selected key:", selectedKey);
+                                setSelectedRange(selectedKey);
+                              }}
+                            >
+                              <Dropdown.Item key={"Current Month"}>
+                                Current Month
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Previous Month"}>
+                                Previous Month
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Last 30 Days"}>
+                                Last 30 Days
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Last 60 Days"}>
+                                Last 60 Days
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Last 90 Days"}>
+                                Last 90 Days
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"Current Year"}>
+                                Current Year
+                              </Dropdown.Item>
+                              <Dropdown.Item key={"All"}>All</Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                        }
                       </th>
 
                       <th scope="col" class="px-6 py-3">
-                        Value
+                        Total
                       </th>
                     </tr>
                   </thead>
