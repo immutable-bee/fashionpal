@@ -11,7 +11,7 @@ const OnboardingContainer = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
-  const [userType, setUserType] = useState(null);
+  const [userType, setUserType] = useState("business");
   const [username, setUsername] = useState("");
 
   const handleConsumerOnboard = () => {
