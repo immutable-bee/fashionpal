@@ -52,6 +52,27 @@ const Profilecomponent = () => {
     }
   };
 
+  const downloadCSV = async () => {
+    const rows = [
+      ["Stats Name", "value"],
+      ["This months # of scans", businessStats.totalListings],
+      ["Most common category", businessStats.mostCommonCategory],
+      ["# disposed", businessStats.disposedListings],
+      ["# to sell", businessStats.listingsToSell],
+      ["% disposed", businessStats.percentageDisposed],
+      ["% to sell", businessStats.percentageToSell],
+      ["% down voted", businessStats.percentageDownVoted],
+      ["% up voted", businessStats.percentageUpVoted],
+    ];
+    const values = rows.map((entry) => entry.join(","));
+    const blob = new Blob([values.join("\n")], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("download", `stats-${new Date().toISOString()}.csv`);
+    a.click();
+  };
+
   useEffect(() => {
     const range = getRange(selectedRange);
     fetchBusinessStats(range.dateTo, range.dateFrom);
@@ -224,7 +245,7 @@ const Profilecomponent = () => {
               </div>
             </div>
             <div className="flex justify-center mt-5">
-              <ButtonComponent full rounded>
+              <ButtonComponent full rounded onClick={() => downloadCSV()}>
                 Download Excel report
               </ButtonComponent>
             </div>
@@ -287,4 +308,3 @@ const Profilecomponent = () => {
   );
 };
 export default Profilecomponent;
-
