@@ -53,10 +53,10 @@ const handler = async (req, res) => {
 
     const totalListings = listings.length;
     const disposedListings = listings.filter(
-      (listing) => listing.isDisposed
+      (listing) => listing.status === "DISPOSED"
     ).length;
     const listingsToSell = listings.filter(
-      (listing) => !listing.isDisposed && listing.isActive
+      (listing) => listing.status === "SALE" && listing.isActive
     ).length;
     const upVotes = listings.flatMap((listing) =>
       listing.votes.filter((vote) => vote.type === "UP")
