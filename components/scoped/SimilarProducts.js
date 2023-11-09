@@ -7,8 +7,9 @@ function ButtonComponent({ imageUrl = "", onSelect }) {
   const [activeResultIndex, setActiveResultIndex] = useState(0);
 
   useEffect(() => {
+    console.log("useefeect");
     fetchSimilarProducts();
-  });
+  }, [imageUrl]); // Add imageUrl as a dependency
 
   const fetchSimilarProducts = async () => {
     setFetchingSimilarProducts(true);

@@ -36,11 +36,7 @@ function AdminListingForm({ onBack, onFecth }) {
     setPrice(0);
     setStartTime("");
     setEndTime("");
-    setFetchingSimilarProducts(false);
     setCategory("");
-    setListType("dispose");
-    setSubCategoryOne("");
-    setSubCategoryTwo("");
     setCurrentPhotoType("main");
     setUploadedImages({
       main: null,
