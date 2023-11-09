@@ -19,30 +19,20 @@ export default async function handler(
       return res.status(400).json({ message: "No listing provided!" });
     }
 
+    console.log(listing);
+
     try {
       let payload: any = {};
 
       switch (listing.type) {
-        case "simple":
-          payload = {
-            type: "simple",
-            mainImage: listing.mainImage,
-            brandImage: listing.brandImage,
-            category: listing.category,
-            subCategoryOne: listing.subCategoryOne,
-            subCategoryTwo: listing.subCategoryTwo,
-            tags: listing.tags,
-          };
-          break;
-
         case "employee":
           payload = {
-            type: "employee",
-            employeeName: listing.employeeName,
-            listType: listing.listType,
+            dataSource: listing.employeeName,
             mainImage: listing.mainImage,
             brandImage: listing.brandImage,
             tags: listing.tags,
+            status: listing.listType,
+            Barcode: listing.barcode,
           };
           break;
 
@@ -69,11 +59,9 @@ export default async function handler(
         default:
           return res.status(400).json({ message: "Invalid listing type!" });
       }
-
       const createdListing = await prisma.listing.create({
         data: payload,
       });
-
       res.status(200).json(createdListing);
     } catch (error) {
       console.error("Error creating listing and tags:", error);
