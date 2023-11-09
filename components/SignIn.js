@@ -139,6 +139,7 @@ const SignIn = ({ props }) => {
               >
                 <Button
                   size={""}
+                  light
                   className="social-provider-btn rounded-full"
                   onClick={handle0AuthSignIn(providers[0].name)}
                   icon={
