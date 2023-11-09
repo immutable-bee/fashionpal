@@ -264,9 +264,9 @@ const ProfileComponent = ({}) => {
           </div>
         ) : (
           <div>
-            {currentSales && currentSales.length !== 0 ? (
+            {currentSales && currentSales?.length !== 0 ? (
               <div className="sm:flex flex-wrap justify-center mt-2">
-                {currentSales.map((row) => {
+                {currentSales?.map((row) => {
                   return (
                     <div
                       className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"
@@ -369,9 +369,9 @@ const ProfileComponent = ({}) => {
           </div>
         ) : (
           <div>
-            {upcomingSales.length !== 0 ? (
+            {upcomingSales?.length !== 0 ? (
               <div className="sm:flex flex-wrap justify-center mt-2">
-                {upcomingSales.map((row) => {
+                {upcomingSales?.map((row) => {
                   return (
                     <div
                       className="px-4 py-4 relative rounded-2xl sm:mx-3 sm:my-3 my-5 w-full sm:sm:w-[500px]  shadow-lg"

@@ -4,12 +4,14 @@ import { Button, Loading, Input } from "@nextui-org/react";
 import OnboardingForm from "../OnboardingForm";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useUser } from "../../context/UserContext";
 
 const OnboardingContainer = () => {
+  const { user } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
-  const [userType, setUserType] = useState(null);
+  const [userType, setUserType] = useState("business");
   const [username, setUsername] = useState("");
 
   const handleConsumerOnboard = () => {
@@ -61,21 +63,23 @@ const OnboardingContainer = () => {
   };
 
   useEffect(() => {
-    if (isOnboardingCompleted) {
-      if (userType === "consumer") {
-        setTimeout(() => {
-          router.push("/consumer");
-        }, [10000]);
-      }
+    if (user) {
+      if (isOnboardingCompleted || user.onboardingComplete) {
+        if (userType === "consumer" || user.consumer) {
+          setTimeout(() => {
+            router.push("/consumer");
+          }, [10000]);
+        }
 
-      if (userType === "business") {
-        setTimeout(() => {
-          router.push("/business");
-        }, [10000]);
+        if (userType === "business" || user.business) {
+          setTimeout(() => {
+            router.push("/business");
+          }, [10000]);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOnboardingCompleted, userType]);
+  }, [isOnboardingCompleted, userType, user]);
 
   return (
     <AuthContainer
@@ -96,16 +100,16 @@ const OnboardingContainer = () => {
               </h2>
               <div className="flex flex-col items-center">
                 <button
-                  onClick={handleConsumerOnboard}
+                  onClick={handleBusinessOnboard}
                   className=" text-white w-4/5 py-5 my-10 border border-black bg-blbBlue rounded"
                 >
-                  Reader
+                  Business
                 </button>
                 <button
-                  onClick={handleBusinessOnboard}
+                  onClick={handleConsumerOnboard}
                   className="text-white w-4/5 py-5 my-5 border border-black bg-biblioGreen rounded"
                 >
-                  Seller
+                  Consumer
                 </button>
               </div>
             </>
@@ -139,8 +143,8 @@ const OnboardingContainer = () => {
             <div className="flex flex-col items-center">
               <h2 className="pt-5 text-lg font-medium text-center">
                 Your account has been confirmed! You can now start using
-                FashionPal. You will be redirected in 10 seconds or you can click
-                the button below to enter FashionPal
+                FashionPal. You will be redirected in 10 seconds or you can
+                click the button below to enter FashionPal
               </h2>
               <Link href={userType === "consumer" ? "/consumer" : "/business"}>
                 <Button className="mt-5" type="submit">
