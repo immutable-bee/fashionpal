@@ -70,12 +70,12 @@ export default function Home() {
     [searchText, appreal, size]
   );
 
-  useEffect(() => {
-    const initialFetch = async () => {
-      await fetchListings(1);
-    };
-    initialFetch();
-  }, [size, fetchListings]);
+  // useEffect(() => {
+  //   const initialFetch = async () => {
+  //     await fetchListings(1);
+  //   };
+  //   initialFetch();
+  // }, [size, fetchListings]);
 
   useEffect(() => {
     const initialFetch = async () => {

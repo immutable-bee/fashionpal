@@ -116,10 +116,10 @@ const HeaderComponent = () => {
             alt="logo"
           />
         </div>
-        <span className="!ml-3 hidden sm:block text-black font-semibold text-lg">
+        <span className="!ml-3 capitalize hidden sm:block text-black font-semibold text-lg">
           Hi,{" "}
           {session && session.user && session.user.email
-            ? session.user.email
+            ? session.user.email.split("@")[0]
             : "Demo User!"}
         </span>
       </Link>

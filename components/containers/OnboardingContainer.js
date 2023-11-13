@@ -4,10 +4,11 @@ import { Button, Loading, Input } from "@nextui-org/react";
 import OnboardingForm from "../OnboardingForm";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useUser } from "../../context/UserContext";
+// import { useUser } from "../../context/UserContext";
 
 const OnboardingContainer = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const { user } = {};
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
@@ -129,7 +130,10 @@ const OnboardingContainer = () => {
                   placeholder="Username"
                   name="username"
                 />
-                <Button className="mt-5" type="submit">
+                <Button
+                  className="mt-5"
+                  type="submit"
+                >
                   Submit
                 </Button>
               </form>
@@ -147,7 +151,10 @@ const OnboardingContainer = () => {
                 click the button below to enter FashionPal
               </h2>
               <Link href={userType === "consumer" ? "/consumer" : "/business"}>
-                <Button className="mt-5" type="submit">
+                <Button
+                  className="mt-5"
+                  type="submit"
+                >
                   Enter FashionPal
                 </Button>
               </Link>

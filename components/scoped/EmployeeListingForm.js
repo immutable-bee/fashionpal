@@ -110,13 +110,13 @@ function EmployeeListingForm({ onBack, onFetch }) {
         {step === 1 ? (
           <div className="sm:w-96 mx-auto">
             <div className="flex justify-center mt-12">
-              <div>
+              <div className="w-full">
                 <label className="text-lg mb-1 block text-gray-700 font-medium">
                   Employee name:
                 </label>
                 <input
                   type="text"
-                  className="bg-white w-72 mx-auto form-input  focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500  rounded-lg  px-4 py-2.5"
+                  className="bg-white w-full mx-auto form-input  focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500  rounded-lg  px-4 py-2.5"
                   onChange={(e) => setEmployeeName(e.target.value)}
                 />
               </div>
@@ -191,13 +191,22 @@ function EmployeeListingForm({ onBack, onFetch }) {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Disposed
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Listed
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Damaged
                       </th>
                     </tr>

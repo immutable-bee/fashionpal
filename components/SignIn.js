@@ -53,7 +53,7 @@ const SignIn = ({ props }) => {
   }, [email]);
 
   return (
-    <div className="sm:flex min-h-screen bg-[#FEFBE8] onboarding-page-container">
+    <div className="sm:flex sm:px-3 min-h-screen bg-[#FEFBE8] onboarding-page-container">
       <div
         className="sm:w-1/2 hidden sm:flex items-center justify-center"
         id="people-svg-container"
@@ -72,8 +72,15 @@ const SignIn = ({ props }) => {
       >
         <div className="bg-white sm:pt-12 sm:pb-3 sm:border rounded-3xl sm:border-gray-700 min-h-screen sm:min-h-[auto] sm:block flex items-center sm:max-w-lg w-full mx-auto px-4 sm:px-12">
           <div className="w-full">
-            <div id="logo-container" className="flex justify-center mb-4">
-              <Image src={Logo} alt="Logo" className="!w-56" />
+            <div
+              id="logo-container"
+              className="flex justify-center mb-4"
+            >
+              <Image
+                src={Logo}
+                alt="Logo"
+                className="!w-56"
+              />
             </div>
 
             <div className="auth-content-container">
@@ -115,7 +122,11 @@ const SignIn = ({ props }) => {
                 ) : loading ? (
                   <Loading className="self-center mt-4" />
                 ) : (
-                  <Button id="login-btn" className="w-full mt-5" type="submit">
+                  <Button
+                    id="login-btn"
+                    className="w-full mt-5"
+                    type="submit"
+                  >
                     Continue with email
                   </Button>
                 )}
@@ -139,15 +150,15 @@ const SignIn = ({ props }) => {
               >
                 <Button
                   size={""}
-                  className="social-provider-btn rounded-full"
+                  className="social-provider-btn rounded-full !w-fill"
                   onClick={handle0AuthSignIn(providers[0].name)}
                   icon={
                     <Image
                       className=""
                       src={providers[0].icon}
                       alt={`${providers[0].name} icon`}
-                      width="35"
-                      height="35"
+                      width="30"
+                      height="30"
                     />
                   }
                 ></Button>
