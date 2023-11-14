@@ -1,21 +1,26 @@
-import { prisma } from "../../../db/prismaDB";
+import { prisma } from "@/db/prismaDB";
+import * as notify from "@/pages/api/notifier/notify";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const handler = async (req, res) => {
-  const email = req.body;
-
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   try {
     const user = await prisma.user.findUnique({
       where: {
-        email: email,
+        email: session?.user?.email,
       },
       include: {
-        consumer: true,
         business: true,
       },
     });
 
     res.status(200).json(user);
   } catch (error) {
+    console.log(error);
     notify.error(error);
     res.status(500).json({ message: error.message });
   }

@@ -48,7 +48,7 @@ export default function Home() {
 
       try {
         const res = await fetch(
-          `/api/fetch-listings?limit=15&page=${e}&searchText=${searchText}&apparel=${appreal}&size=${size}`
+          `/api/common/fetch-listings?limit=15&page=${e}&searchText=${searchText}&apparel=${appreal}&size=${size}`
         );
 
         if (res.status === 200) {
@@ -108,7 +108,7 @@ export default function Home() {
     setDeleteLoading(true);
     const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id;
     try {
-      const res = await fetch(`/api/delete-listing/${id}`, {
+      const res = await fetch(`/api/business/listing/delete-listing/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
