@@ -20,10 +20,18 @@ export default async function handler(
       if (searchText) {
         filters.push(searchText);
       }
+
       if (size) {
         filters.push(size);
       }
-      let whereClause: any = filters.length > 0 ? {} : {};
+      const whereClause: any =
+        filters.length > 0
+          ? {
+              tags: {
+                hasSome: filters,
+              },
+            }
+          : {};
 
       if (apparel) {
         whereClause.category = apparel;
@@ -31,7 +39,6 @@ export default async function handler(
       if (matches) {
         whereClause.matches = true;
       }
-
       const listingsWithTags = await prisma.listing.findMany({
         skip,
         take: limit,

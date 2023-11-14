@@ -48,7 +48,7 @@ export default function Home() {
 
       try {
         const res = await fetch(
-          `/api/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
+          `/api/common/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
         );
 
         if (res.status === 200) {
