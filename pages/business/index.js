@@ -108,7 +108,7 @@ export default function Home() {
     setDeleteLoading(true);
     const id = listings[activeDeleteIndex] && listings[activeDeleteIndex].id;
     try {
-      const res = await fetch(`/api/delete-listing/${id}`, {
+      const res = await fetch(`/api/business/listing/delete-listing/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
