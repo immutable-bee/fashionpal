@@ -249,9 +249,9 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
       <div className="auth-content-container pb-8">
         {!isStepOne && (
           <div
-            id="onboarding-back-btn"
+            id="onboarding-back-btn "
             onClick={formStepHandler}
-            className="flex justify-center mt-3 py-1 bg-atlantis w-7 rounded-full border border-black cursor-pointer hover:opacity-80"
+            className="flex justify-center !mt-5 py-1 bg-atlantis w-7 rounded-full border border-black cursor-pointer hover:opacity-80"
             size={""}
           >
             <Image
@@ -293,7 +293,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
               className="mt-6"
               onSubmit={handleSubmit}
             >
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <Input
                   onChange={handleChange}
                   className="onboard-fields  my-2"
@@ -308,7 +308,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   placeholder="Business City"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <select
                   name="businessState"
                   onChange={handleChange}

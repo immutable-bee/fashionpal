@@ -3,6 +3,8 @@ import HeaderComponent from "@/components/utility/Header";
 import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import ButtonComponent from "@/components/utility/Button";
 // import { useUser } from "@/context/UserContext";
+import { NotificationManager } from "react-notifications";
+
 import { signOut } from "next-auth/react";
 import { Loading } from "@nextui-org/react";
 
@@ -10,11 +12,31 @@ const ProfileComponent = ({}) => {
   const [user, setUser] = useState({});
   const [consumerStats, setConsumerStats] = useState();
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+  const [updating, setUpdating] = useState(false);
+
+  const isValidEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!user.user_name) {
+      NotificationManager.error("User name is required!");
+      return;
+    } else if (!user.email) {
+      NotificationManager.error("Email is required!");
+      return;
+    } else if (!isValidEmail(user.email)) {
+      NotificationManager.error("Invalid email!");
+      return;
+    }
+    setUpdating(true);
+
     console.log(user);
+
+    setUpdating(false);
 
     // try {
     //   await fetch("/api/business/updateData", {
@@ -68,11 +90,14 @@ const ProfileComponent = ({}) => {
           <h1 className="text-lg sm:text-2xl font-medium text-center ">
             Profile Page
           </h1>
-          <form onSubmit={handleSubmit} className="mt-2 sm:mt-6">
+          <form
+            onSubmit={handleSubmit}
+            className="mt-2 sm:mt-6"
+          >
             <div className="py-2">
               <label className="text-sm text-gray-700">Username</label>
               <input
-                name="store_name"
+                name="user_name"
                 type="text"
                 className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
                 onChange={handleChange}
@@ -88,7 +113,12 @@ const ProfileComponent = ({}) => {
               />
             </div>
 
-            <ButtonComponent rounded full type="submit">
+            <ButtonComponent
+              rounded
+              full
+              loading={updating}
+              type="submit"
+            >
               Update
             </ButtonComponent>
 
@@ -97,11 +127,17 @@ const ProfileComponent = ({}) => {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Label
                       </th>
 
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Value
                       </th>
                     </tr>
@@ -190,13 +226,22 @@ const ProfileComponent = ({}) => {
             </div>
 
             <div className="mt-5">
-              <ButtonComponent className="my-7" color="secondary" rounded full>
+              <ButtonComponent
+                className="my-7"
+                color="secondary"
+                rounded
+                full
+              >
                 Connect venmo/paypal
               </ButtonComponent>
             </div>
           </form>
           <div className="mt-4 w-full max-w-lg">
-            <ButtonComponent full rounded onClick={() => signOut()}>
+            <ButtonComponent
+              full
+              rounded
+              onClick={() => signOut()}
+            >
               Sign Out
             </ButtonComponent>
           </div>

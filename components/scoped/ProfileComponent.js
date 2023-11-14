@@ -6,6 +6,7 @@ import ButtonComponent from "@/components/utility/Button";
 import { Loading, Dropdown } from "@nextui-org/react";
 import { signOut } from "next-auth/react";
 import useDateRangePicker from "../../hooks/useDateRangePicker";
+import { NotificationManager } from "react-notifications";
 
 const Profilecomponent = () => {
   // const { user, updateUserUsername, fetchUserData } = useUser();
@@ -16,7 +17,15 @@ const Profilecomponent = () => {
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
 
   const [formData, setFormData] = useState();
-  const [businessStats, setBusinessStats] = useState();
+  const [fetchingBusinessStats, setFetchingBusinessStats] = useState(true);
+  const [businessStats, setBusinessStats] = useState({});
+
+  const [updating, setUpdating] = useState(false);
+
+  const isValidEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,13 +33,39 @@ const Profilecomponent = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    // add check for empty input on store name or email
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user.store_name) {
+      NotificationManager.error("Store name is required!");
+      return;
+    } else if (!user.email) {
+      NotificationManager.error("Email is required!");
+      return;
+    } else if (!isValidEmail(user.email)) {
+      NotificationManager.error("Invalid email!");
+      return;
+    }
+    setUpdating(true);
+
     console.log(user);
+
+    setUpdating(false);
+
+    // try {
+    //   await fetch("/api/business/updateData", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({ email: user.email, data: formData }),
+    //   });
+    //   fetchUserData();
+    // } catch (error) {}
   };
 
   const fetchBusinessStats = async (dateTo = null, dateFrom = null) => {
+    setFetchingBusinessStats(true);
     const path =
       dateTo && dateFrom
         ? `/api/business/fetchStats?dateTo=${dateTo}&dateFrom=${dateFrom}`
@@ -44,6 +79,7 @@ const Profilecomponent = () => {
     });
 
     const data = await response.json();
+    setFetchingBusinessStats(false);
 
     if (response.ok) {
       setBusinessStats(data);
@@ -81,7 +117,10 @@ const Profilecomponent = () => {
   return (
     <div className="bg-white min-h-screen">
       <Head>
-        <link rel="shortcut icon" href="/images/fav.png" />
+        <link
+          rel="shortcut icon"
+          href="/images/fav.png"
+        />
       </Head>
 
       <div>
@@ -109,7 +148,13 @@ const Profilecomponent = () => {
                 />
               </div>
 
-              <ButtonComponent className="mt-3" rounded full type="submit">
+              <ButtonComponent
+                className="mt-3"
+                rounded
+                full
+                loading={updating}
+                type="submit"
+              >
                 Update
               </ButtonComponent>
             </form>
@@ -119,7 +164,10 @@ const Profilecomponent = () => {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         {
                           <Dropdown>
                             <Dropdown.Button light>
@@ -159,7 +207,10 @@ const Profilecomponent = () => {
                         }
                       </th>
 
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Total
                       </th>
                     </tr>
@@ -169,74 +220,77 @@ const Profilecomponent = () => {
                       <td class="text-black px-6 py-4">
                         This months # of scans
                       </td>
-                      {businessStats ? (
-                        <td class="px-6 py-4">{businessStats.totalListings}</td>
-                      ) : (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          <Loading />
+                          {businessStats ? businessStats.totalListings : ""}
+                        </td>
+                      ) : (
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">
-                        {" "}
-                        Most common category
-                      </td>
-                      {businessStats ? (
+                      <td class="text-black px-6 py-4">Most common category</td>
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.mostCommonCategory}
+                          {businessStats
+                            ? businessStats.mostCommonCategory
+                            : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4"> # disposed</td>
-                      {businessStats ? (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.disposedListings}
+                          {businessStats ? businessStats.disposedListings : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4"> # to sell</td>
-                      {businessStats ? (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.listingsToSell}
+                          {businessStats ? businessStats.listingsToSell : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4"> % down voted</td>
-                      {businessStats ? (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.percentageDownVoted}
+                          {businessStats
+                            ? businessStats.percentageDownVoted
+                            : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4">% up voted</td>
-                      {businessStats ? (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.percentageUpVoted}
+                          {businessStats ? businessStats.percentageUpVoted : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
@@ -245,7 +299,11 @@ const Profilecomponent = () => {
               </div>
             </div>
             <div className="flex justify-center mt-5">
-              <ButtonComponent full rounded onClick={() => downloadCSV()}>
+              <ButtonComponent
+                full
+                rounded
+                onClick={() => downloadCSV()}
+              >
                 Download Excel report
               </ButtonComponent>
             </div>
@@ -291,13 +349,20 @@ const Profilecomponent = () => {
             </div>
 
             <div className="flex justify-center mt-5">
-              <ButtonComponent full rounded>
+              <ButtonComponent
+                full
+                rounded
+              >
                 Invite a customer
               </ButtonComponent>
             </div>
 
             <div className="mt-4 w-full flex justify-center">
-              <ButtonComponent full rounded onClick={() => signOut()}>
+              <ButtonComponent
+                full
+                rounded
+                onClick={() => signOut()}
+              >
                 Sign Out
               </ButtonComponent>
             </div>

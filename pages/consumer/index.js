@@ -131,6 +131,11 @@ export default function Home() {
     }
   };
 
+  const onPaginationChange = (e) => {
+    setNotMatchesPage(e);
+    fetchListings(e);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
