@@ -68,6 +68,7 @@ model Business {
   url                     String?
   phoneNumber            String?
   listings                Listing[]
+  listingQueue ListingQueue?
 }
 
 model Consumer {
@@ -137,4 +138,23 @@ enum StatusType {
   SALE
   DISPOSED
   DAMAGED
+}
+
+model ListingQueue {
+  id String @id @default(uuid())
+  owner Business @relation(fields: [ownerId], references: [id])
+  ownerId String @unique
+  Listings QueuedListing[]
+}
+
+model QueuedListing {
+  id String @id @default(uuid())
+  url String? @unique
+  queue ListingQueue @relation(fields: [queueId], references: [id])
+  queueId String
+  topCategory String?
+  mainCategory String?
+  subCategory String?
+  tags String[]
+  relatedPrices String[]
 }
