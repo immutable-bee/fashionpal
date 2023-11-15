@@ -3,7 +3,8 @@ import Inputcomponent from "@/components/utility/Input";
 export default function CustomerFilters({
   fetchListings,
   changeSearchText,
-  changeAppreal,
+  changeCategory,
+  changeStatus,
   changeSize,
 }) {
   const sizes = [
@@ -32,17 +33,21 @@ export default function CustomerFilters({
 
   const [filter, setFilter] = useState("");
   const [size, setSize] = useState("");
-  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
 
   const onChangeSearchText = (e) => {
     const value = e.target.value;
     setFilter(value);
     changeSearchText(value);
   };
-  const onChangeAppreal = (e) => {
+  const onChangeCategory = (e) => {
     const value = e.target.value;
-    setType(value);
-    changeAppreal(value);
+    setCategory(value);
+    changeCategory(value);
+  };
+  const onChangeStatus = (e) => {
+    const value = e.target.value;
+    changeStatus(value);
   };
   const onChangeSize = (e) => {
     const value = e.target.value;
@@ -87,10 +92,23 @@ export default function CustomerFilters({
       </div>
       <ul className=" mt-2 grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center sm:items-center sm:ml-2">
         <div className="mx-2 sm:mt-0 mt-3 ">
-          <label className="block">Apparel</label>
+          <label className="block">Status</label>
           <select
             className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
-            onChange={(e) => onChangeAppreal(e)}
+            onChange={(e) => onChangeStatus(e)}
+          >
+            <option value="">All</option>
+            <option value="DAMAGED">Trashed</option>
+            <option value="DISPOSED">Disposed</option>
+            <option value="SALE">Sell</option>
+          </select>
+        </div>
+
+        <div className="mx-2 sm:mt-0 mt-3 ">
+          <label className="block">Category</label>
+          <select
+            className="sm:w-40 w-full mt-1 rounded-lg px-3 h-9 border border-gray-600"
+            onChange={(e) => onChangeCategory(e)}
           >
             <option value="">All</option>
             <option value="Clothing">Clothing</option>
@@ -99,7 +117,7 @@ export default function CustomerFilters({
           </select>
         </div>
 
-        <div className="mx-2 sm:mt-0 mt-3 ">
+        <div className="mx-2 sm:mt-0 mt-3 hidden">
           <label className="block">Size</label>
           <select
             value={size}
@@ -109,15 +127,12 @@ export default function CustomerFilters({
             <option value="">All</option>
             {sizes
               .filter((x) =>
-                type === "Footwear"
+                category === "Footwear"
                   ? x.type === "Footwear"
                   : x.type !== "Footwear"
               )
               .map((x) => (
-                <option
-                  key={x.value}
-                  value={x.value}
-                >
+                <option key={x.value} value={x.value}>
                   {x.value}
                 </option>
               ))}
