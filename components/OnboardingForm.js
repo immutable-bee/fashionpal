@@ -168,12 +168,6 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
       if (!formData?.businessName) {
         NotificationManager.error("Business  name is required!");
         return;
-      } else if (!formData?.url) {
-        NotificationManager.error("Website url is required!");
-        return;
-      } else if (!isValidHttpUrl(formData?.url)) {
-        NotificationManager.error("Invalid website URL!");
-        return;
       }
 
       setIsStepOne(false);
@@ -288,11 +282,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
               </Button>
             </div>
           ) : (
-            <form
-              id="onboarding-form"
-              className="mt-6"
-              onSubmit={handleSubmit}
-            >
+            <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <Input
                   onChange={handleChange}
@@ -322,10 +312,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                       "
                 >
                   {stateOptions.map((state) => (
-                    <option
-                      key={state.key}
-                      value={state.value}
-                    >
+                    <option key={state.key} value={state.value}>
                       {state.text}
                     </option>
                   ))}
@@ -358,21 +345,14 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                 </h6>
               </div>
               <div className="flex justify-center">
-                <Button
-                  className="mt-5"
-                  type="submit"
-                >
+                <Button className="mt-5" type="submit">
                   Submit
                 </Button>
               </div>
             </form>
           )}
         </div>
-        <Modal
-          open={isTCModalOpen}
-          closeButton
-          onClose={tcModalCloseHandler}
-        >
+        <Modal open={isTCModalOpen} closeButton onClose={tcModalCloseHandler}>
           <TCModalContent />
         </Modal>
       </div>
