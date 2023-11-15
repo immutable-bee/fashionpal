@@ -100,12 +100,12 @@ const Profilecomponent = () => {
       ["Stats Name", "value"],
       ["This months # of scans", businessStats.totalListings],
       ["Most common category", businessStats.mostCommonCategory],
+      ["# trashed", businessStats.listingsDamaged],
       ["# disposed", businessStats.disposedListings],
-      ["# to sell", businessStats.listingsToSell],
+      ["# keep", businessStats.listingsToSell],
+      ["% trashed", businessStats.percentageDamaged],
       ["% disposed", businessStats.percentageDisposed],
       ["% to sell", businessStats.percentageToSell],
-      ["% down voted", businessStats.percentageDownVoted],
-      ["% up voted", businessStats.percentageUpVoted],
     ];
     const values = rows.map((entry) => entry.join(","));
     const blob = new Blob([values.join("\n")], { type: "text/csv" });
@@ -259,7 +259,7 @@ const Profilecomponent = () => {
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # to sell</td>
+                      <td class="text-black px-6 py-4"> # keep</td>
                       {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
                           {businessStats ? businessStats.listingsToSell : ""}
@@ -271,24 +271,10 @@ const Profilecomponent = () => {
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> % down voted</td>
+                      <td className="text-black px-6 py-4"> # trashed</td>
                       {!fetchingBusinessStats ? (
-                        <td class="px-6 py-4">
-                          {businessStats
-                            ? businessStats.percentageDownVoted
-                            : ""}
-                        </td>
-                      ) : (
-                        <td>
-                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
-                        </td>
-                      )}
-                    </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">% up voted</td>
-                      {!fetchingBusinessStats ? (
-                        <td class="px-6 py-4">
-                          {businessStats ? businessStats.percentageUpVoted : ""}
+                        <td className="px-6 py-4">
+                          {businessStats ? businessStats.listingsDamaged : ""}
                         </td>
                       ) : (
                         <td>
