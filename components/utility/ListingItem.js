@@ -53,7 +53,7 @@ function ListingItem({
           tags.slice(0, 3).map((tag, tagIndex) => (
             <p
               key={tagIndex}
-              className="text-gray-800 text-base leading-5"
+              className="text-gray-700 bg-green-400 max-w-fit px-2 py-1 rounded text-base leading-5"
             >
               {tag}
             </p>

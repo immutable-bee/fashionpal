@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import nprogress from "nprogress";
 
 const UserContext = createContext();
 
@@ -35,23 +36,29 @@ export const UserProvider = ({ children }) => {
   const fetchUserData = async () => {
     if (!session) return;
 
-    const res = await fetch("/api/user/fetch", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(session.user.email),
-    });
+    try {
+      nprogress.start(); // Start the loading indicator
 
-    if (!res.ok) {
-      return;
-    }
+      const res = await fetch("/api/user/fetch", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user.email),
+      });
 
-    const data = await res.json();
-    setUser(data);
+      if (!res.ok) {
+        return;
+      }
 
-    if (data?.business) {
-      fetchBusinessData();
+      const data = await res.json();
+      setUser(data);
+
+      if (data?.business) {
+        fetchBusinessData();
+      }
+    } finally {
+      nprogress.done(); // Stop the loading indicator
     }
   };
 
