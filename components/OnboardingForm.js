@@ -2,6 +2,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Checkbox, Input, Button, Modal } from "@nextui-org/react";
 // import * as notify from "../../../bibliopal-nextjs/pages/api/notifier/notify";
+import { NotificationManager } from "react-notifications";
 
 const stateOptions = [
   { key: "al", value: "AL", text: "Alabama" },
@@ -155,14 +156,21 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
 
   const [formData, setFormData] = useState();
 
+  const isValidHttpUrl = (str) => {
+    const valid = /^((https?|ftp):\/\/)?[^\s/$.?#]+\.[^\s/$.?#]+[^\s]*$/.test(
+      str
+    );
+    return valid;
+  };
   const formStepHandler = () => {
     if (isStepOne) {
       // Check if required fields in step one are filled
-      if (formData?.businessName && formData?.url) {
-        setIsStepOne(false);
-      } else {
-        alert("Please fill out all required fields before proceeding.");
+      if (!formData?.businessName) {
+        NotificationManager.error("Business  name is required!");
+        return;
       }
+
+      setIsStepOne(false);
     } else {
       setIsStepOne(true);
     }
@@ -184,13 +192,28 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    loadingHandler(true);
 
-    if (!agreedToTerms) {
-      return alert(
+    if (!formData?.businessStreet) {
+      NotificationManager.error("Street is required!");
+      return;
+    } else if (!formData?.businessCity) {
+      NotificationManager.error("City url is required!");
+      return;
+    } else if (!formData?.businessState) {
+      NotificationManager.error("State url is required!");
+      return;
+    } else if (!formData?.businessZip) {
+      NotificationManager.error("Zip code url is required!");
+      return;
+    } else if (!agreedToTerms) {
+      NotificationManager.error(
         "Please agree to the terms and conditions before proceeding"
       );
+      return;
     }
+    console.log(agreedToTerms);
+
+    loadingHandler(true);
 
     try {
       const res = await fetch("/api/auth/onboarding/business", {
@@ -205,7 +228,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
         throw new Error("Failed to onboard user");
       }
 
-      const data = await res.json();
+      await res.json();
       loadingHandler(false);
       isCompleteHandler();
     } catch (err) {
@@ -220,9 +243,9 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
       <div className="auth-content-container pb-8">
         {!isStepOne && (
           <div
-            id="onboarding-back-btn"
+            id="onboarding-back-btn "
             onClick={formStepHandler}
-            className="flex justify-center mt-3 py-1 bg-atlantis w-7 rounded-full border border-black cursor-pointer hover:opacity-80"
+            className="flex justify-center !mt-5 py-1 bg-atlantis w-7 rounded-full border border-black cursor-pointer hover:opacity-80"
             size={""}
           >
             <Image
@@ -235,11 +258,10 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
           </div>
         )}
 
-        <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
+        <div className="mt-6">
           {isStepOne ? (
             <div className="w-full flex flex-col items-center">
               <Input
-                required={true}
                 onChange={handleChange}
                 className="onboard-fields my-2"
                 placeholder="Store Business Name"
@@ -251,29 +273,32 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                 placeholder="Website Url"
                 name="url"
               />
-              <Button rounded className="mt-5" onClick={formStepHandler}>
+              <Button
+                rounded
+                className="mt-5 !w-full"
+                onClick={formStepHandler}
+              >
                 Next
               </Button>
             </div>
           ) : (
-            <div>
-              <div className="grid grid-cols-2 gap-3">
+            <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <Input
-                  required={true}
                   onChange={handleChange}
                   className="onboard-fields  my-2"
                   name="businessStreet"
                   placeholder="Business Address"
                 />
+
                 <Input
-                  required={true}
                   onChange={handleChange}
                   className="onboard-fields  my-2"
                   name="businessCity"
                   placeholder="Business City"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <select
                   name="businessState"
                   onChange={handleChange}
@@ -293,7 +318,6 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   ))}
                 </select>
                 <Input
-                  required={true}
                   onChange={handleChange}
                   className="small-onboard-fields  my-2"
                   name="businessZip"
@@ -325,9 +349,9 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                   Submit
                 </Button>
               </div>
-            </div>
+            </form>
           )}
-        </form>
+        </div>
         <Modal open={isTCModalOpen} closeButton onClose={tcModalCloseHandler}>
           <TCModalContent />
         </Modal>

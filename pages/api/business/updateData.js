@@ -1,4 +1,4 @@
-import { prisma } from "../../../db/prismaDB";
+import { prisma } from "@/db/prismaDB";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -8,7 +8,7 @@ const handler = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const data = req.body;
+  const { data } = req.body;
 
   const business = await prisma.business.findUnique({
     where: { email: session.user.email },
@@ -21,7 +21,7 @@ const handler = async (req, res) => {
   try {
     const updatedBusiness = await prisma.business.update({
       where: { email: session.user.email },
-      data: { ...data },
+      data: data,
     });
 
     return res

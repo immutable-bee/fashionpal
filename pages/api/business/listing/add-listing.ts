@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../../prisma/client";
 import { createClient } from "@supabase/supabase-js";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
@@ -12,14 +14,15 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // @ts-ignore
+  const session = await getServerSession(req, res, authOptions);
+
   if (req.method === "POST") {
     const listing = req.body.listing;
 
     if (!listing) {
       return res.status(400).json({ message: "No listing provided!" });
     }
-
-    console.log(listing);
 
     try {
       let payload: any = {};
@@ -58,6 +61,13 @@ export default async function handler(
 
         default:
           return res.status(400).json({ message: "Invalid listing type!" });
+      }
+      const business = await prisma.business.findUnique({
+        where: { email: session.user.email },
+      });
+
+      if (business) {
+        payload.businessId = business.id;
       }
       const createdListing = await prisma.listing.create({
         data: payload,

@@ -1,6 +1,6 @@
-import { prisma } from "../../../db/prismaDB";
+import { prisma } from "@/db/prismaDB";
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -52,6 +52,9 @@ const handler = async (req, res) => {
     const listings = business.listings || [];
 
     const totalListings = listings.length;
+    const listingsDamaged = listings.filter(
+      (listing) => listing.status === "DAMAGED"
+    ).length;
     const disposedListings = listings.filter(
       (listing) => listing.status === "DISPOSED"
     ).length;
@@ -80,6 +83,8 @@ const handler = async (req, res) => {
       totalListings !== 0 ? (disposedListings / totalListings) * 100 : 0;
     const percentageToSell =
       totalListings !== 0 ? (listingsToSell / totalListings) * 100 : 0;
+    const percentageDamaged =
+      totalListings !== 0 ? (listingsDamaged / totalListings) * 100 : 0;
     const percentageDownVoted =
       totalListings !== 0 ? (downVotes / totalListings) * 100 : 0;
     const percentageUpVoted =
@@ -88,8 +93,10 @@ const handler = async (req, res) => {
     const stats = {
       totalListings,
       mostCommonCategory: mostCommonCategory ? mostCommonCategory[0] : "None",
+      listingsDamaged,
       disposedListings,
       listingsToSell,
+      percentageDamaged,
       percentageDisposed,
       percentageToSell,
       percentageDownVoted,

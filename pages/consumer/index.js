@@ -49,7 +49,7 @@ export default function Home() {
 
       try {
         const res = await fetch(
-          `/api/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
+          `/api/common/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
         );
 
         if (res.status === 200) {
@@ -131,6 +131,11 @@ export default function Home() {
     }
   };
 
+  const onPaginationChange = (e) => {
+    setNotMatchesPage(e);
+    fetchListings(e);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
@@ -177,17 +182,10 @@ export default function Home() {
               ) : (
                 <div className="w-screen overflow-hidden">
                   <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView="auto"
-                      spaceBetween={14}
-                      navigation
-                    >
+                    <Swiper slidesPerView="auto" spaceBetween={14} navigation>
                       {listings.map((row, index) => {
                         return (
-                          <SwiperSlide
-                            key={index}
-                            className="!w-64"
-                          >
+                          <SwiperSlide key={index} className="!w-64">
                             <div
                               style={{
                                 boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",

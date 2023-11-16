@@ -53,7 +53,7 @@ const SignIn = ({ props }) => {
   }, [email]);
 
   return (
-    <div className="sm:flex min-h-screen bg-[#FEFBE8] onboarding-page-container">
+    <div className="sm:flex sm:px-3 min-h-screen bg-[#FEFBE8] onboarding-page-container">
       <div
         className="sm:w-1/2 hidden sm:flex items-center justify-center"
         id="people-svg-container"
@@ -140,15 +140,15 @@ const SignIn = ({ props }) => {
                 <Button
                   size={""}
                   light
-                  className="social-provider-btn rounded-full"
+                  className="social-provider-btn rounded-full !w-fill"
                   onClick={handle0AuthSignIn(providers[0].name)}
                   icon={
                     <Image
                       className=""
                       src={providers[0].icon}
                       alt={`${providers[0].name} icon`}
-                      width="35"
-                      height="35"
+                      width="30"
+                      height="30"
                     />
                   }
                 ></Button>

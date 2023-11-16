@@ -11,6 +11,7 @@ export default async function handler(
     const limit = parseInt(req.query.limit as string) || 15;
     const searchText = req.query.searchText as string;
     const apparel = req.query.apparel as string;
+    const status = req.query.status as string;
     const matches = req.query.matches as string;
     const size = req.query.size as string;
 
@@ -20,18 +21,30 @@ export default async function handler(
       if (searchText) {
         filters.push(searchText);
       }
+
       if (size) {
         filters.push(size);
       }
-      let whereClause: any = filters.length > 0 ? {} : {};
+      const whereClause: any =
+        filters.length > 0
+          ? {
+              tags: {
+                hasSome: filters,
+              },
+            }
+          : {};
 
       if (apparel) {
-        whereClause.category = apparel;
+        whereClause.categories = {
+          some: { category: { name: apparel } },
+        };
+      }
+      if (status) {
+        whereClause.status = status;
       }
       if (matches) {
         whereClause.matches = true;
       }
-
       const listingsWithTags = await prisma.listing.findMany({
         skip,
         take: limit,

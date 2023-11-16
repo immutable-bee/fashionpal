@@ -18,7 +18,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/edit-listing`, {
+      const response = await fetch(`/api/business/listing/edit-listing`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -73,10 +73,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
             </div>
           }
         >
-          <TagsInput
-            value={data}
-            onChange={(e) => setData(e)}
-          />
+          <TagsInput value={data} onChange={(e) => setData(e)} />
         </ModalComponent>
       ) : (
         ""

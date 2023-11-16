@@ -4,33 +4,75 @@ import Head from "next/head";
 import HeaderComponent from "@/components/utility/BusinessHeader";
 import ButtonComponent from "@/components/utility/Button";
 import { Loading, Dropdown } from "@nextui-org/react";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import useDateRangePicker from "../../hooks/useDateRangePicker";
+import { NotificationManager } from "react-notifications";
 
 const Profilecomponent = () => {
-  // const { user, updateUserUsername, fetchUserData } = useUser();
-
+  const { data: session } = useSession();
   const { selectedRange, setSelectedRange, getRange } = useDateRangePicker();
 
-  const [user, setUser] = useState({});
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
+  const [fetchingBusinessStats, setFetchingBusinessStats] = useState(true);
+  const [businessStats, setBusinessStats] = useState({});
+  const [businessData, setBusinessData] = useState({});
 
-  const [formData, setFormData] = useState();
-  const [businessStats, setBusinessStats] = useState();
+  const [updating, setUpdating] = useState(false);
+
+  const isValidEmail = (email) => {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setUser({ ...user, [name]: value });
+    setBusinessData({ ...businessData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    // add check for empty input on store name or email
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
+
+    if (!businessData.businessName) {
+      NotificationManager.error("Store name is required!");
+      return;
+    }
+    setUpdating(true);
+    try {
+      await fetch("/api/business/updateData", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: businessData.email,
+          data: {
+            businessName: businessData.businessName,
+          },
+        }),
+      });
+      await fetchBusinessData();
+    } catch (error) {}
+    setUpdating(false);
+  };
+
+  const fetchBusinessData = async () => {
+    const response = await fetch(`/api/user/fetch`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      setBusinessData(data.business);
+    } else {
+      return console.error("Failed to fetch user data:", data.error);
+    }
   };
 
   const fetchBusinessStats = async (dateTo = null, dateFrom = null) => {
+    setFetchingBusinessStats(true);
     const path =
       dateTo && dateFrom
         ? `/api/business/fetchStats?dateTo=${dateTo}&dateFrom=${dateFrom}`
@@ -44,6 +86,7 @@ const Profilecomponent = () => {
     });
 
     const data = await response.json();
+    setFetchingBusinessStats(false);
 
     if (response.ok) {
       setBusinessStats(data);
@@ -57,12 +100,12 @@ const Profilecomponent = () => {
       ["Stats Name", "value"],
       ["This months # of scans", businessStats.totalListings],
       ["Most common category", businessStats.mostCommonCategory],
+      ["# trashed", businessStats.listingsDamaged],
       ["# disposed", businessStats.disposedListings],
-      ["# to sell", businessStats.listingsToSell],
+      ["# keep", businessStats.listingsToSell],
+      ["% trashed", businessStats.percentageDamaged],
       ["% disposed", businessStats.percentageDisposed],
       ["% to sell", businessStats.percentageToSell],
-      ["% down voted", businessStats.percentageDownVoted],
-      ["% up voted", businessStats.percentageUpVoted],
     ];
     const values = rows.map((entry) => entry.join(","));
     const blob = new Blob([values.join("\n")], { type: "text/csv" });
@@ -75,7 +118,8 @@ const Profilecomponent = () => {
 
   useEffect(() => {
     const range = getRange(selectedRange);
-    fetchBusinessStats(range.dateTo, range.dateFrom);
+    fetchBusinessStats(range.dateTo, range.dateFrom).then();
+    fetchBusinessData().then();
   }, [selectedRange]);
 
   return (
@@ -93,7 +137,8 @@ const Profilecomponent = () => {
               <div className="py-2">
                 <label className="text-sm text-gray-700">Store name</label>
                 <input
-                  name="store_name"
+                  value={businessData?.businessName}
+                  name="businessName"
                   type="text"
                   className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
                   onChange={handleChange}
@@ -102,6 +147,8 @@ const Profilecomponent = () => {
               <div className="py-2">
                 <label className="text-sm text-gray-700">Email</label>
                 <input
+                  disabled={true}
+                  value={businessData?.email}
                   name="email"
                   type="text"
                   className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
@@ -109,7 +156,13 @@ const Profilecomponent = () => {
                 />
               </div>
 
-              <ButtonComponent className="mt-3" rounded full type="submit">
+              <ButtonComponent
+                className="mt-3"
+                rounded
+                full
+                loading={updating}
+                type="submit"
+              >
                 Update
               </ButtonComponent>
             </form>
@@ -169,74 +222,63 @@ const Profilecomponent = () => {
                       <td class="text-black px-6 py-4">
                         This months # of scans
                       </td>
-                      {businessStats ? (
-                        <td class="px-6 py-4">{businessStats.totalListings}</td>
-                      ) : (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          <Loading />
+                          {businessStats ? businessStats.totalListings : ""}
+                        </td>
+                      ) : (
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">
-                        {" "}
-                        Most common category
-                      </td>
-                      {businessStats ? (
+                      <td class="text-black px-6 py-4">Most common category</td>
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.mostCommonCategory}
+                          {businessStats
+                            ? businessStats.mostCommonCategory
+                            : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
                       <td class="text-black px-6 py-4"> # disposed</td>
-                      {businessStats ? (
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.disposedListings}
+                          {businessStats ? businessStats.disposedListings : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # to sell</td>
-                      {businessStats ? (
+                      <td class="text-black px-6 py-4"> # keep</td>
+                      {!fetchingBusinessStats ? (
                         <td class="px-6 py-4">
-                          {businessStats.listingsToSell}
+                          {businessStats ? businessStats.listingsToSell : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
                     <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> % down voted</td>
-                      {businessStats ? (
-                        <td class="px-6 py-4">
-                          {businessStats.percentageDownVoted}
+                      <td className="text-black px-6 py-4"> # trashed</td>
+                      {!fetchingBusinessStats ? (
+                        <td className="px-6 py-4">
+                          {businessStats ? businessStats.listingsDamaged : ""}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">% up voted</td>
-                      {businessStats ? (
-                        <td class="px-6 py-4">
-                          {businessStats.percentageUpVoted}
-                        </td>
-                      ) : (
-                        <td class="px-6 py-4">
-                          <Loading />
+                        <td>
+                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
@@ -250,7 +292,7 @@ const Profilecomponent = () => {
               </ButtonComponent>
             </div>
 
-            <div className="flex items-center justify-center mt-4">
+            <div className="flex items-center justify-center mt-4 hidden">
               <label className="relative flex items-center cursor-pointer">
                 <input
                   type="checkbox"
@@ -290,7 +332,7 @@ const Profilecomponent = () => {
               </TooltipComponent>
             </div>
 
-            <div className="flex justify-center mt-5">
+            <div className="flex justify-center mt-5 hidden">
               <ButtonComponent full rounded>
                 Invite a customer
               </ButtonComponent>

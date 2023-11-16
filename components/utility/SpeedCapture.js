@@ -17,23 +17,13 @@ function Capture({ onCapture, loading = false, onDone, totalAmount }) {
   }, []);
 
   return (
-    <div>
-      <div className="flex gap-3 sm:justify-start justify-center">
-        <ButtonComponent
-          loading={loading}
-          color="grey"
-          className="bg-red-600 px-5 py-2 rounded-lg mt-3 w-[70%] sm:w-auto"
-          onClick={() => onDone()}
-        >
-          DONE
-        </ButtonComponent>
-      </div>
-      <div className="border-2 border-black rounded-2xl px-2 content-center text-4xl">
+    <div className="w-80">
+      <div className="border-2 w-80 py-1 border-black rounded-2xl px-4 content-center text-4xl">
         # {totalAmount}
       </div>
 
       <div
-        className={`border-4 rounded-2xl px-2 sm:px-4 py-2 sm:py-5 sm:w-64 my-1 relative ${
+        className={`border-4 mx-auto mt-8 rounded-2xl px-2 sm:px-4 py-2 sm:py-5 sm:w-64 my-1 relative ${
           loading ? "border-green-400" : "border-black"
         }`}
       >
@@ -47,23 +37,22 @@ function Capture({ onCapture, loading = false, onDone, totalAmount }) {
           }}
         />
       </div>
-      <div className="flex gap-3 sm:justify-start justify-center">
+
+      <div className="flex w-80 mt-4 gap-3 sm:justify-center justify-center">
         <ButtonComponent
-          loading={loading}
+          disabled={loading}
           color="grey"
-          className="bg-gray-300 px-5 py-2 rounded-lg mt-3 w-[70%] sm:w-auto"
+          className="bg-white px-5 py-2 rounded-lg mt-3 sm:w-auto"
           onClick={() =>
             onCapture(webcamRef.current.getScreenshot(), "DAMAGED")
           }
         >
           Damaged
         </ButtonComponent>
-      </div>
-      <div className="flex gap-3 sm:justify-start justify-center">
         <ButtonComponent
-          loading={loading}
+          disabled={loading}
           color="grey"
-          className="bg-gray-300 px-5 py-2 rounded-lg mt-3 w-[70%] sm:w-auto"
+          className="bg-white px-5 py-2 rounded-lg mt-3  sm:w-auto"
           onClick={() =>
             onCapture(webcamRef.current.getScreenshot(), "DISPOSED")
           }
@@ -71,14 +60,29 @@ function Capture({ onCapture, loading = false, onDone, totalAmount }) {
           Dispose
         </ButtonComponent>
         <ButtonComponent
-          loading={loading}
+          disabled={loading}
           color="grey"
-          className="bg-green-500 px-5 py-2 rounded-lg mt-3 w-[70%] sm:w-auto"
+          className="bg-green-500 px-5 py-2 rounded-lg mt-3  sm:w-auto"
           onClick={() => onCapture(webcamRef.current.getScreenshot(), "SALE")}
         >
           Keep
         </ButtonComponent>
       </div>
+
+      {totalAmount ? (
+        <div className="flex mt-8 gap-3 w-80 sm:justify-center justify-center">
+          <ButtonComponent
+            disabled={loading}
+            color="grey"
+            className="bg-red-600 mx-auto text-white !px-20 py-2 rounded-lg mt-3  sm:w-auto"
+            onClick={() => onDone()}
+          >
+            DONE
+          </ButtonComponent>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

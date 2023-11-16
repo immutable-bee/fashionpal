@@ -21,6 +21,19 @@ export default function Home() {
   const [inventoryMatchesPage, setInventoryMatchesPage] = useState(1);
   const openRequestsItemsPerPage = 7;
 
+  const [pagination, setPagination] = useState({
+    total: 0,
+    previous_page: 1,
+    current_page: 1,
+    next_page: 0,
+    items: [1],
+    total_pages: 2,
+    has_prev_page: true,
+    limit_per_page: 15,
+    has_next_page: false,
+  });
+  const [notMatchesPage, setNotMatchesPage] = useState(1);
+
   const loadingMessage = () => {
     if (loadingListings === true) {
       return "Loading";
@@ -35,7 +48,7 @@ export default function Home() {
 
       try {
         const res = await fetch(
-          `/api/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
+          `/api/common/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
         );
 
         if (res.status === 200) {
@@ -67,6 +80,11 @@ export default function Home() {
   const triggerDetailsModal = (index) => {
     setDetailsModal(true);
     setActiveIndex(index);
+  };
+
+  const onPaginationChange = (e) => {
+    setNotMatchesPage(e);
+    fetchListings(e);
   };
 
   return (
@@ -136,11 +154,10 @@ export default function Home() {
                   >
                     {arrayToMap?.length > 0 && !loadingListings && (
                       <PaginationComponent
-                        total={Math.ceil(
-                          arrayToMap.length / openRequestsItemsPerPage
-                        )}
-                        current={inventoryMatchesPage}
-                        onChange={(page) => setInventoryMatchesPage(page)}
+                        total={pagination.total}
+                        current={notMatchesPage}
+                        pageSize={pagination.limit_per_page}
+                        onChange={(e) => onPaginationChange(e)}
                       />
                     )}
                   </div>
