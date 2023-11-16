@@ -133,7 +133,7 @@ const handler = async (req, res) => {
 
         const data = await ximilarReq.json();
 
-        res.status(200).json(data);
+        res.status(200).json({ queuedListingId: queueListing.id, data });
       } catch (error) {
         return res.status(500).json({ error: error.message });
       }

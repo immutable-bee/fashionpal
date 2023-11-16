@@ -29,6 +29,7 @@ function AdminListingForm({ onBack, onFecth }) {
   const [brandImage, setBrandImage] = useState();
   const [brandImageSkipped, setBrandImageSkipped] = useState(false);
 
+  const [pendingListingId, setPendingListingId] = useState();
   const [similarProducts, setSimilarProducts] = useState([]);
 
   const skipBrandImage = () => {
@@ -105,8 +106,9 @@ function AdminListingForm({ onBack, onFecth }) {
         body: formData,
       });
 
-      const similarResults = await response.json();
-      setSimilarProducts(similarResults);
+      const { queuedListingId, data } = await response.json();
+      setSimilarProducts(data);
+      setPendingListingId(queuedListingId);
       setImageUploading(false);
     } catch (error) {
       setImageUploading(false);
