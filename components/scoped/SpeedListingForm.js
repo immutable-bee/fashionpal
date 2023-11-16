@@ -17,20 +17,18 @@ function EmployeeListingForm({ onBack, onFetch }) {
   const uploadMainOrBrandTagPhoto = async (imageSrc, type) => {
     if (imageSrc) {
       const file = convertDataURLtoFile(imageSrc, `main-${Date.now()}.jpg`);
-      // Set loading to true while uploading
+
+      const formData = new FormData();
+      formData.append("file", file);
+
       setPhotoUploading(true);
 
       try {
-        const response = await fetch("/api/upload-image", {
+        const response = await fetch("/api/business/listing/addToQueue", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "mainImage",
-            image: imageSrc.split(",")[1], // Base64 image data
-          }),
+          body: formData,
         });
+
         if (response.ok) {
           const data = await response.json();
           const image = {
@@ -40,9 +38,14 @@ function EmployeeListingForm({ onBack, onFetch }) {
             url: data.url,
           };
           await createListing(image);
+        } else {
+          const errorData = await response.json();
+          console.error("Server response error:", errorData);
         }
       } catch (error) {
         console.error("Error uploading image:", error);
+      } finally {
+        setPhotoUploading(false);
       }
     }
   };

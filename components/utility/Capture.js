@@ -5,7 +5,7 @@ import Image from "next/image";
 import LoadingComponent from "@/components/utility/loading";
 import { NotificationManager } from "react-notifications";
 
-function Capture({ text, onCapture, skip = false, loading = false }) {
+function Capture({ text, onCapture, onSkip, skip = false, loading = false }) {
   const webcamRef = useRef(null);
   const [facingMode, setFacingMode] = useState("environment");
   const [capturedImage, setCapturedImage] = useState("");
@@ -27,12 +27,7 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
   return (
     <div>
       {loading ? (
-        <Image
-          src={capturedImage}
-          width={400}
-          height={400}
-          alt=""
-        />
+        <Image src={capturedImage} width={400} height={400} alt="" />
       ) : (
         <Webcam
           audio={false}

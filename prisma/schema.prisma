@@ -67,6 +67,7 @@ model Business {
   phoneNumber    String?
   user           User      @relation(fields: [uid], references: [id])
   listings       Listing[]
+  listingQueue ListingQueue?
 }
 
 model Consumer {
@@ -91,7 +92,7 @@ model Vote {
 
 model Category {
   id       String                 @id @default(uuid())
-  name     String
+  name     String @unique
   listings CategoriesOnListings[]
 }
 
@@ -107,6 +108,8 @@ model Listing {
   id           String                 @id @default(cuid())
   mainImage    Json?
   brandImage   Json?
+  mainImageUrl String?
+  brandImageUrl String?
   dataSource   String?
   price        Int?
   delivery     String?
@@ -132,4 +135,23 @@ enum StatusType {
   SALE
   DISPOSED
   DAMAGED
+}
+
+model ListingQueue {
+  id String @id @default(uuid())
+  owner Business @relation(fields: [ownerId], references: [id])
+  ownerId String @unique
+  Listings QueuedListing[]
+}
+
+model QueuedListing {
+  id String @id @default(uuid())
+  bucketPath String? @unique
+  queue ListingQueue @relation(fields: [queueId], references: [id])
+  queueId String
+  topCategory String?
+  mainCategory String?
+  subCategory String?
+  tags String[]
+  relatedPrices String[]
 }

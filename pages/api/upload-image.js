@@ -1,10 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: false },
-});
+import { supabase } from "../../supabase/client";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -24,12 +18,10 @@ export default async function handler(req, res) {
         : null;
 
     if (!imageType) {
-      return res
-        .status(400)
-        .json({
-          message:
-            'Invalid image type provided. Use "mainImage" or "brandImage".',
-        });
+      return res.status(400).json({
+        message:
+          'Invalid image type provided. Use "mainImage" or "brandImage".',
+      });
     }
 
     try {
