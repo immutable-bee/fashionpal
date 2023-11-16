@@ -18,11 +18,25 @@ const handler = async (req, res) => {
   const mainImageUrl = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${bucketPath}/mainImage`;
   const brandImageUrl = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${bucketPath}/brandImage`;
 
-  const categories = [
+  let categories = [
     queuedListing.topCategory,
     queuedListing.mainCategory,
     queuedListing.subCategory,
   ];
+  categories = categories.filter(
+    (entry) => entry !== null && entry !== undefined
+  );
+  const categoriesToCreate = [];
+  for (const category of categories) {
+    categoriesToCreate.push({
+      category: {
+        connectOrCreate: {
+          where: { name: category },
+          create: { name: category },
+        },
+      },
+    });
+  }
 
   try {
     const newListing = await prisma.listing.create({
@@ -39,32 +53,7 @@ const handler = async (req, res) => {
           connect: { id: queuedListing.queue.ownerId },
         },
         categories: {
-          create: [
-            {
-              category: {
-                connectOrCreate: {
-                  where: { name: categories[0] },
-                  create: { name: categories[0] },
-                },
-              },
-            },
-            {
-              category: {
-                connectOrCreate: {
-                  where: { name: categories[1] },
-                  create: { name: categories[1] },
-                },
-              },
-            },
-            {
-              category: {
-                connectOrCreate: {
-                  where: { name: categories[2] },
-                  create: { name: categories[2] },
-                },
-              },
-            },
-          ],
+          create: categoriesToCreate,
         },
       },
     });
