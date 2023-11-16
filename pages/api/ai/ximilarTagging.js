@@ -11,6 +11,9 @@ const handler = async (req, res) => {
     aggregate_labels: true,
   };
 
+  console.log("ximilar payload: ", ximilarPayload);
+  console.log("Stringified Payload: ", JSON.stringify(ximilarPayload));
+
   const options = {
     method: "POST",
     headers: {
