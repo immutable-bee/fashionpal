@@ -389,7 +389,7 @@ function AdminListingForm({ onBack, onFecth }) {
 
                 <SimilarProducts
                   onSelect={onSelectSimilarProduct}
-                  SimilarProducts={SimilarProducts}
+                  similarProducts={similarProducts}
                 />
               </div>
             </div>

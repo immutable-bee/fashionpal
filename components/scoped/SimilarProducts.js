@@ -39,7 +39,7 @@ function ButtonComponent({ imageUrl = "", onSelect, similarProducts }) {
               <div key={key} className="mt-2 mx-1 w-full">
                 <h3 className="text-2xl text-center truncate">{row.name}</h3>
                 <h3 className="text-2xl text-center">
-                  {row.price ? "$" + row.price : "No price"}
+                  {row.price ? row.price : "No price"}
                 </h3>
                 <div className="flex justify-center">
                   <button
