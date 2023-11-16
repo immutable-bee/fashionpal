@@ -114,13 +114,16 @@ const handler = async (req, res) => {
           id: `${queueListing.id}_${file.key}`,
         }));
 
-        const ximilarReq = await fetch("/api/ai/ximilarTagging", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(ximilarReqBody),
-        });
+        const ximilarReq = await fetch(
+          `${process.env.ORIGIN_URL}/api/ai/ximilarTagging`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ximilarReqBody),
+          }
+        );
 
         if (!ximilarReq.ok) {
           return res.status(500).json({ message: "Ximilar call failed" });

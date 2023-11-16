@@ -15,7 +15,7 @@ const handler = async (req, res) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Token ${prcesss.env.XIMILARTOKEN}`,
+      Authorization: `Token ${process.env.XIMILARTOKEN}`,
     },
     body: JSON.stringify(ximilarPayload),
   };
@@ -46,13 +46,16 @@ const handler = async (req, res) => {
       },
     });
 
-    const productSearch = await fetch("api/ai/serpapi/googleShoppingSearch", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ simpleTags }),
-    });
+    const productSearch = await fetch(
+      `${process.env.ORIGIN_URL}/api/ai/serpapi/googleShoppingSearch`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ simpleTags }),
+      }
+    );
 
     if (!productSearch.ok) {
       return res.status(500).json({ message: "Product search failed" });
