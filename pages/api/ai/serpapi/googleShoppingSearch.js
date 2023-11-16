@@ -25,6 +25,7 @@ const handler = async (req, res) => {
           title: item.title,
           price: item.price,
           thumbnail: item.thumbnail,
+          link: item.link,
         }));
 
         return res.status(200).json(simplifiedResults);

@@ -1,7 +1,7 @@
 import { prisma } from "../../../../db/prismaDB";
 import { supabase } from "../../../../supabase/client";
 import fs from "fs";
-import formidable from "formidable";
+import { IncomingForm } from "formidable";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]";
 
@@ -34,7 +34,7 @@ const handler = async (req, res) => {
     let businessQueue;
 
     if (!business.listingQueue) {
-      const newListingQueue = await prisma.ListingQueue.create({
+      const newListingQueue = await prisma.listingQueue.create({
         data: {
           owner: {
             connect: {
@@ -48,9 +48,9 @@ const handler = async (req, res) => {
       businessQueue = business.listingQueue;
     }
 
-    const queueListing = await prisma.queuedlisting.create({
+    const queueListing = await prisma.queuedListing.create({
       data: {
-        owner: {
+        queue: {
           connect: {
             id: businessQueue.id,
           },
@@ -58,66 +58,79 @@ const handler = async (req, res) => {
       },
     });
 
-    const form = new formidable.IncomingForm();
+    const form = new IncomingForm();
     form.parse(req, async (err, fields, files) => {
       if (err) {
         res.status(500).json({ error: "Error parsing the files" });
         return;
       }
 
-      const file = files.file[0];
-      const filePath = file.filepath;
+      const fileUploads = Object.keys(files).map(async (key) => {
+        const file = files[key][0];
+        const filePath = file.filepath;
+        const fileData = fs.readFileSync(filePath);
+        const uploadPath = `${businessQueue.id}/${queueListing.id}/${key}`;
 
-      const fileData = fs.readFileSync(filePath);
+        const { data, error } = await supabase.storage
+          .from("queued-listings")
+          .upload(`${businessQueue.id}/${queueListing.id}`, fileData, {
+            contentType: file.mimetype,
+            upsert: false,
+          });
 
-      const { data, error } = await supabase.storage
-        .from("queued-listings")
-        .upload(`${businessQueue.id}/${queueListing.id}`, fileData, {
-          contentType: file.mimetype,
-          upsert: false,
-        });
+        fs.unlinkSync(filePath);
+        if (error) {
+          throw new Error(error.message);
+        }
+        const { publicURL, error: urlError } = supabase.storage
+          .from("queued-listings")
+          .getPublicUrl(uploadPath);
 
-      fs.unlinkSync(filePath);
+        if (urlError) {
+          throw new Error(urlError.message);
+        }
 
-      const { url, urlFetchError } = supabase.storage
-        .from(`queued-listings`)
-        .getPublicUrl(`${businessQueue.id}/${queueListing.id}`);
-
-      if (urlFetchError) {
-        console.log("Error retrieving public URL", error);
-        return res
-          .status(500)
-          .json({ message: "Error retrieving public URL", error });
-      }
-
-      const updateQueuedListing = await prisma.queuedlisting.update({
-        where: { id: queueListing.id },
-        data: {
-          url: url.publicUrl,
-        },
+        return { key, path: uploadPath, url: publicURL };
       });
 
-      if (error) {
-        res.status(500).json({ error: error.message });
-      } else {
-        const ximilarReq = await fetch("api/ai/ximilarTagging", {
+      let uploadedFiles;
+
+      try {
+        uploadedFiles = await Promise.all(fileUploads);
+
+        const updateQueuedListing = await prisma.queuedListing.update({
+          where: { id: queueListing.id },
+          data: {
+            bucketPath: `${businessQueue.id}/${queueListing.id}/`,
+          },
+        });
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
+      }
+
+      try {
+        const ximilarReqBody = uploadedFiles.map((file) => ({
+          url: file.url,
+          id: `${queueListing.id}_${file.key}`,
+        }));
+
+        const ximilarReq = await fetch("/api/ai/ximilarTagging", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            imageId: queueListing.id,
-            url: url.publicUrl,
-          }),
+          body: JSON.stringify(ximilarReqBody),
         });
 
         if (!ximilarReq.ok) {
           return res.status(500).json({ message: "Ximilar call failed" });
         }
 
-        const data = ximilarReq.json();
+        const data = await ximilarReq.json();
 
         res.status(200).json(data);
+      } catch (error) {
+        return res.status(500).json({ error: error.message });
       }
     });
   } else {

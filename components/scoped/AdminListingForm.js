@@ -7,6 +7,7 @@ import Capture from "@/components/utility/Capture";
 import { QRCode } from "react-qrcode-logo";
 import Image from "next/image";
 import moment from "moment";
+
 function AdminListingForm({ onBack, onFecth }) {
   const [price, setPrice] = useState(0);
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-1);
@@ -24,7 +25,15 @@ function AdminListingForm({ onBack, onFecth }) {
   const [imageUploading, setImageUploading] = useState(false);
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
 
-  //
+  const [mainImage, setMainImage] = useState();
+  const [brandImage, setBrandImage] = useState();
+  const [brandImageSkipped, setBrandImageSkipped] = useState(false);
+
+  const [similarProducts, setSimilarProducts] = useState([]);
+
+  const skipBrandImage = () => {
+    setBrandImageSkipped(true);
+  };
 
   useEffect(() => {
     setStartTime(moment().format("HH:mm:ss"));
@@ -47,114 +56,59 @@ function AdminListingForm({ onBack, onFecth }) {
   const onCapture = async (e) => {
     const imageSrc = e;
     if (imageSrc) {
-      const file = convertDataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
+      if (currentPhotoType === "main") {
+        setMainImage(imageSrc);
+        setCurrentPhotoType("brandTag");
+      }
+
+      if (currentPhotoType === "brandTag") {
+        setBrandImage(imageSrc);
+        setShowCamera(false);
+      }
+
+      //const file = convertDataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
 
       // Set loading to true while uploading
-      setImageUploading(true);
-
-      try {
-        const response = await fetch("/api/upload-image", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: currentPhotoType === "main" ? "mainImage" : "brandImage", // Use the currentPhotoType as the image type
-            image: imageSrc.split(",")[1], // Base64 image data
-          }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-
-          if (currentPhotoType === "main") {
-            // Set main image in the uploadedImages state
-            setUploadedImages((prevState) => ({
-              ...prevState,
-              main: {
-                image: imageSrc,
-                file: file,
-                type: "main",
-                url: data.url,
-              },
-            }));
-            setCurrentPhotoType("brandTag");
-          } else if (currentPhotoType === "brandTag") {
-            // Set brandTag image in the uploadedImages state
-            setUploadedImages((prevState) => ({
-              ...prevState,
-              brandTag: {
-                image: imageSrc,
-                file: file,
-                type: "brandTag",
-                url: data.url,
-              },
-            }));
-            // After capturing the brandTag image:
-            setShowCamera(false); // Hide the camera
-            setStep(2); // Move to the next step
-
-            const tags = [];
-
-            if (uploadedImages.main && uploadedImages.main.url) {
-              const mainTags = await getTagsFromGoogleVision(
-                uploadedImages.main.url,
-                "main"
-              );
-              tags.push(...mainTags);
-            }
-
-            if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
-              const brandTagTags = await getTagsFromGoogleVision(
-                uploadedImages.brandTag.url,
-                "brandTag"
-              );
-              tags.push(...brandTagTags);
-            }
-
-            setUploadedImages((prevState) => ({
-              ...prevState,
-              tags: tags, // Update 'tags' with combined tags from both 'main' and 'brandTag'
-            }));
-          }
-        } else {
-          // Handle the case when the upload was not successful
-          console.error("Image upload failed.");
-        }
-      } catch (error) {
-        console.error("Error uploading image:", error);
-      } finally {
-        // Set loading back to false after the upload is complete
-        setImageUploading(false);
-      }
-    } else if (currentPhotoType === "brandTag") {
-      setShowCamera(false); // Hide the camera
-      setStep(2); // Move to the next step
-
-      const tags = [];
-
-      if (uploadedImages.main && uploadedImages.main.url) {
-        const mainTags = await getTagsFromGoogleVision(
-          uploadedImages.main.url,
-          "main"
-        );
-        tags.push(...mainTags);
-      }
-
-      if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
-        const brandTagTags = await getTagsFromGoogleVision(
-          uploadedImages.brandTag.url,
-          "brandTag"
-        );
-        tags.push(...brandTagTags);
-      }
-
-      setUploadedImages((prevState) => ({
-        ...prevState,
-        tags: tags, // Update 'tags' with combined tags from both 'main' and 'brandTag'
-      }));
     }
   };
+
+  const addToQueue = async (formData) => {
+    setImageUploading(true);
+    try {
+      const response = await fetch("/api/business/listing/addToQueue", {
+        method: "POST",
+        body: formData,
+      });
+
+      const similarResults = await response.json();
+      setSimilarProducts(similarResults);
+      setImageUploading(false);
+    } catch (error) {
+      setImageUploading(false);
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (similarProducts.length > 0) {
+      setStep(2);
+    }
+  }, [similarProducts]);
+
+  useEffect(() => {
+    if (mainImage && (brandImage || brandImageSkipped)) {
+      const formData = new FormData();
+      const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
+      formData.append("mainImage", mainFile);
+
+      if (brandImage) {
+        const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
+        formData.append("brandImage", brandFile);
+      }
+
+      addToQueue(formData);
+    }
+  }, [mainImage, brandImage, brandImageSkipped]);
 
   const convertDataURLtoFile = (dataurl, filename) => {
     let arr = dataurl.split(","),
@@ -205,35 +159,6 @@ function AdminListingForm({ onBack, onFecth }) {
 
       setStep(3);
       setUploading(false);
-    }
-  };
-
-  // This function will send the image to the server-side endpoint for processing.
-  const getTagsFromGoogleVision = async (base64Image, imageType) => {
-    setTagFetching(true);
-    try {
-      const response = await fetch("/api/getTags", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          image: base64Image,
-          type: imageType,
-        }),
-      });
-      setTagFetching(false);
-      const data = await response.json();
-      if (data && data.tags) {
-        return data.tags;
-      } else {
-        console.error("Error fetching tags:", data.error);
-        return [];
-      }
-    } catch (error) {
-      setTagFetching(false);
-      console.error("Failed to get tags:", error);
-      return [];
     }
   };
 
@@ -331,6 +256,7 @@ function AdminListingForm({ onBack, onFecth }) {
                     onCapture={onCapture}
                     loading={imageUploading}
                     skip={currentPhotoType === "main" ? false : true}
+                    onSkip={skipBrandImage}
                     text={
                       currentPhotoType === "main" ? "Main Image" : "BrandTag"
                     }
@@ -462,8 +388,8 @@ function AdminListingForm({ onBack, onFecth }) {
                 </div>
 
                 <SimilarProducts
-                  imageUrl={uploadedImages.main.url}
                   onSelect={onSelectSimilarProduct}
+                  SimilarProducts={SimilarProducts}
                 />
               </div>
             </div>
@@ -674,28 +600,16 @@ function AdminListingForm({ onBack, onFecth }) {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Disposed
                       </th>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Listed
                       </th>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Start time
                       </th>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         End time
                       </th>
                     </tr>

@@ -149,7 +149,7 @@ model ListingQueue {
 
 model QueuedListing {
   id String @id @default(uuid())
-  url String? @unique
+  bucketPath String? @unique
   queue ListingQueue @relation(fields: [queueId], references: [id])
   queueId String
   topCategory String?

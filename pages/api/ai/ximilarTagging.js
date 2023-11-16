@@ -1,13 +1,14 @@
 import { prisma } from "../../../db/prismaDB";
 
 const handler = async (req, res) => {
-  const { imageId, url } = req.body;
+  const images = req.body;
 
   const ximilarEndpoint =
     "https://api.ximilar.com/tagging/fashion/v2/detect_tags";
 
   const ximilarPayload = {
-    records: [{ _id: imageId, _url: url }],
+    records: images.map((image) => ({ _id: image.id, _url: image.url })),
+    aggregate_labels: true,
   };
 
   const options = {
@@ -25,7 +26,7 @@ const handler = async (req, res) => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const resData = response.json();
+    const resData = await response.json();
     console.log(resData);
 
     const firstRecord = resData.records[0];
@@ -35,7 +36,7 @@ const handler = async (req, res) => {
     const mainCategory = firstObject._tags_map["Category"];
     const subCategory = firstObject._tags_map["Subcategory"];
 
-    const updateQueuedListing = await prisma.queuedlisting.update({
+    const updateQueuedListing = await prisma.queuedListing.update({
       where: { id: imageId },
       data: {
         topCategory,
@@ -57,7 +58,7 @@ const handler = async (req, res) => {
       return res.status(500).json({ message: "Product search failed" });
     }
 
-    const searchData = productSearch.json();
+    const searchData = await productSearch.json();
     return res.status(200).json(searchData);
   } catch (error) {
     console.error(`Ximilar tagging call failed: ${error}`);
