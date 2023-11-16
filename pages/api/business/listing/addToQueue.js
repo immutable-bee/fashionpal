@@ -71,6 +71,8 @@ const handler = async (req, res) => {
         const fileData = fs.readFileSync(filePath);
         const uploadPath = `${businessQueue.id}/${queueListing.id}/${key}`;
 
+        console.log("Upload Path:", uploadPath);
+
         const { data, error } = await supabase.storage
           .from("queued-listings")
           .upload(uploadPath, fileData, {
@@ -82,13 +84,10 @@ const handler = async (req, res) => {
         if (error) {
           throw new Error(error.message);
         }
-        const { publicURL, error: urlError } = supabase.storage
-          .from("queued-listings")
-          .getPublicUrl(uploadPath);
 
-        if (urlError) {
-          throw new Error(urlError.message);
-        }
+        const publicURL = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${uploadPath}`;
+
+        console.log("Public URL: ", publicURL);
 
         return { key, path: uploadPath, url: publicURL };
       });
@@ -121,7 +120,10 @@ const handler = async (req, res) => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(ximilarReqBody),
+            body: JSON.stringify({
+              queuedListingId: queueListing.id,
+              ximilarReqBody,
+            }),
           }
         );
 

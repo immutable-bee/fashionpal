@@ -1,18 +1,18 @@
 import { prisma } from "../../../db/prismaDB";
 
 const handler = async (req, res) => {
-  const images = req.body;
+  const { queuedListingId, ximilarReqBody } = req.body;
 
   const ximilarEndpoint =
     "https://api.ximilar.com/tagging/fashion/v2/detect_tags";
 
   const ximilarPayload = {
-    records: images.map((image) => ({ _id: image.id, _url: image.url })),
+    records: ximilarReqBody.map((image) => ({
+      _id: image.id,
+      _url: image.url,
+    })),
     aggregate_labels: true,
   };
-
-  console.log("ximilar payload: ", ximilarPayload);
-  console.log("Stringified Payload: ", JSON.stringify(ximilarPayload));
 
   const options = {
     method: "POST",
@@ -40,7 +40,7 @@ const handler = async (req, res) => {
     const subCategory = firstObject._tags_map["Subcategory"];
 
     const updateQueuedListing = await prisma.queuedListing.update({
-      where: { id: imageId },
+      where: { id: queuedListingId },
       data: {
         topCategory,
         mainCategory,
