@@ -121,7 +121,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
                 />
               </div>
             </div>
-            <div className="border border-gray-500 mx-auto mt-8 min-w-[288px] rounded-xl max-w-fit px-4 py-3">
+            <div className="border-4 border-black mx-auto mt-8 min-w-[288px] rounded-xl max-w-fit px-4 py-3">
               <h3 className="text-xl font-semibold">Instructions</h3>
               <ul className=" list-decimal ml-4 text-lg">
                 <li>
@@ -191,22 +191,13 @@ function EmployeeListingForm({ onBack, onFetch }) {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Disposed
                       </th>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Listed
                       </th>
-                      <th
-                        scope="col"
-                        class="px-6 py-3"
-                      >
+                      <th scope="col" class="px-6 py-3">
                         Damaged
                       </th>
                     </tr>
