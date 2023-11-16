@@ -26,6 +26,7 @@ const handler = async (req, res) => {
           price: item.price,
           thumbnail: item.thumbnail,
           link: item.link,
+          extractedPrice: item.extracted_price,
         }));
 
         return res.status(200).json(simplifiedResults);

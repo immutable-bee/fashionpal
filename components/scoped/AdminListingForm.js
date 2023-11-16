@@ -10,7 +10,7 @@ import moment from "moment";
 
 function AdminListingForm({ onBack, onFecth }) {
   const [price, setPrice] = useState(0);
-  const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-1);
+  const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [category, setCategory] = useState("");
@@ -38,6 +38,12 @@ function AdminListingForm({ onBack, onFecth }) {
   useEffect(() => {
     setStartTime(moment().format("HH:mm:ss"));
   }, []);
+
+  useEffect(() => {
+    if (similarProducts.length > 0) {
+      setPriceOnDiscount();
+    }
+  }, [defaultPriceSuggestion, similarProducts]);
 
   const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
 
@@ -72,6 +78,25 @@ function AdminListingForm({ onBack, onFecth }) {
     }
   };
 
+  const setPriceOnDiscount = () => {
+    const averagePrice = calulateAvgPrice();
+    const adjustedPrice = averagePrice * (1 + defaultPriceSuggestion / 100);
+    setPrice(parseFloat(adjustedPrice.toFixed(2)));
+  };
+
+  const calulateAvgPrice = () => {
+    const total = similarProducts.reduce((sum, item) => {
+      return sum + (item.extractedPrice || 0);
+    }, 0);
+
+    const average =
+      similarProducts.length > 0
+        ? parseFloat((total / similarProducts.length).toFixed(2))
+        : 0;
+
+    return average;
+  };
+
   const addToQueue = async (formData) => {
     setImageUploading(true);
     try {
@@ -96,17 +121,19 @@ function AdminListingForm({ onBack, onFecth }) {
   }, [similarProducts]);
 
   useEffect(() => {
-    if (mainImage && (brandImage || brandImageSkipped)) {
-      const formData = new FormData();
-      const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
-      formData.append("mainImage", mainFile);
+    if (similarProducts.length === 0) {
+      if (mainImage && (brandImage || brandImageSkipped)) {
+        const formData = new FormData();
+        const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
+        formData.append("mainImage", mainFile);
 
-      if (brandImage) {
-        const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
-        formData.append("brandImage", brandFile);
+        if (brandImage) {
+          const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
+          formData.append("brandImage", brandFile);
+        }
+
+        addToQueue(formData);
       }
-
-      addToQueue(formData);
     }
   }, [mainImage, brandImage, brandImageSkipped]);
 
@@ -393,6 +420,9 @@ function AdminListingForm({ onBack, onFecth }) {
                 />
               </div>
             </div>
+            <div className="flex justify-center mt-3">
+              <h6 className="text-2xl">Average Price: ${calulateAvgPrice()}</h6>
+            </div>
 
             <div className="flex mx-1 justify-between">
               <div>
@@ -416,7 +446,7 @@ function AdminListingForm({ onBack, onFecth }) {
                     % Off
                   </label>
                   <div className="relative w-32 flex items-center">
-                    <h3 className="absolute text-4xl right-8 mt-1">%</h3>
+                    <h3 className="absolute text-2xl right-8 mt-1">%</h3>
                     <input
                       value={defaultPriceSuggestion}
                       type="number"
