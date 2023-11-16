@@ -92,7 +92,7 @@ model Vote {
 
 model Category {
   id       String                 @id @default(uuid())
-  name     String
+  name     String @unique
   listings CategoriesOnListings[]
 }
 
@@ -108,6 +108,8 @@ model Listing {
   id           String                 @id @default(cuid())
   mainImage    Json?
   brandImage   Json?
+  mainImageUrl String?
+  brandImageUrl String?
   dataSource   String?
   price        Int?
   delivery     String?
