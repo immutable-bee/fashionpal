@@ -191,12 +191,9 @@ export default function Home() {
                             <ListingItem
                               mainPhoto={row?.mainImage}
                               brandPhoto={row?.brandImage}
-<<<<<<< Updated upstream
-=======
                               tags={[
                                 row.status === "SALE" ? "SELL" : row.status,
                               ]}
->>>>>>> Stashed changes
                               status={row.status}
                               clickable={true}
                             >

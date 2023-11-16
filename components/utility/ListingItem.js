@@ -4,10 +4,7 @@ function ListingItem({
   mainPhoto,
   brandPhoto,
   status,
-<<<<<<< Updated upstream
-=======
   tags = [],
->>>>>>> Stashed changes
   children = "",
   clickable = false,
   isSlot = true,
@@ -21,9 +18,9 @@ function ListingItem({
       case "SALE":
         return "bg-green-400";
       case "DISPOSED":
-        return "bg-amber-300";
-      case "DAMAGED":
         return "bg-red-600";
+      case "DAMAGED":
+        return "bg-amber-300";
       default:
         return "bg-green-400";
     }
@@ -66,13 +63,6 @@ function ListingItem({
         )}
       </div>
       <div className="mt-4">
-<<<<<<< Updated upstream
-        {status && (
-          <p className="text-gray-700 capitalize bg-green-400 max-w-fit px-2 py-1 rounded text-base leading-5">
-            {status}
-          </p>
-        )}
-=======
         {tags.length !== 0 &&
           tags.slice(0, 3).map((tag, tagIndex) => (
             <p
@@ -82,7 +72,6 @@ function ListingItem({
               {tag}
             </p>
           ))}
->>>>>>> Stashed changes
         {isSlot && children ? (
           <div className="mt-1.5" onClick={stopClick}>
             {children}
