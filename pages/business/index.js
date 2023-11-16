@@ -191,12 +191,15 @@ export default function Home() {
                             <ListingItem
                               mainPhoto={row?.mainImage}
                               brandPhoto={row?.brandImage}
-                              tags={row?.tags}
+                              tags={[
+                                row.status === "SALE" ? "SELL" : row.status,
+                              ]}
+                              status={row.status}
                               clickable={true}
                             >
                               <button
                                 onClick={() => triggerEditTagsModal(key)}
-                                className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded"
+                                className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded hidden"
                               >
                                 Edit Tags
                               </button>

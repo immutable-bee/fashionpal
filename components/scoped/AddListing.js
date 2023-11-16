@@ -8,8 +8,8 @@ function AddListing({ onBack, onFecth }) {
   const [islistTypeSelected, setIsListTypeSelected] = useState(false);
 
   return (
-    <div className="max-w-7xl mx-auto px-5 pb-8 pt-6">
-      <div className="flex items-center">
+    <div className="max-w-7xl mx-auto px-3 sm:px-5 pb-8 sm:pt-6 pt-0">
+      <div className="flex items-center mb-4">
         <svg
           onClick={onBack}
           xmlns="http://www.w3.org/2000/svg"

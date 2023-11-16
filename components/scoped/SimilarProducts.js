@@ -16,7 +16,7 @@ function ButtonComponent({ imageUrl = "", onSelect, similarProducts }) {
   return (
     <div>
       {!fetchingSimilarProducts ? (
-        <div className="mt-3 flex overflow-x-auto">
+        <div className="mt-3 flex overflow-x-auto max-w-full">
           {similarProducts.map((row, key) => (
             <div
               key={key}
