@@ -34,6 +34,7 @@ const handler = async (req, res) => {
         status: data.status,
         isActive: true,
         daysToExpiry: 7,
+        Barcode: "1",
         Business: {
           connect: { id: queuedListing.queue.ownerId },
         },

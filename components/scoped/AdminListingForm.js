@@ -191,6 +191,38 @@ function AdminListingForm({ onBack, onFecth }) {
     }
   };
 
+  const pushQueuedListing = async (status) => {
+    setUploading(true);
+
+    const payload = {
+      data: {
+        id: pendingListingId,
+        price: parseFloat(price),
+        status: status,
+      },
+    };
+
+    const response = await fetch("/api/business/listing/pushQueuedListing", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      console.log("An error occured while pushing the queued listing");
+      return;
+    }
+
+    onFecth();
+    resetAllVariables();
+    setStep(3);
+    setUploading(false);
+
+    return;
+  };
+
   const onStop = async () => {
     setStep(4);
   };
@@ -522,7 +554,7 @@ function AdminListingForm({ onBack, onFecth }) {
 
             <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
               <button
-                onClick={() => onUploadAll()}
+                onClick={() => pushQueuedListing("DISPOSE")}
                 className={`${
                   tagFetching ? " pointer-events-none bg-gray-300" : ""
                 } hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
@@ -531,7 +563,7 @@ function AdminListingForm({ onBack, onFecth }) {
               </button>
               <button
                 disabled={tagFetching}
-                onClick={() => onUploadAll()}
+                onClick={() => pushQueuedListing("SALE")}
                 className={`${
                   tagFetching ? " pointer-events-none bg-gray-300" : ""
                 } hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
