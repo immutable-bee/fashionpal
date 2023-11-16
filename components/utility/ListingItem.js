@@ -3,7 +3,7 @@ import Image from "next/image";
 function ListingItem({
   mainPhoto,
   brandPhoto,
-  tags = [],
+  status,
   children = "",
   clickable = false,
   isSlot = true,
@@ -13,7 +13,7 @@ function ListingItem({
   };
   return (
     <div
-      className={`px-4 py-4 sm:!w-64 overflow-hidden w-full relative rounded-3xl group [perspective:1000px] mx-2 my-2 ${
+      className={`px-4 py-4 sm:!w-64 overflow-hidden w-[calc(100%-15px)] relative rounded-3xl group [perspective:1000px] mx-auto my-2 ${
         clickable ? "cursor-pointer hover:opacity-90 " : ""
       } `}
       style={{ boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)" }}
@@ -49,15 +49,11 @@ function ListingItem({
         )}
       </div>
       <div className="mt-4">
-        {tags.length !== 0 &&
-          tags.slice(0, 3).map((tag, tagIndex) => (
-            <p
-              key={tagIndex}
-              className="text-gray-700 bg-green-400 max-w-fit px-2 py-1 rounded text-base leading-5"
-            >
-              {tag}
-            </p>
-          ))}
+        {status && (
+          <p className="text-gray-700 capitalize bg-green-400 max-w-fit px-2 py-1 rounded text-base leading-5">
+            {status}
+          </p>
+        )}
         {isSlot && children ? (
           <div
             className="mt-1.5"

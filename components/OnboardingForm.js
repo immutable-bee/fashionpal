@@ -168,10 +168,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
       if (!formData?.businessName) {
         NotificationManager.error("Business  name is required!");
         return;
-      } else if (!formData?.url) {
-        NotificationManager.error("Website url is required!");
-        return;
-      } else if (!isValidHttpUrl(formData?.url)) {
+      } else if (formData?.url && !isValidHttpUrl(formData?.url)) {
         NotificationManager.error("Invalid website URL!");
         return;
       }

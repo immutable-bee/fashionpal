@@ -203,7 +203,8 @@ function AdminListingForm({ onBack, onFecth }) {
 
       resetAllVariables();
 
-      setStep(3);
+      // setStep(3);
+      setStep(1);
       setUploading(false);
     }
   };
@@ -388,7 +389,7 @@ function AdminListingForm({ onBack, onFecth }) {
         )}
 
         {step === 2 ? (
-          <div className="px-5 mt-6 w-[480px] mx-auto">
+          <div className="px-5 mt-6 w-full sm:w-[480px] mx-auto">
             {/* <div className="flex flex-wrap items-center gap-3 justify-center mt-5">
                     <button
                       onClick={() => setListType("dispose")}

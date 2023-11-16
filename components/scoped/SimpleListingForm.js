@@ -783,7 +783,7 @@ function SimpleListingForm({ onBack, onFecth }) {
                     key={key}
                     mainPhoto={row.items?.main?.image}
                     brandPhoto={row.items?.brandTag?.image}
-                    tags={row.tags}
+                    status={row.status}
                   >
                     <button
                       onClick={() => triggerEditTagsModalOffline(key)}

@@ -189,7 +189,7 @@ export default function Home() {
                             <ListingItem
                               mainPhoto={row?.mainImage}
                               brandPhoto={row?.brandImage}
-                              tags={row?.tags}
+                              status={row.status}
                               clickable={true}
                             >
                               <button
