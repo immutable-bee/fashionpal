@@ -73,7 +73,7 @@ const handler = async (req, res) => {
 
         const { data, error } = await supabase.storage
           .from("queued-listings")
-          .upload(`${businessQueue.id}/${queueListing.id}`, fileData, {
+          .upload(uploadPath, fileData, {
             contentType: file.mimetype,
             upsert: false,
           });
