@@ -64,6 +64,7 @@ const handler = async (req, res) => {
         res.status(500).json({ error: "Error parsing the files" });
         return;
       }
+      const baseUrl = fields.baseUrl;
 
       const fileUploads = Object.keys(files).map(async (key) => {
         const file = files[key][0];
@@ -113,19 +114,17 @@ const handler = async (req, res) => {
           id: `${queueListing.id}_${file.key}`,
         }));
 
-        const ximilarReq = await fetch(
-          `${process.env.ORIGIN_URL}/api/ai/ximilarTagging`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              queuedListingId: queueListing.id,
-              ximilarReqBody,
-            }),
-          }
-        );
+        const ximilarReq = await fetch(`${baseUrl}/api/ai/ximilarTagging`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            queuedListingId: queueListing.id,
+            ximilarReqBody,
+            baseUrl,
+          }),
+        });
 
         if (!ximilarReq.ok) {
           return res.status(500).json({ message: "Ximilar call failed" });

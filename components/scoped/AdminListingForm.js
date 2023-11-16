@@ -99,6 +99,9 @@ function AdminListingForm({ onBack, onFecth }) {
   };
 
   const addToQueue = async (formData) => {
+    const baseUrl = window.location.origin;
+    formData.append("baseUrl", baseUrl);
+
     setImageUploading(true);
     try {
       const response = await fetch("/api/business/listing/addToQueue", {

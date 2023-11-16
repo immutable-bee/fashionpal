@@ -1,7 +1,7 @@
 import { prisma } from "../../../db/prismaDB";
 
 const handler = async (req, res) => {
-  const { queuedListingId, ximilarReqBody } = req.body;
+  const { queuedListingId, ximilarReqBody, baseUrl } = req.body;
 
   const ximilarEndpoint =
     "https://api.ximilar.com/tagging/fashion/v2/detect_tags";
@@ -50,7 +50,7 @@ const handler = async (req, res) => {
     });
 
     const productSearch = await fetch(
-      `${process.env.ORIGIN_URL}/api/ai/serpapi/googleShoppingSearch`,
+      `${baseUrl}/api/ai/serpapi/googleShoppingSearch`,
       {
         method: "POST",
         headers: {
