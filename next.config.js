@@ -4,7 +4,10 @@ const nextConfig = {
     GOOGLE_APPLICATION_CREDENTIALS: "./google-cloud-key.json",
   },
   images: {
-    domains: ["afmipzwmfcoduhcmwowr.supabase.co"],
+    domains: [
+      "afmipzwmfcoduhcmwowr.supabase.co",
+      "jhkrtmranrjztkixgfgf.supabase.co",
+    ],
   },
 };
 

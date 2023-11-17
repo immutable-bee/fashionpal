@@ -189,8 +189,16 @@ export default function Home() {
                             onClick={() => triggerDetailsModal(key)}
                           >
                             <ListingItem
-                              mainPhoto={row?.mainImage}
-                              brandPhoto={row?.brandImage}
+                              mainPhoto={
+                                row?.mainImage
+                                  ? row.mainImage
+                                  : row.mainImageUrl
+                              }
+                              brandPhoto={
+                                row?.brandImage
+                                  ? row.brandImage
+                                  : row.brandImageUrl
+                              }
                               tags={[
                                 row.status === "SALE" ? "SELL" : row.status,
                               ]}
