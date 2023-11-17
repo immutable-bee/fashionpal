@@ -13,7 +13,6 @@ function ListingItem({
     event.stopPropagation();
   };
   const getTabClass = () => {
-    console.log(status);
     switch (status) {
       case "SALE":
         return "bg-green-400";
@@ -73,7 +72,10 @@ function ListingItem({
             </p>
           ))}
         {isSlot && children ? (
-          <div className="mt-1.5" onClick={stopClick}>
+          <div
+            className="mt-1.5"
+            onClick={stopClick}
+          >
             {children}
           </div>
         ) : (

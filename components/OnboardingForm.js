@@ -214,7 +214,6 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
       );
       return;
     }
-    console.log(agreedToTerms);
 
     loadingHandler(true);
 

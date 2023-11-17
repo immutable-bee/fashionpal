@@ -83,6 +83,9 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    console.log("useEffect");
+    console.log(session);
+    console.log(user?.onboardingComplete);
     if (!session && router.pathname !== "localhost:3000/") {
       router.push("/auth");
     }

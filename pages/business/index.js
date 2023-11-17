@@ -15,8 +15,6 @@ import AddListing from "@/components/scoped/AddListing";
 export default function Home() {
   const { data: session } = useSession();
 
-  console.log(session);
-
   const [searchText, setSearchText] = useState("");
   const [size, setSize] = useState("");
   const [category, setCategory] = useState("");

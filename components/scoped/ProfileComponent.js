@@ -125,7 +125,10 @@ const Profilecomponent = () => {
   return (
     <div className="bg-white min-h-screen">
       <Head>
-        <link rel="shortcut icon" href="/images/fav.png" />
+        <link
+          rel="shortcut icon"
+          href="/images/fav.png"
+        />
       </Head>
 
       <div>
@@ -172,7 +175,10 @@ const Profilecomponent = () => {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         {
                           <Dropdown>
                             <Dropdown.Button light>
@@ -184,7 +190,7 @@ const Profilecomponent = () => {
                               selectedKeys={selectedRange}
                               onSelectionChange={(keys) => {
                                 const selectedKey = Array.from(keys)[0];
-                                console.log("Selected key:", selectedKey);
+
                                 setSelectedRange(selectedKey);
                               }}
                             >
@@ -212,7 +218,10 @@ const Profilecomponent = () => {
                         }
                       </th>
 
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Total
                       </th>
                     </tr>
@@ -287,7 +296,11 @@ const Profilecomponent = () => {
               </div>
             </div>
             <div className="flex justify-center mt-5">
-              <ButtonComponent full rounded onClick={() => downloadCSV()}>
+              <ButtonComponent
+                full
+                rounded
+                onClick={() => downloadCSV()}
+              >
                 Download Excel report
               </ButtonComponent>
             </div>
@@ -333,13 +346,20 @@ const Profilecomponent = () => {
             </div>
 
             <div className="flex justify-center mt-5 hidden">
-              <ButtonComponent full rounded>
+              <ButtonComponent
+                full
+                rounded
+              >
                 Invite a customer
               </ButtonComponent>
             </div>
 
             <div className="mt-4 w-full flex justify-center">
-              <ButtonComponent full rounded onClick={() => signOut()}>
+              <ButtonComponent
+                full
+                rounded
+                onClick={() => signOut()}
+              >
                 Sign Out
               </ButtonComponent>
             </div>

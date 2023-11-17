@@ -34,8 +34,6 @@ const ProfileComponent = ({}) => {
     }
     setUpdating(true);
 
-    console.log(user);
-
     setUpdating(false);
 
     // try {

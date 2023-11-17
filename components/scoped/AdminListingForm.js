@@ -120,7 +120,6 @@ function AdminListingForm({ onBack, onFecth }) {
     } catch (error) {
       setLoading(false);
       setImageUploading(false);
-      console.log(error);
     }
   };
 
@@ -221,7 +220,6 @@ function AdminListingForm({ onBack, onFecth }) {
     });
 
     if (!response.ok) {
-      console.log("An error occured while pushing the queued listing");
       return;
     }
 
@@ -282,7 +280,10 @@ function AdminListingForm({ onBack, onFecth }) {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div>
@@ -403,7 +404,10 @@ function AdminListingForm({ onBack, onFecth }) {
         {step === 2 ? (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -632,16 +636,28 @@ function AdminListingForm({ onBack, onFecth }) {
                 <table class="w-full text-sm text-left text-gray-500">
                   <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Disposed
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Listed
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         Start time
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        class="px-6 py-3"
+                      >
                         End time
                       </th>
                     </tr>

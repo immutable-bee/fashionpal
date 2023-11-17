@@ -13,7 +13,5 @@ export function error(err, info = "") {
       params: { info: info },
     })
     .then(() => {})
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => {});
 }

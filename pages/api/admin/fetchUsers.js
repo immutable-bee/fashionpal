@@ -12,14 +12,11 @@ const handler = async (req, res) => {
     return res.status(403).json({ message: "User does not have permission" });
   }
 
-  console.log(session.user.email);
-
   try {
     const users = await prisma.business.findMany({});
 
     res.status(200).json(users);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };

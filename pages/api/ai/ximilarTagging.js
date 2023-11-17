@@ -30,7 +30,6 @@ const handler = async (req, res) => {
     }
 
     const resData = await response.json();
-    console.log(resData);
 
     const firstRecord = resData.records[0];
     const firstObject = firstRecord._objects[0];

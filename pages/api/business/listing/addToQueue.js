@@ -72,8 +72,6 @@ const handler = async (req, res) => {
         const fileData = fs.readFileSync(filePath);
         const uploadPath = `${businessQueue.id}/${queueListing.id}/${key}`;
 
-        console.log("Upload Path:", uploadPath);
-
         const { data, error } = await supabase.storage
           .from("queued-listings")
           .upload(uploadPath, fileData, {
@@ -87,8 +85,6 @@ const handler = async (req, res) => {
         }
 
         const publicURL = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${uploadPath}`;
-
-        console.log("Public URL: ", publicURL);
 
         return { key, path: uploadPath, url: publicURL };
       });

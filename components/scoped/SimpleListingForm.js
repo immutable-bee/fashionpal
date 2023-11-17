@@ -224,7 +224,6 @@ function SimpleListingForm({ onBack, onFecth }) {
     const requests = [];
 
     for (let listing of listings) {
-      console.log(listing.items.main);
       if (listing.items.main && listing.items.main.image) {
         const mainImageBase64 = listing.items.main.image;
 
@@ -554,7 +553,10 @@ function SimpleListingForm({ onBack, onFecth }) {
                     className="w-full mt-1 rounded-xl px-3 py-3 border border-gray-600"
                     onChange={(e) => setCategory(e.target.value)}
                   >
-                    <option value="" disabled>
+                    <option
+                      value=""
+                      disabled
+                    >
                       Select type
                     </option>
                     <option value="Clothing">Clothing</option>
@@ -570,11 +572,17 @@ function SimpleListingForm({ onBack, onFecth }) {
                     className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                     onChange={(e) => setSubCategoryOne(e.target.value)}
                   >
-                    <option value="" disabled>
+                    <option
+                      value=""
+                      disabled
+                    >
                       Select sub-category 01
                     </option>
                     {computedSubCategoryOneOptions().map((option) => (
-                      <option key={option.value} value={option.value}>
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
                         {option.name}
                       </option>
                     ))}
@@ -589,11 +597,17 @@ function SimpleListingForm({ onBack, onFecth }) {
                     className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                     onChange={(e) => setSubCategoryTwo(e.target.value)}
                   >
-                    <option value="" disabled>
+                    <option
+                      value=""
+                      disabled
+                    >
                       Select sub-category 02
                     </option>
                     {computedSubCategoryTwoOptions().map((option) => (
-                      <option key={option.value} value={option.value}>
+                      <option
+                        key={option.value}
+                        value={option.value}
+                      >
                         {option.name}
                       </option>
                     ))}

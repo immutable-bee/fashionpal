@@ -9,7 +9,7 @@ function ButtonComponent({ imageUrl = "", onSelect, similarProducts }) {
   const onSelectSimilarProduct = (key) => {
     const row = similarProducts[key];
     setActiveResultIndex(key);
-    console.log(row);
+
     onSelect(row);
   };
 
@@ -36,7 +36,10 @@ function ButtonComponent({ imageUrl = "", onSelect, similarProducts }) {
                   className="rounded max-w-full max-h-full"
                 />
               </div>
-              <div key={key} className="mt-2 mx-1 w-full">
+              <div
+                key={key}
+                className="mt-2 mx-1 w-full"
+              >
                 <h3 className="text-2xl text-center truncate">{row.name}</h3>
                 <h3 className="text-2xl text-center">
                   {row.price ? row.price : "No price"}
