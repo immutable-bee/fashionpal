@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import nprogress from "nprogress";
@@ -22,15 +22,16 @@ export const UserProvider = ({ children }) => {
   const router = useRouter();
 
   const [user, setUser] = useState(null);
+  const isInitialRender = useRef(true);
 
   const updateUserUsername = (newUsername) => {
-    setUser({
-      ...user,
+    setUser((prevUser) => ({
+      ...prevUser,
       consumer: {
-        ...user.consumer,
+        ...prevUser.consumer,
         username: newUsername,
       },
-    });
+    }));
   };
 
   const fetchUserData = async () => {
@@ -75,7 +76,8 @@ export const UserProvider = ({ children }) => {
       return;
     }
 
-    const data = await res.json();
+    // Do something with the business data if needed
+    // const data = await res.json();
 
     setUser((prevUser) => ({
       ...prevUser,
@@ -83,33 +85,38 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
     console.log("useEffect");
     console.log(session);
     console.log(user?.onboardingComplete);
-    if (!session && router.pathname !== "localhost:3000/") {
+
+    if (!session && router.pathname !== "/") {
       router.push("/auth");
     }
 
     if (session) {
       fetchUserData();
-      if (user) {
-        if (!user.onboardingComplete) {
-          router.push("/auth/onboarding");
-        }
 
-        const role = user.consumer
-          ? "consumer"
-          : user.business
-          ? "business"
-          : null;
-        const allowedRoutes = ACCESS_RULES[role] || [];
+      if (user && !user.onboardingComplete) {
+        router.push("/auth/onboarding");
+      }
 
-        if (role && !allowedRoutes.includes(router.pathname)) {
-          router.push(allowedRoutes[0]);
-        }
+      const role = user?.consumer
+        ? "consumer"
+        : user?.business
+        ? "business"
+        : null;
+      const allowedRoutes = ACCESS_RULES[role] || [];
+
+      if (role && !allowedRoutes.includes(router.pathname)) {
+        router.push(allowedRoutes[0]);
       }
     }
-  }, [session, user?.onboardingComplete]);
+  }, [session, user?.onboardingComplete, router.pathname]);
 
   return (
     <UserContext.Provider value={{ user, updateUserUsername, fetchUserData }}>
