@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 import ButtonComponent from "@/components/utility/Button";
-import { NotificationManager } from "react-notifications";
 
 function Capture({ onCapture, loading = false, onDone, totalAmount }) {
   const webcamRef = useRef(null);
@@ -12,7 +11,7 @@ function Capture({ onCapture, loading = false, onDone, totalAmount }) {
       .getUserMedia({ video: { facingMode: "environment" } })
       .catch((error) => {
         setFacingMode("user");
-        NotificationManager.error(error);
+        console.log(error);
       });
   }, []);
 
