@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma/client";
-import { supabase } from "@/supabase/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -17,23 +16,12 @@ export default async function handler(
       if (!listing) {
         return res.status(404).json({ message: "Listing not found!" });
       }
-      const { mainImage, brandImage } = listing;
 
-      if (mainImage && (mainImage as any).url) {
-        const imagePath = (mainImage as any).url.split("/").pop();
-
-        await supabase.storage.from("listings").remove([imagePath]);
-      }
-
-      if (brandImage && (brandImage as any).url) {
-        const imagePath = (brandImage as any).url.split("/").pop();
-        await supabase.storage.from("listings").remove([imagePath]);
-      }
-
-      await prisma.listing.delete({
+      await prisma.listing.update({
         where: {
           id: id,
         },
+        data: { isActive: false },
       });
 
       res.status(200).json({ message: "Listing deleted successfully!" });
