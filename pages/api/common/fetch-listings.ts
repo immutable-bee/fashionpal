@@ -57,6 +57,7 @@ export default async function handler(
         });
         whereClause.businessId = business?.id;
       }
+      whereClause.isActive = true;
       const listingsWithTags = await prisma.listing.findMany({
         skip,
         take: limit,
