@@ -1,10 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/prisma/client";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // @ts-ignore
+  const session = await getServerSession(req, res, authOptions);
+
   if (req.method === "GET") {
     // Parse query parameters for pagination
     const page = parseInt(req.query.page as string) || 1;
@@ -14,6 +19,7 @@ export default async function handler(
     const status = req.query.status as string;
     const matches = req.query.matches as string;
     const size = req.query.size as string;
+    const isBusiness = req.query.isBusiness === "true";
 
     try {
       const skip = (page - 1) * limit;
@@ -44,6 +50,12 @@ export default async function handler(
       }
       if (matches) {
         whereClause.matches = true;
+      }
+      if (isBusiness) {
+        const business = await prisma.business.findUnique({
+          where: { email: session?.user?.email },
+        });
+        whereClause.businessId = business?.id;
       }
       const listingsWithTags = await prisma.listing.findMany({
         skip,
