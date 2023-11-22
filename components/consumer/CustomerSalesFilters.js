@@ -47,7 +47,7 @@ export default function CustomerFilters({
   return (
     <div>
       <ShareFashionPal />
-      <div class=" flex justify-between px-5 max-w-7xl mx-auto">
+      <div className=" flex justify-between px-5 max-w-7xl mx-auto">
         <Inputcomponent
           value={searchText}
           onChange={(e) => onChangeSearchText(e)}
@@ -57,12 +57,12 @@ export default function CustomerFilters({
           <div className="ml-2 sm:ml-3">
             <button
               type="button"
-              class="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
+              className="bg-primary px-3 sm:px-4 py-3 sm:py-4 rounded-[0.65rem] sm:rounded-[0.85rem]"
               onClick={() => onFetch()}
             >
               <div>
                 <svg
-                  class="text-white w-4"
+                  className="text-white w-4"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -96,7 +96,7 @@ export default function CustomerFilters({
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="w-6 h-6 absolute right-2 top-2.5 pointer-events-none"
+              className="w-6 h-6 absolute right-2 top-2.5 pointer-events-none"
             >
               <path
                 stroke-linecap="round"
@@ -122,7 +122,7 @@ export default function CustomerFilters({
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="w-6 h-6 absolute right-2 top-2.5 z-0 pointer-events-none"
+              className="w-6 h-6 absolute right-2 top-2.5 z-0 pointer-events-none"
             >
               <path
                 stroke-linecap="round"
@@ -151,7 +151,7 @@ export default function CustomerFilters({
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="w-4 h-4 ml-1"
+              className="w-4 h-4 ml-1"
             >
               <path
                 stroke-linecap="round"

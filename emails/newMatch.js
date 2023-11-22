@@ -100,17 +100,17 @@ const compiledHtml = `<!doctype html>
 </head>
 
 <body style="word-spacing:normal;">
-  <div class="body" style="background-color:#d2e2ae;">
+  <div className="body" style="background-color:#d2e2ae;">
     <div style="height:12px;line-height:12px;">&#8202;</div>
-    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:480px;" width="480" bgcolor="transparent" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:480px;" width="480" bgcolor="transparent" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div style="background:transparent;background-color:transparent;margin:0px auto;border-radius:14px;max-width:480px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:transparent;background-color:transparent;width:100%;border-radius:14px;">
         <tbody>
           <tr>
             <td style="padding-bottom: 5px; direction: ltr; font-size: 0px; padding: 16px 8px; text-align: center;" align="center">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" width="480px" ><![endif]-->
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td className="" width="480px" ><![endif]-->
               <div style>
-                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" bgcolor="#FDFDFD" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+                <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:600px;" width="600" bgcolor="#FDFDFD" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
                 <div style="background:#FDFDFD;background-color:#FDFDFD;margin:0px auto;border-radius:14px;max-width:600px;">
                   <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#FDFDFD;background-color:#FDFDFD;width:100%;border-radius:14px;">
                     <tbody>
@@ -118,14 +118,14 @@ const compiledHtml = `<!doctype html>
                         <td style="padding-bottom: 5px; direction: ltr; font-size: 0px; padding: 28px 24px; text-align: center;" align="center">
                           <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><![endif]-->
                           <!-- ?-------------------------- Logo -------------------------- -->
-                          <!--[if mso | IE]><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+                          <!--[if mso | IE]><tr><td className="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
                           <div style="margin:0px auto;max-width:552px;">
                             <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                               <tbody>
                                 <tr>
                                   <td style="padding-bottom: 5px; direction: ltr; font-size: 0px; padding: 0px; text-align: center;" align="center">
-                                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
-                                    <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td className="" style="vertical-align:top;width:552px;" ><![endif]-->
+                                    <div className="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                                         <tbody>
                                           <tr>
@@ -152,14 +152,14 @@ const compiledHtml = `<!doctype html>
                           </div>
                           <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
                           <!-- ?-------------------------- Title -------------------------- -->
-                          <!--[if mso | IE]><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+                          <!--[if mso | IE]><tr><td className="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
                           <div style="margin:0px auto;max-width:552px;">
                             <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                               <tbody>
                                 <tr>
                                   <td style="padding-bottom: 5px; direction: ltr; font-size: 0px; padding: 0px; text-align: center;" align="center">
-                                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:552px;" ><![endif]-->
-                                    <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td className="" style="vertical-align:top;width:552px;" ><![endif]-->
+                                    <div className="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                         <tbody>
                                           <tr>
@@ -186,14 +186,14 @@ const compiledHtml = `<!doctype html>
                           </div>
                           <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
                           <!-- ?-------------------------- Message -------------------------- -->
-                          <!--[if mso | IE]><tr><td class="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+                          <!--[if mso | IE]><tr><td className="" width="600px" ><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
                           <div style="margin:0px auto;max-width:552px;">
                             <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                               <tbody>
                                 <tr>
                                   <td style="padding-bottom: 5px; direction: ltr; font-size: 0px; padding: 0px; text-align: center;" align="center">
-                                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:276px;" ><![endif]-->
-                                    <div class="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                    <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td className="" style="vertical-align:top;width:276px;" ><![endif]-->
+                                    <div className="mj-column-per-50 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                                         <tbody>
                                           <tr>
@@ -209,14 +209,14 @@ const compiledHtml = `<!doctype html>
                                         </tbody>
                                       </table>
                                     </div>
-                                    <!--[if mso | IE]></td><td class="" style="" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+                                    <!--[if mso | IE]></td><td className="" style="" ><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:552px;" width="552" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
                                     <div style="margin:0px auto;max-width:552px;">
                                       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                                         <tbody>
                                           <tr>
                                             <td style="padding-bottom: 5px; direction: ltr; font-size: 0px; padding: 5px; text-align: center;" align="center">
-                                              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:542px;" ><![endif]-->
-                                              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                                              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td className="" style="vertical-align:top;width:542px;" ><![endif]-->
+                                              <div className="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                                                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                                                   <tbody>
                                                     <tr>
@@ -224,7 +224,7 @@ const compiledHtml = `<!doctype html>
                                                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style width="100%">
                                                           <tbody>
                                                             <tr>
-                                                              <td align="center" vertical-align="middle" class="btn-link" style="padding-bottom: 5px; font-size: 0px; padding: 8px; word-break: break-word;">
+                                                              <td align="center" vertical-align="middle" className="btn-link" style="padding-bottom: 5px; font-size: 0px; padding: 8px; word-break: break-word;">
                                                                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:120px;line-height:100%;">
                                                                   <tr>
                                                                     <td align="center" bgcolor="#FFC71F" role="presentation" style="padding-bottom: 5px; border: 1px solid black; border-radius: 24px; cursor: auto; height: 30px; mso-padding-alt: 0; background: #FFC71F;" valign="middle" height="30">

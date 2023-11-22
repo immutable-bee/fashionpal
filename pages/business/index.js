@@ -69,13 +69,6 @@ export default function Home() {
     [searchText, category, status, size]
   );
 
-  // useEffect(() => {
-  //   const initialFetch = async () => {
-  //     await fetchListings(1);
-  //   };
-  //   initialFetch();
-  // }, [size, fetchListings]);
-
   useEffect(() => {
     const initialFetch = async () => {
       await fetchListings(1);
@@ -219,7 +212,7 @@ export default function Home() {
                                   viewBox="0 0 24 24"
                                   stroke-width="1.5"
                                   stroke="currentColor"
-                                  class="w-5 h-5"
+                                  className="w-5 h-5"
                                 >
                                   <path
                                     stroke-linecap="round"

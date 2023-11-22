@@ -107,7 +107,7 @@ const BusinessPricing = () => {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-8 h-8 ml-3 cursor-pointer"
+            className="w-8 h-8 ml-3 cursor-pointer"
           >
             <path
               stroke-linecap="round"

@@ -264,7 +264,7 @@ function ProductDetails({
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="stroke-white"
+                    className="stroke-white"
                     width="44"
                     height="44"
                     viewBox="0 0 24 24"
@@ -291,7 +291,7 @@ function ProductDetails({
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="stroke-white"
+                    className="stroke-white"
                     width="44"
                     height="44"
                     viewBox="0 0 24 24"
@@ -343,7 +343,7 @@ function ProductDetails({
                 <svg
                   onClick={() => triggerOpenShareModal()}
                   xmlns="http://www.w3.org/2000/svg"
-                  class="w-12 h-12 mx-2 cursor-pointer"
+                  className="w-12 h-12 mx-2 cursor-pointer"
                   width="44"
                   height="44"
                   viewBox="0 0 24 24"

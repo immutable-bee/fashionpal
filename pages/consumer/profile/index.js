@@ -121,99 +121,99 @@ const ProfileComponent = ({}) => {
             </ButtonComponent>
 
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
-              <div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left text-gray-500">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <div className="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                       <th
                         scope="col"
-                        class="px-6 py-3"
+                        className="px-6 py-3"
                       >
                         Label
                       </th>
 
                       <th
                         scope="col"
-                        class="px-6 py-3"
+                        className="px-6 py-3"
                       >
                         Value
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4">
                         This months # of votes
                       </td>
                       {consumerStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {consumerStats.votesInDateRange}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <Loading />
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4">
                         {" "}
                         Most common category
                       </td>
                       {consumerStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {consumerStats.mostCommonUpvoteCategory}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <Loading />
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # up voted</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4"> # up voted</td>
                       {consumerStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {consumerStats.upvotedListings}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <Loading />
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # down voted</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4"> # down voted</td>
                       {consumerStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {consumerStats.downvotedListings}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <Loading />
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> % up voted</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4"> % up voted</td>
                       {consumerStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {consumerStats.percentUpvotedListings}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <Loading />
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">% up voted</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4">% up voted</td>
                       {consumerStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {consumerStats.percentDownvotedListings}
                         </td>
                       ) : (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           <Loading />
                         </td>
                       )}

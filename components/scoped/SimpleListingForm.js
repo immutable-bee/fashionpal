@@ -363,7 +363,7 @@ function SimpleListingForm({ onBack, onFecth }) {
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
                         stroke="currentColor"
-                        class="w-16 h-16 mt-4 mx-auto"
+                        className="w-16 h-16 mt-4 mx-auto"
                       >
                         <path
                           stroke-linecap="round"
@@ -407,7 +407,7 @@ function SimpleListingForm({ onBack, onFecth }) {
                           viewBox="0 0 24 24"
                           stroke-width="1.5"
                           stroke="currentColor"
-                          class="w-6 h-6"
+                          className="w-6 h-6"
                         >
                           <path
                             stroke-linecap="round"
@@ -489,7 +489,7 @@ function SimpleListingForm({ onBack, onFecth }) {
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="w-4 h-4"
+                            className="w-4 h-4"
                           >
                             <path
                               stroke-linecap="round"
@@ -530,7 +530,7 @@ function SimpleListingForm({ onBack, onFecth }) {
                             viewBox="0 0 24 24"
                             stroke-width="1.5"
                             stroke="currentColor"
-                            class="w-4 h-4"
+                            className="w-4 h-4"
                           >
                             <path
                               stroke-linecap="round"

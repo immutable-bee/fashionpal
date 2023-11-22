@@ -24,7 +24,7 @@ const Collapse = ({ title, subtitle, contentLeft, children }) => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="h-5 w-5 text-gray-500"
+              className="h-5 w-5 text-gray-500"
             >
               <path
                 stroke-linecap="round"
@@ -39,7 +39,7 @@ const Collapse = ({ title, subtitle, contentLeft, children }) => {
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="h-5 w-5 text-gray-500"
+              className="h-5 w-5 text-gray-500"
             >
               <path
                 stroke-linecap="round"

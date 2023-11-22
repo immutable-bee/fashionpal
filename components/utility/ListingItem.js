@@ -38,7 +38,7 @@ function ListingItem({
             : ""
         }`}
       >
-        <div class="absolute inset-0">
+        <div className="absolute inset-0">
           <Image
             src={mainPhoto}
             width={100}
@@ -48,7 +48,7 @@ function ListingItem({
           />
         </div>
         {brandPhoto ? (
-          <div class="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+          <div className="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]">
             <Image
               src={brandPhoto}
               width={100}

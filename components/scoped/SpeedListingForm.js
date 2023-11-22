@@ -152,7 +152,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-16 h-16 mt-4 mx-auto"
+                      className="w-16 h-16 mt-4 mx-auto"
                     >
                       <path
                         stroke-linecap="round"
@@ -190,23 +190,32 @@ function EmployeeListingForm({ onBack, onFetch }) {
         {step === 3 ? (
           <>
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
-              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left text-gray-500">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Disposed
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Listed
                       </th>
-                      <th scope="col" class="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Damaged
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="bg-white dark:bg-gray-800">
+                    <tr className="bg-white dark:bg-gray-800">
                       <td className="px-6 py-4">{disposedAmount}</td>
                       <td className="px-6 py-4">{listedAmount}</td>
                       <td className="px-6 py-4">{damagedAmount}</td>

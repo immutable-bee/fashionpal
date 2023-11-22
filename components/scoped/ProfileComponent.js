@@ -171,13 +171,13 @@ const Profilecomponent = () => {
             </form>
 
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
-              <div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
-                <table class="w-full text-sm text-left text-gray-500">
-                  <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+              <div className="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                       <th
                         scope="col"
-                        class="px-6 py-3"
+                        className="px-6 py-3"
                       >
                         {
                           <Dropdown>
@@ -220,66 +220,68 @@ const Profilecomponent = () => {
 
                       <th
                         scope="col"
-                        class="px-6 py-3"
+                        className="px-6 py-3"
                       >
                         Total
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4">
                         This months # of scans
                       </td>
                       {!fetchingBusinessStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {businessStats ? businessStats.totalListings : ""}
                         </td>
                       ) : (
                         <td>
-                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
+                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4">Most common category</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4">
+                        Most common category
+                      </td>
                       {!fetchingBusinessStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {businessStats
                             ? businessStats.mostCommonCategory
                             : ""}
                         </td>
                       ) : (
                         <td>
-                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
+                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # disposed</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4"> # disposed</td>
                       {!fetchingBusinessStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {businessStats ? businessStats.disposedListings : ""}
                         </td>
                       ) : (
                         <td>
-                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
+                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
-                      <td class="text-black px-6 py-4"> # keep</td>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="text-black px-6 py-4"> # keep</td>
                       {!fetchingBusinessStats ? (
-                        <td class="px-6 py-4">
+                        <td className="px-6 py-4">
                           {businessStats ? businessStats.listingsToSell : ""}
                         </td>
                       ) : (
                         <td>
-                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
+                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
-                    <tr class="bg-white dark:bg-gray-800">
+                    <tr className="bg-white dark:bg-gray-800">
                       <td className="text-black px-6 py-4"> # trashed</td>
                       {!fetchingBusinessStats ? (
                         <td className="px-6 py-4">
@@ -287,7 +289,7 @@ const Profilecomponent = () => {
                         </td>
                       ) : (
                         <td>
-                          <div class="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
+                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
                         </td>
                       )}
                     </tr>
@@ -334,7 +336,7 @@ const Profilecomponent = () => {
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  class="w-8 h-8 ml-3 cursor-pointer"
+                  className="w-8 h-8 ml-3 cursor-pointer"
                 >
                   <path
                     stroke-linecap="round"
