@@ -42,7 +42,7 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
           }}
         />
       )}
-      <div className="flex gap-3 sm:justify-start justify-center">
+      <div className="flex gap-3 sm:justify-center justify-center">
         {!loading ? (
           <>
             <ButtonComponent
@@ -53,18 +53,6 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
             >
               Capture {text}
             </ButtonComponent>
-            {skip ? (
-              <ButtonComponent
-                loading={loading}
-                color="grey"
-                className="bg-gray-300 px-5 py-2 rounded-lg mt-3 w-[70%] sm:w-auto"
-                onClick={() => onCapture(null)}
-              >
-                Skip
-              </ButtonComponent>
-            ) : (
-              ""
-            )}
           </>
         ) : (
           <LoadingComponent />

@@ -55,19 +55,19 @@ model User {
 }
 
 model Business {
-  id             String    @id @default(uuid())
-  uid            String    @unique
+  id             String        @id @default(uuid())
+  uid            String        @unique
   businessName   String
-  email          String    @unique
+  email          String        @unique
   businessState  String
   businessCity   String
   businessStreet String
   businessZip    String
   url            String?
   phoneNumber    String?
-  user           User      @relation(fields: [uid], references: [id])
+  user           User          @relation(fields: [uid], references: [id])
   listings       Listing[]
-  listingQueue ListingQueue?
+  listingQueue   ListingQueue?
 }
 
 model Consumer {
@@ -92,7 +92,7 @@ model Vote {
 
 model Category {
   id       String                 @id @default(uuid())
-  name     String @unique
+  name     String                 @unique
   listings CategoriesOnListings[]
 }
 
@@ -105,25 +105,44 @@ model CategoriesOnListings {
 }
 
 model Listing {
-  id           String                 @id @default(cuid())
-  mainImage    Json?
-  brandImage   Json?
-  mainImageUrl String?
+  id            String                 @id @default(cuid())
+  mainImage     Json?
+  brandImage    Json?
+  dataSource    String?
+  price         Int?
+  delivery      String?
+  tags          String[]
+  status        StatusType             @default(SALE)
+  isActive      Boolean                @default(true)
+  createdAt     DateTime?              @default(now())
+  updatedAt     DateTime?
+  daysToExpiry  Int                    @default(7)
+  businessId    String?
+  Barcode       String
   brandImageUrl String?
-  dataSource   String?
-  price        Int?
-  delivery     String?
-  tags         String[]
-  status       StatusType             @default(SALE)
-  isActive     Boolean                @default(true)
-  createdAt    DateTime?              @default(now())
-  updatedAt    DateTime?
-  daysToExpiry Int                    @default(7)
-  businessId   String?
-  Barcode      String
-  categories   CategoriesOnListings[]
-  Business     Business?              @relation(fields: [businessId], references: [id])
-  votes        Vote[]
+  mainImageUrl  String?
+  categories    CategoriesOnListings[]
+  Business      Business?              @relation(fields: [businessId], references: [id])
+  votes         Vote[]
+}
+
+model ListingQueue {
+  id       String          @id @default(uuid())
+  ownerId  String          @unique
+  owner    Business        @relation(fields: [ownerId], references: [id])
+  Listings QueuedListing[]
+}
+
+model QueuedListing {
+  id            String       @id @default(uuid())
+  queueId       String
+  topCategory   String?
+  mainCategory  String?
+  subCategory   String?
+  tags          String[]
+  relatedPrices String[]
+  bucketPath    String?      @unique
+  queue         ListingQueue @relation(fields: [queueId], references: [id])
 }
 
 enum VoteType {
@@ -135,23 +154,4 @@ enum StatusType {
   SALE
   DISPOSED
   DAMAGED
-}
-
-model ListingQueue {
-  id String @id @default(uuid())
-  owner Business @relation(fields: [ownerId], references: [id])
-  ownerId String @unique
-  Listings QueuedListing[]
-}
-
-model QueuedListing {
-  id String @id @default(uuid())
-  bucketPath String? @unique
-  queue ListingQueue @relation(fields: [queueId], references: [id])
-  queueId String
-  topCategory String?
-  mainCategory String?
-  subCategory String?
-  tags String[]
-  relatedPrices String[]
 }

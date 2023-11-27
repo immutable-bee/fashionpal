@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import SpeedListingForm from "@/components/scoped/SpeedListingForm";
-import AdminListingForm from "@/components/scoped/AdminListingForm";
+import AdminListingForm2 from "@/components/scoped/AdminListingForm2";
 
 function AddListing({ onBack, onFecth }) {
   const [listType, setListType] = useState("speed");
@@ -60,7 +60,7 @@ function AddListing({ onBack, onFecth }) {
       ) : (
         <>
           {listType === "admin" ? (
-            <AdminListingForm
+            <AdminListingForm2
               onBack={onBack}
               onFecth={onFecth}
             />

@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import ModalComponent from "@/components/utility/Modal";
 
-function ProductDetails({ children, title, onConfirmed }) {
+function ProductDetails({
+  heading = "Delete confirmation",
+  btnText = "Delete",
+  children,
+  title,
+  onConfirmed,
+}) {
   const [openModal, setOpenModal] = useState(false);
 
   const onDeleted = () => {
@@ -16,7 +22,7 @@ function ProductDetails({ children, title, onConfirmed }) {
       {openModal ? (
         <ModalComponent
           open={openModal}
-          title="Delete confirmation"
+          title={heading}
           onClose={() => setOpenModal(false)}
           footer={
             <div className="flex justify-end w-full">
@@ -24,7 +30,7 @@ function ProductDetails({ children, title, onConfirmed }) {
                 className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white"
                 onClick={() => onDeleted()}
               >
-                Delete
+                {btnText}
               </button>
             </div>
           }
