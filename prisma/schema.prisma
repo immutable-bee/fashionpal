@@ -130,7 +130,7 @@ model ListingQueue {
   id       String          @id @default(uuid())
   ownerId  String          @unique
   owner    Business        @relation(fields: [ownerId], references: [id])
-  Listings QueuedListing[]
+  listings QueuedListing[]
 }
 
 model QueuedListing {
@@ -140,9 +140,20 @@ model QueuedListing {
   mainCategory  String?
   subCategory   String?
   tags          String[]
-  relatedPrices String[]
   bucketPath    String?      @unique
+  relatedProducts RelatedProduct[]
   queue         ListingQueue @relation(fields: [queueId], references: [id])
+  status QueuedStatus @default(QUEUED)
+}
+
+model RelatedProduct {
+  id String @id @default(uuid())
+  title String
+  price Int
+  thumbnail String
+  link String
+  Listing QueuedListing @relation(fields: [queuedListingId], references: [id])
+  queuedListingId String
 }
 
 enum VoteType {
@@ -154,4 +165,10 @@ enum StatusType {
   SALE
   DISPOSED
   DAMAGED
+}
+
+enum QueuedStatus {
+  QUEUED
+  PROCESSING
+  PROCESSED
 }
