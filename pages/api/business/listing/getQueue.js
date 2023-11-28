@@ -23,7 +23,7 @@ const handler = async (req, res) => {
     },
   });
 
-  res.status(queue);
+  res.status(200).json(queue);
 };
 
 export default handler;

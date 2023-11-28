@@ -1,6 +1,6 @@
 import { Loading } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-import SimilarProducts from "@components/scoped/SimilarProducts";
+import SimilarProducts from "../scoped/SimilarProducts";
 import Image from "next/image";
 
 const QueuedListings = () => {
@@ -19,7 +19,7 @@ const QueuedListings = () => {
 
   const getQueue = async (req, res) => {
     setLoadingQueue(true);
-    const response = await fetch("api/business/listing/getQueue");
+    const response = await fetch("/api/business/listing/getQueue");
 
     if (!response.ok) {
       console.error("Failed to get queue");
@@ -144,7 +144,7 @@ const QueuedListings = () => {
             <div key={listing.id}>
               <div className="flex">
                 <Image
-                  src={`${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`}
                   alt={"Main Listing Photo"}
                   width={200}
                   height={200}

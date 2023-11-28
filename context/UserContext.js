@@ -14,7 +14,12 @@ const ACCESS_RULES = {
     "/consumer/saved",
     "/consumer/sales",
   ],
-  business: ["/business", "/business/sales", "/business/profile"],
+  business: [
+    "/business",
+    "/business/sales",
+    "/business/profile",
+    "/business/listing-queue",
+  ],
 };
 
 export const UserProvider = ({ children }) => {
