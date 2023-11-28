@@ -7,17 +7,13 @@ import Capture from "@/components/utility/Capture";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 
 import Image from "next/image";
-import moment from "moment";
 import LoadingComponent from "../utility/loading";
 
 function AdminListingForm({ onFecth }) {
   const [price, setPrice] = useState(0);
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
-  const [startTime, setStartTime] = useState("");
   const [listingQueue, setListingQueue] = useState([]);
-  const [endTime, setEndTime] = useState("");
   const [category, setCategory] = useState("");
-  const [count, setCount] = useState(1);
   const [tagFetching, setTagFetching] = useState(false);
   const [uploadedImages, setUploadedImages] = useState({
     main: null,
@@ -29,7 +25,6 @@ function AdminListingForm({ onFecth }) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const [currentPhotoType, setCurrentPhotoType] = useState("main");
 
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
@@ -44,10 +39,6 @@ function AdminListingForm({ onFecth }) {
   };
 
   useEffect(() => {
-    setStartTime(moment().format("HH:mm:ss"));
-  }, []);
-
-  useEffect(() => {
     if (similarProducts.length > 0) {
       setPriceOnDiscount();
     }
@@ -57,10 +48,7 @@ function AdminListingForm({ onFecth }) {
 
   const resetAllVariables = () => {
     setPrice(0);
-    setStartTime("");
-    setEndTime("");
     setCategory("");
-    setCurrentPhotoType("main");
     setUploadedImages({
       main: null,
       brandTag: null,
@@ -217,7 +205,6 @@ function AdminListingForm({ onFecth }) {
     } catch (error) {
       console.error(error);
     } finally {
-      setEndTime(moment().format("HH:mm:ss"));
       onFecth();
 
       resetAllVariables();
@@ -277,26 +264,10 @@ function AdminListingForm({ onFecth }) {
     setShowCamera(true);
   };
 
-  const downloadCustomerQRCode = () => {
-    const canvas = document.querySelector("#customer-qrcode");
-
-    if (canvas) {
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL();
-      link.download = "customer-qrcode.png";
-      link.click();
-    }
-  };
-
-  const downloadQRCode = () => {
-    const canvas = document.querySelector("#admin-qrcode");
-
-    if (canvas) {
-      const link = document.createElement("a");
-      link.href = canvas.toDataURL();
-      link.download = "admin-qrcode.png";
-      link.click();
-    }
+  const computedCount = () => {
+    return listingQueue.length + 1 < 10
+      ? `00${listingQueue.length + 1}`
+      : `${listingQueue.length + 1}`;
   };
 
   const onSelectSimilarProduct = (row) => {
@@ -458,10 +429,7 @@ function AdminListingForm({ onFecth }) {
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
-              #
-              {listingQueue.length + 1 < 10
-                ? `00${listingQueue.length + 1}`
-                : `${listingQueue.length + 1}`}
+              #{computedCount()}
             </div>
 
             {uploadedImages.main ? (
@@ -518,7 +486,7 @@ function AdminListingForm({ onFecth }) {
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
-              #{count}
+              #{computedCount()}
             </div>
             <div className="mt-8">
               {uploadedImages.brandTag ? (
@@ -592,7 +560,7 @@ function AdminListingForm({ onFecth }) {
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
-              #{count}
+              #{computedCount()}
             </div>
             <div
               className={`mt-8 grid gap-2 ${
@@ -666,7 +634,7 @@ function AdminListingForm({ onFecth }) {
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
-              #{count}
+              #{computedCount()}
             </div>
             <div
               className={`mt-8 grid gap-2 ${
@@ -944,147 +912,6 @@ function AdminListingForm({ onFecth }) {
         ) : (
           ""
         )}
-        {/* {step === 3 && (
-          <div className="mt-5">
-            <div className="flex justify-center">
-              <div className="border-[5px] border-gray-700 rounded-3xl px-8 py-2">
-                <h3 className="text-5xl font-normal text-gray-700">
-                  Our Price: $8.99
-                </h3>
-              </div>
-            </div>
-            <h3 className="text-center text-lg italic text-gray-600">
-              {" "}
-              Check FashionPal for the updated price
-            </h3>
-            <div className="flex items-center justify-center mt-5">
-              <div className="w-[260px] mr-20">
-                <h3 className="text-2xl text-center">
-                  Follow us on FashionPal
-                </h3>
-                <QRCode
-                  id="customer-qrcode" // Set a unique id for this QR code
-                  value={`https://fashionpal.vercel.app/store/KalisKloset-${
-                    listings[listings.length - 1]?.id
-                  }`}
-                  logoImage={
-                    "https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/fav.jpg"
-                  }
-                  enableCORS={true}
-                  size="250"
-                  qrStyle="dots"
-                  bgColor="#FFFFFF"
-                  fgColor="#808080"
-                  eyeColor="#FF5733"
-                />
-                <div className="flex justify-center">
-                  <button
-                    className="underline text-lg"
-                    onClick={downloadCustomerQRCode}
-                  >
-                    Download QR Code (Customer)
-                  </button>
-                </div>
-              </div>
-              <div className="w-[260px]">
-                <h3 className="text-2xl text-center">Product SKU</h3>
-                <QRCode
-                  id="admin-qrcode" // Set a unique id for this QR code
-                  value={`https://fashionpal.vercel.app/store/KalisKloset`}
-                  logoImage={
-                    "https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/fav.jpg"
-                  }
-                  enableCORS={true}
-                  size="250"
-                  bgColor="#FFFFFF"
-                  fgColor="#808080"
-                  eyeColor="#FF5733"
-                />
-                <div className="flex justify-center">
-                  <button
-                    className="underline text-lg"
-                    onClick={downloadQRCode}
-                  >
-                    Download QR Code (Admin)
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div className="flex justify-center  mt-1">
-              <ButtonComponent
-                rounded
-                className="!w-48 mt-6"
-                onClick={() => setStep(1)}
-              >
-                List
-              </ButtonComponent>
-            </div>
-          </div>
-        )}
-        {step === 4 ? (
-          <>
-            <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        Disposed
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        Listed
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        Start time
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        End time
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="px-6 py-4">
-                        {
-                          listings.filter((x) => x.list_type === "dispose")
-                            .length
-                        }
-                      </td>
-                      <td className="px-6 py-4">
-                        {listings.filter((x) => x.list_type === "list").length}
-                      </td>
-                      <td className="px-6 py-4">{startTime}</td>
-                      <td className="px-6 py-4">{endTime}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div className="flex justify-center sm:justify-start mt-1">
-              <ButtonComponent
-                rounded
-                className="!w-48 mt-6"
-                onClick={() => onBack()}
-              >
-                Home page
-              </ButtonComponent>
-            </div>
-          </>
-        ) : (
-          ""
-        )} */}
       </>
     </div>
   );
