@@ -4,14 +4,13 @@ import axios from "axios";
 import ButtonComponent from "@/components/utility/Button";
 import SimilarProducts from "@/components/scoped/SimilarProducts";
 import Capture from "@/components/utility/Capture";
-import { QRCode } from "react-qrcode-logo";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 
 import Image from "next/image";
 import moment from "moment";
 import LoadingComponent from "../utility/loading";
 
-function AdminListingForm({ onBack, onFecth }) {
+function AdminListingForm({ onFecth }) {
   const [price, setPrice] = useState(0);
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [startTime, setStartTime] = useState("");
@@ -24,6 +23,7 @@ function AdminListingForm({ onBack, onFecth }) {
     main: null,
     brandTag: null,
   });
+
   const [listings, setListings] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [step, setStep] = useState(1);
