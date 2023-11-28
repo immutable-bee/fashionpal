@@ -9,8 +9,10 @@ const QueuedListings = () => {
 
   // For opening listing dropdown based on id
   const [openListing, setOpenListing] = useState();
+  const [openListingData, setOpenListingData] = useState();
 
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
+  const [referencePrice, setReferencePrice] = useState();
   const [openListingPrice, setOpenListingPrice] = useState(0);
 
   const [isUploading, setIsUploading] = useState(false);
@@ -44,23 +46,27 @@ const QueuedListings = () => {
     return average;
   };
 
+  const findLowestPrice = (products) => {
+    return products.reduce(
+      (min, p) => (p.extractedPrice < min ? p.extractedPrice : min),
+      products[0].extractedPrice
+    );
+  };
+
+  const findHighestPrice = (products) => {
+    return products.reduce(
+      (max, p) => (p.extractedPrice > max ? p.extractedPrice : max),
+      products[0].extractedPrice
+    );
+  };
+
   const setPriceOnDiscount = () => {
-    const listing = queuedListings.find((item) => item.id === openListing);
-    const averagePrice = calulateAvgPrice(listing.relatedProducts);
-    const adjustedPrice = averagePrice * (1 + defaultPriceSuggestion / 100);
+    const adjustedPrice = referencePrice * (1 + defaultPriceSuggestion / 100);
     setOpenListingPrice(parseFloat(adjustedPrice.toFixed(2)));
   };
 
   const onSelectSimilarProduct = (row) => {
-    setPrice(
-      (
-        Math.round(
-          (row.price
-            ? row.price + (row.price * defaultPriceSuggestion) / 100
-            : 0) * 100
-        ) / 100
-      ).toFixed(2)
-    );
+    updatePriceReference(row.extractedPrice);
   };
 
   const pushQueuedListing = async (id, status) => {
@@ -89,16 +95,44 @@ const QueuedListings = () => {
     return;
   };
 
+  const onOpenListing = (listing) => {
+    setOpenListing(listing.id);
+    setOpenListingData(listing);
+    const avgPrice = calulateAvgPrice(listing.similarProducts);
+    setReferencePrice(avgPrice);
+  };
+
   const closeOpenListing = () => {
     setOpenListing("");
     setOpenListingPrice(0);
   };
 
+  const updatePriceReference = (ref) => {
+    if (ref === "high" || ref === "low" || ref === "avg") {
+      if (ref === "high") {
+        const highestPrice = findHighestPrice(openListingData.relatedProducts);
+        setReferencePrice(highestPrice);
+      }
+      if (ref === "low") {
+        const lowestPrice = findLowestPrice(openListingData.relatedProducts);
+        setReferencePrice(lowestPrice);
+      }
+      if (ref === "avg") {
+        const avgPrice = calulateAvgPrice(openListingData.relatedProducts);
+        setReferencePrice(avgPrice);
+      }
+    } else {
+      setReferencePrice(ref);
+    }
+  };
+
   useEffect(() => {
     if (openListing) {
-      setPriceOnDiscount();
+      if (referencePrice) {
+        setPriceOnDiscount();
+      }
     }
-  }, [defaultPriceSuggestion, openListing]);
+  }, [defaultPriceSuggestion, openListing, referencePrice]);
 
   return (
     <div>
@@ -121,9 +155,7 @@ const QueuedListings = () => {
                   (openListing === listing.id ? (
                     <button onClick={closeOpenListing}>Close</button>
                   ) : (
-                    <button onClick={() => setOpenListing(listing.id)}>
-                      Open
-                    </button>
+                    <button onClick={() => onOpenListing(listing)}>Open</button>
                   ))}
               </div>
               {listing.status === "PROCESSED" && openListing === listing.id ? (
@@ -133,10 +165,17 @@ const QueuedListings = () => {
                     similarProducts={listing.relatedProducts}
                   />
                   <div className="flex justify-center mt-3">
-                    <h6 className="text-2xl">
+                    <button onClick={() => updatePriceReference("high")}>
+                      Highest Price: $
+                      {findHighestPrice(listing.relatedProducts)}
+                    </button>
+                    <button onClick={() => updatePriceReference("avg")}>
                       Average Price: $
                       {calulateAvgPrice(listing.relatedProducts)}
-                    </h6>
+                    </button>
+                    <button onClick={() => updatePriceReference("low")}>
+                      Lowest Price: ${findLowestPrice(listing.relatedProducts)}
+                    </button>
                   </div>
                   <div className="flex mx-1 justify-between">
                     <div>
