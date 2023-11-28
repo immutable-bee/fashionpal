@@ -134,26 +134,26 @@ model ListingQueue {
 }
 
 model QueuedListing {
-  id            String       @id @default(uuid())
-  queueId       String
-  topCategory   String?
-  mainCategory  String?
-  subCategory   String?
-  tags          String[]
-  bucketPath    String?      @unique
+  id              String           @id @default(uuid())
+  queueId         String
+  topCategory     String?
+  mainCategory    String?
+  subCategory     String?
+  tags            String[]
+  bucketPath      String?          @unique
+  status          QueuedStatus     @default(QUEUED)
+  queue           ListingQueue     @relation(fields: [queueId], references: [id])
   relatedProducts RelatedProduct[]
-  queue         ListingQueue @relation(fields: [queueId], references: [id])
-  status QueuedStatus @default(QUEUED)
 }
 
 model RelatedProduct {
-  id String @id @default(uuid())
-  title String
-  price Int
-  thumbnail String
-  link String
-  Listing QueuedListing @relation(fields: [queuedListingId], references: [id])
+  id              String        @id @default(uuid())
+  title           String
+  price           Int
+  thumbnail       String
   queuedListingId String
+  link            String
+  Listing         QueuedListing @relation(fields: [queuedListingId], references: [id])
 }
 
 enum VoteType {

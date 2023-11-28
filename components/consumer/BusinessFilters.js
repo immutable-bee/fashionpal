@@ -107,7 +107,7 @@ export default function CustomerFilters({
             <button
               id="dropdown-button"
               data-dropdown-toggle="dropdown"
-              class="flex-shrink-0 z-10 w-full sm:w-36 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 "
+              class="flex-shrink-0   z-10 w-full sm:w-40 inline-flex justify-between items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 "
               type="button"
               onClick={() => toggleStatusDropdown()}
             >
@@ -155,7 +155,7 @@ export default function CustomerFilters({
             <button
               id="dropdown-button"
               data-dropdown-toggle="dropdown"
-              class="flex-shrink-0 w-full sm:w-36 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 sm:rounded-none rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 "
+              class="flex-shrink-0 w-full sm:w-40 z-10 inline-flex justify-between items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 sm:rounded-none rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 "
               type="button"
               onClick={() => toggleCategoriesDropdown()}
             >
@@ -180,7 +180,7 @@ export default function CustomerFilters({
             {isCategoriesDropdownOpen && (
               <div
                 id="dropdown"
-                class="z-10 absolute top-11 sm:left-40 left-[50%] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
+                class="z-10 absolute top-11 sm:left-44 left-[50%] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
               >
                 <ul
                   class="py-2 text-sm text-gray-700 "
