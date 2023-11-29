@@ -8,9 +8,7 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const url = new URL(req.url);
-  const baseUrl = url.searchParams.get("baseUrl");
-  const batchSize = url.searchParams.get("batchSize");
+  const { baseUrl, batchSize } = req.query;
 
   console.error("Base Url: ", baseUrl);
   console.error("batchSize", batchSize);
