@@ -3,7 +3,7 @@ import { prisma } from "../../../../db/prismaDB";
 
 const handler = async (req, res) => {
   try {
-    const { simpleTags, listingId } = req.body;
+    const { simpleTags, queuedListingId } = req.body;
     const apiQuery = simpleTags.join(" ");
 
     getJson(
@@ -32,7 +32,7 @@ const handler = async (req, res) => {
                   price: item.extracted_price,
                   thumbnail: item.thumbnail,
                   link: item.link,
-                  queuedListingId: listingId,
+                  queuedListingId,
                 },
               });
             })
