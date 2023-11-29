@@ -78,34 +78,7 @@ const handler = async (req, res) => {
         files,
         `${businessQueue.id}/${queueListing.id}`
       );
-      // try {
-      //   const ximilarReqBody = uploadedFiles.map((file) => ({
-      //     url: file.url,
-      //     id: `${queueListing.id}_${file.key}`,
-      //   }));
-      //
-      //   const ximilarReq = await fetch(`${baseUrl}/api/ai/ximilarTagging`, {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify({
-      //       queuedListingId: queueListing.id,
-      //       ximilarReqBody,
-      //       baseUrl,
-      //     }),
-      //   });
-      //
-      //   if (!ximilarReq.ok) {
-      //     return res.status(500).json({ message: "Ximilar call failed" });
-      //   }
-      //
-      //   const data = await ximilarReq.json();
-      //
-      //   res.status(200).json({ queuedListingId: queueListing.id, data });
-      // } catch (error) {
-      //   return res.status(500).json({ error: error.message });
-      // }
+
       res.status(200).json("Listing added to queue");
     }
   } catch (error) {
