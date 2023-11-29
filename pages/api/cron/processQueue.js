@@ -1,5 +1,5 @@
 import { prisma } from "../../../db/prismaDB";
-import { verifySignature } from "@upstash/qstash/nextjs";
+import { verifySignature } from "@upstash/qstash/dist/nextjs";
 
 export const config = {
   api: {
