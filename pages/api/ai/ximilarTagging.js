@@ -55,7 +55,7 @@ const handler = async (req, res) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ simpleTags }),
+        body: JSON.stringify({ simpleTags, queuedListingId }),
       }
     );
 
