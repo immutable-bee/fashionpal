@@ -1,4 +1,5 @@
 import Image from "next/image";
+import placeholder from "@/public/images/icon.jpg";
 
 function ListingItem({
   mainPhoto,
@@ -40,7 +41,7 @@ function ListingItem({
       >
         <div className="absolute inset-0">
           <Image
-            src={mainPhoto}
+            src={mainPhoto || placeholder}
             width={100}
             height={100}
             className="rounded-xl !w-full !h-64 object-cover"
@@ -72,10 +73,7 @@ function ListingItem({
             </p>
           ))}
         {isSlot && children ? (
-          <div
-            className="mt-1.5"
-            onClick={stopClick}
-          >
+          <div className="mt-1.5" onClick={stopClick}>
             {children}
           </div>
         ) : (

@@ -1,6 +1,6 @@
 import { Loading } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-import SimilarProducts from "@components/scoped/SimilarProducts";
+import SimilarProducts from "../scoped/SimilarProducts";
 import Image from "next/image";
 
 const QueuedListings = () => {
@@ -19,7 +19,7 @@ const QueuedListings = () => {
 
   const getQueue = async (req, res) => {
     setLoadingQueue(true);
-    const response = await fetch("api/business/listing/getQueue");
+    const response = await fetch("/api/business/listing/getQueue");
 
     if (!response.ok) {
       console.error("Failed to get queue");
@@ -139,23 +139,37 @@ const QueuedListings = () => {
       {loadingQueue ? (
         <Loading />
       ) : (
-        <div>
+        <div className="w-full flex flex-col items-center">
           {queuedListings.map((listing) => (
-            <div key={listing.id}>
-              <div className="flex">
+            <div className="w-1/2 flex shadow-md" key={listing.id}>
+              <div className="flex gap-1 justify-center items-center">
                 <Image
-                  src={`${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`}
                   alt={"Main Listing Photo"}
-                  width={200}
-                  height={200}
+                  width={100}
+                  height={100}
                 />
                 <h6>Status: {listing.status} </h6>
 
                 {listing.status === "PROCESSED" &&
                   (openListing === listing.id ? (
-                    <button onClick={closeOpenListing}>Close</button>
+                    <button onClick={closeOpenListing}>
+                      <Image
+                        src={"/images/chevron-down.svg"}
+                        alt={"Close listing details icon"}
+                        width={25}
+                        height={25}
+                      />
+                    </button>
                   ) : (
-                    <button onClick={() => onOpenListing(listing)}>Open</button>
+                    <button onClick={() => onOpenListing(listing)}>
+                      <Image
+                        src={"/images/chevron-up.svg"}
+                        alt={"Open listing details icon"}
+                        width={25}
+                        height={25}
+                      />
+                    </button>
                   ))}
               </div>
               {listing.status === "PROCESSED" && openListing === listing.id ? (

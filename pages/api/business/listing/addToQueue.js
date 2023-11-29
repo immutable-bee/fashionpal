@@ -104,6 +104,7 @@ const handler = async (req, res) => {
         return res.status(500).json({ error: error.message });
       }
 
+      /*
       try {
         const ximilarReqBody = uploadedFiles.map((file) => ({
           url: file.url,
@@ -132,7 +133,9 @@ const handler = async (req, res) => {
       } catch (error) {
         return res.status(500).json({ error: error.message });
       }
+      */
     });
+    res.status(200).json("Listing added to queue");
   } else {
     res.status(405).json({ error: "Method not allowed" });
   }

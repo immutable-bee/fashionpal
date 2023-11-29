@@ -2,24 +2,18 @@ import React, { useState, useEffect } from "react";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import ButtonComponent from "@/components/utility/Button";
-import SimilarProducts from "@/components/scoped/SimilarProducts";
 import Capture from "@/components/utility/Capture";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
-import { QRCode } from "react-qrcode-logo";
-import Barcode from "react-barcode";
+
 import Image from "next/image";
 import LoadingComponent from "../utility/loading";
+import { useRouter } from "next/router";
 
 function AdminListingForm({ onFecth }) {
-  const [price, setPrice] = useState(0);
+  const router = useRouter();
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [listingQueue, setListingQueue] = useState([]);
   const [category, setCategory] = useState("");
-  const [tagFetching, setTagFetching] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState({
-    main: null,
-    brandTag: null,
-  });
 
   const [listings, setListings] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -32,90 +26,37 @@ function AdminListingForm({ onFecth }) {
   const [brandImageSkipped, setBrandImageSkipped] = useState(false);
 
   const [pendingListingId, setPendingListingId] = useState();
-  const [similarProducts, setSimilarProducts] = useState([]);
+  const [currentPhotoType, setCurrentPhotoType] = useState("main");
 
   const skipBrandImage = () => {
     setBrandImageSkipped(true);
     setStep(4);
   };
 
-  useEffect(() => {
-    if (similarProducts.length > 0) {
-      setPriceOnDiscount();
-    }
-  }, [defaultPriceSuggestion, similarProducts]);
-
   const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
 
-  const resetAllVariables = () => {
-    setPrice(0);
-    setCategory("");
-    setUploadedImages({
-      main: null,
-      brandTag: null,
-    });
-  };
-
-  const onCaptureBrandTag = async (e) => {
-    setUploadedImages({
-      main: {
-        image:
-          "https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/brandImage-1698842707957.png?t=2023-11-23T15:45:20.094Z",
-      },
-      brandTag: {
-        image:
-          "https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/brandImage-1698842707957.png?t=2023-11-23T15:45:20.094Z",
-      },
-    });
-  };
-
   const onCapture = async (e) => {
-    setUploadedImages({
-      main: {
-        image:
-          "https://afmipzwmfcoduhcmwowr.supabase.co/storage/v1/object/public/listings/brandImage-1698842707957.png?t=2023-11-23T15:45:20.094Z",
-      },
-      brandTag: null,
-    });
-    setStep(2);
+    const imageSrc = e;
+    if (imageSrc) {
+      if (currentPhotoType === "main") {
+        setMainImage(imageSrc);
+        setCurrentPhotoType("brandTag");
+        setStep(2);
+      }
+
+      if (currentPhotoType === "brandTag") {
+        setBrandImage(imageSrc);
+        setShowCamera(false);
+      }
+    }
   };
 
-  // const onCapture = async (e) => {
-  //   const imageSrc = e;
-  //   if (imageSrc) {
-  //     if (currentPhotoType === "main") {
-  //       setMainImage(imageSrc);
-  //       setCurrentPhotoType("brandTag");
-  //     }
-
-  //     if (currentPhotoType === "brandTag") {
-  //       setBrandImage(imageSrc);
-  //       setShowCamera(false);
-  //     }
-
-  //     //const file = convertDataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
-
-  //     // Set loading to true while uploading
-  //   }
-  // };
-
-  const setPriceOnDiscount = () => {
-    const averagePrice = calulateAvgPrice();
-    const adjustedPrice = averagePrice * (1 + defaultPriceSuggestion / 100);
-    setPrice(parseFloat(adjustedPrice.toFixed(2)));
-  };
-
-  const calulateAvgPrice = () => {
-    const total = similarProducts.reduce((sum, item) => {
-      return sum + (item.extractedPrice || 0);
-    }, 0);
-
-    const average =
-      similarProducts.length > 0
-        ? parseFloat((total / similarProducts.length).toFixed(2))
-        : 0;
-
-    return average;
+  const onNextListing = () => {
+    setCurrentPhotoType("main");
+    setMainImage("");
+    setBrandImage("");
+    setCategory("");
+    setStep(1);
   };
 
   const addToQueue = async (formData) => {
@@ -131,7 +72,6 @@ function AdminListingForm({ onFecth }) {
       });
 
       const { queuedListingId, data } = await response.json();
-      setSimilarProducts(data);
       setPendingListingId(queuedListingId);
       setLoading(false);
       setImageUploading(false);
@@ -142,25 +82,17 @@ function AdminListingForm({ onFecth }) {
   };
 
   useEffect(() => {
-    if (similarProducts.length > 0) {
-      setStep(2);
-    }
-  }, [similarProducts]);
+    if (mainImage && (brandImage || brandImageSkipped)) {
+      const formData = new FormData();
+      const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
+      formData.append("mainImage", mainFile);
 
-  useEffect(() => {
-    if (similarProducts.length === 0) {
-      if (mainImage && (brandImage || brandImageSkipped)) {
-        const formData = new FormData();
-        const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
-        formData.append("mainImage", mainFile);
-
-        if (brandImage) {
-          const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
-          formData.append("brandImage", brandFile);
-        }
-
-        addToQueue(formData);
+      if (brandImage) {
+        const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
+        formData.append("brandImage", brandFile);
       }
+
+      addToQueue(formData);
     }
   }, [mainImage, brandImage, brandImageSkipped]);
 
@@ -176,86 +108,17 @@ function AdminListingForm({ onFecth }) {
     return new File([u8arr], filename, { type: mime });
   };
 
-  const onUploadAll = async () => {
-    setUploading(true);
-    let JSON = {
-      type: "admin",
-      tags: uploadedImages.tags,
-      mainImage: uploadedImages.main.url,
-    };
-
-    if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
-      JSON.brandImage = uploadedImages.brandTag.url;
-    }
-
-    const newListing = listings;
-    newListing.push(JSON);
-
-    setListings(newListing);
-
-    try {
-      const response = await axios.post("/api/add-listing", { listing: JSON });
-      const result = response.data;
-
-      const newListing = listings;
-      newListing.push(result);
-
-      setListings(newListing);
-
-      NotificationManager.success("Listing added successfully!");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      onFecth();
-
-      resetAllVariables();
-
-      //setStep(3);
-
-      setUploading(false);
-    }
-  };
-
-  const pushQueuedListing = async (status) => {
-    setLoading(true);
-    setUploading(true);
-
-    const payload = {
-      data: {
-        id: pendingListingId,
-        price: parseFloat(price),
-        status: status,
-      },
-    };
-
-    const response = await fetch("/api/business/listing/pushQueuedListing", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      return;
-    }
-
-    onFecth();
-    resetAllVariables();
-    setStep(3);
-    setLoading(false);
-    setUploading(false);
-
-    return;
-  };
-
   const onStop = async () => {
     setStep(4);
   };
 
   const onAdd = () => {
     const newListingQueue = listingQueue;
-    newListingQueue.push(uploadedImages);
+    const queueItem = {
+      main: mainImage,
+      brandTag: brandImage,
+    };
+    newListingQueue.push(queueItem);
     console.log(newListingQueue);
     setListingQueue(newListingQueue);
     setStep(5);
@@ -271,16 +134,8 @@ function AdminListingForm({ onFecth }) {
       : `${listingQueue.length + 1}`;
   };
 
-  const onSelectSimilarProduct = (row) => {
-    setPrice(
-      (
-        Math.round(
-          (row.price
-            ? row.price + (row.price * defaultPriceSuggestion) / 100
-            : 0) * 100
-        ) / 100
-      ).toFixed(2)
-    );
+  const redirectToQueue = () => {
+    router.push("/business/listing-queue");
   };
 
   return (
@@ -289,10 +144,7 @@ function AdminListingForm({ onFecth }) {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div>
@@ -433,11 +285,11 @@ function AdminListingForm({ onFecth }) {
               #{computedCount()}
             </div>
 
-            {uploadedImages.main ? (
+            {mainImage ? (
               <div className=" border-2 mx-auto mt-8 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                 <div className="w-full flex items-center justify-center">
-                  <Image
-                    src={uploadedImages.main.image}
+                  <img
+                    src={mainImage}
                     alt={"Main Photo"}
                     width={250}
                     height={250}
@@ -490,11 +342,11 @@ function AdminListingForm({ onFecth }) {
               #{computedCount()}
             </div>
             <div className="mt-8">
-              {uploadedImages.brandTag ? (
+              {brandImage ? (
                 <div className=" border-2 mx-auto  border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
                   <div className="w-full flex items-center justify-center">
-                    <Image
-                      src={uploadedImages.brandTag.image}
+                    <img
+                      src={brandImage}
                       alt={"brandTag Photo"}
                       width={250}
                       height={250}
@@ -504,7 +356,7 @@ function AdminListingForm({ onFecth }) {
                 </div>
               ) : (
                 <Capture
-                  onCapture={onCaptureBrandTag}
+                  onCapture={onCapture}
                   loading={loading}
                   skip={true}
                   onSkip={skipBrandImage}
@@ -522,9 +374,7 @@ function AdminListingForm({ onFecth }) {
               </button>
               <button
                 className={`bg-green-400 w-1/2 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5 ${
-                  uploadedImages.brandTag && uploadedImages.brandTag.image
-                    ? ""
-                    : "pointer-events-none bg-green-300"
+                  brandImage ? "" : "pointer-events-none bg-green-300"
                 }`}
                 onClick={() => setStep(4)}
               >
@@ -565,14 +415,14 @@ function AdminListingForm({ onFecth }) {
             </div>
             <div
               className={`mt-8 grid gap-2 ${
-                uploadedImages.brandTag ? "grid-cols-2" : "grid-cosl-1"
+                brandImage ? "grid-cols-2" : "grid-cosl-1"
               }`}
             >
-              {uploadedImages.main ? (
+              {mainImage ? (
                 <div className=" border-2 mx-auto  border-primary rounded-2xl px-4 py-5  my-1 relative">
                   <div className="w-full flex items-center justify-center">
-                    <Image
-                      src={uploadedImages.main.image}
+                    <img
+                      src={mainImage}
                       alt={"Main Photo"}
                       width={250}
                       height={250}
@@ -583,11 +433,11 @@ function AdminListingForm({ onFecth }) {
               ) : (
                 ""
               )}
-              {uploadedImages.brandTag ? (
+              {brandImage ? (
                 <div className=" border-2 mx-auto  border-primary rounded-2xl px-4 py-5  my-1 relative">
                   <div className="w-full flex items-center justify-center">
-                    <Image
-                      src={uploadedImages.brandTag.image}
+                    <img
+                      src={brandImage}
                       alt={"brandTag Photo"}
                       width={250}
                       height={250}
@@ -639,14 +489,14 @@ function AdminListingForm({ onFecth }) {
             </div>
             <div
               className={`mt-8 grid gap-2 ${
-                uploadedImages.brandTag ? "grid-cols-2" : "grid-cosl-1"
+                brandImage ? "grid-cols-2" : "grid-cosl-1"
               }`}
             >
-              {uploadedImages.main ? (
+              {mainImage && (
                 <div className=" border-2 mx-auto  border-primary rounded-2xl px-4 py-5  my-1 relative">
                   <div className="w-full flex items-center justify-center">
-                    <Image
-                      src={uploadedImages.main.image}
+                    <img
+                      src={mainImage}
                       alt={"Main Photo"}
                       width={250}
                       height={250}
@@ -654,14 +504,12 @@ function AdminListingForm({ onFecth }) {
                     />
                   </div>
                 </div>
-              ) : (
-                ""
               )}
-              {uploadedImages.brandTag ? (
+              {brandImage && (
                 <div className=" border-2 mx-auto  border-primary rounded-2xl px-4 py-5  my-1 relative">
                   <div className="w-full flex items-center justify-center">
-                    <Image
-                      src={uploadedImages.brandTag.image}
+                    <img
+                      src={brandImage}
                       alt={"brandTag Photo"}
                       width={250}
                       height={250}
@@ -669,8 +517,6 @@ function AdminListingForm({ onFecth }) {
                     />
                   </div>
                 </div>
-              ) : (
-                ""
               )}
             </div>
 
@@ -684,7 +530,7 @@ function AdminListingForm({ onFecth }) {
 
               <button
                 className={`bg-green-400 w-full border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
-                onClick={() => setStep(1)}
+                onClick={onNextListing}
               >
                 Next Listing
               </button>
@@ -704,24 +550,24 @@ function AdminListingForm({ onFecth }) {
                   >
                     <div
                       class={`relative h-[255px] w-full rounded-xl transition-all duration-500 ease-in-out ${
-                        listing.brandTag && listing.brandTag.image
+                        listing.brandTag
                           ? "[transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
                           : ""
                       }`}
                     >
                       <div className="absolute inset-0">
-                        <Image
-                          src={listing.main.image}
+                        <img
+                          src={listing.main}
                           width={100}
                           height={100}
                           className="rounded-xl !w-full !h-64 object-cover"
                           alt=""
                         />
                       </div>
-                      {listing.brandTag && listing.brandTag.image ? (
+                      {listing.brandTag ? (
                         <div className="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]">
-                          <Image
-                            src={listing.brandTag.image}
+                          <img
+                            src={listing.brandTag}
                             width={100}
                             height={100}
                             className="rounded-xl !w-full !h-64 object-cover"
@@ -732,10 +578,7 @@ function AdminListingForm({ onFecth }) {
                         ""
                       )}
                     </div>
-                    <LoadingComponent
-                      className="mt-6"
-                      size="md"
-                    />
+                    <LoadingComponent className="mt-6" size="md" />
                   </div>
                 </>
               ))}
@@ -743,7 +586,7 @@ function AdminListingForm({ onFecth }) {
             <div className="mt-8 ml-4">
               <button
                 className={`bg-green-400 w-32 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
-                onClick={() => setStep(7)}
+                onClick={redirectToQueue}
               >
                 Next
               </button>
@@ -751,199 +594,6 @@ function AdminListingForm({ onFecth }) {
           </div>
         ) : (
           ""
-        )}
-
-        {step === 7 ? (
-          <div>
-            {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
-            ) : (
-              <div>
-                <div className="px-5 mt-6 w-[480px] mx-auto">
-                  <div className="mt-6 mb-4">
-                    <div className="flex gap-4 flex-wrap justify-center items-center ">
-                      {uploadedImages.main ? (
-                        <div className=" border-2 border-primary rounded-2xl px-4 py-5 w-64 my-1 relative">
-                          <div className="w-full flex items-center justify-center">
-                            <Image
-                              src={uploadedImages.main.image}
-                              alt={"Main Photo"}
-                              width={250}
-                              height={250}
-                              className="rounded-xl max-w-full max-h-full"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-
-                    <div className="mt-6">
-                      <div className="flex items-center">
-                        <h3 className="!text-2xl">Similar Online Listings: </h3>
-                      </div>
-                      <SimilarProducts
-                        onSelect={onSelectSimilarProduct}
-                        similarProducts={similarProducts}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex justify-center mt-3">
-                    <h6 className="text-2xl">
-                      Average Price: ${calulateAvgPrice()}
-                    </h6>
-                  </div>
-
-                  <div className="flex mx-1 justify-between">
-                    <div>
-                      {}
-                      <div className="">
-                        <label className="block text-gray-600 text-3xl mb-2">
-                          % Off
-                        </label>
-                        <div className="relative w-32 flex items-center">
-                          <h3 className="absolute text-2xl right-8 mt-1">%</h3>
-                          <input
-                            value={defaultPriceSuggestion}
-                            type="number"
-                            className="w-48 mt-1 !text-4xl rounded-2xl pl-4 pr-2  !py-3 border-4 border-gray-400"
-                            onChange={(e) =>
-                              setDefaultPriceSuggestion(e.target.value)
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div className="mt-3">
-                        <label className="block text-gray-600 text-3xl mb-2">
-                          Your Price
-                        </label>
-                        <div className="relative flex items-center">
-                          <h3 className="absolute text-4xl left-3 mt-1">$</h3>
-                          <input
-                            value={price}
-                            type="number"
-                            className="w-48 mt-1 !text-4xl rounded-2xl pl-10 pr-2  !py-3 border-4 border-gray-400"
-                            onChange={(e) => setPrice(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-4 justify-center">
-                      <button
-                        onClick={() =>
-                          setDefaultPriceSuggestion(
-                            Number(Number(defaultPriceSuggestion) + 5)
-                          )
-                        }
-                        className="border-4 p-1 border-gray-400 rounded-2xl"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-24 h-24 text-green-500"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() =>
-                          setDefaultPriceSuggestion(
-                            Number(Number(defaultPriceSuggestion) - 5)
-                          )
-                        }
-                        className="border-4 p-1 border-gray-400 rounded-2xl"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-24 h-24 text-red-500"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-                    <button
-                      onClick={() => pushQueuedListing("DISPOSED")}
-                      className={`${
-                        tagFetching ? " pointer-events-none bg-gray-300" : ""
-                      } hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      disabled={tagFetching}
-                      onClick={() => pushQueuedListing("SALE")}
-                      className={`${
-                        tagFetching ? " pointer-events-none bg-gray-300" : ""
-                      } hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
-                    >
-                      Print
-                    </button>
-                  </div>
-
-                  <div className="flex justify-center mt-5">
-                    <button
-                      className={`bg-green-400 w-72 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-2`}
-                      onClick={() => setStep(8)}
-                    >
-                      List all
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : (
-          ""
-        )}
-
-        {step === 8 && (
-          <>
-            <div className="max-w-2xl mx-auto grid grid-cols-2 gap-3 divide-x-8 divide-black">
-              <div>
-                <h3 className="mb-3 text-3xl text-center">Membership price</h3>
-                <div className="flex justify-center">
-                  <QRCode
-                    value={`https://fashionpal.vercel.app/store/KalisKloset-${
-                      listings[listings.length - 1]?.id
-                    }`}
-                    enableCORS={true}
-                    size="250"
-                  />
-                </div>
-              </div>
-              <div>
-                <h3 className="mb-3 text-7xl text-center">$8.99 </h3>
-                <div className="flex justify-center mx-5">
-                  <Barcode
-                    value={`https://fashionpal.vercel.app/store/KalisKloset-${
-                      listings[listings.length - 1]?.id
-                    }`}
-                    renderer="img"
-                    lineColor="black"
-                    height={600}
-                  />
-                </div>
-              </div>
-            </div>
-          </>
         )}
       </>
     </div>
