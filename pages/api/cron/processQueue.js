@@ -17,7 +17,7 @@ const handler = async (req, res) => {
   try {
     queuedListingBatch = await prisma.queuedListing.findMany({
       where: { status: "QUEUED" },
-      take: batchSize,
+      take: parseInt(batchSize),
     });
     if (queuedListingBatch.length === 0) {
       return res.status(200).json("No listings are currently queued");
