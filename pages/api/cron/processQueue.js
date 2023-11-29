@@ -8,7 +8,10 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const { baseUrl, batchSize } = req.body;
+  const url = new URL(req.url);
+  const baseUrl = url.searchParams.get("baseUrl");
+  const batchSize = url.searchParams.get("batchSize");
+
   console.error("Base Url: ", baseUrl);
   console.error("batchSize", batchSize);
   let queuedListingBatchIds;
