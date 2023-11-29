@@ -144,7 +144,7 @@ const QueuedListings = () => {
             <div className="w-1/2 flex shadow-md" key={listing.id}>
               <div className="flex gap-1 justify-center items-center">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`}
+                  src={listing.mainImage}
                   alt={"Main Listing Photo"}
                   width={100}
                   height={100}

@@ -158,47 +158,6 @@ function AdminListingForm({ onBack, onFecth }) {
     return new File([u8arr], filename, { type: mime });
   };
 
-  const onUploadAll = async () => {
-    setUploading(true);
-    let JSON = {
-      type: "admin",
-      tags: uploadedImages.tags,
-      mainImage: uploadedImages.main.url,
-    };
-
-    if (uploadedImages.brandTag && uploadedImages.brandTag.url) {
-      JSON.brandImage = uploadedImages.brandTag.url;
-    }
-
-    const newListing = listings;
-    newListing.push(JSON);
-
-    setListings(newListing);
-
-    try {
-      const response = await axios.post("/api/add-listing", { listing: JSON });
-      const result = response.data;
-
-      const newListing = listings;
-      newListing.push(result);
-
-      setListings(newListing);
-
-      NotificationManager.success("Listing added successfully!");
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setEndTime(moment().format("HH:mm:ss"));
-      onFecth();
-
-      resetAllVariables();
-
-      //setStep(3);
-
-      setUploading(false);
-    }
-  };
-
   const pushQueuedListing = async (status) => {
     setLoading(true);
     setUploading(true);
@@ -280,10 +239,7 @@ function AdminListingForm({ onBack, onFecth }) {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div>
@@ -404,10 +360,7 @@ function AdminListingForm({ onBack, onFecth }) {
         {step === 2 ? (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -636,28 +589,16 @@ function AdminListingForm({ onBack, onFecth }) {
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Disposed
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Listed
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Start time
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         End time
                       </th>
                     </tr>

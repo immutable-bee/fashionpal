@@ -22,7 +22,10 @@ const handler = async (req, res) => {
       },
     },
   });
-
+  queue.listings = queue.listings.map((listing) => {
+    listing.mainImage = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}/mainImage`;
+    return listing;
+  });
   res.status(200).json(queue);
 };
 
