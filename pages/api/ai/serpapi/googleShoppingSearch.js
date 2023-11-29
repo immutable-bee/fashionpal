@@ -4,6 +4,7 @@ import { prisma } from "../../../../db/prismaDB";
 const handler = async (req, res) => {
   try {
     const { simpleTags, queuedListingId } = req.body;
+    console.log(req.body);
     const apiQuery = simpleTags.join(" ");
 
     getJson(
@@ -39,7 +40,7 @@ const handler = async (req, res) => {
           );
 
           const updateListingStatus = await prisma.queuedListing.update({
-            where: { id: listingId },
+            where: { id: queuedListingId },
             data: {
               status: "PROCESSED",
             },
