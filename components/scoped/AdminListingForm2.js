@@ -7,8 +7,10 @@ import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 
 import Image from "next/image";
 import LoadingComponent from "../utility/loading";
+import { useRouter } from "next/router";
 
 function AdminListingForm({ onFecth }) {
+  const router = useRouter();
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [listingQueue, setListingQueue] = useState([]);
   const [category, setCategory] = useState("");
@@ -130,6 +132,10 @@ function AdminListingForm({ onFecth }) {
     return listingQueue.length + 1 < 10
       ? `00${listingQueue.length + 1}`
       : `${listingQueue.length + 1}`;
+  };
+
+  const redirectToQueue = () => {
+    router.push("/business/listing-queue");
   };
 
   return (
@@ -580,7 +586,7 @@ function AdminListingForm({ onFecth }) {
             <div className="mt-8 ml-4">
               <button
                 className={`bg-green-400 w-32 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
-                onClick={() => setStep(7)}
+                onClick={redirectToQueue}
               >
                 Next
               </button>
