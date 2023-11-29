@@ -48,6 +48,7 @@ const handler = async (req, res) => {
       },
     });
 
+    console.log(queuedListingId);
     const productSearch = await fetch(
       `${baseUrl}/api/ai/serpapi/googleShoppingSearch`,
       {
