@@ -60,7 +60,7 @@ const handler = async (req, res) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              listingId,
+              queuedListingId: listingId,
               ximilarReqBody,
               baseUrl,
             }),
