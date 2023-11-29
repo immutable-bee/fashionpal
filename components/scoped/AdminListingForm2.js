@@ -5,7 +5,8 @@ import ButtonComponent from "@/components/utility/Button";
 import SimilarProducts from "@/components/scoped/SimilarProducts";
 import Capture from "@/components/utility/Capture";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
-
+import { QRCode } from "react-qrcode-logo";
+import Barcode from "react-barcode";
 import Image from "next/image";
 import LoadingComponent from "../utility/loading";
 
@@ -900,7 +901,7 @@ function AdminListingForm({ onFecth }) {
                   <div className="flex justify-center mt-5">
                     <button
                       className={`bg-green-400 w-72 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-2`}
-                      onClick={() => setStep(7)}
+                      onClick={() => setStep(8)}
                     >
                       List all
                     </button>
@@ -911,6 +912,38 @@ function AdminListingForm({ onFecth }) {
           </div>
         ) : (
           ""
+        )}
+
+        {step === 8 && (
+          <>
+            <div className="max-w-2xl mx-auto grid grid-cols-2 gap-3 divide-x-8 divide-black">
+              <div>
+                <h3 className="mb-3 text-3xl text-center">Membership price</h3>
+                <div className="flex justify-center">
+                  <QRCode
+                    value={`https://fashionpal.vercel.app/store/KalisKloset-${
+                      listings[listings.length - 1]?.id
+                    }`}
+                    enableCORS={true}
+                    size="250"
+                  />
+                </div>
+              </div>
+              <div>
+                <h3 className="mb-3 text-7xl text-center">$8.99 </h3>
+                <div className="flex justify-center mx-5">
+                  <Barcode
+                    value={`https://fashionpal.vercel.app/store/KalisKloset-${
+                      listings[listings.length - 1]?.id
+                    }`}
+                    renderer="img"
+                    lineColor="black"
+                    height={600}
+                  />
+                </div>
+              </div>
+            </div>
+          </>
         )}
       </>
     </div>
