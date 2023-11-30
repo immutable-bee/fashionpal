@@ -35,7 +35,7 @@ const QueuedListings = () => {
 
   const calulateAvgPrice = (products) => {
     const total = products.reduce((sum, item) => {
-      return sum + (item.extractedPrice || 0);
+      return sum + (item.price || 0);
     }, 0);
 
     const average =
@@ -48,15 +48,15 @@ const QueuedListings = () => {
 
   const findLowestPrice = (products) => {
     return products.reduce(
-      (min, p) => (p.extractedPrice < min ? p.extractedPrice : min),
-      products[0].extractedPrice
+      (min, p) => (p.price < min ? p.price : min),
+      products[0].price
     );
   };
 
   const findHighestPrice = (products) => {
     return products.reduce(
-      (max, p) => (p.extractedPrice > max ? p.extractedPrice : max),
-      products[0].extractedPrice
+      (max, p) => (p.price > max ? p.price : max),
+      products[0].price
     );
   };
 
@@ -66,7 +66,7 @@ const QueuedListings = () => {
   };
 
   const onSelectSimilarProduct = (row) => {
-    updatePriceReference(row.extractedPrice);
+    updatePriceReference(row.price);
   };
 
   const pushQueuedListing = async (id, status) => {
@@ -98,7 +98,7 @@ const QueuedListings = () => {
   const onOpenListing = (listing) => {
     setOpenListing(listing.id);
     setOpenListingData(listing);
-    const avgPrice = calulateAvgPrice(listing.similarProducts);
+    const avgPrice = calulateAvgPrice(listing.relatedProducts);
     setReferencePrice(avgPrice);
   };
 
@@ -141,8 +141,19 @@ const QueuedListings = () => {
       ) : (
         <div className="w-full flex flex-col items-center">
           {queuedListings.map((listing) => (
-            <div className="w-1/2 flex shadow-md" key={listing.id}>
-              <div className="flex gap-1 justify-center items-center">
+            <div
+              className={`w-1/2 flex shadow-md ${
+                openListing === listing.id ? "flex-col" : ""
+              }`}
+              key={listing.id}
+            >
+              <div
+                className={`flex gap-1 ${
+                  openListing === listing.id
+                    ? `justify-evenly`
+                    : "justify-center"
+                } items-center`}
+              >
                 <Image
                   src={listing.mainImage}
                   alt={"Main Listing Photo"}
@@ -173,12 +184,14 @@ const QueuedListings = () => {
                   ))}
               </div>
               {listing.status === "PROCESSED" && openListing === listing.id ? (
-                <div>
-                  <SimilarProducts
-                    onSelect={onSelectSimilarProduct}
-                    similarProducts={listing.relatedProducts}
-                  />
-                  <div className="flex justify-center mt-3">
+                <div className="flex flex-col">
+                  <div className="flex overflow-x-auto">
+                    <SimilarProducts
+                      onSelect={onSelectSimilarProduct}
+                      similarProducts={listing.relatedProducts}
+                    />
+                  </div>
+                  <div className="flex justify-evenly mt-3">
                     <button onClick={() => updatePriceReference("high")}>
                       Highest Price: $
                       {findHighestPrice(listing.relatedProducts)}
@@ -192,103 +205,103 @@ const QueuedListings = () => {
                     </button>
                   </div>
                   <div className="flex mx-1 justify-between">
-                    <div>
-                      {}
-                      <div className="">
-                        <label className="block text-gray-600 text-3xl mb-2">
-                          % Off
-                        </label>
-                        <div className="relative w-32 flex items-center">
-                          <h3 className="absolute text-2xl right-8 mt-1">%</h3>
-                          <input
-                            value={defaultPriceSuggestion}
-                            type="number"
-                            className="w-48 mt-1 !text-4xl rounded-2xl pl-4 pr-2  !py-3 border-4 border-gray-400"
-                            onChange={(e) =>
-                              setDefaultPriceSuggestion(e.target.value)
-                            }
-                          />
+                    <div className="w-full flex justify-center gap-5 items-center mt-2">
+                      <div>
+                        {}
+                        <div className="">
+                          <label className="block text-gray-600 text-2xl mb-2">
+                            % Off
+                          </label>
+                          <div className="relative w-32 flex items-center">
+                            <h3 className="absolute text-2xl right-8 mt-1">
+                              %
+                            </h3>
+                            <input
+                              value={defaultPriceSuggestion}
+                              type="number"
+                              className="w-48 mt-1 !text-4xl rounded-2xl pl-4 pr-2  !py-3 border-4 border-gray-400"
+                              onChange={(e) =>
+                                setDefaultPriceSuggestion(e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="mt-3">
+                          <label className="block text-gray-600 text-2xl mb-2">
+                            Your Price
+                          </label>
+                          <div className="relative flex items-center">
+                            <h3 className="absolute text-4xl left-3 mt-1">$</h3>
+                            <input
+                              value={openListingPrice}
+                              type="number"
+                              className="w-48 mt-1 !text-4xl rounded-2xl pl-10 pr-2  !py-3 border-4 border-gray-400"
+                              onChange={(e) =>
+                                setOpenListingPrice(e.target.value)
+                              }
+                            />
+                          </div>
                         </div>
                       </div>
-                      <div className="mt-3">
-                        <label className="block text-gray-600 text-3xl mb-2">
-                          Your Price
-                        </label>
-                        <div className="relative flex items-center">
-                          <h3 className="absolute text-4xl left-3 mt-1">$</h3>
-                          <input
-                            value={price}
-                            type="number"
-                            className="w-48 mt-1 !text-4xl rounded-2xl pl-10 pr-2  !py-3 border-4 border-gray-400"
-                            onChange={(e) =>
-                              setOpenListingPrice(e.target.value)
-                            }
-                          />
-                        </div>
+                      <div className="flex flex-col gap-12 mt-12 ">
+                        <button
+                          onClick={() =>
+                            setDefaultPriceSuggestion(
+                              Number(Number(defaultPriceSuggestion) + 5)
+                            )
+                          }
+                          className="border-4 p-1 border-gray-400 rounded-2xl"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="w-16 h-16 text-green-500"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() =>
+                            setDefaultPriceSuggestion(
+                              Number(Number(defaultPriceSuggestion) - 5)
+                            )
+                          }
+                          className="border-4  p-1 border-gray-400 rounded-2xl"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="w-16 h-16 text-red-500"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </button>
                       </div>
-                    </div>
-                    <div className="flex flex-col gap-4 justify-center">
-                      <button
-                        onClick={() =>
-                          setDefaultPriceSuggestion(
-                            Number(Number(defaultPriceSuggestion) + 5)
-                          )
-                        }
-                        className="border-4 p-1 border-gray-400 rounded-2xl"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-24 h-24 text-green-500"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() =>
-                          setDefaultPriceSuggestion(
-                            Number(Number(defaultPriceSuggestion) - 5)
-                          )
-                        }
-                        className="border-4 p-1 border-gray-400 rounded-2xl"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                          className="w-24 h-24 text-red-500"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </button>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+                  <div className="flex flex-wrap items-center justify-evenly mb-3 mt-3">
                     <button
                       onClick={() => pushQueuedListing(listing.id, "DISPOSED")}
                       disabled={isUploading}
-                      className={`${
-                        tagFetching ? " pointer-events-none bg-gray-300" : ""
-                      } hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
+                      className={`hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
                     >
                       Dispose
                     </button>
                     <button
                       disabled={isUploading}
                       onClick={() => pushQueuedListing(listing.id, "SALE")}
-                      className={`${
-                        tagFetching ? " pointer-events-none bg-gray-300" : ""
-                      } hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
+                      className={`hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
                     >
                       Sell
                     </button>
