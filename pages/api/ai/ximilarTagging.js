@@ -48,7 +48,6 @@ const handler = async (req, res) => {
       },
     });
 
-    console.log(queuedListingId);
     const productSearch = await fetch(
       `${baseUrl}/api/ai/serpapi/googleShoppingSearch`,
       {
@@ -66,7 +65,6 @@ const handler = async (req, res) => {
 
     return res.status(200).json("Listing successfully tagged");
   } catch (error) {
-    console.error(`Ximilar tagging call failed: ${error}`);
     return res.status(500).json({ message: error.message });
   }
 };

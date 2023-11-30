@@ -9,9 +9,6 @@ export const config = {
 
 const handler = async (req, res) => {
   const { baseUrl, batchSize } = req.query;
-
-  console.error("Base Url: ", baseUrl);
-  console.error("batchSize", batchSize);
   let queuedListingBatchIds;
   let queuedListingBatch;
   try {
