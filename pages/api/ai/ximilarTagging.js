@@ -55,7 +55,7 @@ const handler = async (req, res) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ simpleTags }),
+        body: JSON.stringify({ simpleTags, queuedListingId }),
       }
     );
 
@@ -63,10 +63,8 @@ const handler = async (req, res) => {
       return res.status(500).json({ message: "Product search failed" });
     }
 
-    const searchData = await productSearch.json();
-    return res.status(200).json(searchData);
+    return res.status(200).json("Listing successfully tagged");
   } catch (error) {
-    console.error(`Ximilar tagging call failed: ${error}`);
     return res.status(500).json({ message: error.message });
   }
 };
