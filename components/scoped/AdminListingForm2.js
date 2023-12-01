@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { NotificationManager } from "react-notifications";
-import axios from "axios";
+
 import ButtonComponent from "@/components/utility/Button";
 import Capture from "@/components/utility/Capture";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 
-import Image from "next/image";
 import LoadingComponent from "../utility/loading";
 import { useRouter } from "next/router";
 
-function AdminListingForm({ onFecth }) {
+function AdminListingForm() {
   const router = useRouter();
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [listingQueue, setListingQueue] = useState([]);
@@ -19,14 +17,12 @@ function AdminListingForm({ onFecth }) {
   const [uploading, setUploading] = useState(false);
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [imageUploading, setImageUploading] = useState(false);
 
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
   const [brandImageSkipped, setBrandImageSkipped] = useState(false);
 
   const [pendingListingId, setPendingListingId] = useState();
-  const [currentPhotoType, setCurrentPhotoType] = useState("main");
 
   const skipBrandImage = () => {
     setBrandImageSkipped(true);
@@ -35,16 +31,13 @@ function AdminListingForm({ onFecth }) {
 
   const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
 
-  const onCapture = async (e) => {
+  const onCapture = async (e, type) => {
     const imageSrc = e;
     if (imageSrc) {
-      if (currentPhotoType === "main") {
+      if (type === "main") {
         setMainImage(imageSrc);
-        setCurrentPhotoType("brandTag");
         setStep(2);
-      }
-
-      if (currentPhotoType === "brandTag") {
+      } else if (type === "brandTag") {
         setBrandImage(imageSrc);
         setShowCamera(false);
       }
@@ -52,7 +45,13 @@ function AdminListingForm({ onFecth }) {
   };
 
   const onNextListing = () => {
-    setCurrentPhotoType("main");
+    setMainImage("");
+    setBrandImage("");
+    setCategory("");
+    setStep(1);
+  };
+
+  const onBackListing = () => {
     setMainImage("");
     setBrandImage("");
     setCategory("");
@@ -64,7 +63,7 @@ function AdminListingForm({ onFecth }) {
     formData.append("baseUrl", baseUrl);
 
     setLoading(true);
-    setImageUploading(true);
+
     try {
       const response = await fetch("/api/business/listing/addToQueue", {
         method: "POST",
@@ -74,15 +73,31 @@ function AdminListingForm({ onFecth }) {
       const { queuedListingId, data } = await response.json();
       setPendingListingId(queuedListingId);
       setLoading(false);
-      setImageUploading(false);
+
+      setStep(5);
     } catch (error) {
       setLoading(false);
-      setImageUploading(false);
     }
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (mainImage && (brandImage || brandImageSkipped)) {
+  //     const formData = new FormData();
+  //     const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
+  //     formData.append("mainImage", mainFile);
+
+  //     if (brandImage) {
+  //       const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
+  //       formData.append("brandImage", brandFile);
+  //     }
+
+  //     addToQueue(formData);
+  //   }
+  // }, [mainImage, brandImage, brandImageSkipped]);
+
+  const triggerAddToQueue = () => {
     if (mainImage && (brandImage || brandImageSkipped)) {
+      onAdd();
       const formData = new FormData();
       const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
       formData.append("mainImage", mainFile);
@@ -94,7 +109,7 @@ function AdminListingForm({ onFecth }) {
 
       addToQueue(formData);
     }
-  }, [mainImage, brandImage, brandImageSkipped]);
+  };
 
   const convertDataURLtoFile = (dataurl, filename) => {
     let arr = dataurl.split(","),
@@ -121,7 +136,6 @@ function AdminListingForm({ onFecth }) {
     newListingQueue.push(queueItem);
     console.log(newListingQueue);
     setListingQueue(newListingQueue);
-    setStep(5);
   };
 
   const openCamera = () => {
@@ -144,7 +158,10 @@ function AdminListingForm({ onFecth }) {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div>
@@ -196,9 +213,7 @@ function AdminListingForm({ onFecth }) {
                       <div className="flex justify-center mt-8 rounded-2xl gap-2">
                         {showCamera ? (
                           <Capture
-                            onCapture={onCapture}
-                            loading={loading}
-                            skip={false}
+                            onCapture={(e) => onCapture(e, "main")}
                             text="Main Image"
                           />
                         ) : (
@@ -276,9 +291,9 @@ function AdminListingForm({ onFecth }) {
                 />
               </svg>
 
-              <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
+              {/* <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
                 Review List
-              </button>
+              </button> */}
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
@@ -301,9 +316,9 @@ function AdminListingForm({ onFecth }) {
               ""
             )}
 
-            <div className="flex justify-end mt-8">
+            <div className="flex justify-center mt-8">
               <button
-                className="bg-green-400 border border-green-600 rounded-xl px-8 text-lg py-1.5"
+                className="bg-green-400 border border-green-600 rounded-xl w-full max-w-[250px] text-lg py-1.5"
                 onClick={() => setStep(3)}
               >
                 Main
@@ -333,9 +348,9 @@ function AdminListingForm({ onFecth }) {
                 />
               </svg>
 
-              <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
+              {/* <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
                 Review List
-              </button>
+              </button> */}
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
@@ -356,22 +371,21 @@ function AdminListingForm({ onFecth }) {
                 </div>
               ) : (
                 <Capture
-                  onCapture={onCapture}
-                  loading={loading}
-                  skip={true}
-                  onSkip={skipBrandImage}
+                  onCapture={(e) => onCapture(e, "brandTag")}
                   text={"Brand Tag"}
                 />
               )}
             </div>
 
-            <div className="flex justify-end mt-8 w-2/3 mx-auto gap-3">
-              <button
-                className="bg-gray-300 w-1/2 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
-                onClick={() => setStep(4)}
-              >
-                Skip
-              </button>
+            <div className="flex justify-center mt-8 w-2/3 mx-auto gap-3">
+              {!brandImage && (
+                <button
+                  className="bg-gray-300 w-1/2 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
+                  onClick={() => skipBrandImage()}
+                >
+                  Skip
+                </button>
+              )}
               <button
                 className={`bg-green-400 w-1/2 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5 ${
                   brandImage ? "" : "pointer-events-none bg-green-300"
@@ -405,9 +419,9 @@ function AdminListingForm({ onFecth }) {
                 />
               </svg>
 
-              <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
+              {/* <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
                 Review List
-              </button>
+              </button> */}
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
@@ -456,17 +470,23 @@ function AdminListingForm({ onFecth }) {
                   heading="Cancel confirmation"
                   title="Are you sure you want to cancel it?"
                   btnText="Cancel"
-                  onConfirmed={() => setStep(1)}
+                  onConfirmed={() => onBackListing(1)}
                 >
-                  <button className="bg-red-400 w-full border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
+                  <button
+                    className={`bg-red-400 w-full border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5 ${
+                      loading && "pointer-events-none opacity-70"
+                    }`}
+                  >
                     Cancel
                   </button>
                 </DeleteModalComponent>
               </div>
 
               <button
-                className={`bg-green-400 w-full border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
-                onClick={() => onAdd()}
+                className={`bg-green-400 w-full border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5 ${
+                  loading && "pointer-events-none opacity-70"
+                }`}
+                onClick={() => triggerAddToQueue()}
               >
                 Add
               </button>
@@ -479,7 +499,10 @@ function AdminListingForm({ onFecth }) {
         {step === 5 ? (
           <div className="sm:w-96 mx-auto">
             <div className="flex items-center justify-end">
-              <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
+              <button
+                onClick={() => setStep(6)}
+                className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
+              >
                 Review List
               </button>
             </div>
@@ -523,7 +546,7 @@ function AdminListingForm({ onFecth }) {
             <div className="grid grid-cols-2 mt-8 mx-auto gap-3">
               <button
                 className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
-                onClick={() => setStep(6)}
+                onClick={redirectToQueue}
               >
                 Finish
               </button>
@@ -542,11 +565,11 @@ function AdminListingForm({ onFecth }) {
 
         {step === 6 ? (
           <div className="">
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap justify-center">
               {listingQueue.map((listing) => (
                 <>
                   <div
-                    className={`px-4 py-4 sm:!w-64 overflow-hidden border w-[calc(100%-15px)] relative rounded-3xl group [perspective:1000px] mx-auto my-2 `}
+                    className={`px-4 py-4 sm:!w-64 overflow-hidden border w-[calc(100%-15px)] relative rounded-3xl group [perspective:1000px]  my-2 `}
                   >
                     <div
                       class={`relative h-[255px] w-full rounded-xl transition-all duration-500 ease-in-out ${
@@ -578,17 +601,28 @@ function AdminListingForm({ onFecth }) {
                         ""
                       )}
                     </div>
-                    <LoadingComponent className="mt-6" size="md" />
+                    {/* <LoadingComponent
+                      className="mt-6"
+                      size="md"
+                    /> */}
                   </div>
                 </>
               ))}
             </div>
-            <div className="mt-8 ml-4">
+
+            <div className="grid grid-cols-2 mt-8 mx-auto gap-3 max-w-md">
               <button
-                className={`bg-green-400 w-32 border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
+                className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
                 onClick={redirectToQueue}
               >
-                Next
+                Finish
+              </button>
+
+              <button
+                className={`bg-green-400 w-full border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
+                onClick={onNextListing}
+              >
+                Next Listing
               </button>
             </div>
           </div>

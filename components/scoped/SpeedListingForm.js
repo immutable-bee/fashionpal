@@ -105,6 +105,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
   };
 
   const showResults = () => {
+    onFetch();
     setStep(3);
   };
 
@@ -195,13 +196,22 @@ function EmployeeListingForm({ onBack, onFetch }) {
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" className="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Disposed
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Listed
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Damaged
                       </th>
                     </tr>

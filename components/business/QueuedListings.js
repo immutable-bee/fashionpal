@@ -135,14 +135,14 @@ const QueuedListings = () => {
   }, [defaultPriceSuggestion, openListing, referencePrice]);
 
   return (
-    <div>
+    <div className="mt-8">
       {loadingQueue ? (
         <Loading />
       ) : (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full gap-3 flex items-center flex-col">
           {queuedListings.map((listing) => (
             <div
-              className={`w-1/2 flex shadow-md ${
+              className={`w-1/2 flex shadow rounded-lg overflow-hidden border ${
                 openListing === listing.id ? "flex-col" : ""
               }`}
               key={listing.id}
@@ -160,6 +160,7 @@ const QueuedListings = () => {
                   width={100}
                   height={100}
                 />
+
                 <h6>Status: {listing.status} </h6>
 
                 {listing.status === "PROCESSED" &&
