@@ -68,6 +68,15 @@ const HeaderComponent = () => {
               Home
             </Link>
           </li>
+          <li>
+            <Link
+              style={{ color: linkColor("/business/listing-queue") }}
+              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+              href="/business/listing-queue"
+            >
+              Queue listing
+            </Link>
+          </li>
           <li className="hidden">
             <Link
               style={{ color: linkColor("/business/sales") }}
