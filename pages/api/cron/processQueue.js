@@ -1,5 +1,6 @@
 import { prisma } from "../../../db/prismaDB";
 import { verifySignature } from "@upstash/qstash/dist/nextjs";
+import { supabase } from "../../../supabase/client";
 
 export const config = {
   api: {
@@ -37,17 +38,33 @@ const handler = async (req, res) => {
   }
 
   try {
-    const apiCalls = queuedListingBatch.map((listing) => {
-      const ximilarReqBody = [
-        {
+    const apiCalls = queuedListingBatch.map(async (listing) => {
+      const { data: fileList, error } = await supabase.storage
+        .from("queued-listings")
+        .list(listing.bucketPath);
+
+      if (error) {
+        console.error(`Error fetching files: ${error.message}`);
+        throw error;
+      }
+
+      const hasMainImage = fileList.some((file) => file.name === "mainImage");
+      const hasBrandImage = fileList.some((file) => file.name === "brandImage");
+
+      const ximilarReqBody = [];
+
+      if (hasMainImage) {
+        ximilarReqBody.push({
           id: listing.id + "mainImage",
           url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`,
-        },
-        {
+        });
+      }
+      if (hasBrandImage) {
+        ximilarReqBody.push({
           id: listing.id + "brandImage",
           url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}brandImage`,
-        },
-      ];
+        });
+      }
 
       const makeXimilarCall = async (listingId) => {
         try {
