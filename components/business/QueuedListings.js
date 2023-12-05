@@ -142,23 +142,24 @@ const QueuedListings = () => {
         {loadingQueue ? (
           <Loading />
         ) : (
-          <div className="w-full gap-3 flex items-center flex-col">
+          <div className="w-full gap-3 flex items-start flex-col justify-center">
             {queuedListings && queuedListings.length !== 0 ? (
               <>
                 {queuedListings.map((listing) => (
                   <div
-                    className={`w-1/2 flex shadow rounded-lg overflow-hidden border ${
+                    className={`w-full sm:max-w-3xl mx-auto flex shadow rounded-2xl overflow-hidden border ${
                       openListing === listing.id ? "flex-col" : ""
                     }`}
                     key={listing.id}
                   >
                     <div
-                      className={`flex gap-1 w-full items-center justify-between pr-4`}
+                      className={`flex gap-1 w-full h-24 items-center justify-between pr-4`}
                     >
                       <div className="flex items-center">
                         <Image
                           src={listing.mainImage}
                           alt={"Main Listing Photo"}
+                          className="h-24"
                           width={100}
                           height={100}
                         />
