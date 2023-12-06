@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import SpeedListingForm from "@/components/scoped/SpeedListingForm";
 import AdminListingForm2 from "@/components/scoped/AdminListingForm2";
+import StandardListingForm from "../scoped/StandardListingForm";
 
 function AddListing({ onBack, onFecth }) {
-  const [listType, setListType] = useState("speed");
+  const [listType, setListType] = useState("standard");
   const [islistTypeSelected, setIsListTypeSelected] = useState(false);
 
   return (
@@ -31,6 +32,14 @@ function AddListing({ onBack, onFecth }) {
       {!islistTypeSelected ? (
         <div>
           <div className="flex flex-wrap gap-3 items-center justify-center mt-5">
+            <button
+              onClick={() => setListType("standard")}
+              className={`${
+                listType === "standard" ? "bg-primary text-white" : "bg-white"
+              } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
+            >
+              Standard
+            </button>
             <button
               onClick={() => setListType("speed")}
               className={`${
@@ -60,21 +69,18 @@ function AddListing({ onBack, onFecth }) {
       ) : (
         <>
           {listType === "admin" ? (
-            <AdminListingForm2
-              onBack={onBack}
-              onFecth={onFecth}
-            />
+            <AdminListingForm2 onBack={onBack} onFecth={onFecth} />
           ) : (
             ""
           )}
 
           {listType === "speed" ? (
-            <SpeedListingForm
-              onBack={onBack}
-              onFetch={onFecth}
-            />
+            <SpeedListingForm onBack={onBack} onFetch={onFecth} />
           ) : (
             ""
+          )}
+          {listType === "standard" && (
+            <StandardListingForm onBack={onBack} onFecth={onFecth} />
           )}
         </>
       )}
