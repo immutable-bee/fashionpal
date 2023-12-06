@@ -138,6 +138,7 @@ const QueuedListings = () => {
   return (
     <div className="min-h-screen bg-white">
       <HeaderComponent />
+
       <div className="mt-8 px-2 sm:px-4">
         {loadingQueue ? (
           <Loading />
