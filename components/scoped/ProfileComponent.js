@@ -248,7 +248,9 @@ const Profilecomponent = () => {
                       {!fetchingBusinessStats ? (
                         <td className="px-6 py-4">
                           {businessStats
-                            ? businessStats.mostCommonCategory
+                            ? businessStats.mostCommonCategory === "None"
+                              ? "--"
+                              : businessStats.mostCommonCategory
                             : ""}
                         </td>
                       ) : (

@@ -41,7 +41,7 @@ const HeaderComponent = () => {
         </svg>
       </button>
       <div>
-        <Link href="">
+        <Link href="/business">
           <Image
             src="/images/logo-vertical.jpg"
             width={120}
