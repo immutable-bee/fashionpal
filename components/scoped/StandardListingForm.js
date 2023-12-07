@@ -97,7 +97,10 @@ const StandardListingForm = ({ onBack, onFecth }) => {
         {step === 1 && (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div>
@@ -197,7 +200,10 @@ const StandardListingForm = ({ onBack, onFecth }) => {
         {step === 2 && (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -269,20 +275,20 @@ const StandardListingForm = ({ onBack, onFecth }) => {
         {step === 3 && (
           <div className="mt-5">
             <div className="flex justify-center">
-              <div className="border-[5px] border-gray-700 rounded-3xl px-8 py-2">
-                <h3 className="text-5xl font-normal text-gray-700">
+              <div className="border-[3px] sm:border-[5px] border-gray-700 rounded-xl sm:rounded-3xl px-8 py-2">
+                <h3 className="text-xl sm:text-3xl font-normal text-gray-700">
                   Your Listing has been added!
                 </h3>
               </div>
             </div>
-            <div className="flex items-center justify-center mt-5">
-              <div className="w-[260px] mr-20">
+            <div className="flex items-center justify-center mt-8">
+              <div className="">
                 <h3 className="text-2xl text-center">
                   Follow us on FashionPal
                 </h3>
               </div>
             </div>
-            <div className="flex justify-center  mt-1">
+            <div className="flex justify-center gap-2 mt-1">
               <ButtonComponent
                 rounded
                 className="!w-48 mt-6"

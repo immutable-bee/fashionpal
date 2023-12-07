@@ -3,6 +3,7 @@ import Webcam from "react-webcam";
 import ButtonComponent from "@/components/utility/Button";
 import Image from "next/image";
 import LoadingComponent from "@/components/utility/loading";
+import { NotificationManager } from "react-notifications";
 
 function Capture({ text, onCapture, skip = false, loading = false }) {
   const webcamRef = useRef(null);
@@ -21,6 +22,7 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
   const capture = () => {
     setCapturedImage(webcamRef.current.getScreenshot());
     onCapture(webcamRef.current.getScreenshot());
+    NotificationManager.success("Captured");
   };
 
   return (
@@ -48,7 +50,9 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
             <ButtonComponent
               loading={loading}
               color="grey"
-              className="bg-gray-300 px-5 py-2 rounded-lg mt-3 w-[70%] sm:w-auto"
+              className={` px-5 py-2 hover:opacity-90 rounded-lg mt-3 w-[70%] sm:w-auto ${
+                text === "Main Image" ? "bg-gray-300 text-black" : ""
+              }`}
               onClick={() => capture()}
             >
               Capture {text}
