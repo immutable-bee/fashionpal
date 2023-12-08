@@ -84,10 +84,6 @@ const PrintBarcode = ({ sku, price }) => {
                 align-items: center;
                 justify-content: evenly; horizontally
               }
-            .print\\:price-text {
-                margin-bottom: 20px
-            }
-
             .print\\:barcode-container > div:nth-child(2) {
                 border-left: 2px solid black;
                 height: 30mm;
