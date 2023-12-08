@@ -284,7 +284,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
             </div>
 
             {newListingSku ? (
-              <PrintBarcode sku={newListingSku} />
+              <PrintBarcode sku={newListingSku} price={price} />
             ) : (
               <LoadingComponent size={"xl"} />
             )}
