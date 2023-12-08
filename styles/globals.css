@@ -122,14 +122,10 @@ html {
 
 html::-webkit-scrollbar-thumb {
   border-radius: 5px;
-  background: transparent;
+  background-color: #e44a1f;
 }
 
 html::-webkit-scrollbar {
   width: 2px;
   height: 2px;
-}
-
-html:hover::-webkit-scrollbar-thumb {
-  background-color: #e44a1f;
 }

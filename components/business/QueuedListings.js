@@ -1,8 +1,7 @@
-import { Loading } from "@nextui-org/react";
+import Loading from "@/components/utility/loading";
 import { useState, useEffect } from "react";
 import SimilarProducts from "../scoped/SimilarProducts";
 import Image from "next/image";
-import HeaderComponent from "@/components/utility/BusinessHeader";
 
 const QueuedListings = () => {
   const [loadingQueue, setLoadingQueue] = useState(false);
@@ -136,12 +135,16 @@ const QueuedListings = () => {
   }, [defaultPriceSuggestion, openListing, referencePrice]);
 
   return (
-    <div className="min-h-screen bg-white">
-      <HeaderComponent />
-
+    <div className="bg-white">
       <div className="mt-8 px-2 sm:px-4">
         {loadingQueue ? (
-          <Loading />
+          <div className="sm:flex justify-center pb-10">
+            <div>
+              <div className="pt-2.5 mt-10">
+                <Loading size="xl" />
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="w-full gap-3 flex items-start flex-col justify-center">
             {queuedListings && queuedListings.length !== 0 ? (

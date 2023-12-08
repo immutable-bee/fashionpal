@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { SessionProvider } from "next-auth/react";
 import { UserProvider } from "../context/UserContext";
 import { NotificationContainer } from "react-notifications";
+import HeaderComponent from "@/components/utility/BusinessHeader";
 import "../styles/globals.css";
 import "nprogress/nprogress.css";
 import "react-notifications/lib/notifications.css";
@@ -17,11 +18,19 @@ function App({ Component, pageProps: { session, ...pageProps } }) {
     }
   }, [router]);
 
+  // Define a computed property isBusinessPage
+  const isBusinessPage = (() => {
+    // Check if the current route path includes "/business"
+    return router.pathname.includes("/business");
+  })();
+
   return (
     <>
       <SessionProvider session={session}>
         <UserProvider>
-          <Component {...pageProps} /> <NotificationContainer />
+          {isBusinessPage && <HeaderComponent />}
+          <Component {...pageProps} />
+          <NotificationContainer />
         </UserProvider>
       </SessionProvider>
     </>

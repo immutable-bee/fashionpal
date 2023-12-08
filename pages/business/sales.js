@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import ButtonComponent from "@/components/utility/Button";
-import HeaderComponent from "@/components/utility/BusinessHeader";
 import axios from "axios";
 import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 import DatePicker from "react-datepicker";
@@ -140,7 +139,6 @@ const ProfileComponent = ({}) => {
 
   return (
     <div className="min-h-screen pb-8 bg-white ">
-      <HeaderComponent />
       <div className="h-full flex flex-col items-center justify-center">
         <div className="max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded">
           <div className="sm:w-[500px] w-[90vw]">

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import TooltipComponent from "@/components/utility/Tooltip";
 import Head from "next/head";
-import HeaderComponent from "@/components/utility/BusinessHeader";
 import ButtonComponent from "@/components/utility/Button";
 import { Loading, Dropdown } from "@nextui-org/react";
 import { signOut, useSession } from "next-auth/react";
@@ -123,17 +122,8 @@ const Profilecomponent = () => {
   }, [selectedRange]);
 
   return (
-    <div className="bg-white min-h-screen">
-      <Head>
-        <link
-          rel="shortcut icon"
-          href="/images/fav.png"
-        />
-      </Head>
-
+    <div className="bg-white ">
       <div>
-        <HeaderComponent />
-
         <section className="px-5 ">
           <div className="max-w-lg mx-auto">
             <form onSubmit={handleSubmit}>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
-import HeaderComponent from "@/components/utility/BusinessHeader";
 import { NotificationManager } from "react-notifications";
 import Loading from "@/components/utility/loading";
 import PaginationComponent from "@/components/utility/Pagination";
@@ -121,9 +120,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <HeaderComponent />
-
+    <div className="bg-white">
       {detailsModal ? (
         <ProductDetails
           open={detailsModal}
@@ -172,7 +169,7 @@ export default function Home() {
                   </div>
                 ) : (
                   <div className="w-full">
-                    <div className="sm:flex flex-wrap justify-center w-full">
+                    <div className="sm:flex flex-wrap sm:gap-3 justify-center w-full">
                       {listings.map((row, key) => {
                         return (
                           <div
