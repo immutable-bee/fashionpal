@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Mulish:wght@200;300;400;500;600;700;800;900;1000&display=swap");
-
+@font-face {
+  font-family: myFirstFont;
+  src: url("../assets/mulish/Mulish-VariableFont_wght.ttf");
+}
 * {
-  font-family: "Mulish", sans-serif !important;
+  font-family: myFirstFont !important;
 }
 
 body {
@@ -112,4 +114,22 @@ body {
 
 .nextui-input-main-container {
   width: 100% !important;
+}
+
+html {
+  overflowy: auto;
+}
+
+html::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+html:hover::-webkit-scrollbar-thumb {
+  background-color: #e44a1f;
 }
