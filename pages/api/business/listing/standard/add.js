@@ -47,20 +47,18 @@ const handler = async (req, res) => {
       const price = parseFloat(fields.price);
       const status = fields.status[0];
 
-      const skuCat = category === "" ? "apparel" : category;
-      const timestamp = new Date()
+      const timestampSku = new Date()
         .toISOString()
         .replace(/[-T:]/g, "")
         .slice(0, 14);
 
-      const sku = `${skuCat}-${status}-${timestamp}`;
-      newListingSku = sku;
+      newListingSku = timestampSku;
 
       const newListing = await tx.listing.create({
         data: {
           price,
           status,
-          Barcode: sku,
+          Barcode: timestampSku,
           businessId: business.id,
           categories: {
             create: {
