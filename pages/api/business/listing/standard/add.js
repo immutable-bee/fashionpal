@@ -73,7 +73,7 @@ const handler = async (req, res) => {
 
       newListingId = newListing.id;
 
-      for (const key in files) {
+      for (const key of Object.keys(files)) {
         const file = files[key][0];
         const filePath = file.filepath;
         const fileData = fs.readFileSync(filePath);
