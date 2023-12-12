@@ -22,6 +22,7 @@ const handler = async (req, res) => {
 
   let businessId;
   let newListingId;
+  let newListingSku;
 
   const form = new IncomingForm();
   const [fields, files] = await new Promise((resolve, reject) => {
@@ -46,13 +47,18 @@ const handler = async (req, res) => {
       const price = parseFloat(fields.price);
       const status = fields.status[0];
 
-      console.log("Status", status);
+      const timestampSku = new Date()
+        .toISOString()
+        .replace(/[-T:]/g, "")
+        .slice(0, 14);
+
+      newListingSku = timestampSku;
 
       const newListing = await tx.listing.create({
         data: {
           price,
           status,
-          Barcode: "placeholder",
+          Barcode: timestampSku,
           businessId: business.id,
           categories: {
             create: {
@@ -107,7 +113,7 @@ const handler = async (req, res) => {
       });
     });
 
-    res.status(200).json({ message: "Listing added successfully" });
+    res.status(200).json(newListingSku);
   } catch (error) {
     for (const key in files) {
       const uploadPath = `${businessId}/${newListingId}/${key}`;
