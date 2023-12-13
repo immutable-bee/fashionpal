@@ -69,18 +69,27 @@ function AddListing({ onBack, onFecth }) {
       ) : (
         <>
           {listType === "admin" ? (
-            <AdminListingForm2 onBack={onBack} onFecth={onFecth} />
+            <AdminListingForm2
+              onBack={onBack}
+              onFecth={onFecth}
+            />
           ) : (
             ""
           )}
 
           {listType === "speed" ? (
-            <SpeedListingForm onBack={onBack} onFetch={onFecth} />
+            <SpeedListingForm
+              onBack={onBack}
+              onFetch={onFecth}
+            />
           ) : (
             ""
           )}
           {listType === "standard" && (
-            <StandardListingForm onBack={onBack} onFecth={onFecth} />
+            <StandardListingForm
+              onBack={onBack}
+              onFecth={onFecth}
+            />
           )}
         </>
       )}
