@@ -200,6 +200,6 @@ enum QueuedStatus {
 enum RepricingRuleType {
   PREMIUM_ONLY
   EXCLUDE_PREMIUM
-  INCLUDE_PREMIUM
+  ALL
 }
 
