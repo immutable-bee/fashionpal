@@ -68,6 +68,7 @@ model Business {
   user           User          @relation(fields: [uid], references: [id])
   listings       Listing[]
   listingQueue   ListingQueue?
+  pricingRules PricingRule[]
 }
 
 model Consumer {
@@ -165,6 +166,20 @@ model ReferenceListing {
   tags String[]
 }
 
+model PricingRule {
+  id String @id @default(uuid())
+  name String
+  category String
+  listingType RepricingRuleType
+
+  adjustPriceBy Int
+  cycle String
+  roundTo Int
+  floorPrice Int
+  owner Business @relation(fields: [ownerId], references: [id])
+  ownerId String
+}
+
 enum VoteType {
   UP
   DOWN
@@ -181,3 +196,10 @@ enum QueuedStatus {
   PROCESSING
   PROCESSED
 }
+
+enum RepricingRuleType {
+  PREMIUM_ONLY
+  EXCLUDE_PREMIUM
+  INCLUDE_PREMIUM
+}
+
