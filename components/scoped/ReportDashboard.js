@@ -1,9 +1,25 @@
+import dynamic from "next/dynamic";
 import { useState } from "react";
-import ItemLinkedSoldChart from "@/components/scoped/ItemLinkedSoldChart";
-import ALPASPChart from "@/components/scoped/ALPASPChart";
-import RevenueChart from "@/components/scoped/RevenueChart";
-import AVGDayListedChart from "@/components/scoped/AVGDayListedChart";
-import DonationAcceptedChart from "@/components/scoped/DonationAcceptedChart";
+
+// Import the chart component using dynamic import
+const ItemLinkedSoldChart = dynamic(
+  () => import("@/components/scoped/ItemLinkedSoldChart"),
+  { ssr: false }
+);
+const ALPASPChart = dynamic(() => import("@/components/scoped/ALPASPChart"), {
+  ssr: false,
+});
+const RevenueChart = dynamic(() => import("@/components/scoped/RevenueChart"), {
+  ssr: false,
+});
+const AVGDayListedChart = dynamic(
+  () => import("@/components/scoped/AVGDayListedChart"),
+  { ssr: false }
+);
+const DonationAcceptedChart = dynamic(
+  () => import("@/components/scoped/DonationAcceptedChart"),
+  { ssr: false }
+);
 
 const RePricer = () => {
   const [ruleName, setRuleName] = useState("");
