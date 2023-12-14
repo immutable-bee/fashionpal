@@ -5,7 +5,10 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    const isMobile = window.innerWidth <= 768; // Adjust the threshold for mobile screens
+
     this.state = {
+      computedValue: isMobile ? 350 : 700,
       options: {
         chart: {
           id: "line-chart-donations",
@@ -63,7 +66,7 @@ class App extends Component {
               options={this.state.options}
               series={this.state.series}
               type="line"
-              width="1000"
+              width={this.state.computedValue}
             />
           </div>
         </div>

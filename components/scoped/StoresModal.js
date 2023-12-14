@@ -20,7 +20,7 @@ function ProductDetails({ open, onClose }) {
         <ModalComponent
           open={open}
           title="Stores"
-          width="90vw"
+          width={this.state.computedValue}
           onClose={() => onClose()}
           footer={
             <div className="flex justify-end w-full">
