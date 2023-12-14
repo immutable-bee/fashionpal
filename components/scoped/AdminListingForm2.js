@@ -470,7 +470,7 @@ function AdminListingForm() {
                   heading="Cancel confirmation"
                   title="Are you sure you want to cancel it?"
                   btnText="Cancel"
-                  onConfirmed={() => onBackListing(1)}
+                  onConfirmed={() => onBackListing()}
                 >
                   <button
                     className={`bg-red-400 w-full border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5 ${

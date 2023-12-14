@@ -129,10 +129,7 @@ export default function CustomerFilters({
               </svg>
             </button>
             {isStatusDropdownOpen && (
-              <div
-                id="dropdown"
-                class="z-10 absolute top-11 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
-              >
+              <div class="z-10 absolute top-11 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
                 <ul
                   class="py-2 text-sm text-gray-700 "
                   aria-labelledby="dropdown-button"
@@ -179,7 +176,7 @@ export default function CustomerFilters({
 
             {isCategoriesDropdownOpen && (
               <div
-                id="dropdown"
+                key={1}
                 class="z-10 absolute top-11 sm:left-44 left-[50%] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
               >
                 <ul

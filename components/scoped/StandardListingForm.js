@@ -3,6 +3,7 @@ import ButtonComponent from "../utility/Button";
 import LoadingComponent from "../utility/loading";
 import Capture from "../utility/Capture";
 import PrintBarcode from "../business/PrintBarcode";
+import { NotificationManager } from "react-notifications";
 
 const StandardListingForm = ({ onBack, onFecth }) => {
   const [step, setStep] = useState(1);
@@ -60,6 +61,10 @@ const StandardListingForm = ({ onBack, onFecth }) => {
   };
 
   const pushListing = async (status) => {
+    if (!price) {
+      NotificationManager.error("price is required!");
+      return;
+    }
     console.log("Client Status: ", status);
     setUploadFailed(false);
     setLoading(true);
@@ -282,24 +287,23 @@ const StandardListingForm = ({ onBack, onFecth }) => {
         {step === 3 && (
           <div className="mt-5">
             <div className="flex justify-center">
-
               <div className="">
                 <h3 className="text-xl sm:text-3xl  font-normal text-gray-700">
-
-
                   Your Listing has been added!
                 </h3>
               </div>
             </div>
 
             {newListingSku ? (
-              <PrintBarcode sku={newListingSku} price={price} />
+              <PrintBarcode
+                sku={newListingSku}
+                price={price}
+              />
             ) : (
               <LoadingComponent size={"xl"} />
             )}
 
-            <div className="flex items-center justify-center mt-8">
-
+            <div className="flex items-center justify-center mt-4">
               <div className="">
                 <h3 className="text-2xl text-center">
                   Follow us on FashionPal
@@ -308,7 +312,6 @@ const StandardListingForm = ({ onBack, onFecth }) => {
             </div>
 
             <div className="flex justify-center gap-1 mt-1">
-
               <ButtonComponent
                 rounded
                 className="!w-48 mt-6"

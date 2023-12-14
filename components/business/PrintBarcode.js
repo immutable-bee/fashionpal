@@ -6,26 +6,42 @@ const PrintBarcode = ({ sku, price }) => {
   const [template, setTemplate] = useState("1");
 
   return (
-    <div className="flex flex-col items-center container mx-auto p-4">
-      <div className="border-[5px] border-gray-700 rounded-3xl px-8 py-4">
-        <div id="barcode-to-print" className="print:barcode-container flex">
+    <div className="flex flex-col items-center container mx-auto p-4 w-full">
+      <div className="border-[5px] w-full max-w-xs border-gray-700 rounded-3xl px-3 py-4">
+        <div
+          id="barcode-to-print"
+          className="print:barcode-container flex justify-center"
+        >
           {template === "1" && (
             <>
-              <div className="flex flex-col items-center">
-                <h6 className="w-2/3 text-center text-sm">Members Price</h6>
-                <QRCode value={`$${price}`} size={60} />
+              <div className="w-1/2 border-r-2 border-black flex flex-col items-center">
+                <h6 className=" text-center text-sm">Members Price</h6>
+                <QRCode
+                  value={`$${price}`}
+                  size={80}
+                />
               </div>
-              <div className="ml-2 border-l-2 border-black"></div>
-              <div className="flex flex-col items-center justify-center">
+              {/* <div className="ml-2 border-l-2 border-black"></div> */}
+              <div className="w-1/2 overflow-hidden  flex flex-col items-center justify-center">
                 <div className="mr-3">{`$${price}`}</div>
-                <Barcode width={1} height={25} value={sku} fontSize={10} />
+                <Barcode
+                  width={1}
+                  height={25}
+                  value={sku}
+                  fontSize={10}
+                />
               </div>
             </>
           )}
           {template === "2" && (
             <>
               <div className="price-text tp-2 mb-2 ">{`$${price}`}</div>
-              <Barcode width={1} height={25} value={sku} fontSize={10} />
+              <Barcode
+                width={1}
+                height={25}
+                value={sku}
+                fontSize={10}
+              />
             </>
           )}
           {template === "3" && (
@@ -39,7 +55,7 @@ const PrintBarcode = ({ sku, price }) => {
 
       <button
         onClick={() => window.print()}
-        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
       >
         Print Barcode
       </button>

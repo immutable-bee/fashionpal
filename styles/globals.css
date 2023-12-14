@@ -4,8 +4,9 @@
 
 @font-face {
   font-family: myFirstFont;
-  src: url("../assets/mulish/Mulish-VariableFont_wght.ttf");
+  src: url("../assets/jost/Jost-VariableFont_wght.ttf");
 }
+
 * {
   font-family: myFirstFont !important;
 }

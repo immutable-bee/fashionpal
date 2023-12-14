@@ -13,6 +13,12 @@ const HeaderComponent = () => {
     return router.pathname === path ? "#E44A1F" : "#828282";
   };
 
+  const handleClick = () => {
+    if (open) {
+      setOpen(false);
+    }
+  };
+
   return (
     <header className="flex  mx-auto w-full justify-between items-center px-2 sm:px-4 py-3">
       <button
@@ -64,6 +70,7 @@ const HeaderComponent = () => {
               style={{ color: linkColor("/business") }}
               className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
               href="/business"
+              onClick={handleClick}
             >
               Home
             </Link>
@@ -73,6 +80,7 @@ const HeaderComponent = () => {
               style={{ color: linkColor("/business/listing-queue") }}
               className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
               href="/business/listing-queue"
+              onClick={handleClick}
             >
               Queued Listings
             </Link>
@@ -82,6 +90,7 @@ const HeaderComponent = () => {
               style={{ color: linkColor("/business/sales") }}
               className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
               href="/business/sales"
+              onClick={handleClick}
             >
               Sales
             </Link>
@@ -91,6 +100,7 @@ const HeaderComponent = () => {
               style={{ color: linkColor("/consumer") }}
               className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
               href="/consumer"
+              onClick={handleClick}
             >
               Consumer
             </Link>
