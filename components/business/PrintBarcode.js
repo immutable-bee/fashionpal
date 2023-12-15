@@ -1,19 +1,9 @@
-import Script from "next/script";
 import Barcode from "react-barcode";
 import { QRCode } from "react-qrcode-logo";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const PrintBarcode = ({ sku, price }) => {
   const [template, setTemplate] = useState(1);
-
-  const printDymoLabel = () => {
-    const dymoLabel = createDymoLabel(template, {
-      PRICE_VALUE: price,
-      URL_VALUE: sku,
-      BARCODE_VALUE: sku,
-    });
-    dymo.print("DYMO LabelWriter 450", dymoLabel);
-  };
 
   return (
     <>
@@ -35,26 +25,26 @@ const PrintBarcode = ({ sku, price }) => {
             {template === "3" && (
               <div className="w-full h-full flex flex-col items-center">
                 <div className="price-text ">{`$${price}`}</div>
-                <div id="barcode-2-container">
+                <div className="w-full">
                   <Barcode width={1.3} height={40} value={sku} fontSize={10} />
                 </div>
               </div>
             )}
             {template === "4" && (
-              <div className="flex flex-col items-center">
+              <div className="print:qr-container flex flex-col items-center">
                 <h6 className="price-text">Members Price</h6>
-                <QRCode value={`$${price}`} size={60} />
+                <QRCode value={`$${price}`} size={75} />
               </div>
             )}
             {template === "5" && (
               <div className="flex">
-                <div className="flex flex-col items-center">
+                <div className="print:qr-container flex flex-col items-center">
                   <h6 className="w-2/3 text-center text-sm">Members Price</h6>
                   <QRCode value={`$${price}`} size={75} />
                 </div>
                 <div className="ml-2 border-l-2 border-black"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <div className="mr-3">{`$${price}`}</div>
+                  <div className="w-full mr-3">{`$${price}`}</div>
                   <Barcode width={1} height={25} value={sku} fontSize={10} />
                 </div>
               </div>
@@ -125,10 +115,6 @@ const PrintBarcode = ({ sku, price }) => {
 
             .print\\:qr-container {
               margin-left: 10px
-            }
-
-            #barcode-2-container {
-              width: 100%;
             }
 
             .print\\:barcode-container > div {
