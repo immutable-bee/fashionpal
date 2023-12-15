@@ -11,7 +11,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
   const [brandImage, setBrandImage] = useState();
   const [brandImageSkipped, setBrandImageSkipped] = useState(false);
   const [category, setCategory] = useState("");
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState(0);
 
   const [showCamera, setShowCamera] = useState(false);
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
@@ -227,9 +227,8 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                     </div>
                   </div>
 
-                  <div className="flex mx-1 justify-between w-full">
-                    {}
-                    <div className="mt-3 flex flex-col items-center w-full ">
+                  <div className="flex mx-1 justify-center w-full gap-5">
+                    <div className="mt-3 flex flex-col items-center  ">
                       <label className="block text-gray-600 text-3xl mb-2">
                         Your Price
                       </label>
@@ -242,6 +241,42 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                           onChange={(e) => setPrice(e.target.value)}
                         />
                       </div>
+                    </div>
+                    <div className="flex flex-col items-start ">
+                      <button
+                        onClick={() => setPrice(Number(Number(price) + 5))}
+                        className="border-4 p-1 border-gray-400 rounded-2xl"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-10 h-10 text-green-500"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => setPrice(Number(Number(price) - 5))}
+                        className="border-4 p-1 mt-4 border-gray-400 rounded-2xl"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="w-10 h-10 text-red-500"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M3.75 12a.75.75 0 01.75-.75h15a.75.75 0 010 1.5h-15a.75.75 0 01-.75-.75z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                   {uploadFailed && (
@@ -258,13 +293,13 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                       onClick={() => pushListing("DISPOSED")}
                       className={`hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
                     >
-                      Dispose
+                      Cancel
                     </button>
                     <button
                       onClick={() => pushListing("SALE")}
                       className={`hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
                     >
-                      Sell
+                      Print
                     </button>
                   </div>
                 </div>
