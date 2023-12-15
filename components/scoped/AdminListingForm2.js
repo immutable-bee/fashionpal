@@ -166,6 +166,9 @@ function AdminListingForm() {
               <div>
                 <div>
                   <div className="sm:w-96 mx-auto">
+                    <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
+                      #{computedCount()}
+                    </div>
                     <div className="sm:w-96 mx-auto">
                       <label className="text-lg">Category</label>
                       <select
@@ -263,6 +266,22 @@ function AdminListingForm() {
                         )}
                       </div>
                     </div>
+                    {listingQueue.length > 0 && (
+                      <div className="grid grid-cols-2 mt-4 mx-auto gap-3">
+                        <button
+                          onClick={() => setStep(6)}
+                          className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
+                        >
+                          Review List
+                        </button>
+                        <button
+                          className="bg-green-400 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
+                          onClick={redirectToQueue}
+                        >
+                          Finish
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -290,10 +309,6 @@ function AdminListingForm() {
                   d="M15.75 19.5L8.25 12l7.5-7.5"
                 />
               </svg>
-
-              {/* <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
-                Review List
-              </button> */}
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
@@ -601,6 +616,7 @@ function AdminListingForm() {
                         ""
                       )}
                     </div>
+
                     {/* <LoadingComponent
                       className="mt-6"
                       size="md"
