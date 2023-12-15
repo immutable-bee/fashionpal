@@ -21,13 +21,28 @@ const DonationAcceptedChart = dynamic(
   { ssr: false }
 );
 
-const RePricer = () => {
+const RePricer = ({ onBack }) => {
   const [ruleName, setRuleName] = useState("");
   const [category, setCategory] = useState("");
   const [week, setWeek] = useState("");
 
   return (
-    <div>
+    <div className=" max-w-3xl mx-auto">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
+        onClick={() => onBack()}
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5L8.25 12l7.5-7.5"
+        />
+      </svg>
       <div>
         <div className="sm:w-96 mx-auto">
           <div className="py-2">

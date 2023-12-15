@@ -3,7 +3,7 @@ import ButtonComponent from "@/components/utility/Button";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 
-const RePricer = () => {
+const RePricer = ({ onBack }) => {
   const [ruleName, setRuleName] = useState("");
   const [category, setCategory] = useState("");
   const [premium, setPremium] = useState("");
@@ -21,6 +21,21 @@ const RePricer = () => {
   return (
     <div>
       <div className="sm:w-96 mx-auto">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
+          onClick={() => onBack()}
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M15.75 19.5L8.25 12l7.5-7.5"
+          />
+        </svg>
         <div className="py-2">
           <label className="text-lg">Rule name</label>
           <input
