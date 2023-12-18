@@ -167,7 +167,7 @@ const Profilecomponent = () => {
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3"
+                        className="px-1 py-3"
                       >
                         {
                           <Dropdown>
