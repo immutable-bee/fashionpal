@@ -16,22 +16,10 @@ export default async function handler(req, res) {
   if (!id) {
     return res.status(400).json({ message: "ID is missing." });
   }
-  const business = await prisma.business.findUnique({
-    where: { email: session.user.email },
-  });
-  const payload = { ...req.body };
-  if (business) {
-    payload["ownerId"] = business.id;
-  }
   try {
-    const updatedPriceRule = await prisma.PricingRule.update({
-      where: {
-        id: id,
-      },
-      data: payload,
-    });
+    await prisma.PricingRule.delete({ where: { id } });
 
-    res.status(200).json(updatedPriceRule);
+    res.status(200).json({ message: "Price rule deleted successfully" });
   } catch (error) {
     console.error("Error updating Price Rule:", error);
     res.status(500).json({ message: error.message });
