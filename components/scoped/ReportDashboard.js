@@ -63,7 +63,7 @@ const RePricer = ({ onBack }) => {
       </svg> */}
       <div>
         <div className="w-full bg-white rounded-2xl shadow py-2 flex justify-center mt-3">
-          <div class="sm:flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto hidden">
+          <div class="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto">
             <div
               class={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
                 activeTab == "overview"
