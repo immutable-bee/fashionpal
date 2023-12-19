@@ -38,7 +38,7 @@ function AddListing({ onBack, onFecth }) {
                 listType === "standard" ? "bg-primary text-white" : "bg-white"
               } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
             >
-              Standard
+              Simple Lister
             </button>
             <button
               onClick={() => setListType("speed")}
@@ -46,7 +46,7 @@ function AddListing({ onBack, onFecth }) {
                 listType === "speed" ? "bg-primary text-white" : "bg-white"
               } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
             >
-              Speed
+              Donations
             </button>
             <button
               onClick={() => setListType("admin")}
@@ -54,7 +54,7 @@ function AddListing({ onBack, onFecth }) {
                 listType === "admin" ? "bg-primary text-white" : "bg-white"
               } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
             >
-              Admin
+              AI Lister
             </button>
           </div>
 
@@ -69,27 +69,18 @@ function AddListing({ onBack, onFecth }) {
       ) : (
         <>
           {listType === "admin" ? (
-            <AdminListingForm2
-              onBack={onBack}
-              onFecth={onFecth}
-            />
+            <AdminListingForm2 onBack={onBack} onFecth={onFecth} />
           ) : (
             ""
           )}
 
           {listType === "speed" ? (
-            <SpeedListingForm
-              onBack={onBack}
-              onFetch={onFecth}
-            />
+            <SpeedListingForm onBack={onBack} onFetch={onFecth} />
           ) : (
             ""
           )}
           {listType === "standard" && (
-            <StandardListingForm
-              onBack={onBack}
-              onFecth={onFecth}
-            />
+            <StandardListingForm onBack={onBack} onFecth={onFecth} />
           )}
         </>
       )}
