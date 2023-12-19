@@ -33,14 +33,6 @@ function AddListing({ onBack, onFecth }) {
         <div>
           <div className="flex flex-wrap gap-3 items-center justify-center mt-5">
             <button
-              onClick={() => setListType("standard")}
-              className={`${
-                listType === "standard" ? "bg-primary text-white" : "bg-white"
-              } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
-            >
-              Simple Lister
-            </button>
-            <button
               onClick={() => setListType("speed")}
               className={`${
                 listType === "speed" ? "bg-primary text-white" : "bg-white"
@@ -48,6 +40,16 @@ function AddListing({ onBack, onFecth }) {
             >
               Donations
             </button>
+
+            <button
+              onClick={() => setListType("standard")}
+              className={`${
+                listType === "standard" ? "bg-primary text-white" : "bg-white"
+              } duration-250 ease-in-out rounded-xl px-10 text-xl py-2.5  border border-gray-300`}
+            >
+              Simple Lister
+            </button>
+
             <button
               onClick={() => setListType("admin")}
               className={`${
