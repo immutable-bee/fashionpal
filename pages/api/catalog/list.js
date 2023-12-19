@@ -1,12 +1,7 @@
 import { prisma } from "@/db/prismaDB";
-import { v4 as uuid } from "uuid";
+import { AES, enc } from "crypto-ts";
 
-const { Client, Environment, ApiError } = require("square");
-
-const client = new Client({
-  accessToken: process.env.SQUARE_ACCESS_TOKEN,
-  environment: Environment.Sandbox,
-});
+const { Client, Environment } = require("square");
 
 export const config = {
   api: {
@@ -16,6 +11,25 @@ export const config = {
 
 const handler = async (req, res) => {
   try {
+    const { email } = req.query;
+    const business = await prisma.business.findUnique({
+      where: { email },
+    });
+
+    if (!business || !business?.squareAccessToken) {
+      return res.status(404).json({ message: "Business not found." });
+    }
+
+    const squareAccessToken = AES.decrypt(
+      business?.squareAccessToken,
+      process.env.NEXTAUTH_SECRET
+    ).toString(enc.Utf8);
+
+    const client = new Client({
+      accessToken: squareAccessToken,
+      environment: Environment.Sandbox,
+    });
+
     const response = await client.catalogApi.listCatalog(undefined, "item");
     console.log(response.result);
     res

@@ -46,6 +46,7 @@ const Profilecomponent = () => {
           email: businessData.email,
           data: {
             businessName: businessData.businessName,
+            squareAccessToken: businessData.squareAccessToken,
           },
         }),
       });
@@ -149,6 +150,19 @@ const Profilecomponent = () => {
                 />
               </div>
 
+              <div className="py-2">
+                <label className="text-sm text-gray-700">
+                  Square Access Token
+                </label>
+                <input
+                  value={businessData?.squareAccessToken}
+                  name="squareAccessToken"
+                  type="password"
+                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                  onChange={handleChange}
+                />
+              </div>
+
               <ButtonComponent
                 className="mt-3"
                 rounded
@@ -208,10 +222,7 @@ const Profilecomponent = () => {
                         }
                       </th>
 
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Total
                       </th>
                     </tr>
@@ -290,11 +301,7 @@ const Profilecomponent = () => {
               </div>
             </div>
             <div className="flex justify-center mt-5">
-              <ButtonComponent
-                full
-                rounded
-                onClick={() => downloadCSV()}
-              >
+              <ButtonComponent full rounded onClick={() => downloadCSV()}>
                 Download Excel report
               </ButtonComponent>
             </div>
@@ -340,20 +347,13 @@ const Profilecomponent = () => {
             </div>
 
             <div className="flex justify-center mt-5 hidden">
-              <ButtonComponent
-                full
-                rounded
-              >
+              <ButtonComponent full rounded>
                 Invite a customer
               </ButtonComponent>
             </div>
 
             <div className="mt-4 w-full flex justify-center">
-              <ButtonComponent
-                full
-                rounded
-                onClick={() => signOut()}
-              >
+              <ButtonComponent full rounded onClick={() => signOut()}>
                 Sign Out
               </ButtonComponent>
             </div>

@@ -190,6 +190,7 @@ enum StatusType {
   SALE
   DISPOSED
   DAMAGED
+  SOLD
 }
 
 enum QueuedStatus {

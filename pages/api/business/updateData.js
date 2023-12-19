@@ -1,6 +1,7 @@
 import { prisma } from "@/db/prismaDB";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
+import { AES } from "crypto-ts";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -18,6 +19,14 @@ const handler = async (req, res) => {
     return res.status(404).json({ message: "Business record not found" });
   }
 
+  console.log(process.env.NEXTAUTH_SECRET);
+
+  if (business.squareAccessToken !== data.squareAccessToken) {
+    data.squareAccessToken = AES.encrypt(
+      data.squareAccessToken,
+      process.env.NEXTAUTH_SECRET
+    ).toString();
+  }
   try {
     const updatedBusiness = await prisma.business.update({
       where: { email: session.user.email },
