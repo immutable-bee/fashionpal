@@ -58,6 +58,12 @@ const handler = async (req, res) => {
       });
 
       const soldListingsSquareIds = [];
+
+      if (soldListingsSquareIds?.length === 0) {
+        res.status(200).json({ message: "No listings to sync." });
+        return;
+      }
+
       for (const count of response?.result?.counts) {
         if (count?.quantity === "0") {
           soldListingsSquareIds.push(count.catalogObjectId);
