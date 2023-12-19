@@ -144,6 +144,7 @@ export default function CustomerFilters({
               </svg>
             </button>
 
+
             <button
               id="dropdown-button"
               data-dropdown-toggle="dropdown"
@@ -197,7 +198,7 @@ export default function CustomerFilters({
           {isCategoriesDropdownOpen && (
             <OutsideClickHandler onOutsideClick={() => outsideCategoryClick()}>
               <div
-                id="dropdown"
+                key={1}
                 class="z-10 absolute top-11 sm:left-44 left-[50%] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
               >
                 <ul

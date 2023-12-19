@@ -29,6 +29,12 @@ const HeaderComponent = () => {
     }, 10);
   };
 
+  const handleClick = () => {
+    if (open) {
+      setOpen(false);
+    }
+  };
+
   return (
     <div>
       <header className="flex  mx-auto w-full justify-between items-center px-2 sm:px-4 py-3">

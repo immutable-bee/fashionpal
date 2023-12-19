@@ -39,26 +39,34 @@ const handler = async (req, res) => {
   }
 
   try {
-    const newListing = await prisma.listing.create({
-      data: {
-        mainImageUrl,
-        brandImageUrl,
-        price: data.price,
-        tags: queuedListing.tags,
-        status: data.status,
-        isActive: true,
-        daysToExpiry: 7,
-        Barcode: "1",
-        Business: {
-          connect: { id: queuedListing.queue.ownerId },
+    const transactionResult = await prisma.$transaction(async (prisma) => {
+      const newListing = await prisma.listing.create({
+        data: {
+          mainImageUrl,
+          brandImageUrl,
+          price: data.price,
+          tags: queuedListing.tags,
+          status: data.status,
+          isActive: true,
+          daysToExpiry: 7,
+          Barcode: "1",
+          Business: {
+            connect: { id: queuedListing.queue.ownerId },
+          },
+          categories: {
+            create: categoriesToCreate,
+          },
         },
-        categories: {
-          create: categoriesToCreate,
-        },
-      },
+      });
+
+      await prisma.queuedListing.delete({
+        where: { id: data.id },
+      });
+
+      return newListing;
     });
 
-    res.status(200).json(newListing);
+    res.status(200).json(transactionResult);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

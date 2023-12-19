@@ -68,6 +68,7 @@ model Business {
   user           User          @relation(fields: [uid], references: [id])
   listings       Listing[]
   listingQueue   ListingQueue?
+  pricingRules   PricingRule[]
 }
 
 model Consumer {
@@ -105,25 +106,26 @@ model CategoriesOnListings {
 }
 
 model Listing {
-  id            String                 @id @default(cuid())
-  mainImage     Json?
-  brandImage    Json?
-  dataSource    String?
-  price         Int?
-  delivery      String?
-  tags          String[]
-  status        StatusType             @default(SALE)
-  isActive      Boolean                @default(true)
-  createdAt     DateTime?              @default(now())
-  updatedAt     DateTime?
-  daysToExpiry  Int                    @default(7)
-  businessId    String?
-  Barcode       String
-  brandImageUrl String?
-  mainImageUrl  String?
-  categories    CategoriesOnListings[]
-  Business      Business?              @relation(fields: [businessId], references: [id])
-  votes         Vote[]
+  id                 String                 @id @default(cuid())
+  mainImage          Json?
+  brandImage         Json?
+  dataSource         String?
+  price              Int?
+  delivery           String?
+  tags               String[]
+  status             StatusType             @default(SALE)
+  isActive           Boolean                @default(true)
+  createdAt          DateTime?              @default(now())
+  updatedAt          DateTime?
+  daysToExpiry       Int                    @default(7)
+  businessId         String?
+  Barcode            String
+  brandImageUrl      String?
+  mainImageUrl       String?
+  isSyncedWithSquare Boolean                @default(false)
+  categories         CategoriesOnListings[]
+  Business           Business?              @relation(fields: [businessId], references: [id])
+  votes              Vote[]
 }
 
 model ListingQueue {
@@ -156,6 +158,27 @@ model RelatedProduct {
   Listing         QueuedListing @relation(fields: [queuedListingId], references: [id])
 }
 
+model ReferenceListing {
+  id         String   @id @default(uuid())
+  bucketPath String?
+  price      Int?
+  categories String[]
+  tags       String[]
+}
+
+model PricingRule {
+  id            String            @id @default(uuid())
+  name          String
+  category      String
+  listingType   RepricingRuleType
+  adjustPriceBy Int
+  cycle         String
+  roundTo       Int
+  floorPrice    Int
+  ownerId       String
+  owner         Business          @relation(fields: [ownerId], references: [id])
+}
+
 enum VoteType {
   UP
   DOWN
@@ -171,4 +194,10 @@ enum QueuedStatus {
   QUEUED
   PROCESSING
   PROCESSED
+}
+
+enum RepricingRuleType {
+  PREMIUM_ONLY
+  EXCLUDE_PREMIUM
+  ALL
 }

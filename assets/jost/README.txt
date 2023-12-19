@@ -1,34 +1,36 @@
-Mulish Variable Font
-====================
+Jost Variable Font
+==================
 
-This download contains Mulish as both variable fonts and static fonts.
+This download contains Jost as both variable fonts and static fonts.
 
-Mulish is a variable font with this axis:
+Jost is a variable font with this axis:
   wght
 
 This means all the styles are contained in these files:
-  Mulish-VariableFont_wght.ttf
-  Mulish-Italic-VariableFont_wght.ttf
+  Jost-VariableFont_wght.ttf
+  Jost-Italic-VariableFont_wght.ttf
 
 If your app fully supports variable fonts, you can now pick intermediate styles
 that aren’t available as static fonts. Not all apps support variable fonts, and
-in those cases you can use the static font files for Mulish:
-  static/Mulish-ExtraLight.ttf
-  static/Mulish-Light.ttf
-  static/Mulish-Regular.ttf
-  static/Mulish-Medium.ttf
-  static/Mulish-SemiBold.ttf
-  static/Mulish-Bold.ttf
-  static/Mulish-ExtraBold.ttf
-  static/Mulish-Black.ttf
-  static/Mulish-ExtraLightItalic.ttf
-  static/Mulish-LightItalic.ttf
-  static/Mulish-Italic.ttf
-  static/Mulish-MediumItalic.ttf
-  static/Mulish-SemiBoldItalic.ttf
-  static/Mulish-BoldItalic.ttf
-  static/Mulish-ExtraBoldItalic.ttf
-  static/Mulish-BlackItalic.ttf
+in those cases you can use the static font files for Jost:
+  static/Jost-Thin.ttf
+  static/Jost-ExtraLight.ttf
+  static/Jost-Light.ttf
+  static/Jost-Regular.ttf
+  static/Jost-Medium.ttf
+  static/Jost-SemiBold.ttf
+  static/Jost-Bold.ttf
+  static/Jost-ExtraBold.ttf
+  static/Jost-Black.ttf
+  static/Jost-ThinItalic.ttf
+  static/Jost-ExtraLightItalic.ttf
+  static/Jost-LightItalic.ttf
+  static/Jost-Italic.ttf
+  static/Jost-MediumItalic.ttf
+  static/Jost-SemiBoldItalic.ttf
+  static/Jost-BoldItalic.ttf
+  static/Jost-ExtraBoldItalic.ttf
+  static/Jost-BlackItalic.ttf
 
 Get started
 -----------

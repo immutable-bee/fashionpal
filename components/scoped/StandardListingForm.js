@@ -2,6 +2,8 @@ import { useState } from "react";
 import ButtonComponent from "../utility/Button";
 import LoadingComponent from "../utility/loading";
 import Capture from "../utility/Capture";
+import PrintBarcode from "../business/PrintBarcode";
+import { NotificationManager } from "react-notifications";
 
 const StandardListingForm = ({ onBack, onFecth }) => {
   const [step, setStep] = useState(1);
@@ -17,6 +19,8 @@ const StandardListingForm = ({ onBack, onFecth }) => {
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
   const [uploadFailed, setUploadFailed] = useState(false);
 
+  const [newListingSku, setNewListingSku] = useState("");
+
   const resetListingForm = () => {
     setStep(1);
     setMainImage("");
@@ -24,6 +28,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     setBrandImageSkipped(false);
     setCategory("");
     setPrice("");
+    setNewListingSku("");
   };
 
   const openCamera = () => {
@@ -56,6 +61,10 @@ const StandardListingForm = ({ onBack, onFecth }) => {
   };
 
   const pushListing = async (status) => {
+    if (!price) {
+      NotificationManager.error("price is required!");
+      return;
+    }
     console.log("Client Status: ", status);
     setUploadFailed(false);
     setLoading(true);
@@ -82,6 +91,9 @@ const StandardListingForm = ({ onBack, onFecth }) => {
       return;
     }
 
+    const newSku = await response.json();
+
+    setNewListingSku(newSku);
     setLoading(false);
     setStep(3);
   };
@@ -310,20 +322,31 @@ const StandardListingForm = ({ onBack, onFecth }) => {
         {step === 3 && (
           <div className="mt-5">
             <div className="flex justify-center">
-              <div className="border-[3px] sm:border-[5px] border-gray-700 rounded-xl sm:rounded-3xl px-8 py-2">
-                <h3 className="text-xl sm:text-3xl font-normal text-gray-700">
+              <div className="">
+                <h3 className="text-xl sm:text-3xl  font-normal text-gray-700">
                   Your Listing has been added!
                 </h3>
               </div>
             </div>
-            <div className="flex items-center justify-center mt-8">
+
+            {newListingSku ? (
+              <PrintBarcode
+                sku={newListingSku}
+                price={price}
+              />
+            ) : (
+              <LoadingComponent size={"xl"} />
+            )}
+
+            <div className="flex items-center justify-center mt-4">
               <div className="">
                 <h3 className="text-2xl text-center">
                   Follow us on FashionPal
                 </h3>
               </div>
             </div>
-            <div className="flex justify-center gap-2 mt-1">
+
+            <div className="flex justify-center gap-1 mt-1">
               <ButtonComponent
                 rounded
                 className="!w-48 mt-6"
