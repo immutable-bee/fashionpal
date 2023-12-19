@@ -29,10 +29,45 @@ const handler = async (req, res) => {
         environment: Environment.Sandbox,
       });
 
+      const listingsToFetchInventory = await prisma.listing.findMany({
+        where: {
+          status: "SALE",
+          isActive: true,
+          isSyncedWithSquare: true,
+          NOT: [{ squareId: null }],
+        },
+        include: {
+          categories: {
+            include: {
+              category: true,
+            },
+          },
+        },
+      });
+      const catalogObjectIds = listingsToFetchInventory.map(
+        (listing) => listing.squareId
+      );
+
+      const { result } = await client.locationsApi.listLocations();
+      const locations = result?.locations || [];
+      const locationIds = locations.map((loc) => loc.id);
+
+      const response = await client.inventoryApi.batchRetrieveInventoryCounts({
+        catalogObjectIds,
+        locationIds,
+      });
+
+      const soldListingsSquareIds = [];
+      for (const count of response?.result?.counts) {
+        if (count?.quantity === "0") {
+          soldListingsSquareIds.push(count.catalogObjectId);
+        }
+      }
+
       await prisma.listing.updateMany({
         where: {
-          id: {
-            in: allIdsToUpdate,
+          squareId: {
+            in: soldListingsSquareIds,
           },
         },
         data: {

@@ -137,7 +137,7 @@ const handler = async (req, res) => {
               physicalCount: {
                 catalogObjectId: item.itemData.variations[0].id,
                 state: "IN_STOCK",
-                quantity: "1",
+                quantity: "0",
                 locationId: location.id,
                 occurredAt: new Date().toISOString(),
               },
@@ -169,12 +169,12 @@ const handler = async (req, res) => {
           },
           data: {
             isSyncedWithSquare: true,
-            squareId: idMappings[id],
+            squareId: idMappings[`${id}-main`],
           },
         })
       );
     }
-    // await prisma.$transaction(transactions);
+    await prisma.$transaction(transactions);
 
     res
       .status(200)
