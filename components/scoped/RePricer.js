@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import CreateNewRule from "@/components/scoped/CreateNewRule";
-import EditRule from "@/components/scoped/EditRule";
+import Rules from "@/components/scoped/Rules";
 import ReportDashboard from "@/components/scoped/ReportDashboard";
 
 const RePricer = () => {
   const [listType, setListType] = useState("rule");
   const [islistTypeSelected, setIsListTypeSelected] = useState(false);
+
   return (
     <div>
       {!islistTypeSelected ? (
@@ -49,12 +50,15 @@ const RePricer = () => {
       ) : (
         <>
           {listType === "create" ? (
-            <CreateNewRule onBack={() => setIsListTypeSelected(false)} />
+            <CreateNewRule
+              onBack={() => setIsListTypeSelected(false)}
+              onFetch={() => setListType("rule")}
+            />
           ) : (
             ""
           )}
           {listType === "rule" ? (
-            <EditRule onBack={() => setIsListTypeSelected(false)} />
+            <Rules onBack={() => setIsListTypeSelected(false)} />
           ) : (
             ""
           )}

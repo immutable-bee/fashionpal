@@ -55,20 +55,21 @@ model User {
 }
 
 model Business {
-  id             String        @id @default(uuid())
-  uid            String        @unique
-  businessName   String
-  email          String        @unique
-  businessState  String
-  businessCity   String
-  businessStreet String
-  businessZip    String
-  url            String?
-  phoneNumber    String?
-  user           User          @relation(fields: [uid], references: [id])
-  listings       Listing[]
-  listingQueue   ListingQueue?
-  pricingRules   PricingRule[]
+  id                String        @id @default(uuid())
+  uid               String        @unique
+  businessName      String
+  email             String        @unique
+  businessState     String
+  businessCity      String
+  businessStreet    String
+  businessZip       String
+  url               String?
+  phoneNumber       String?
+  squareAccessToken String?
+  user              User          @relation(fields: [uid], references: [id])
+  listings          Listing[]
+  listingQueue      ListingQueue?
+  pricingRules      PricingRule[]
 }
 
 model Consumer {
@@ -123,6 +124,7 @@ model Listing {
   brandImageUrl      String?
   mainImageUrl       String?
   isSyncedWithSquare Boolean                @default(false)
+  squareId           String?
   categories         CategoriesOnListings[]
   Business           Business?              @relation(fields: [businessId], references: [id])
   votes              Vote[]

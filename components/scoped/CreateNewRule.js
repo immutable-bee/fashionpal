@@ -1,22 +1,91 @@
 import { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import Slider from "rc-slider";
+import { NotificationManager } from "react-notifications";
+import axios from "axios";
 import "rc-slider/assets/index.css";
 
-const RePricer = ({ onBack }) => {
-  const [ruleName, setRuleName] = useState("");
-  const [category, setCategory] = useState("");
-  const [premium, setPremium] = useState("");
+const RePricer = ({ onBack, onFetch }) => {
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("All");
+  const [listingType, setListingType] = useState("");
   const [isWeekly, setIsWeekly] = useState(false);
   const [isMonthly, setIsMonthly] = useState(false);
-  const [rulePercentage, setRulePercentage] = useState(0);
-  const [offPer, setOffPer] = useState("weekly");
+  const [adjustPriceBy, setAdjustPriceBy] = useState(0);
+  const [cycle, setCycle] = useState("weekly");
   const [roundTo, setRoundTo] = useState("0.50");
   const [floorPrice, setFloorPrice] = useState(0);
+  //
+  const [isLoading, setIsLoading] = useState(0);
 
-  const onStart = () => {
-    console.log("Start");
+  const onStart = async () => {
+    if (!name) {
+      NotificationManager.error("Rule is required!");
+    }
+    setIsLoading(true);
+    const data = {
+      name: name,
+      category: category,
+      listingType: listingType,
+      isWeekly: isWeekly,
+      isMonthly: isMonthly,
+      adjustPriceBy: adjustPriceBy,
+      cycle: cycle,
+      roundTo: roundTo,
+      floorPrice: floorPrice,
+    };
+
+    axios
+      .post("/api/pricing-rules/add", data)
+      .then(() => {
+        setIsLoading(false);
+        NotificationManager.success("Rule added successfully!");
+        onFetch();
+      })
+      .catch((error) => {
+        // Handle error here
+        setIsLoading(false);
+        NotificationManager.error("Error adding pricing rule:", error);
+      });
   };
+
+  // const pushListing = async (status) => {
+  //   if (!price) {
+  //     NotificationManager.error("price is required!");
+  //     return;
+  //   }
+  //   console.log("Client Status: ", status);
+  //   setUploadFailed(false);
+  //   setLoading(true);
+
+  //   const formData = new FormData();
+  //   const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
+  //   formData.append("mainImage", mainFile);
+  //   if (brandImage) {
+  //     const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
+  //     formData.append("brandImage", brandFile);
+  //   }
+  //   formData.append("price", price);
+  //   formData.append("category", category);
+  //   formData.append("status", status);
+
+  //   const response = await fetch("/api/business/listing/standard/add", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+
+  //   if (!response.ok) {
+  //     setUploadFailed(true);
+  //     setLoading(false);
+  //     return;
+  //   }
+
+  //   const newSku = await response.json();
+
+  //   setNewListingSku(newSku);
+  //   setLoading(false);
+  //   setStep(3);
+  // };
 
   return (
     <div>
@@ -39,9 +108,9 @@ const RePricer = ({ onBack }) => {
         <div className="py-2">
           <label className="text-lg">Rule name</label>
           <input
-            value={ruleName}
+            value={name}
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-            onChange={(e) => setRuleName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div className="py-2">
@@ -51,7 +120,7 @@ const RePricer = ({ onBack }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value="">All</option>
+            <option value="All">All</option>
             <option value="Clothing">Clothing</option>
             <option value="Footwear">Footwear</option>
             <option value="Hats">Hats</option>
@@ -59,13 +128,13 @@ const RePricer = ({ onBack }) => {
           </select>
         </div>
         <div className="py-2">
-          <label className="text-lg">Premium</label>
+          <label className="text-lg">Type</label>
           <select
-            value={premium}
+            value={listingType}
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-            onChange={(e) => setPremium(e.target.value)}
+            onChange={(e) => setListingType(e.target.value)}
           >
-            <option value="only">Premium only</option>
+            <option value="only">premium only</option>
             <option value="exclude">Exclude premium</option>
             <option value="include">Include premium</option>
           </select>
@@ -115,18 +184,18 @@ const RePricer = ({ onBack }) => {
           <h3 className="text-lg text-center">Price adjustment</h3>
           <div className="py-2 flex items-center">
             <input
-              value={rulePercentage}
+              value={adjustPriceBy}
               className=" mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2"
               max="99"
               type="Number"
-              onChange={(e) => setRulePercentage(e.target.value)}
+              onChange={(e) => setAdjustPriceBy(e.target.value)}
             />
             <label className="text-lg min-w-fit">% off year</label>
 
             <select
-              value={offPer}
+              value={cycle}
               className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
-              onChange={(e) => setOffPer(e.target.value)}
+              onChange={(e) => setCycle(e.target.value)}
             >
               <option value="weekly">Weekly</option>
               <option value="bi-weely">Bi Weekly</option>
@@ -161,6 +230,7 @@ const RePricer = ({ onBack }) => {
 
         <ButtonComponent
           full
+          loading={isLoading}
           onClick={() => onStart()}
           className={`mt-8 mx-auto !w-64 rounded-lg !text-black`}
         >
