@@ -15,7 +15,7 @@ const Modal = ({
     end: "justify-end",
   };
   const onBackgroundClick = (event) => {
-    if (event.target.id === "modal") onClose; // Close if clicked outside modal
+    if (event.target.id === "modal") onClose(); // Close if clicked outside modal
   };
 
   return open ? (

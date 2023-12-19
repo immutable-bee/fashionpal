@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Inputcomponent from "@/components/utility/Input";
 import debounce from "lodash.debounce";
+import OutsideClickHandler from "react-outside-click-handler";
 
 export default function CustomerFilters({
   fetchListings,
@@ -84,19 +85,33 @@ export default function CustomerFilters({
     changeSize(value);
   };
 
-  const toggleStatusDropdown = () => {
-    setStatusDropdownOpen(!isStatusDropdownOpen);
-    setCategoriesDropdownOpen(false);
+  const openStatusDropdown = () => {
+    setStatusDropdownOpen(true);
   };
 
-  const toggleCategoriesDropdown = () => {
-    setCategoriesDropdownOpen(!isCategoriesDropdownOpen);
-    setStatusDropdownOpen(false);
+  const openCategoriesDropdown = () => {
+    setCategoriesDropdownOpen(true);
   };
 
   const resetDropdownStates = () => {
     setCategoriesDropdownOpen(false);
     setStatusDropdownOpen(false);
+  };
+
+  const outsideStatusClick = () => {
+    setTimeout(() => {
+      if (isStatusDropdownOpen) {
+        setStatusDropdownOpen(false);
+      }
+    }, 10);
+  };
+
+  const outsideCategoryClick = () => {
+    setTimeout(() => {
+      if (isCategoriesDropdownOpen) {
+        setCategoriesDropdownOpen(false);
+      }
+    }, 10);
   };
 
   return (
@@ -109,7 +124,7 @@ export default function CustomerFilters({
               data-dropdown-toggle="dropdown"
               class="flex-shrink-0   z-10 w-full sm:w-40 inline-flex justify-between items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 "
               type="button"
-              onClick={() => toggleStatusDropdown()}
+              onClick={() => openStatusDropdown()}
             >
               {status.label}
               <svg
@@ -128,33 +143,14 @@ export default function CustomerFilters({
                 />
               </svg>
             </button>
-            {isStatusDropdownOpen && (
-              <div class="z-10 absolute top-11 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 ">
-                <ul
-                  class="py-2 text-sm text-gray-700 "
-                  aria-labelledby="dropdown-button"
-                >
-                  {statusOptions.map((option) => (
-                    <li key={option}>
-                      <button
-                        type="button"
-                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
-                        onClick={() => onChangeStatus(option)}
-                      >
-                        {option.label}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+
 
             <button
               id="dropdown-button"
               data-dropdown-toggle="dropdown"
               class="flex-shrink-0 w-full sm:w-40 z-10 inline-flex justify-between items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 sm:rounded-none rounded-e-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 "
               type="button"
-              onClick={() => toggleCategoriesDropdown()}
+              onClick={() => openCategoriesDropdown()}
             >
               {category.label}
               <svg
@@ -173,8 +169,34 @@ export default function CustomerFilters({
                 />
               </svg>
             </button>
-
-            {isCategoriesDropdownOpen && (
+          </div>
+          {isStatusDropdownOpen && (
+            <OutsideClickHandler onOutsideClick={() => outsideStatusClick()}>
+              <div
+                id="dropdown"
+                class="z-10 absolute top-11 sm:left-5 left-5 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
+              >
+                <ul
+                  class="py-2 text-sm text-gray-700 "
+                  aria-labelledby="dropdown-button"
+                >
+                  {statusOptions.map((option) => (
+                    <li key={option}>
+                      <button
+                        type="button"
+                        class="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                        onClick={() => onChangeStatus(option)}
+                      >
+                        {option.label}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </OutsideClickHandler>
+          )}
+          {isCategoriesDropdownOpen && (
+            <OutsideClickHandler onOutsideClick={() => outsideCategoryClick()}>
               <div
                 key={1}
                 class="z-10 absolute top-11 sm:left-44 left-[50%] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 "
@@ -196,8 +218,8 @@ export default function CustomerFilters({
                   ))}
                 </ul>
               </div>
-            )}
-          </div>
+            </OutsideClickHandler>
+          )}
 
           <div class="relative w-full sm:mt-0 mt-3">
             <input

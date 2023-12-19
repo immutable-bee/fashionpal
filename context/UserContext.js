@@ -19,6 +19,7 @@ const ACCESS_RULES = {
     "/business/sales",
     "/business/profile",
     "/business/listing-queue",
+    "/business/dashboard",
   ],
 };
 
@@ -94,10 +95,6 @@ export const UserProvider = ({ children }) => {
       isInitialRender.current = false;
       return;
     }
-
-    console.log("useEffect");
-    console.log(session);
-    console.log(user?.onboardingComplete);
 
     if (!session && router.pathname !== "/") {
       router.push("/auth");

@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import { UserProvider } from "../context/UserContext";
 import { NotificationContainer } from "react-notifications";
 import HeaderComponent from "@/components/utility/BusinessHeader";
+
 import "../styles/globals.css";
 import "nprogress/nprogress.css";
 import "react-notifications/lib/notifications.css";
