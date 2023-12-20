@@ -4,16 +4,19 @@ import LoadingComponent from "../utility/loading";
 import Capture from "../utility/Capture";
 import PrintBarcode from "../business/PrintBarcode";
 import { NotificationManager } from "react-notifications";
+import { Checkbox } from "@nextui-org/react";
 
 const StandardListingForm = ({ onBack, onFecth }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  const [defaultPrice, setDefaultPrice] = useState(5);
 
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
-  const [brandImageSkipped, setBrandImageSkipped] = useState(false);
+
   const [category, setCategory] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState(5);
 
   const [showCamera, setShowCamera] = useState(false);
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
@@ -25,7 +28,6 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     setStep(1);
     setMainImage("");
     setBrandImage("");
-    setBrandImageSkipped(false);
     setCategory("");
     setPrice("");
     setNewListingSku("");
@@ -79,6 +81,8 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     formData.append("price", price);
     formData.append("category", category);
     formData.append("status", status);
+    formData.append("defaultPrice", defaultPrice);
+    formData.append("premium", isPremium);
 
     const response = await fetch("/api/business/listing/standard/add", {
       method: "POST",
@@ -99,8 +103,11 @@ const StandardListingForm = ({ onBack, onFecth }) => {
   };
 
   const skipBrandImage = () => {
-    setBrandImageSkipped(true);
     setStep(2);
+  };
+  const triggerToHomePage = () => {
+    onFecth();
+    onBack();
   };
 
   return (
@@ -130,6 +137,21 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                         <option value="Hats">Hats</option>
                         <option value="Bags">Bags</option>
                       </select>
+                    </div>
+
+                    <div className="mt-5  mx-auto flex items-center justify-center  ">
+                      <label className="block text-gray-600 text-xl ">
+                        Default price
+                      </label>
+                      <div className="relative flex items-center justify-center ml-4">
+                        <h3 className="absolute text-xl left-3 mt-1">$</h3>
+                        <input
+                          value={defaultPrice}
+                          type="number"
+                          className="w-36 mt-1 !text-xl rounded-xl pl-8 pr-2  !py-2.5 border-4 border-gray-400"
+                          onChange={(e) => setDefaultPrice(e.target.value)}
+                        />
+                      </div>
                     </div>
 
                     <div className="mx-auto">
@@ -238,8 +260,25 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                       )}
                     </div>
                   </div>
+                  <div
+                    id="onboarding-form-tc-row"
+                    className="flex items-center justify-center mt-3"
+                  >
+                    <Checkbox
+                      onChange={() => setIsPremium(!isPremium)}
+                      id="onboarding-form-tc-checkbox"
+                      className="mr-2"
+                      size={"xl"}
+                    ></Checkbox>
+                    <h6
+                      id="onboarding-form-tc-agree-text"
+                      className="text-2xl"
+                    >
+                      Premium
+                    </h6>
+                  </div>
 
-                  <div className="flex mx-1 justify-center w-full gap-5">
+                  <div className="flex mx-1 justify-center w-full gap-5 mt-4">
                     <div className="mt-3 flex flex-col items-center  ">
                       <label className="block text-gray-600 text-3xl mb-2">
                         Your Price
@@ -256,7 +295,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                     </div>
                     <div className="flex flex-col items-start ">
                       <button
-                        onClick={() => setPrice(Number(Number(price) + 5))}
+                        onClick={() => setPrice(Number(Number(price) + 0.5))}
                         className="border-4 p-1 border-gray-400 rounded-2xl"
                       >
                         <svg
@@ -273,7 +312,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                         </svg>
                       </button>
                       <button
-                        onClick={() => setPrice(Number(Number(price) - 5))}
+                        onClick={() => setPrice(Number(Number(price) - 0.5))}
                         className="border-4 p-1 mt-4 border-gray-400 rounded-2xl"
                       >
                         <svg
@@ -330,10 +369,12 @@ const StandardListingForm = ({ onBack, onFecth }) => {
             </div>
 
             {newListingSku ? (
-              <PrintBarcode
-                sku={newListingSku}
-                price={price}
-              />
+              <>
+                <PrintBarcode
+                  sku={newListingSku}
+                  price={price}
+                />
+              </>
             ) : (
               <LoadingComponent size={"xl"} />
             )}
@@ -357,7 +398,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
               <ButtonComponent
                 rounded
                 className="!w-48 mt-6"
-                onClick={() => onBack()}
+                onClick={() => triggerToHomePage()}
               >
                 Home page
               </ButtonComponent>
