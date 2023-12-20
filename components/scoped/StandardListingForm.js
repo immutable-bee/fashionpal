@@ -29,7 +29,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     setMainImage("");
     setBrandImage("");
     setCategory("");
-    setPrice("");
+    setPrice(defaultPrice);
     setNewListingSku("");
   };
 
@@ -81,7 +81,6 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     formData.append("price", price);
     formData.append("category", category);
     formData.append("status", status);
-    formData.append("defaultPrice", defaultPrice);
     formData.append("premium", isPremium);
 
     const response = await fetch("/api/business/listing/standard/add", {
@@ -149,7 +148,10 @@ const StandardListingForm = ({ onBack, onFecth }) => {
                           value={defaultPrice}
                           type="number"
                           className="w-36 mt-1 !text-xl rounded-xl pl-8 pr-2  !py-2.5 border-4 border-gray-400"
-                          onChange={(e) => setDefaultPrice(e.target.value)}
+                          onChange={(e) => {
+                            setDefaultPrice(e.target.value);
+                            setPrice(e.target.value);
+                          }}
                         />
                       </div>
                     </div>
