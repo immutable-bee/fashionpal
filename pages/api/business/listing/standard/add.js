@@ -33,85 +33,91 @@ const handler = async (req, res) => {
   });
 
   try {
-    await prisma.$transaction(async (tx) => {
-      const business = await tx.business.findUnique({
-        where: { email: session.user.email },
-      });
-      if (!business) {
-        throw new Error("Business record not found");
-      }
+    await prisma.$transaction(
+      async (tx) => {
+        const business = await tx.business.findUnique({
+          where: { email: session.user.email },
+        });
+        if (!business) {
+          throw new Error("Business record not found");
+        }
 
-      businessId = business.id;
+        businessId = business.id;
 
-      const category = fields.category[0];
-      const price = parseFloat(fields.price);
-      const status = fields.status[0];
+        const category = fields.category[0];
+        const price = parseFloat(fields.price);
+        const status = fields.status[0];
 
-      const timestampSku = new Date()
-        .toISOString()
-        .replace(/[-T:]/g, "")
-        .slice(0, 14);
+        const timestampSku = new Date()
+          .toISOString()
+          .replace(/[-T:]/g, "")
+          .slice(0, 14);
 
-      newListingSku = timestampSku;
+        newListingSku = timestampSku;
 
-      const newListing = await tx.listing.create({
-        data: {
-          price,
-          status,
-          Barcode: timestampSku,
-          businessId: business.id,
-          categories: {
-            create: {
-              category: {
-                connectOrCreate: {
-                  where: {
-                    name: category,
-                  },
-                  create: {
-                    name: category,
+        const newListing = await tx.listing.create({
+          data: {
+            price,
+            status,
+            Barcode: timestampSku,
+            businessId: business.id,
+            categories: {
+              create: {
+                category: {
+                  connectOrCreate: {
+                    where: {
+                      name: category,
+                    },
+                    create: {
+                      name: category,
+                    },
                   },
                 },
               },
             },
           },
-        },
-      });
+        });
 
-      newListingId = newListing.id;
+        newListingId = newListing.id;
 
-      for (const key of Object.keys(files)) {
-        const file = files[key][0];
-        const filePath = file.filepath;
-        const fileData = fs.readFileSync(filePath);
-        const uploadPath = `${business.id}/${newListing.id}/${key}`;
+        for (const key of Object.keys(files)) {
+          const file = files[key][0];
+          const filePath = file.filepath;
+          const fileData = fs.readFileSync(filePath);
+          const uploadPath = `${business.id}/${newListing.id}/${key}`;
 
-        const { error } = await supabase.storage
-          .from("standard-listings")
-          .upload(uploadPath, fileData, {
-            contentType: file.mimetype,
-            upsert: false,
-          });
+          const { error } = await supabase.storage
+            .from("standard-listings")
+            .upload(uploadPath, fileData, {
+              contentType: file.mimetype,
+              upsert: false,
+            });
 
-        fs.unlinkSync(filePath);
-        if (error) {
-          throw new Error(error.message);
-        }
-      }
-
-      const data = files.brandImage
-        ? {
-            mainImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/mainImage`,
-            brandImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/brandImage`,
+          fs.unlinkSync(filePath);
+          if (error) {
+            throw new Error(error.message);
           }
-        : {
-            mainImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/mainImage`,
-          };
+        }
 
-      await tx.listing.update({
-        where: { id: newListing.id },
-        data,
-      });
-    });
+        const data = files.brandImage
+          ? {
+              mainImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/mainImage`,
+              brandImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/brandImage`,
+            }
+          : {
+              mainImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/mainImage`,
+            };
+
+        await tx.listing.update({
+          where: { id: newListing.id },
+          data,
+        });
+      },
+      {
+        maxWait: 5000,
+        timeout: 10000,
+      }
+    );
 
     res.status(200).json(newListingSku);
   } catch (error) {
