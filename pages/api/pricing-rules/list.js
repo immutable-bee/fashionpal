@@ -13,11 +13,19 @@ const handler = async (req, res) => {
   const business = await prisma.business.findUnique({
     where: { email: session.user.email },
   });
+  const { category, listingType } = req.query;
 
   if (business) {
     try {
+      let condition = { ownerId: business.id };
+      if (category) {
+        condition = { ...condition, category };
+      }
+      if (listingType) {
+        condition = { ...condition, listingType };
+      }
       const PricingRules = await prisma.PricingRule.findMany({
-        where: { ownerId: business.id },
+        where: condition,
       });
       res.status(200).json(PricingRules);
     } catch (error) {
