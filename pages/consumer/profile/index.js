@@ -7,6 +7,7 @@ import { NotificationManager } from "react-notifications";
 
 import { signOut } from "next-auth/react";
 import { Loading } from "@nextui-org/react";
+import { QRCode } from "react-qrcode-logo";
 
 const ProfileComponent = ({}) => {
   const [user, setUser] = useState({});
@@ -81,165 +82,57 @@ const ProfileComponent = ({}) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white ">
+    <div className='min-h-screen bg-white '>
       <HeaderComponent />
-      <div className="h-full flex flex-col items-center justify-center">
-        <div className="max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded">
-          <h1 className="text-lg sm:text-2xl font-medium text-center ">
+      <div className='h-full flex flex-col items-center justify-center'>
+        <div className='max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded'>
+          <h1 className='text-lg sm:text-2xl font-medium text-center '>
             Profile Page
           </h1>
-          <form
-            onSubmit={handleSubmit}
-            className="mt-2 sm:mt-6"
-          >
-            <div className="py-2">
-              <label className="text-sm text-gray-700">Username</label>
+          <div className='mt-2 sm:mt-6'>
+            <div className='py-2'>
+              <label className='text-sm text-gray-700'>Username</label>
               <input
-                name="user_name"
-                type="text"
-                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                name='user_name'
+                type='text'
+                className='bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2'
                 onChange={handleChange}
               />
             </div>
-            <div className="py-2">
-              <label className="text-sm text-gray-700">Email</label>
+            <div className='py-2'>
+              <label className='text-sm text-gray-700'>Email</label>
               <input
-                name="email"
-                type="text"
-                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                name='email'
+                type='text'
+                className='bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2'
                 onChange={handleChange}
               />
             </div>
 
+            <label className='relative inline-flex items-center cursor-pointer'>
+              <input type='checkbox' value='' className='sr-only peer' />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              <span className='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'>
+                Weekly Email Notifications
+              </span>
+            </label>
+            <h3> Use QR Code at checkout to receive your subscriber price</h3>
+          </div>
+          <div className='flex justify-center'>
+            <QRCode value={`12345`} size={250} />
+          </div>
+          <div className='mt-5'>
             <ButtonComponent
+              className='my-7'
               rounded
               full
-              loading={updating}
-              type="submit"
-            >
-              Update
-            </ButtonComponent>
-
-            <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
-              <div className="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        Label
-                      </th>
-
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        Value
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4">
-                        This months # of votes
-                      </td>
-                      {consumerStats ? (
-                        <td className="px-6 py-4">
-                          {consumerStats.votesInDateRange}
-                        </td>
-                      ) : (
-                        <td className="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4">
-                        {" "}
-                        Most common category
-                      </td>
-                      {consumerStats ? (
-                        <td className="px-6 py-4">
-                          {consumerStats.mostCommonUpvoteCategory}
-                        </td>
-                      ) : (
-                        <td className="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4"> # up voted</td>
-                      {consumerStats ? (
-                        <td className="px-6 py-4">
-                          {consumerStats.upvotedListings}
-                        </td>
-                      ) : (
-                        <td className="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4"> # down voted</td>
-                      {consumerStats ? (
-                        <td className="px-6 py-4">
-                          {consumerStats.downvotedListings}
-                        </td>
-                      ) : (
-                        <td className="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4"> % up voted</td>
-                      {consumerStats ? (
-                        <td className="px-6 py-4">
-                          {consumerStats.percentUpvotedListings}
-                        </td>
-                      ) : (
-                        <td className="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4">% up voted</td>
-                      {consumerStats ? (
-                        <td className="px-6 py-4">
-                          {consumerStats.percentDownvotedListings}
-                        </td>
-                      ) : (
-                        <td className="px-6 py-4">
-                          <Loading />
-                        </td>
-                      )}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <ButtonComponent
-                className="my-7"
-                color="secondary"
-                rounded
-                full
-              >
-                Connect venmo/paypal
-              </ButtonComponent>
-            </div>
-          </form>
-          <div className="mt-4 w-full max-w-lg">
-            <ButtonComponent
-              full
-              rounded
               onClick={() => signOut()}
             >
+              Thrift List
+            </ButtonComponent>
+          </div>
+          <div className='mt-4 w-full max-w-lg'>
+            <ButtonComponent full rounded onClick={() => signOut()}>
               Sign Out
             </ButtonComponent>
           </div>
