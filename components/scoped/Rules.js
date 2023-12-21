@@ -35,7 +35,7 @@ const RePricer = ({ onBack }) => {
 
     try {
       const res = await fetch(
-        `/api/pricing-rules/list?searchText=${searchText}&category=${filterCategory}&type=${filterType}`
+        `/api/pricing-rules/list?name=${searchText}&category=${filterCategory}&listingType=${filterType}`
       );
 
       if (res.status === 200) {
