@@ -8,7 +8,7 @@ import "rc-slider/assets/index.css";
 const RePricer = ({ onBack, onFetch }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
-  const [listingType, setListingType] = useState("");
+  const [listingType, setListingType] = useState("ALL");
   const [isWeekly, setIsWeekly] = useState(false);
   const [isMonthly, setIsMonthly] = useState(false);
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
@@ -134,50 +134,10 @@ const RePricer = ({ onBack, onFetch }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setListingType(e.target.value)}
           >
-            <option value="only">premium only</option>
-            <option value="exclude">Exclude premium</option>
-            <option value="include">Include premium</option>
+            <option value="ALL">Include premium</option>
+            <option value="PREMIUM_ONLY">premium only</option>
+            <option value="EXCLUDE_PREMIUM">Exclude premium</option>
           </select>
-        </div>
-        <div className="py-2">
-          <label className="text-lg">Max shelf life</label>
-          <label className="relative flex items-center cursor-pointer mt-3">
-            <input
-              type="checkbox"
-              value=""
-              className="sr-only peer"
-              checked={isWeekly}
-              onChange={() => setIsWeekly(!isWeekly)}
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#E44A1F]"></div>
-            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Weekly
-            </span>
-          </label>
-          <label className="relative flex items-center cursor-pointer mt-3">
-            <input
-              type="checkbox"
-              value=""
-              className="sr-only peer"
-              checked={isMonthly}
-              onChange={() => setIsMonthly(!isMonthly)}
-            />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#E44A1F]"></div>
-            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Monthly
-            </span>
-          </label>
-        </div>
-
-        <div className="mt-4">
-          <Slider
-            className="horizontal-slider"
-            thumbClassName="example-thumb"
-            trackClassName="example-track"
-            renderThumb={(props, state) => (
-              <div {...props}>{state.valueNow}</div>
-            )}
-          />
         </div>
 
         <div className="py-2 mt-4 max-w-fit mx-auto">
