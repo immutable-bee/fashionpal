@@ -169,19 +169,21 @@ export default function Home() {
           <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">
             <div className="w-full">
               <div className="flex justify-between items-center">
-                <p className="text-gray-900 text-base">
-                  {pagination.total} Results found
-                </p>
+                <div className="flex items-center gap-4">
+                  <p className="text-gray-900 text-xs sm:text-lg">
+                    {pagination.total} Results found
+                  </p>
 
-                <div className="content-start">
-                  <label className="m-2 ">Auto Refresh</label>
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      defaultChecked={isAutoRefreshOn}
-                      onChange={setAutoRefreshOn}
-                    />
-                    <span className="slider round"></span>
+                  <label className="content-start flex cursor-pointer items-center gap-2">
+                    <h3 className=" text-xs sm:text-lg">Auto Refresh</h3>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        defaultChecked={isAutoRefreshOn}
+                        onChange={setAutoRefreshOn}
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </label>
                 </div>
 
@@ -194,7 +196,7 @@ export default function Home() {
                 </ButtonComponent>
               </div>
 
-              <div className="w-full">
+              <div className="w-full mt-2">
                 {loadingListings ? (
                   <div className="absolute w-full mt-10">
                     <div>
@@ -210,7 +212,10 @@ export default function Home() {
                 <div className="sm:flex flex-wrap sm:gap-3 justify-center w-full">
                   {listings.map((row, key) => {
                     return (
-                      <div key={key} onClick={() => triggerDetailsModal(key)}>
+                      <div
+                        key={key}
+                        onClick={() => triggerDetailsModal(key)}
+                      >
                         <ListingItem
                           mainPhoto={
                             row?.mainImage ? row.mainImage : row.mainImageUrl
