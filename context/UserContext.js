@@ -114,10 +114,16 @@ export const UserProvider = ({ children }) => {
         ? "business"
         : null;
       const allowedRoutes = ACCESS_RULES[role] || [];
-
-      if (role && !allowedRoutes.includes(router.pathname)) {
+      // Check if role is defined and router pathname is not in allowedRoutes
+      if (
+        role &&
+        allowedRoutes.every((route) => !router.pathname.includes(route))
+      ) {
         router.push(allowedRoutes[0]);
       }
+      // if (role && !allowedRoutes.includes(router.pathname)) {
+      //   router.push(allowedRoutes[0]);
+      // }
     }
   }, [session, user?.onboardingComplete, router.pathname]);
 
