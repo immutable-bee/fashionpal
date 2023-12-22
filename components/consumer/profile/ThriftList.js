@@ -6,10 +6,6 @@ import ButtonComponent from "@/components/utility/Button";
 import ModalComponent from "@/components/utility/Modal";
 
 import { NotificationManager } from "react-notifications";
-import { signOut } from "next-auth/react";
-import { Loading } from "@nextui-org/react";
-import { QRCode } from "react-qrcode-logo";
-import Image from "next/image";
 import debounce from "lodash.debounce";
 
 const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
