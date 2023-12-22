@@ -21,7 +21,6 @@ const ProfileComponent = ({}) => {
     } else {
       const data = await response.json();
       setConsumerData(data);
-      console.log(data);
     }
   };
   useEffect(() => {
