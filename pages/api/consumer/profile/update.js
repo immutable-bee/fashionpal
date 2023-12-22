@@ -1,5 +1,4 @@
-
-\import { getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { prisma } from "../../../../db/prismaDB";
 import { authOptions } from "../../auth/[...nextauth]";
 

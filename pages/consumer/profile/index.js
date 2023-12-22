@@ -4,141 +4,68 @@ import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import ButtonComponent from "@/components/utility/Button";
 // import { useUser } from "@/context/UserContext";
 import { NotificationManager } from "react-notifications";
-
 import { signOut } from "next-auth/react";
 import { Loading } from "@nextui-org/react";
 import { QRCode } from "react-qrcode-logo";
+import debounce from "lodash.debounce";
+import ConsumerInfo from "@/components/consumer/profile/ConsumerInfo";
+import ThriftList from "@/components/consumer/profile/thriftList";
 
 const ProfileComponent = ({}) => {
-  const [user, setUser] = useState({});
-  const [consumerStats, setConsumerStats] = useState();
-  const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
-  const [updating, setUpdating] = useState(false);
-
-  const isValidEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return regex.test(email);
+  const [displatThrift, setDisplayThrift] = useState(false);
+  const [consumerData, setConsumerData] = useState({});
+  const toggleThriftList = () => {
+    setDisplayThrift(!displatThrift);
   };
+  const fetchConsumerDetails = async () => {
+    const response = await fetch("/api/consumer/profile/");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!user.user_name) {
-      NotificationManager.error("User name is required!");
-      return;
-    } else if (!user.email) {
-      NotificationManager.error("Email is required!");
-      return;
-    } else if (!isValidEmail(user.email)) {
-      NotificationManager.error("Invalid email!");
-      return;
-    }
-    setUpdating(true);
-
-    setUpdating(false);
-
-    // try {
-    //   await fetch("/api/business/updateData", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ email: user.email, data: formData }),
-    //   });
-    //   fetchUserData();
-    // } catch (error) {}
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setUser({ ...user, [name]: value });
-  };
-
-  const fetchConsumerStats = async (dateTo = null, dateFrom = null) => {
-    const path =
-      dateTo && dateFrom
-        ? `/api/consumer/fetchStats?dateTo=${dateTo}&dateFrom=${dateFrom}`
-        : "/api/consumer/fetchStats";
-
-    const response = await fetch(path, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      setConsumerStats(data);
+    if (!response.ok) {
+      console.error("Failed to get queue");
     } else {
-      return console.error("Failed to fetch business stats:", data.error);
+      const data = await response.json();
+      setConsumerData(data);
+      console.log(data);
     }
   };
-
   useEffect(() => {
-    fetchConsumerStats();
+    fetchConsumerDetails();
   }, []);
 
   return (
     <div className='min-h-screen bg-white '>
       <HeaderComponent />
       <div className='h-full flex flex-col items-center justify-center'>
-        <div className='max-w-xl w-full bg-whit px-4 sm:px-8 py-3 sm:py-6 rounded'>
-          <h1 className='text-lg sm:text-2xl font-medium text-center '>
-            Profile Page
-          </h1>
-          <div className='mt-2 sm:mt-6'>
-            <div className='py-2'>
-              <label className='text-sm text-gray-700'>Username</label>
-              <input
-                name='user_name'
-                type='text'
-                className='bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2'
-                onChange={handleChange}
-              />
-            </div>
-            <div className='py-2'>
-              <label className='text-sm text-gray-700'>Email</label>
-              <input
-                name='email'
-                type='text'
-                className='bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2'
-                onChange={handleChange}
-              />
-            </div>
-
-            <label className='relative inline-flex items-center cursor-pointer'>
-              <input type='checkbox' value='' className='sr-only peer' />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-              <span className='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'>
-                Weekly Email Notifications
-              </span>
-            </label>
-            <h3> Use QR Code at checkout to receive your subscriber price</h3>
-          </div>
-          <div className='flex justify-center'>
-            <QRCode value={`12345`} size={250} />
-          </div>
-          <div className='mt-5'>
+        {displatThrift ? (
+          <ThriftList
+            toggleThrift={toggleThriftList}
+            consumerData={consumerData}
+            setConsumerData={setConsumerData}
+          />
+        ) : (
+          <ConsumerInfo
+            consumerData={consumerData}
+            setConsumerData={setConsumerData}
+          />
+        )}
+        {!displatThrift && (
+          <div className='mt-4 w-full max-w-lg'>
             <ButtonComponent
               className='my-7'
               rounded
               full
-              onClick={() => signOut()}
+              onClick={() => toggleThriftList()}
             >
               Thrift List
             </ButtonComponent>
           </div>
-          <div className='mt-4 w-full max-w-lg'>
-            <ButtonComponent full rounded onClick={() => signOut()}>
-              Sign Out
-            </ButtonComponent>
-          </div>
+        )}
+        <div className='mt-4 w-full max-w-lg'>
+          <ButtonComponent full rounded onClick={() => signOut()}>
+            Sign Out
+          </ButtonComponent>
         </div>
       </div>
-      <SubscriptionModal isSubscriptionModalOpen={isSubscriptionModalOpen} />
     </div>
   );
 };

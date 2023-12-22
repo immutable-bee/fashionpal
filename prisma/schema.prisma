@@ -73,13 +73,14 @@ model Business {
 }
 
 model Consumer {
-  id            String  @id @default(uuid())
-  uid           String  @unique
+  id            String       @id @default(uuid())
+  uid           String       @unique
   username      String
-  email         String  @unique
-  emailAlertsOn Boolean @default(true)
-  user          User    @relation(fields: [uid], references: [id])
+  email         String       @unique
+  emailAlertsOn Boolean      @default(true)
+  user          User         @relation(fields: [uid], references: [id])
   votes         Vote[]
+  ThriftList    ThriftList[]
 }
 
 model Vote {
@@ -90,6 +91,14 @@ model Vote {
   type      VoteType @default(UP)
   listing   Listing  @relation(fields: [listingId], references: [id])
   user      Consumer @relation(fields: [userId], references: [id])
+}
+
+model ThriftList {
+  id          String   @id @default(uuid())
+  customerId  String
+  description String
+  isChecked   Boolean  @default(false)
+  customer    Consumer @relation(fields: [customerId], references: [id])
 }
 
 model Category {
