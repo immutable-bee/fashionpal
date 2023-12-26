@@ -27,7 +27,7 @@ const handler = async (req, res) => {
 
     const client = new Client({
       accessToken: squareAccessToken,
-      environment: Environment.Sandbox,
+      environment: Environment.Production,
     });
 
     const response = await client.catalogApi.listCatalog(undefined, "item");
