@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import HeaderComponent from "@/components/utility/Header";
-import SubscriptionModal from "@/components/scoped/SubscriptionModal";
 import ButtonComponent from "@/components/utility/Button";
-// import { useUser } from "@/context/UserContext";
 import ModalComponent from "@/components/utility/Modal";
 
 import { NotificationManager } from "react-notifications";
@@ -13,6 +10,8 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activeDeleteId, setActiveDeleteId] = useState(null);
+  const [newThrift, setNewThrift] = useState("");
+
   useEffect(() => {
     setDataList(consumerData.ThriftList);
   }, [consumerData]);
@@ -71,16 +70,12 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
         const index = consumerData.ThriftList.findIndex(
           (elem) => elem.id === id
         );
-        console.log("index", index);
         if (index > -1) {
-          console.log(`Updated  successfully`);
-
           let updatedConsumerData = consumerData;
           updatedConsumerData.ThriftList[index] = resp.updatedList;
           setConsumerData({ ...updatedConsumerData });
         }
       } else {
-        // Handle errors, e.g., display an error message
         console.error(`Error updating ${fieldName}`);
       }
     } catch (error) {
@@ -93,7 +88,43 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
     let { checked } = e.target;
     debouncedSendFieldUpdate(checked, id);
   };
+  const handleInputChange = (e) => {
+    setNewThrift(e.target.value);
+  };
+  const addNewThrift = async () => {
+    try {
+      if (newThrift) {
+        const res = await fetch(`/api/consumer/profile/thriftList/add`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            detail: newThrift,
+            customerId: consumerData.id,
+          }),
+        });
+        const response = await res.json();
+        console.log(response);
+        setDeleteLoading(false);
+        if (res.ok) {
+          setNewThrift("");
+          setConsumerData({
+            ...consumerData,
+            ThriftList: [...consumerData.ThriftList, response],
+          });
 
+          NotificationManager.success("thrift item added successfully");
+        } else {
+          // Handle error
+          const errorData = await res.json();
+          NotificationManager.error(errorData);
+        }
+      } else {
+        NotificationManager.error("input field is required");
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the listing", error);
+    }
+  };
   return (
     <div className='w-3/4 bg-white '>
       <div className=' flex items-center justify-center'>
@@ -103,6 +134,20 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
               &#8592;
             </button>
             <h1 class='text-2xl text-center font-bold'>Thrift List</h1>
+          </div>
+          <div class='flex mt-4 mb-4'>
+            <input
+              class='shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker'
+              placeholder='Add Thrift Item'
+              value={newThrift}
+              onChange={handleInputChange}
+            />
+            <button
+              onClick={addNewThrift}
+              class='flex-no-shrink p-2 border-2 rounded text-teal border-teal  hover:border-light'
+            >
+              Add
+            </button>
           </div>
           <div>
             {dataList.length > 0 ? (

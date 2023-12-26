@@ -5,11 +5,7 @@ import ButtonComponent from "@/components/utility/Button";
 // import { useUser } from "@/context/UserContext";
 import { NotificationManager } from "react-notifications";
 import { signOut } from "next-auth/react";
-import { Loading } from "@nextui-org/react";
-import { QRCode } from "react-qrcode-logo";
-import debounce from "lodash.debounce";
 import ConsumerInfo from "@/components/consumer/profile/ConsumerInfo";
-// import ThriftList from "../../../components/consumer/profile/thriftList";
 import ThriftList from "@/components/consumer/profile/Thrifts";
 
 const ProfileComponent = ({}) => {
