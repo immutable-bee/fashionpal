@@ -5,7 +5,6 @@ import { signOut } from "next-auth/react";
 import { QRCode } from "react-qrcode-logo";
 
 import ConsumerInfo from "@/components/consumer/profile/ConsumerInfo";
-// import ThriftList from "../../../components/consumer/profile/thriftList";
 import ThriftList from "@/components/consumer/profile/Thrifts";
 
 const ProfileComponent = ({}) => {
