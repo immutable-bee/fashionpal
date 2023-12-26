@@ -92,21 +92,33 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    // if (router.pathname === "/_error") {
+    if (router.asPath !== "/" && router.pathname === "/_error") {
+      return;
+    }
     if (isInitialRender.current) {
       isInitialRender.current = false;
       return;
     }
 
-    if (!session && router.pathname !== "/") {
-      router.push("/auth");
+    // If not logged in, not already on the "/auth" page, and not in the process of authentication
+    if (
+      !session &&
+      router.pathname !== "/auth" &&
+      !router.query.authenticating
+    ) {
+      // Redirect to "/auth" page with the current route's pathname and existing query parameters
+      console.log(1);
+      router.push({
+        pathname: "/auth",
+        query: {
+          redirectUrl: router.pathname,
+        },
+      });
     }
 
     if (session) {
       fetchUserData();
-
-      if (user && !user.onboardingComplete) {
-        router.push("/auth/onboarding");
-      }
 
       const role = user?.consumer
         ? "consumer"
@@ -114,16 +126,70 @@ export const UserProvider = ({ children }) => {
         ? "business"
         : null;
       const allowedRoutes = ACCESS_RULES[role] || [];
+
+      if (user && !user.onboardingComplete) {
+        router.push("/auth/onboarding");
+      }
+
+      // if (user && !user.onboardingComplete) {
+      //   console.log(router);
+      //   console.log(
+      //     !allowedRoutes.every((route) => router.asPath.includes(route))
+      //   );
+      //   console.log(1);
+      //   const route = {
+      //     pathname: "/auth/onboarding",
+      //   };
+
+      //   if (
+      //     router.query &&
+      //     router.query.redirectUrl &&
+      //     router.query.redirectUrl !== "/auth/onboarding" &&
+      //     router.query.redirectUrl !== "/_error" &&
+      //     !allowedRoutes.every(
+      //       (route) => !router.query.redirectUrl.includes(route)
+      //     )
+      //   ) {
+      //     route.query = {};
+      //     route.query.redirectUrl = router.query.redirectUrl;
+      //   } else if (
+      //     router.asPath !== "/auth/onboarding" &&
+      //     router.pathname !== "/_error" &&
+      //     !allowedRoutes.every((route) => !router.asPath.includes(route))
+      //   ) {
+      //     route.query = {};
+      //     route.query.redirectUrl = router.pathname;
+      //   }
+      //   router.push(route);
+      // }
+
       // Check if role is defined and router pathname is not in allowedRoutes
       if (
         role &&
         allowedRoutes.every((route) => !router.pathname.includes(route))
       ) {
-        router.push(allowedRoutes[0]);
+        console.log(router.pathname === "/auth");
+        console.log(router.query.redirectUrl);
+        console.log(allowedRoutes);
+
+        if (
+          !router.query.redirectUrl ||
+          router.pathname !== "/auth" ||
+          (router.pathname === "/auth" &&
+            router.query.redirectUrl &&
+            allowedRoutes.every(
+              (route) => !router.query.redirectUrl.includes(route)
+            ))
+        ) {
+          router.push({
+            pathname: allowedRoutes[0],
+          });
+        } else {
+          router.push({
+            pathname: router.query.redirectUrl,
+          });
+        }
       }
-      // if (role && !allowedRoutes.includes(router.pathname)) {
-      //   router.push(allowedRoutes[0]);
-      // }
     }
   }, [session, user?.onboardingComplete, router.pathname]);
 

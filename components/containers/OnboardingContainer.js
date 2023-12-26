@@ -68,19 +68,47 @@ const OnboardingContainer = () => {
       if (isOnboardingCompleted || user.onboardingComplete) {
         if (userType === "consumer" || user.consumer) {
           setTimeout(() => {
-            router.push("/consumer");
+            const route = {
+              pathname: "/consumer",
+            };
+            // if (router.query && router.query.redirectUrl) {
+            //   route.query = {};
+            //   route.query.redirectUrl = router.query.redirectUrl;
+            // }
+            // console.log(route);
+            router.push(route);
           }, [10000]);
         }
 
         if (userType === "business" || user.business) {
           setTimeout(() => {
-            router.push("/business");
+            const route = {
+              pathname: "/business",
+            };
+            // if (router.query && router.query.redirectUrl) {
+            //   route.query = {};
+            //   route.query.redirectUrl = router.query.redirectUrl;
+            // }
+            // console.log(route);
+            router.push(route);
           }, [10000]);
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnboardingCompleted, userType, user]);
+
+  const onEnter = () => {
+    const route = {
+      pathname: userType === "consumer" ? "/consumer" : "/business",
+    };
+    // if (router.query && router.query.redirectUrl) {
+    //   route.query = {};
+    //   route.query.redirectUrl = router.query.redirectUrl;
+    // }
+    // console.log(route);
+    router.push(route);
+  };
 
   return (
     <AuthContainer
@@ -150,14 +178,14 @@ const OnboardingContainer = () => {
                 FashionPal. You will be redirected in 10 seconds or you can
                 click the button below to enter FashionPal
               </h2>
-              <Link href={userType === "consumer" ? "/consumer" : "/business"}>
-                <Button
-                  className="mt-5"
-                  type="submit"
-                >
-                  Enter FashionPal
-                </Button>
-              </Link>
+
+              <Button
+                className="mt-5"
+                type="button"
+                onClick={() => onEnter()}
+              >
+                Enter FashionPal
+              </Button>
             </div>
           )}
         </div>

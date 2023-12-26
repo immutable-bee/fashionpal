@@ -29,13 +29,13 @@ const Modal = ({
       <div
         id="modal"
         onClick={onBackgroundClick}
-        className="fixed flex items-center justify-center top-0 left-0 right-0 z-[10000] w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+        className="fixed flex items-center justify-center top-0 left-0 right-0 z-[10000] w-full p-4 overflow-x-hidden overflow-y-auto medium-y-scrollbar md:inset-0 h-[calc(100%-1rem)] max-h-full"
       >
         <div
           style={{ maxWidth: `${width}` }}
           className="relative modal-content-custom w-full max-w-full sm:max-w-lg max-h-full"
         >
-          <div className="relative bg-white rounded-lg max-h-[90vh] overflow-y-auto shadow dark:bg-gray-700">
+          <div className="relative bg-white rounded-lg max-h-[90vh] overflow-y-auto medium-y-scrollbar shadow dark:bg-gray-700">
             <div className="flex items-start justify-between px-4 py-2 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 {title}

@@ -130,3 +130,42 @@ html::-webkit-scrollbar {
   width: 2px;
   height: 2px;
 }
+
+.medium-x-scrollbar {
+  overflow-x: auto;
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  /* background-color: var(--primary); */
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #e44a1f;
+    }
+  }
+}
+.medium-y-scrollbar {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+  /* background-color: var(--primary); */
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #e44a1f;
+    }
+  }
+}

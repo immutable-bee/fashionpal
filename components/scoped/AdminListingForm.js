@@ -9,7 +9,7 @@ import Image from "next/image";
 import moment from "moment";
 import LoadingComponent from "../utility/loading";
 
-function AdminListingForm({ onBack, onFecth }) {
+function AdminListingForm({ onBack, onFetch }) {
   const [price, setPrice] = useState(0);
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [startTime, setStartTime] = useState("");
@@ -182,7 +182,7 @@ function AdminListingForm({ onBack, onFecth }) {
       return;
     }
 
-    onFecth();
+    onFetch();
     resetAllVariables();
     setStep(3);
     setLoading(false);
