@@ -3,11 +3,8 @@ import AuthContainer from "./AuthContainer";
 import { Button, Loading, Input } from "@nextui-org/react";
 import OnboardingForm from "../OnboardingForm";
 import { useRouter } from "next/router";
-import Link from "next/link";
-// import { useUser } from "../../context/UserContext";
 
 const OnboardingContainer = () => {
-  // const { user } = useUser();
   const { user } = {};
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -71,11 +68,18 @@ const OnboardingContainer = () => {
             const route = {
               pathname: "/consumer",
             };
-            // if (router.query && router.query.redirectUrl) {
-            //   route.query = {};
-            //   route.query.redirectUrl = router.query.redirectUrl;
-            // }
-            // console.log(route);
+            if (router.query && router.query.redirectUrl) {
+              route.pathname = router.query.redirectUrl;
+            } else if (router.query && router.query.callbackUrl) {
+              const callbackUrl = router.query.callbackUrl;
+              const redirectUrlParam = callbackUrl.split("redirectUrl=")[1];
+
+              if (redirectUrlParam) {
+                // Decode the URL-encoded value
+                route.pathname = decodeURIComponent(redirectUrlParam);
+              }
+            }
+            console.log(route);
             router.push(route);
           }, [10000]);
         }
@@ -85,11 +89,18 @@ const OnboardingContainer = () => {
             const route = {
               pathname: "/business",
             };
-            // if (router.query && router.query.redirectUrl) {
-            //   route.query = {};
-            //   route.query.redirectUrl = router.query.redirectUrl;
-            // }
-            // console.log(route);
+            if (router.query && router.query.redirectUrl) {
+              route.pathname = router.query.redirectUrl;
+            } else if (router.query && router.query.callbackUrl) {
+              const callbackUrl = router.query.callbackUrl;
+              const redirectUrlParam = callbackUrl.split("redirectUrl=")[1];
+
+              if (redirectUrlParam) {
+                // Decode the URL-encoded value
+                route.pathname = decodeURIComponent(redirectUrlParam);
+              }
+            }
+            console.log(route);
             router.push(route);
           }, [10000]);
         }
@@ -102,11 +113,19 @@ const OnboardingContainer = () => {
     const route = {
       pathname: userType === "consumer" ? "/consumer" : "/business",
     };
-    // if (router.query && router.query.redirectUrl) {
-    //   route.query = {};
-    //   route.query.redirectUrl = router.query.redirectUrl;
-    // }
-    // console.log(route);
+    console.log(router);
+    if (router.query && router.query.redirectUrl) {
+      route.pathname = router.query.redirectUrl;
+    } else if (router.query && router.query.callbackUrl) {
+      const callbackUrl = router.query.callbackUrl;
+      const redirectUrlParam = callbackUrl.split("redirectUrl=")[1];
+
+      if (redirectUrlParam) {
+        // Decode the URL-encoded value
+        route.pathname = decodeURIComponent(redirectUrlParam);
+      }
+    }
+    console.log(route);
     router.push(route);
   };
 
