@@ -96,6 +96,7 @@ export const UserProvider = ({ children }) => {
         isInitialRender.current = false;
         return;
       }
+      console.log("Session", session);
 
       if (session) {
         await fetchUserData();
