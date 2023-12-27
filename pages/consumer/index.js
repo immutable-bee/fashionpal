@@ -183,7 +183,7 @@ export default function Home() {
                 <div className='w-screen overflow-hidden'>
                   <div className='sm:flex flex-wrap justify-center mt-2'>
                     <Swiper slidesPerView='auto' spaceBetween={14} navigation>
-                      {listings &&
+                      {listings.length > 0 &&
                         listings.map((row, index) => {
                           return (
                             <SwiperSlide key={index} className='!w-64'>
@@ -196,11 +196,11 @@ export default function Home() {
                                 onClick={() => triggerDetailsModal(index)}
                               >
                                 <Image
-                                  src={row.mainImage}
+                                  src={row.mainImage ? row.mainImage : ""}
                                   width={100}
                                   height={100}
                                   className='rounded !w-full !h-64 object-cover'
-                                  alt=''
+                                  alt='image not found'
                                 />
 
                                 <div className='flex items-center justify-between w-40 pr-2 mt-6 mb-3 mx-auto'>
