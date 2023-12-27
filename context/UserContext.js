@@ -91,33 +91,35 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-
-    if (!session && router.pathname !== "/") {
-      router.push("/auth");
-    }
-
-    if (session) {
-      fetchUserData();
-
-      if (user && !user.onboardingComplete) {
-        router.push("/auth/onboarding");
+    const handler = async () => {
+      if (isInitialRender.current) {
+        isInitialRender.current = false;
+        return;
       }
+      console.log("Session", session);
 
-      const role = user?.consumer
-        ? "consumer"
-        : user?.business
-        ? "business"
-        : null;
-      const allowedRoutes = ACCESS_RULES[role] || [];
+      if (session) {
+        await fetchUserData();
+        if (user && !user.onboardingComplete) {
+          router.push("/auth/onboarding");
+        }
 
-      if (role && !allowedRoutes.includes(router.pathname)) {
-        router.push(allowedRoutes[0]);
+        const role = user?.consumer
+          ? "consumer"
+          : user?.business
+          ? "business"
+          : null;
+        const allowedRoutes = ACCESS_RULES[role] || [];
+
+        if (role && !allowedRoutes.includes(router.pathname)) {
+          router.push(allowedRoutes[0]);
+        }
       }
-    }
+      if (!session && router.pathname !== "/") {
+        router.push("/auth");
+      }
+    };
+    handler();
   }, [session, user?.onboardingComplete, router.pathname]);
 
   return (
