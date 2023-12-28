@@ -131,7 +131,6 @@ html::-webkit-scrollbar {
   height: 2px;
 }
 
-
 .medium-x-scrollbar {
   overflow-x: auto;
 
@@ -169,6 +168,7 @@ html::-webkit-scrollbar {
       background-color: #e44a1f;
     }
   }
+}
 
 .switch {
   position: relative;
@@ -191,8 +191,8 @@ html::-webkit-scrollbar {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -203,16 +203,16 @@ html::-webkit-scrollbar {
   left: 4px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #2196f3;
 }
 
 input:checked + .slider:before {
@@ -228,5 +228,4 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-
 }
