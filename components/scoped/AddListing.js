@@ -4,7 +4,7 @@ import SpeedListingForm from "@/components/scoped/SpeedListingForm";
 import AdminListingForm2 from "@/components/scoped/AdminListingForm2";
 import StandardListingForm from "../scoped/StandardListingForm";
 
-function AddListing({ onBack, onFecth }) {
+function AddListing({ onBack, onFetch }) {
   const [listType, setListType] = useState("standard");
   const [islistTypeSelected, setIsListTypeSelected] = useState(false);
 
@@ -71,18 +71,27 @@ function AddListing({ onBack, onFecth }) {
       ) : (
         <>
           {listType === "admin" ? (
-            <AdminListingForm2 onBack={onBack} onFecth={onFecth} />
+            <AdminListingForm2
+              onBack={onBack}
+              onFetch={onFetch}
+            />
           ) : (
             ""
           )}
 
           {listType === "speed" ? (
-            <SpeedListingForm onBack={onBack} onFetch={onFecth} />
+            <SpeedListingForm
+              onBack={onBack}
+              onFetch={onFetch}
+            />
           ) : (
             ""
           )}
           {listType === "standard" && (
-            <StandardListingForm onBack={onBack} onFecth={onFecth} />
+            <StandardListingForm
+              onBack={onBack}
+              onFetch={onFetch}
+            />
           )}
         </>
       )}

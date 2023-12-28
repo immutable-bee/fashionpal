@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import HeaderComponent from "@/components/utility/Header";
 import ButtonComponent from "@/components/utility/Button";
 import { signOut } from "next-auth/react";
-import { QRCode } from "react-qrcode-logo";
 
 import ConsumerInfo from "@/components/consumer/profile/ConsumerInfo";
 import ThriftList from "@/components/consumer/profile/Thrifts";
@@ -50,6 +49,7 @@ const ProfileComponent = ({}) => {
               rounded
               full
               onClick={() => toggleThriftList()}
+
             >
               Thrift List
             </ButtonComponent>

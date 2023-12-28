@@ -1,9 +1,14 @@
 import Barcode from "react-barcode";
 import { QRCode } from "react-qrcode-logo";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 const PrintBarcode = ({ sku, price }) => {
   const [template, setTemplate] = useState("1");
+  const skuWithBaseURL = useMemo(() => {
+    const baseUrl = window.location.origin || ""; // Replace with the actual property name
+
+    return `${baseUrl}/scan/`;
+  }, [window]);
 
   return (
     <>
@@ -16,28 +21,31 @@ const PrintBarcode = ({ sku, price }) => {
             {template === "1" && (
               <div className="print:qr-container flex flex-col items-center">
                 <h6 className="price-text">Sku</h6>
+
                 <QRCode
-                  value={`$${sku}`}
-                  size={75}
+                  value={`${skuWithBaseURL}sku/${sku}`}
+                  size={175}
                 />
               </div>
             )}
             {template === "2" && (
               <div className="print:qr-container flex flex-col items-center">
                 <h6 className="price-text">Members Price</h6>
+
                 <QRCode
-                  value={`$${price}`}
-                  size={75}
+                  value={`${skuWithBaseURL}product/${price}`}
+                  size={175}
                 />
               </div>
             )}
             {template === "3" && (
               <div className="w-full h-full flex flex-col items-center">
                 <div className="price-text ">{`$${price}`}</div>
+
                 <div className="w-full">
                   <Barcode
-                    width={1.3}
-                    height={40}
+                    width={2}
+                    height={60}
                     value={sku}
                     fontSize={10}
                   />
@@ -47,27 +55,30 @@ const PrintBarcode = ({ sku, price }) => {
             {template === "4" && (
               <div className="print:qr-container flex flex-col items-center">
                 <h6 className="price-text">Members Price</h6>
+
                 <QRCode
-                  value={`$${price}`}
-                  size={75}
+                  value={`${skuWithBaseURL}product/${price}`}
+                  size={175}
                 />
               </div>
             )}
             {template === "5" && (
-              <div className="flex">
+              <div className="sm:flex">
                 <div className="print:qr-container flex flex-col items-center">
-                  <h6 className="w-2/3 text-center text-sm">Members Price</h6>
+                  <h6 className="sm:w-2/3 text-center text-sm">
+                    Members Price
+                  </h6>
                   <QRCode
-                    value={`$${price}`}
-                    size={75}
+                    value={`${skuWithBaseURL}product/${price}`}
+                    size={175}
                   />
                 </div>
-                <div className="ml-2 border-l-2 border-black"></div>
+                <div className="mt-2 mb-2 sm:mb-0 sm:ml-2 sm:border-l-2 border-t-2 border-black"></div>
                 <div className="flex flex-col items-center justify-center">
                   <div className="w-full mr-3 text-center">{`$${price}`}</div>
                   <Barcode
-                    width={1}
-                    height={25}
+                    width={2}
+                    height={55}
                     value={sku}
                     fontSize={10}
                   />

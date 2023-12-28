@@ -124,7 +124,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
     }
   };
   return (
-    <div className='w-full xl:w-3/4 lg:w-3/4 md:w-full sm:w-full xs:w-full bg-white '>
+  <div className='w-full xl:w-3/4 lg:w-3/4 md:w-full sm:w-full xs:w-full bg-white '>
       <div className=' flex items-center justify-center'>
         <div className='bg-white rounded shadow  p-6 m-4 w-full lg:max-xl '>
           <div class=' p-4 flex items-center'>

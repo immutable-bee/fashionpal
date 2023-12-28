@@ -12,7 +12,7 @@ import ListingItem from "@/components/utility/ListingItem";
 
 import "react-tagsinput/react-tagsinput.css";
 
-function SimpleListingForm({ onBack, onFecth }) {
+function SimpleListingForm({ onBack, onFetch }) {
   const [tagFetching, setTagFetching] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
   const [category, setCategory] = useState("");
@@ -309,7 +309,7 @@ function SimpleListingForm({ onBack, onFecth }) {
 
       await axios.all(requests);
 
-      onFecth();
+      onFetch();
       NotificationManager.success("Listing added successfully!");
     } catch (error) {
       console.error(error);

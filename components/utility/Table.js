@@ -35,7 +35,7 @@ const Table = ({
   };
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-2xl border-2 min-h-[400px] p-3">
+    <div className="relative overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-2xl border-2 min-h-[400px] p-3">
       <table className="w-full text-sm text-left text-gray-500">
         <thead className="text-xs text-gray-500 rounded-lg font-semibold bg-gray-100">
           <tr>

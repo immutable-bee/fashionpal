@@ -6,7 +6,7 @@ import PrintBarcode from "../business/PrintBarcode";
 import { NotificationManager } from "react-notifications";
 import { Checkbox } from "@nextui-org/react";
 
-const StandardListingForm = ({ onBack, onFecth }) => {
+const StandardListingForm = ({ onBack, onFetch }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
@@ -97,6 +97,7 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     const newSku = await response.json();
 
     setNewListingSku(newSku);
+    onFetch();
     setLoading(false);
     setStep(3);
   };
@@ -105,7 +106,6 @@ const StandardListingForm = ({ onBack, onFecth }) => {
     setStep(2);
   };
   const triggerToHomePage = () => {
-    onFecth();
     onBack();
   };
 

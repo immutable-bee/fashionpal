@@ -28,7 +28,7 @@ const handler = async (req, res) => {
 
       const client = new Client({
         accessToken: squareAccessToken,
-        environment: Environment.Sandbox,
+        environment: Environment.Production,
       });
 
       const listings = await prisma.listing.findMany({

@@ -6,7 +6,7 @@ import ButtonComponent from "@/components/utility/Button";
 import TagsInput from "react-tagsinput";
 
 import "react-tagsinput/react-tagsinput.css";
-function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
+function ProductDetails({ open, onClose, tags, listingId, onFetch }) {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
 
@@ -35,7 +35,7 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
         throw new Error("Failed to save tags.");
       }
       onClose();
-      onFecth();
+      onFetch();
 
       NotificationManager.success("Tag updated successfully!");
       setLoading(false);
@@ -73,7 +73,10 @@ function ProductDetails({ open, onClose, tags, listingId, onFecth }) {
             </div>
           }
         >
-          <TagsInput value={data} onChange={(e) => setData(e)} />
+          <TagsInput
+            value={data}
+            onChange={(e) => setData(e)}
+          />
         </ModalComponent>
       ) : (
         ""

@@ -92,6 +92,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
     } catch (error) {
       console.error(error);
     } finally {
+      onFetch();
       setPhotoUploading(false);
     }
   };
@@ -105,7 +106,6 @@ function EmployeeListingForm({ onBack, onFetch }) {
   };
 
   const showResults = () => {
-    onFetch();
     setStep(3);
   };
 
@@ -192,7 +192,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
         {step === 3 ? (
           <>
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-4 items-center">
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+              <div className="relative overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>

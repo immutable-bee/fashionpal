@@ -12,13 +12,6 @@ import "react-notifications/lib/notifications.css";
 function App({ Component, pageProps: { session, ...pageProps } }) {
   const router = useRouter();
 
-  useEffect(() => {
-    // If the current path is '/', redirect to '/business'
-    if (router.pathname === "/_error") {
-      router.push("/business");
-    }
-  }, [router]);
-
   // Define a computed property isBusinessPage
   const isBusinessPage = (() => {
     // Check if the current route path includes "/business"
