@@ -28,6 +28,8 @@ export default function Home() {
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loadingListings, setLoadingListings] = useState(false);
+  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(true);
+  const [autoRefreshInterval, setAutoRefreshInterval] = useState(0);
   const [listings, setListings] = useState([]);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -71,6 +73,7 @@ export default function Home() {
   useEffect(() => {
     const initialFetch = async () => {
       await fetchListings(1);
+      handleAutoRefresh(isAutoRefreshOn);
     };
     initialFetch();
   }, [category, status, size, fetchListings]);
@@ -93,6 +96,27 @@ export default function Home() {
   const triggerEditTagsModal = (index) => {
     setTagEditModal(true);
     setActiveTagIndex(index);
+  };
+
+  const setAutoRefreshOn = (isOn) => {
+    setTimeout(() => {
+      const isChecked = isOn?.target?.checked;
+      setIsAutoRefreshOn(isChecked);
+      handleAutoRefresh(isChecked);
+    }, 100);
+  };
+
+  const handleAutoRefresh = (isOn) => {
+    if (autoRefreshInterval) {
+      clearInterval(autoRefreshInterval);
+      setAutoRefreshInterval(0);
+    }
+    if (isOn) {
+      const interval = setInterval(async () => {
+        await fetchListings(1);
+      }, 5000);
+      setAutoRefreshInterval(interval);
+    }
   };
 
   const onConfirmDeleteListing = async () => {
@@ -145,9 +169,23 @@ export default function Home() {
           <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3 w-full">
             <div className="w-full">
               <div className="flex justify-between items-center">
-                <p className="text-gray-900 text-base">
-                  {pagination.total} Results found
-                </p>
+                <div className="flex items-center gap-4">
+                  <p className="text-gray-900 text-xs sm:text-lg">
+                    {pagination.total} Results found
+                  </p>
+
+                  <label className="content-start flex cursor-pointer items-center gap-2">
+                    <h3 className=" text-xs sm:text-lg">Auto Refresh</h3>
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        defaultChecked={isAutoRefreshOn}
+                        onChange={setAutoRefreshOn}
+                      />
+                      <span className="slider round"></span>
+                    </label>
+                  </label>
+                </div>
 
                 <ButtonComponent
                   onClick={() => setMode("adding")}
@@ -158,95 +196,88 @@ export default function Home() {
                 </ButtonComponent>
               </div>
 
-              <div className="w-full">
+              <div className="w-full mt-2">
                 {loadingListings ? (
-                  <div className="sm:flex justify-center pb-10">
+                  <div className="absolute w-full mt-10">
                     <div>
-                      <div className="pt-2.5 mt-10">
+                      <div className="">
                         <Loading size="xl" />
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="w-full">
-                    <div className="sm:flex flex-wrap sm:gap-3 justify-center w-full">
-                      {listings.map((row, key) => {
-                        return (
-                          <div
-                            key={key}
-                            onClick={() => triggerDetailsModal(key)}
-                          >
-                            <ListingItem
-                              mainPhoto={
-                                row?.mainImage
-                                  ? row.mainImage
-                                  : row.mainImageUrl
-                              }
-                              brandPhoto={
-                                row?.brandImage
-                                  ? row.brandImage
-                                  : row.brandImageUrl
-                              }
-                              tags={[
-                                row.status === "SALE" ? "SELL" : row.status,
-                              ]}
-                              status={row.status}
-                              clickable={true}
-                            >
-                              <button
-                                onClick={() => triggerEditTagsModal(key)}
-                                className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded hidden"
-                              >
-                                Edit Tags
-                              </button>
-                              <button
-                                onClick={() => triggerDeleteModal(key)}
-                                className="bg-primary absolute top-3 right-4 text-white px-1 py-1 text-xs mt-1 rounded"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke-width="1.5"
-                                  stroke="currentColor"
-                                  className="w-5 h-5"
-                                >
-                                  <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                                  />
-                                </svg>
-                              </button>
-                            </ListingItem>
-                          </div>
-                        );
-                      })}
-
-                      {listings.length === 0 ? (
-                        <p className="text-2xl mt-5">No Listings</p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-
-                    <div
-                      id="inventory-matches-pagination"
-                      className="flex justify-center"
-                    >
-                      {pagination &&
-                        pagination.total_pages > 1 &&
-                        !loadingListings && (
-                          <PaginationComponent
-                            total={pagination.total}
-                            current={notMatchesPage}
-                            pageSize={pagination.limit_per_page}
-                            onChange={(e) => onPaginationChange(e)}
-                          />
-                        )}
-                    </div>
-                  </div>
+                  ""
                 )}
+
+                <div className="sm:flex flex-wrap sm:gap-3 justify-center w-full">
+                  {listings.map((row, key) => {
+                    return (
+                      <div
+                        key={key}
+                        onClick={() => triggerDetailsModal(key)}
+                      >
+                        <ListingItem
+                          mainPhoto={
+                            row?.mainImage ? row.mainImage : row.mainImageUrl
+                          }
+                          brandPhoto={
+                            row?.brandImage ? row.brandImage : row.brandImageUrl
+                          }
+                          tags={[row.status === "SALE" ? "SELL" : row.status]}
+                          status={row.status}
+                          clickable={true}
+                        >
+                          <button
+                            onClick={() => triggerEditTagsModal(key)}
+                            className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded hidden"
+                          >
+                            Edit Tags
+                          </button>
+                          <button
+                            onClick={() => triggerDeleteModal(key)}
+                            className="bg-primary absolute top-3 right-4 text-white px-1 py-1 text-xs mt-1 rounded"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="w-5 h-5"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                              />
+                            </svg>
+                          </button>
+                        </ListingItem>
+                      </div>
+                    );
+                  })}
+
+                  {listings.length === 0 ? (
+                    <p className="text-2xl mt-5">No Listings</p>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div
+                  id="inventory-matches-pagination"
+                  className="flex justify-center"
+                >
+                  {pagination &&
+                    pagination.total_pages > 1 &&
+                    !loadingListings && (
+                      <PaginationComponent
+                        total={pagination.total}
+                        current={notMatchesPage}
+                        pageSize={pagination.limit_per_page}
+                        onChange={(e) => onPaginationChange(e)}
+                      />
+                    )}
+                </div>
               </div>
             </div>
           </section>
