@@ -175,7 +175,7 @@ const Profilecomponent = () => {
             </form>
 
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
-              <div className="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+              <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>

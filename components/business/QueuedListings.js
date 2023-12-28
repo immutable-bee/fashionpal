@@ -200,7 +200,7 @@ const QueuedListings = () => {
                           : "max-h-0 opacity-0"
                       }`}
                     >
-                      <div className="flex overflow-x-auto">
+                      <div>
                         <SimilarProducts
                           onSelect={onSelectSimilarProduct}
                           similarProducts={listing.relatedProducts}

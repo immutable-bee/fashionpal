@@ -63,7 +63,7 @@ const RePricer = ({ onBack }) => {
               d="M15.75 19.5L8.25 12l7.5-7.5"
             />
           </svg>
-          <div class="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto">
+          <div class="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
             <div
               class={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
                 activeTab == "overview"
@@ -173,7 +173,7 @@ const RePricer = ({ onBack }) => {
                 <option value="Last 12 months">Last 12 months</option>
               </select>
             </div>
-            <div className="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
+            <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
               <table className="w-full text-sm text-left text-gray-500">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>

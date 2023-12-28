@@ -3,11 +3,8 @@ import AuthContainer from "./AuthContainer";
 import { Button, Loading, Input } from "@nextui-org/react";
 import OnboardingForm from "../OnboardingForm";
 import { useRouter } from "next/router";
-import Link from "next/link";
-// import { useUser } from "../../context/UserContext";
 
 const OnboardingContainer = () => {
-  // const { user } = useUser();
   const { user } = {};
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -68,19 +65,69 @@ const OnboardingContainer = () => {
       if (isOnboardingCompleted || user.onboardingComplete) {
         if (userType === "consumer" || user.consumer) {
           setTimeout(() => {
-            router.push("/consumer");
+            const route = {
+              pathname: "/consumer",
+            };
+            if (router.query && router.query.redirectUrl) {
+              route.pathname = router.query.redirectUrl;
+            } else if (router.query && router.query.callbackUrl) {
+              const callbackUrl = router.query.callbackUrl;
+              const redirectUrlParam = callbackUrl.split("redirectUrl=")[1];
+
+              if (redirectUrlParam) {
+                // Decode the URL-encoded value
+                route.pathname = decodeURIComponent(redirectUrlParam);
+              }
+            }
+            console.log(route);
+            router.push(route);
           }, [10000]);
         }
 
         if (userType === "business" || user.business) {
           setTimeout(() => {
-            router.push("/business");
+            const route = {
+              pathname: "/business",
+            };
+            if (router.query && router.query.redirectUrl) {
+              route.pathname = router.query.redirectUrl;
+            } else if (router.query && router.query.callbackUrl) {
+              const callbackUrl = router.query.callbackUrl;
+              const redirectUrlParam = callbackUrl.split("redirectUrl=")[1];
+
+              if (redirectUrlParam) {
+                // Decode the URL-encoded value
+                route.pathname = decodeURIComponent(redirectUrlParam);
+              }
+            }
+            console.log(route);
+            router.push(route);
           }, [10000]);
         }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnboardingCompleted, userType, user]);
+
+  const onEnter = () => {
+    const route = {
+      pathname: userType === "consumer" ? "/consumer" : "/business",
+    };
+    console.log(router);
+    if (router.query && router.query.redirectUrl) {
+      route.pathname = router.query.redirectUrl;
+    } else if (router.query && router.query.callbackUrl) {
+      const callbackUrl = router.query.callbackUrl;
+      const redirectUrlParam = callbackUrl.split("redirectUrl=")[1];
+
+      if (redirectUrlParam) {
+        // Decode the URL-encoded value
+        route.pathname = decodeURIComponent(redirectUrlParam);
+      }
+    }
+    console.log(route);
+    router.push(route);
+  };
 
   return (
     <AuthContainer
@@ -147,11 +194,16 @@ const OnboardingContainer = () => {
                 FashionPal. You will be redirected in 10 seconds or you can
                 click the button below to enter FashionPal
               </h2>
-              <Link href={userType === "consumer" ? "/consumer" : "/business"}>
-                <Button className='mt-5' type='submit'>
-                  Enter FashionPal
-                </Button>
-              </Link>
+
+
+              <Button
+                className="mt-5"
+                type="button"
+                onClick={() => onEnter()}
+              >
+                Enter FashionPal
+              </Button>
+
             </div>
           )}
         </div>

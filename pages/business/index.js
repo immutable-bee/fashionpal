@@ -285,7 +285,7 @@ export default function Home() {
       ) : (
         <AddListing
           onBack={() => setMode("view")}
-          onFecth={() => fetchListings(1)}
+          onFetch={() => fetchListings(1)}
         />
       )}
 
@@ -318,7 +318,7 @@ export default function Home() {
         open={tagEditModal}
         listingId={listings[activeTagIndex]?.id}
         tags={listings[activeTagIndex] && listings[activeTagIndex].tags}
-        onFecth={() => fetchListings(1)}
+        onFetch={() => fetchListings(1)}
         onClose={() => setTagEditModal(false)}
       />
     </div>

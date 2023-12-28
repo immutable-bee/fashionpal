@@ -53,7 +53,7 @@ function ButtonComponent({
     <button
       id={id}
       type={type}
-      className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-sm font-normal min-w-fit
+      className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-lg font-normal min-w-fit
         ${rounded ? "rounded-full" : ""}
         ${full ? "w-full" : ""}
         ${border ? "border border-black" : ""}

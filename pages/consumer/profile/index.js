@@ -51,6 +51,7 @@ const ProfileComponent = ({}) => {
               rounded
               full
               onClick={() => toggleThriftList()}
+
             >
               Thrift List
             </ButtonComponent>
