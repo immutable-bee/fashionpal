@@ -18,6 +18,7 @@ const SignIn = ({ props }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLoginEmailSent, setIsLoginEmailSent] = useState(false);
+  const [signInError, setSignInError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -25,18 +26,27 @@ const SignIn = ({ props }) => {
 
     if (!email) return false;
 
-    signIn("email", { email, redirect: false }).then(
-      setTimeout(() => {
+    signIn("email", { email, redirect: false })
+      .then((result) => {
         setLoading(false);
-        setIsLoginEmailSent(true);
-      }, 2000)
-    );
+        if (result.error) {
+          setSignInError("Error sending sign-in email:", result.error);
+        } else {
+          setIsLoginEmailSent(true);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        setSignInError("Error sending sign-in email:", error);
+      });
   };
 
   const handle0AuthSignIn = (provider) => () => signIn(provider);
 
   const validateEmail = (value) => {
-    return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+      value
+    );
   };
 
   const helper = useMemo(() => {
@@ -72,15 +82,8 @@ const SignIn = ({ props }) => {
       >
         <div className="bg-white sm:pt-12 sm:pb-3 sm:border rounded-3xl sm:border-gray-700 min-h-screen sm:min-h-[auto] sm:block flex items-center sm:max-w-lg w-full mx-auto px-4 sm:px-12">
           <div className="w-full">
-            <div
-              id="logo-container"
-              className="flex justify-center mb-4"
-            >
-              <Image
-                src={Logo}
-                alt="Logo"
-                className="!w-56"
-              />
+            <div id="logo-container" className="flex justify-center mb-4">
+              <Image src={Logo} alt="Logo" className="!w-56" />
             </div>
 
             <div className="auth-content-container">
@@ -118,15 +121,17 @@ const SignIn = ({ props }) => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 {isLoginEmailSent ? (
-                  <h6 className="self-center mt-4">Magic Sign In Link Sent!</h6>
+                  signInError ? (
+                    <h6 className="self-center mt-4">{signInError}</h6>
+                  ) : (
+                    <h6 className="self-center mt-4">
+                      Magic Sign In Link Sent!
+                    </h6>
+                  )
                 ) : loading ? (
                   <Loading className="self-center mt-4" />
                 ) : (
-                  <Button
-                    id="login-btn"
-                    className="w-full mt-5"
-                    type="submit"
-                  >
+                  <Button id="login-btn" className="w-full mt-5" type="submit">
                     Continue with email
                   </Button>
                 )}
