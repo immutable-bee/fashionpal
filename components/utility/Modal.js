@@ -66,7 +66,7 @@ const Modal = ({
             <div className="p-6 space-y-6">{children}</div>
             {footer ? (
               <div
-                class={`${alignMap[buttonAlign]} flex items-center px-4 py-4 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600`}
+                className={`${alignMap[buttonAlign]} flex items-center px-4 py-2 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600`}
               >
                 {footer}
               </div>

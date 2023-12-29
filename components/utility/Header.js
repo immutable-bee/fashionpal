@@ -34,9 +34,9 @@ const HeaderComponent = () => {
         >
           <path
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M1 1h15M1 7h15M1 13h15"
           />
         </svg>
@@ -54,7 +54,7 @@ const HeaderComponent = () => {
       </div>
 
       <div
-        class={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${
+        className={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${
           open ? "!block" : ""
         } `}
         id="navbar-default"

@@ -16,7 +16,7 @@ const HeaderComponent = ({ open, close, mobile }) => {
 
   return (
     <div
-      class={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${
+      className={` hidden sm:static absolute right-4 left-4 top-14 z-50 md:block md:w-auto ${
         open ? "!block" : ""
       } `}
       id="navbar-default"

@@ -4,10 +4,11 @@ import CustomerFilters from "@/components/consumer/CustomerFilters";
 import Loading from "@/components/utility/loading";
 import ProductDetails from "@/components/utility/ProductDetails";
 import PaginationComponent from "@/components/utility/Pagination";
-import { Swiper, SwiperSlide } from "swiper/react";
+
 import moment from "moment";
 import Image from "next/image";
-import "swiper/css";
+
+import placeholder from "@/public/images/icon.jpg";
 
 export default function Home() {
   const [store, setStore] = useState("");
@@ -137,7 +138,7 @@ export default function Home() {
   };
 
   return (
-    <div className='min-h-screen bg-white'>
+    <div className="min-h-screen bg-white">
       <HeaderComponent />
 
       <div>
@@ -158,119 +159,122 @@ export default function Home() {
           changeChance={(e) => setChance(e)}
         />
 
-        <section className='px-2 sm:px-5 mt-6 border-t-2 border-black py-3'>
-          <div className=''>
-            <div className=''>
-              <p className='text-gray-900 text-base'>
+        <section className="px-2 sm:px-5 mt-6 border-t-2 border-black py-3">
+          <div className="">
+            <div className="">
+              <p className="text-gray-900 text-base">
                 {resultCount} Results found
               </p>
-              <p className='text-gray-900 mt-1 text-base'>
+              <p className="text-gray-900 mt-1 text-base">
                 ({resultCount} of 745) voted
               </p>
             </div>
 
-            <div className=''>
+            <div className="">
               {loadingListings || loadingSearchResults ? (
-                <div className='sm:flex justify-center pb-10'>
+                <div className="sm:flex justify-center pb-10">
                   <div>
-                    <p className='me-1'>{loadingMessage()}</p>
-                    <div className='pt-2.5'>
+                    <p className="me-1">{loadingMessage()}</p>
+                    <div className="pt-2.5">
                       <Loading />
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className='w-screen overflow-hidden'>
-                  <div className='sm:flex flex-wrap justify-center mt-2'>
-                    <Swiper slidesPerView='auto' spaceBetween={14} navigation>
+                <div className="w-full overflow-hidden">
+                  <div className=" mt-2">
+                    <div className="flex overflow-x-auto gap-3 medium-x-scrollbar">
                       {listings &&
                         listings.map((row, index) => {
                           return (
-                            <SwiperSlide key={index} className='!w-64'>
+                            <div
+                              key={index}
+                              className="flex-shrink-0 !w-80"
+                            >
                               <div
                                 style={{
                                   boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
                                 }}
-                                className='px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full '
+                                className="px-4 py-4 relative cursor-pointer hover:opacity-90 rounded-3xl mx-2 my-2 w-full "
                                 key={row.id}
                                 onClick={() => triggerDetailsModal(index)}
                               >
                                 <Image
-                                  src={row.mainImage}
+                                  src={row.mainImageUrl || placeholder}
                                   width={100}
                                   height={100}
-                                  className='rounded !w-full !h-64 object-cover'
-                                  alt=''
+                                  className="rounded !w-full !h-64 object-cover"
+                                  alt=""
                                 />
 
-                                <div className='flex items-center justify-between w-40 pr-2 mt-6 mb-3 mx-auto'>
+                                <div className="flex items-center justify-between w-40 pr-2 mt-6 mb-3 mx-auto">
                                   <button
                                     onClick={(e) => toggleLike(index, e)}
-                                    className=' cursor-pointer hover:opacity-90 w-16 h-16 rounded-full flex items-center justify-center'
+                                    className=" cursor-pointer hover:opacity-90 w-16 h-16 rounded-full flex items-center justify-center"
                                   >
                                     <svg
-                                      xmlns='http://www.w3.org/2000/svg'
-                                      class={`w-12 h-12 ${
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className={`w-12 h-12 ${
                                         row.isLiked ? "stroke-yellow-400 " : ""
                                       }`}
-                                      width='44'
-                                      height='44'
-                                      viewBox='0 0 24 24'
-                                      stroke-width='1.5'
-                                      stroke='#2c3e50'
-                                      fill='none'
-                                      stroke-linecap='round'
-                                      stroke-linejoin='round'
+                                      width="44"
+                                      height="44"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth="1.5"
+                                      stroke="#2c3e50"
+                                      fill="none"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
                                     >
                                       <path
-                                        stroke='none'
-                                        d='M0 0h24v24H0z'
-                                        fill='none'
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
                                       />
-                                      <path d='M10.363 20.405l-8.106 -13.534a1.914 1.914 0 0 1 1.636 -2.871h16.214a1.914 1.914 0 0 1 1.636 2.871l-8.106 13.534a1.914 1.914 0 0 1 -3.274 0z' />
+                                      <path d="M10.363 20.405l-8.106 -13.534a1.914 1.914 0 0 1 1.636 -2.871h16.214a1.914 1.914 0 0 1 1.636 2.871l-8.106 13.534a1.914 1.914 0 0 1 -3.274 0z" />
                                     </svg>
                                   </button>
 
                                   <button
                                     onClick={(e) => toggleUnLike(index, e)}
-                                    className=' cursor-pointer hover:opacity-90 w-16 h-16 rounded-full flex items-center justify-center'
+                                    className=" cursor-pointer hover:opacity-90 w-16 h-16 rounded-full flex items-center justify-center"
                                   >
                                     <svg
-                                      xmlns='http://www.w3.org/2000/svg'
-                                      class={`w-12 h-12 ${
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className={`w-12 h-12 ${
                                         row.isUnLiked ? "stroke-green-400 " : ""
                                       }`}
-                                      width='44'
-                                      height='44'
-                                      viewBox='0 0 24 24'
-                                      stroke-width='1.5'
-                                      stroke='#2c3e50'
-                                      fill='none'
-                                      stroke-linecap='round'
-                                      stroke-linejoin='round'
+                                      width="44"
+                                      height="44"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth="1.5"
+                                      stroke="#2c3e50"
+                                      fill="none"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
                                     >
                                       <path
-                                        stroke='none'
-                                        d='M0 0h24v24H0z'
-                                        fill='none'
+                                        stroke="none"
+                                        d="M0 0h24v24H0z"
+                                        fill="none"
                                       />
-                                      <path d='M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z' />
+                                      <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z" />
                                     </svg>
                                   </button>
-                                  <h3 className='text-gray-500 font-base absolute right-4 bottom-2'>
+                                  <h3 className="text-gray-500 font-base absolute right-4 bottom-2">
                                     {moment(row.createdAt).fromNow()}
                                   </h3>
                                 </div>
                               </div>
-                            </SwiperSlide>
+                            </div>
                           );
                         })}
-                    </Swiper>
+                    </div>
                   </div>
 
                   <div
-                    id='inventory-matches-pagination'
-                    className='flex justify-center'
+                    id="inventory-matches-pagination"
+                    className="flex justify-center"
                   >
                     {pagination &&
                       pagination.total_pages > 1 &&

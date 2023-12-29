@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import nprogress from "nprogress";
-
+import Loading from "@/components/utility/loading";
 const UserContext = createContext();
 
 export const useUser = () => useContext(UserContext);
@@ -29,6 +29,7 @@ export const UserProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const isInitialRender = useRef(true);
+  const [userDataFetched, setUserDataFetched] = useState(false);
 
   // Function to update user's username
   const updateUserUsername = (newUsername) => {
@@ -102,12 +103,18 @@ export const UserProvider = ({ children }) => {
 
   // useEffect to handle user-related logic on component mount and updates
   useEffect(() => {
+    if (router.query.authenticating) {
+      setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
+      return;
+    }
     console.log(router);
     if (router.pathname === "/scan/[type.js]/[id]") {
+      setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
       return;
     }
     // Skip logic on initial render and if on error page
     if (router.asPath !== "/" && router.pathname === "/404") {
+      setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
       return;
     }
     if (isInitialRender.current) {
@@ -116,25 +123,38 @@ export const UserProvider = ({ children }) => {
     }
 
     // If not logged in, not already on the "/auth" page, and not in the process of authentication
-    if (
-      !session &&
-      router.pathname !== "/auth" &&
-      !router.query.authenticating
-    ) {
-      // Redirect to "/auth" page with the current route's pathname and existing query parameters
+    console.log(2);
+    console.log(session);
+    console.log(router);
 
-      router.push({
+    if (!session && router.pathname !== "/auth") {
+      // Redirect to "/auth" page with the current route's pathname and existing query parameters
+      const route = {
         pathname: "/auth",
-        query: {
+      };
+      if (router.pathname !== "/") {
+        route.query = {};
+        route.query = {
           redirectUrl: router.pathname,
-        },
-      });
+        };
+      }
+      router.push(route);
+    }
+
+    if (session && router.pathname == "/") {
+      router.push("/business");
     }
 
     // If the user is logged in
     if (session) {
       // Fetch user data, including business data if applicable
-      fetchUserData();
+      // fetchUserData();
+      fetchUserData()
+        .then(() => setUserDataFetched(true))
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+          setUserDataFetched(true); // Set to true even on error to prevent infinite loading
+        });
 
       // If the user is not yet onboarded
       if (user && !user.onboardingComplete) {
@@ -172,13 +192,15 @@ export const UserProvider = ({ children }) => {
         // Redirect the user to the determined route
         router.push(route);
       }
-
+      console.log(user);
       // Determine the user role
       const role = user?.consumer
         ? "consumer"
         : user?.business
         ? "business"
         : null;
+
+      console.log(role);
       const allowedRoutes = ACCESS_RULES[role] || [];
 
       // Check if the user role is defined and the router pathname is not in allowedRoutes
@@ -202,13 +224,23 @@ export const UserProvider = ({ children }) => {
           });
         }
       }
+    } else {
+      setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
     }
   }, [session, user?.onboardingComplete, router.pathname]);
 
   // Provide the user context to the components
   return (
     <UserContext.Provider value={{ user, updateUserUsername, fetchUserData }}>
-      {children}
+      {/* Conditionally render loading component until user data is fetched */}
+      {!userDataFetched ? (
+        <div className="h-screen w-full flex justify-center items-center">
+          <Loading size="2xl" />
+        </div>
+      ) : (
+        // Render the actual content when user data is fetched
+        children
+      )}
     </UserContext.Provider>
   );
 };

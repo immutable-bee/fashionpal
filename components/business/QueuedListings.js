@@ -135,7 +135,7 @@ const QueuedListings = () => {
   }, [defaultPriceSuggestion, openListing, referencePrice]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white pb-5">
       <div className="mt-8 px-2 sm:px-4">
         {loadingQueue ? (
           <div className="sm:flex justify-center pb-10">

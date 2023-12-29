@@ -52,20 +52,20 @@ const RePricer = ({ onBack }) => {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             stroke="currentColor"
-            class="w-8 h-8  bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
+            className="w-8 h-8  bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
             onClick={() => onBack()}
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               d="M15.75 19.5L8.25 12l7.5-7.5"
             />
           </svg>
-          <div class="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
+          <div className="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
             <div
-              class={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
+              className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
                 activeTab == "overview"
                   ? "bg-primary text-white"
                   : "text-gray-900 bg-gray-100"
@@ -75,7 +75,7 @@ const RePricer = ({ onBack }) => {
               Overview
             </div>
             <div
-              class={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
+              className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
                 activeTab == "performance_comparison"
                   ? "bg-primary text-white"
                   : "text-gray-900 bg-gray-100"

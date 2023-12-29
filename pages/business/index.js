@@ -28,7 +28,7 @@ export default function Home() {
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loadingListings, setLoadingListings] = useState(false);
-  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(true);
+  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false);
   const [autoRefreshInterval, setAutoRefreshInterval] = useState(0);
   const [listings, setListings] = useState([]);
   const [pagination, setPagination] = useState({
@@ -42,8 +42,19 @@ export default function Home() {
     limit_per_page: 15,
     has_next_page: false,
   });
+
+  // Cleanup the interval when the component is unmounted
+  useEffect(() => {
+    return () => {
+      if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+      }
+    };
+  }, [autoRefreshInterval]);
+
   const fetchListings = useCallback(
     async (e) => {
+      setNotMatchesPage(e);
       setLoadingListings(true);
 
       try {
@@ -71,6 +82,7 @@ export default function Home() {
   );
 
   useEffect(() => {
+    console.log("listings page");
     const initialFetch = async () => {
       await fetchListings(1);
       handleAutoRefresh(isAutoRefreshOn);
@@ -79,7 +91,6 @@ export default function Home() {
   }, [category, status, size, fetchListings]);
 
   const onPaginationChange = (e) => {
-    setNotMatchesPage(e);
     fetchListings(e);
   };
 
@@ -206,78 +217,84 @@ export default function Home() {
                     </div>
                   </div>
                 ) : (
-                  ""
-                )}
-
-                <div className="sm:flex flex-wrap sm:gap-3 justify-center w-full">
-                  {listings.map((row, key) => {
-                    return (
-                      <div
-                        key={key}
-                        onClick={() => triggerDetailsModal(key)}
-                      >
-                        <ListingItem
-                          mainPhoto={
-                            row?.mainImage ? row.mainImage : row.mainImageUrl
-                          }
-                          brandPhoto={
-                            row?.brandImage ? row.brandImage : row.brandImageUrl
-                          }
-                          tags={[row.status === "SALE" ? "SELL" : row.status]}
-                          status={row.status}
-                          clickable={true}
-                        >
-                          <button
-                            onClick={() => triggerEditTagsModal(key)}
-                            className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded hidden"
+                  <>
+                    <div className="sm:flex flex-wrap sm:gap-3 justify-center w-full">
+                      {listings.map((row, key) => {
+                        return (
+                          <div
+                            key={key}
+                            onClick={() => triggerDetailsModal(key)}
                           >
-                            Edit Tags
-                          </button>
-                          <button
-                            onClick={() => triggerDeleteModal(key)}
-                            className="bg-primary absolute top-3 right-4 text-white px-1 py-1 text-xs mt-1 rounded"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke-width="1.5"
-                              stroke="currentColor"
-                              className="w-5 h-5"
+                            <ListingItem
+                              mainPhoto={
+                                row?.mainImage
+                                  ? row.mainImage
+                                  : row.mainImageUrl
+                              }
+                              brandPhoto={
+                                row?.brandImage
+                                  ? row.brandImage
+                                  : row.brandImageUrl
+                              }
+                              tags={[
+                                row.status === "SALE" ? "SELL" : row.status,
+                              ]}
+                              status={row.status}
+                              clickable={true}
                             >
-                              <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                              />
-                            </svg>
-                          </button>
-                        </ListingItem>
-                      </div>
-                    );
-                  })}
+                              <button
+                                onClick={() => triggerEditTagsModal(key)}
+                                className="bg-primary mr-2 text-white px-3 py-1 text-xs mt-1 rounded hidden"
+                              >
+                                Edit Tags
+                              </button>
+                              <button
+                                onClick={() => triggerDeleteModal(key)}
+                                className="bg-primary absolute top-3 right-4 text-white px-1 py-1 text-xs mt-1 rounded"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="1.5"
+                                  stroke="currentColor"
+                                  className="w-5 h-5"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                  />
+                                </svg>
+                              </button>
+                            </ListingItem>
+                          </div>
+                        );
+                      })}
 
-                  {listings.length === 0 ? (
-                    <p className="text-2xl mt-5">No Listings</p>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div
-                  id="inventory-matches-pagination"
-                  className="flex justify-center"
-                >
-                  {pagination &&
-                    pagination.total_pages > 1 &&
-                    !loadingListings && (
-                      <PaginationComponent
-                        total={pagination.total}
-                        current={notMatchesPage}
-                        pageSize={pagination.limit_per_page}
-                        onChange={(e) => onPaginationChange(e)}
-                      />
-                    )}
-                </div>
+                      {listings.length === 0 ? (
+                        <p className="text-2xl mt-5">No Listings</p>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                    <div
+                      id="inventory-matches-pagination"
+                      className="flex justify-center"
+                    >
+                      {pagination &&
+                        pagination.total_pages > 1 &&
+                        !loadingListings && (
+                          <PaginationComponent
+                            total={pagination.total}
+                            current={notMatchesPage}
+                            pageSize={pagination.limit_per_page}
+                            onChange={(e) => onPaginationChange(e)}
+                          />
+                        )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </section>
@@ -285,10 +302,9 @@ export default function Home() {
       ) : (
         <AddListing
           onBack={() => setMode("view")}
-          onFetch={() => fetchListings(1)}
+          onFetch={() => fetchListings(pagination.total_pages)}
         />
       )}
-
       <ModalComponent
         open={deleteModal}
         onClose={() => setDeleteModal(false)}
@@ -313,7 +329,6 @@ export default function Home() {
           </h4>
         </>
       </ModalComponent>
-
       <EditTagsModal
         open={tagEditModal}
         listingId={listings[activeTagIndex]?.id}

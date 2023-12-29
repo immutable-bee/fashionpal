@@ -33,7 +33,7 @@ function ListingItem({
       style={{ boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)" }}
     >
       <div
-        class={`relative h-[255px] w-full rounded-xl shadow-xl transition-all duration-500 ease-in-out ${
+        className={`relative h-[255px] w-full rounded-xl shadow-xl transition-all duration-500 ease-in-out ${
           brandPhoto
             ? "[transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]"
             : ""
@@ -73,7 +73,10 @@ function ListingItem({
             </p>
           ))}
         {isSlot && children ? (
-          <div className="mt-1.5" onClick={stopClick}>
+          <div
+            className="mt-1.5"
+            onClick={stopClick}
+          >
             {children}
           </div>
         ) : (
