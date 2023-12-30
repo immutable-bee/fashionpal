@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
 import TooltipComponent from "@/components/utility/Tooltip";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import ButtonComponent from "@/components/utility/Button";
 import { Loading, Dropdown } from "@nextui-org/react";
 import { signOut, useSession } from "next-auth/react";
 import useDateRangePicker from "../../hooks/useDateRangePicker";
 import { NotificationManager } from "react-notifications";
-
+import { useZxing } from "react-zxing";
 const Profilecomponent = () => {
   const { data: session } = useSession();
+
+  //
+  const [result, setResult] = useState("");
+  const { ref } = useZxing({
+    onDecodeResult(result) {
+      console.log(result);
+      setResult(result.getText());
+    },
+  });
+
   const { selectedRange, setSelectedRange, getRange } = useDateRangePicker();
 
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
@@ -173,6 +184,12 @@ const Profilecomponent = () => {
                 Update
               </ButtonComponent>
             </form>
+            <video ref={ref} />
+            <p>
+              <span>Last result:</span>
+              <span>{result}</span>
+            </p>
+            {/* <BarcodeScanner /> */}
 
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
               <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
