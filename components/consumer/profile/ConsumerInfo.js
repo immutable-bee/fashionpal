@@ -20,10 +20,8 @@ function ConsumerInfo({ consumerData, setConsumerData }) {
       });
 
       if (response.ok) {
-        // Handle success, e.g., display a success message
         console.log(`Updated ${fieldName} successfully`);
       } else {
-        // Handle errors, e.g., display an error message
         console.error(`Error updating ${fieldName}`);
       }
     } catch (error) {
@@ -40,7 +38,6 @@ function ConsumerInfo({ consumerData, setConsumerData }) {
       [name]: modifyValue,
     });
 
-    // Send the updated field data to the REST API immediately.
     debouncedSendFieldUpdate(name, modifyValue);
   };
 
@@ -86,7 +83,9 @@ function ConsumerInfo({ consumerData, setConsumerData }) {
               Weekly Email Notifications
             </span>
           </label>
-          <h3> Use QR Code at checkout to receive your subscriber price</h3>
+          <div className='w-full md:w-3/4 sm:w-3/4 mx-auto bg-white border-2 border-gray-300 p-4 text-center'>
+            <p>Use QR Code at checkout to receive your subscriber price</p>
+          </div>
         </div>
         <div className='flex justify-center'>
           <QRCode value={consumerData.email} size={250} />

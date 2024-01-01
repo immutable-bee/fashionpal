@@ -53,7 +53,6 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
   };
   const updateThriftListItem = async (fieldValue, id) => {
     try {
-      console.log("debounce addFieldUpdate", fieldValue, id);
       const response = await fetch("/api/consumer/profile/thriftList/update", {
         method: "PUT",
         headers: {
@@ -103,7 +102,6 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
           }),
         });
         const response = await res.json();
-        console.log(response);
         setDeleteLoading(false);
         if (res.ok) {
           setNewThrift("");
@@ -126,7 +124,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
     }
   };
   return (
-    <div className='w-3/4 bg-white '>
+  <div className='w-full xl:w-3/4 lg:w-3/4 md:w-full sm:w-full xs:w-full bg-white '>
       <div className=' flex items-center justify-center'>
         <div className='bg-white rounded shadow  p-6 m-4 w-full lg:max-xl '>
           <div class=' p-4 flex items-center'>
