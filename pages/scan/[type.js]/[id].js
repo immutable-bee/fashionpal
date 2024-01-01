@@ -159,8 +159,12 @@ function Scan() {
         <h3 className="text-xl text-center mt-3  uppercase">
           SUBSCRIBER PRICE
         </h3>
-        <div className="border-4 flex justify-center items-center w-28 h-28 mb-2 flex-shrink-0 mx-auto mt-2  py-1.5 border-green-300 rounded-full px-4  ">
-          <h3 className="text-3xl">${discountedPriceForSubscribers}</h3>
+
+        <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
+          <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
+          <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
+            <h3 className="text-3xl">${discountedPriceForSubscribers}</h3>
+          </div>
         </div>
 
         {/* {product.isSaleSubscribers && (
