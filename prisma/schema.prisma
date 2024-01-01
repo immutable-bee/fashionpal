@@ -79,8 +79,8 @@ model Consumer {
   email         String       @unique
   emailAlertsOn Boolean      @default(true)
   user          User         @relation(fields: [uid], references: [id])
-  votes         Vote[]
   ThriftList    ThriftList[]
+  votes         Vote[]
 }
 
 model Vote {
