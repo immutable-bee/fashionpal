@@ -128,7 +128,7 @@ function Scan() {
       </Modal>
 
       {product.isSaleAllUsers && (
-        <div className="bg-red-500 rounded-xl uppercase text-black text-center py-3 sm:py-4 text-2xl sm:text-3xl">
+        <div className="bg-red-600 rounded-xl uppercase text-white text-center py-3 sm:py-4 text-2xl sm:text-3xl">
           {product.discountAllUsers}% Off
         </div>
       )}
@@ -142,7 +142,7 @@ function Scan() {
           alt=""
         />
       </div>
-
+      {/* 
       <div className="py-2">
         <h3 className="text-xl text-center mt-3  uppercase">NON-SUBSCRIBER</h3>
         <div className="flex items-center justify-center gap-2">
@@ -153,7 +153,7 @@ function Scan() {
             ${discountedPrice}
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="py-2">
         <h3 className="text-xl text-center mt-3  uppercase">
@@ -163,17 +163,17 @@ function Scan() {
           ${discountedPriceForSubscribers}
         </div>
 
-        {product.isSaleSubscribers && (
+        {/* {product.isSaleSubscribers && (
           <h3 className="text-2xl sm:text-3xl text-green-400 text-center mt-6">
             {product.discountSubscribers}% Off
           </h3>
-        )}
+        )} */}
 
         <h3
-          className="text-base cursor-pointer text-blue-500 underline text-center mt-3"
+          className="text-2xl cursor-pointer text-blue-500 underline text-center mt-3"
           onClick={perksModalOpenHandler}
         >
-          perks
+          Perks
         </h3>
       </div>
 
