@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
 
-const RePricer = ({ onBack, onFetch }) => {
+const RePricer = ({ onBack }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
   const [listingType, setListingType] = useState("ALL");
@@ -40,7 +40,7 @@ const RePricer = ({ onBack, onFetch }) => {
       .then(() => {
         setIsLoading(false);
         NotificationManager.success("Rule added successfully!");
-        onFetch();
+        onBack();
       })
       .catch((error) => {
         // Handle error here

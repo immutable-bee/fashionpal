@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import TooltipComponent from "@/components/utility/Tooltip";
 import Head from "next/head";
 import ButtonComponent from "@/components/utility/Button";
-import { Loading, Dropdown } from "@nextui-org/react";
+import { Dropdown } from "@nextui-org/react";
+import Loading from "@/components/utility/loading";
+
 import { signOut, useSession } from "next-auth/react";
 import useDateRangePicker from "../../hooks/useDateRangePicker";
 import { NotificationManager } from "react-notifications";
@@ -13,6 +15,7 @@ const Profilecomponent = () => {
 
   const [isViewableForVoting, setIsViewableForVoting] = useState(true);
   const [fetchingBusinessStats, setFetchingBusinessStats] = useState(true);
+  const [fetchingUser, setFetchingUser] = useState(true);
   const [businessStats, setBusinessStats] = useState({});
   const [businessData, setBusinessData] = useState({});
 
@@ -56,6 +59,7 @@ const Profilecomponent = () => {
   };
 
   const fetchBusinessData = async () => {
+    setFetchingUser(true);
     const response = await fetch(`/api/user/fetch`, {
       method: "GET",
       headers: {
@@ -63,7 +67,7 @@ const Profilecomponent = () => {
       },
     });
     const data = await response.json();
-
+    setFetchingUser(false);
     if (response.ok) {
       setBusinessData(data.business);
     } else {
@@ -117,9 +121,12 @@ const Profilecomponent = () => {
   };
 
   useEffect(() => {
+    fetchBusinessData().then();
+  }, []);
+
+  useEffect(() => {
     const range = getRange(selectedRange);
     fetchBusinessStats(range.dateTo, range.dateFrom).then();
-    fetchBusinessData().then();
   }, [selectedRange]);
 
   return (
@@ -127,52 +134,61 @@ const Profilecomponent = () => {
       <div>
         <section className="px-5 ">
           <div className="max-w-lg mx-auto">
-            <form onSubmit={handleSubmit}>
-              <div className="py-2">
-                <label className="text-sm text-gray-700">Store name</label>
-                <input
-                  value={businessData?.businessName}
-                  name="businessName"
-                  type="text"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={handleChange}
-                />
+            {fetchingUser ? (
+              <div>
+                <div>
+                  <div className="h-[312px] flex justify-center items-center">
+                    <Loading size="xl" />
+                  </div>
+                </div>
               </div>
-              <div className="py-2">
-                <label className="text-sm text-gray-700">Email</label>
-                <input
-                  disabled={true}
-                  value={businessData?.email}
-                  name="email"
-                  type="text"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={handleChange}
-                />
-              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="py-2">
+                  <label className="text-sm text-gray-700">Store name</label>
+                  <input
+                    value={businessData?.businessName}
+                    name="businessName"
+                    type="text"
+                    className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="py-2">
+                  <label className="text-sm text-gray-700">Email</label>
+                  <input
+                    disabled={true}
+                    value={businessData?.email}
+                    name="email"
+                    type="text"
+                    className="bg-gray-100 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2"
+                    onChange={handleChange}
+                  />
+                </div>
 
-              <div className="py-2">
-                <label className="text-sm text-gray-700">
-                  Square Access Token
-                </label>
-                <input
-                  value={businessData?.squareAccessToken}
-                  name="squareAccessToken"
-                  type="password"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={handleChange}
-                />
-              </div>
-
-              <ButtonComponent
-                className="mt-3"
-                rounded
-                full
-                loading={updating}
-                type="submit"
-              >
-                Update
-              </ButtonComponent>
-            </form>
+                <div className="py-2">
+                  <label className="text-sm text-gray-700">
+                    Square Access Token
+                  </label>
+                  <input
+                    value={businessData?.squareAccessToken}
+                    name="squareAccessToken"
+                    type="password"
+                    className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                    onChange={handleChange}
+                  />
+                </div>
+                <ButtonComponent
+                  className="mt-3"
+                  rounded
+                  full
+                  loading={updating}
+                  type="submit"
+                >
+                  Update
+                </ButtonComponent>
+              </form>
+            )}
 
             <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
               <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">

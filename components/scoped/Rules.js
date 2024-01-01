@@ -1,12 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import ButtonComponent from "@/components/utility/Button";
-import Slider from "rc-slider";
 import Loading from "@/components/utility/loading";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
 
-const RePricer = ({ onBack }) => {
+const RePricer = () => {
   const [loadingListings, setLoadingListings] = useState(false);
 
   const [isEditing, setIsEditing] = useState("");
@@ -131,21 +130,6 @@ const RePricer = ({ onBack }) => {
       <div className="sm:w-96 mx-auto">
         {!isEditing ? (
           <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
-              onClick={() => onBack()}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5L8.25 12l7.5-7.5"
-              />
-            </svg>
             <div className="py-2">
               <input
                 value={searchText}

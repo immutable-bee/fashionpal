@@ -209,7 +209,7 @@ export default function Home() {
 
               <div className="w-full mt-2">
                 {loadingListings ? (
-                  <div className="absolute w-full mt-10">
+                  <div className=" w-full mt-10">
                     <div>
                       <div className="">
                         <Loading size="xl" />
