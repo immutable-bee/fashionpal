@@ -242,5 +242,5 @@ input:checked + .slider:before {
 }
 
 .animate-pulse-once {
-  animation: pulse-once 2s forwards;
+  animation: pulse-once 3s forwards;
 }
