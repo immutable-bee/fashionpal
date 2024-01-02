@@ -45,29 +45,31 @@ const Dashboard = ({ onBack }) => {
   const [selectedRevenue, setSelectedRevenues] = useState([]);
 
   return (
-    <div className="max-w-7xl mx-auto px-3 sm:px-5 pb-8 sm:pt-6 pt-0">
-      <div className=" max-w-3xl mx-auto">
-        <div className="w-full bg-white rounded-2xl shadow py-2 px-3 sm:px-6 flex justify-center mt-3">
-          <div className="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
-            <div
-              className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
-                activeTab == "overview"
-                  ? "bg-primary text-white"
-                  : "text-gray-900 bg-gray-100"
-              }`}
-              onClick={() => setActiveTab("overview")}
-            >
-              Overview
-            </div>
-            <div
-              className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
-                activeTab == "performance_comparison"
-                  ? "bg-primary text-white"
-                  : "text-gray-900 bg-gray-100"
-              }`}
-              onClick={() => setActiveTab("performance_comparison")}
-            >
-              Performance Comparison
+    <div className="max-w-7xl mx-auto  pb-8 sm:pt-6 pt-0">
+      <div className="  max-w-3xl mx-auto">
+        <div className="px-3 sm:px-5">
+          <div className="w-full   bg-white rounded-2xl shadow py-2 px-3 sm:px-6 flex justify-center mt-3">
+            <div className="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
+              <div
+                className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
+                  activeTab == "overview"
+                    ? "bg-primary text-white"
+                    : "text-gray-900 bg-gray-100"
+                }`}
+                onClick={() => setActiveTab("overview")}
+              >
+                Overview
+              </div>
+              <div
+                className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
+                  activeTab == "performance_comparison"
+                    ? "bg-primary text-white"
+                    : "text-gray-900 bg-gray-100"
+                }`}
+                onClick={() => setActiveTab("performance_comparison")}
+              >
+                Performance Comparison
+              </div>
             </div>
           </div>
 
@@ -75,7 +77,7 @@ const Dashboard = ({ onBack }) => {
         </div>
         {activeTab == "overview" ? (
           <div>
-            <div className="sm:w-96 mx-auto">
+            <div className="sm:w-96 mx-auto px-3 sm:px-5">
               <div className="py-2">
                 <label className="text-lg">Rule name</label>
                 <input
@@ -85,7 +87,7 @@ const Dashboard = ({ onBack }) => {
                 />
               </div>
               <h2 className="text-xl mt-1 text-center">Or</h2>
-              <div className="flex justify-center items-center gap-3">
+              <div className="sm:flex justify-center items-center gap-3">
                 <div className="">
                   <label className="text-lg">Category</label>
                   <select
@@ -118,32 +120,33 @@ const Dashboard = ({ onBack }) => {
                 </div>
               </div>
             </div>
-
-            <div className="max-w-fit rounded-lg border shadow pt-3 mx-auto mt-5">
-              <h3 className="text-xl text-center">
-                Items Listed and Items Sold
-              </h3>
-              <ItemLinkedSoldChart />
-            </div>
-            <div className="max-w-fit rounded-lg border shadow pt-3 mx-auto mt-5">
-              <h3 className="text-xl text-center">ALP and ASP</h3>
-              <ALPASPChart />
-            </div>
-            <div className="max-w-fit rounded-lg border shadow pt-3 mx-auto mt-5">
-              <h3 className="text-xl text-center">Donations and Accepted</h3>
-              <DonationAcceptedChart />
-            </div>
-            <div className="max-w-fit rounded-lg border shadow pt-3 mx-auto mt-5">
-              <h3 className="text-xl text-center">AVG Days Listed</h3>
-              <AVGDayListedChart />
-            </div>
-            <div className="max-w-fit rounded-lg border shadow pt-3 mx-auto mt-5">
-              <h3 className="text-xl text-center">Revenue</h3>
-              <RevenueChart />
+            <div className="px-[6px] sm:px-5">
+              <div className="sm:max-w-fit  rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+                <h3 className="text-xl text-center">
+                  Items Listed and Items Sold
+                </h3>
+                <ItemLinkedSoldChart />
+              </div>
+              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+                <h3 className="text-xl text-center">ALP and ASP</h3>
+                <ALPASPChart />
+              </div>
+              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+                <h3 className="text-xl text-center">Donations and Accepted</h3>
+                <DonationAcceptedChart />
+              </div>
+              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+                <h3 className="text-xl text-center">AVG Days Listed</h3>
+                <AVGDayListedChart />
+              </div>
+              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+                <h3 className="text-xl text-center">Revenue</h3>
+                <RevenueChart />
+              </div>
             </div>
           </div>
         ) : (
-          <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
+          <div className="px-3 sm:px-5 sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
             <div className="py-2 flex items-center justify-center w-full">
               <select
                 value={week}

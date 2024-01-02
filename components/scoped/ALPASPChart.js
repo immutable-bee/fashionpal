@@ -5,28 +5,38 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const isMobile = window.innerWidth <= 768; // Adjust the threshold for mobile screens
+    const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
     this.state = {
-      computedValue: isMobile ? window.innerWidth - 12 : 700,
+      computedValue: isMobile ? document.documentElement.clientWidth - 0 : 700,
       options: {
         chart: {
           id: "line-chart",
         },
         xaxis: {
           categories: [
-            "January",
-            "February",
-            "March",
-            "April",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
             "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              position: "top",
+            },
+          },
+        },
+        dataLabels: {
+          enabled: !isMobile, // Disable data labels on mobile
         },
         yaxis: {
           labels: {
@@ -34,9 +44,6 @@ class App extends Component {
               return "$" + value;
             },
           },
-        },
-        dataLabels: {
-          enabled: true, // Set to true to display data labels by default
         },
       },
       series: [
@@ -59,9 +66,9 @@ class App extends Component {
 
   // Event handler for window resize
   handleResize = () => {
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = document.documentElement.clientWidth <= 768;
     this.setState({
-      computedValue: isMobile ? window.innerWidth - 12 : 700,
+      computedValue: isMobile ? document.documentElement.clientWidth - 0 : 700,
     });
   };
 

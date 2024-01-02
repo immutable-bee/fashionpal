@@ -5,38 +5,48 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const isMobile = window.innerWidth <= 768; // Adjust the threshold for mobile screens
+    const isMobile = document.documentElement.clientWidth <= 614; // Adjust the threshold for mobile screens
     this.state = {
-      computedValue: isMobile ? window.innerWidth - 12 : 700,
+      computedValue: isMobile ? document.documentElement.clientWidth - 6 : 700,
       options: {
         chart: {
           id: "basic-bar",
         },
         xaxis: {
           categories: [
-            "January",
-            "February",
-            "March",
-            "April",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
             "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              position: "top",
+            },
+          },
+        },
+        dataLabels: {
+          enabled: !isMobile, // Disable data labels on mobile
         },
       },
       series: [
         {
-          name: "Items Listed",
-          data: [900, 1200, 500, 700, 900, 1200, 500, 700, 900, 1200, 500, 700],
+          name: "Listed",
+          data: [720, 960, 400, 560, 720, 960, 400, 560, 720, 960, 400, 560],
         },
         {
-          name: "Items Sold",
-          data: [800, 100, 400, 500, 800, 100, 400, 500, 800, 100, 400, 500],
+          name: "Sold",
+          data: [640, 80, 320, 400, 640, 80, 320, 400, 640, 80, 320, 400],
         },
       ],
     };
@@ -47,9 +57,9 @@ class App extends Component {
 
   // Event handler for window resize
   handleResize = () => {
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = document.documentElement.clientWidth <= 614;
     this.setState({
-      computedValue: isMobile ? window.innerWidth - 12 : 700,
+      computedValue: isMobile ? document.documentElement.clientWidth - 10 : 700,
     });
   };
 
