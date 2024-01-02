@@ -7,7 +7,7 @@ class App extends Component {
 
     const isMobile = window.innerWidth <= 768; // Adjust the threshold for mobile screens
     this.state = {
-      computedValue: isMobile ? 350 : 700,
+      computedValue: isMobile ? window.innerWidth - 12 : 700,
       options: {
         chart: {
           id: "bar-chart",
@@ -85,6 +85,21 @@ class App extends Component {
         },
       ],
     };
+    // Add event listener for window resize
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  // Event handler for window resize
+  handleResize = () => {
+    const isMobile = window.innerWidth <= 768;
+    this.setState({
+      computedValue: isMobile ? window.innerWidth - 12 : 700,
+    });
+  };
+
+  componentWillUnmount() {
+    // Remove the event listener when the component is unmounted
+    window.removeEventListener("resize", this.handleResize);
   }
 
   render() {

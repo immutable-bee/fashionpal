@@ -85,35 +85,37 @@ const Dashboard = ({ onBack }) => {
                 />
               </div>
               <h2 className="text-xl mt-1 text-center">Or</h2>
-              <div className="pb-2">
-                <label className="text-lg">Category</label>
-                <select
-                  value={category}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setCategory(e.target.value)}
-                >
-                  <option value="">All</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Footwear">Footwear</option>
-                  <option value="Hats">Hats</option>
-                  <option value="Bags">Bags</option>
-                </select>
-              </div>
-              <div className="py-2">
-                <label className="text-lg">Week</label>
-                <select
-                  value={week}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setWeek(e.target.value)}
-                >
-                  <option value="This Week">This Week</option>
-                  <option value="Last Week">Last Week</option>
-                  <option value="This Month">This Month</option>
-                  <option value="Last Month">Last Month</option>
-                  <option value="Last Three Months">Last Three Months</option>
-                  <option value="Last six months">Last six months</option>
-                  <option value="Last 12 months">Last 12 months</option>
-                </select>
+              <div className="flex justify-center items-center gap-3">
+                <div className="">
+                  <label className="text-lg">Category</label>
+                  <select
+                    value={category}
+                    className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    <option value="">All</option>
+                    <option value="Clothing">Clothing</option>
+                    <option value="Footwear">Footwear</option>
+                    <option value="Hats">Hats</option>
+                    <option value="Bags">Bags</option>
+                  </select>
+                </div>
+                <div className="">
+                  <label className="text-lg">Week</label>
+                  <select
+                    value={week}
+                    className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                    onChange={(e) => setWeek(e.target.value)}
+                  >
+                    <option value="This Week">This Week</option>
+                    <option value="Last Week">Last Week</option>
+                    <option value="This Month">This Month</option>
+                    <option value="Last Month">Last Month</option>
+                    <option value="Last Three Months">Last Three Months</option>
+                    <option value="Last six months">Last six months</option>
+                    <option value="Last 12 months">Last 12 months</option>
+                  </select>
+                </div>
               </div>
             </div>
 
