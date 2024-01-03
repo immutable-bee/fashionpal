@@ -13,13 +13,13 @@ const handler = async (req, res) => {
   const business = await prisma.business.findUnique({
     where: { email: session.user.email },
   });
-  const { category, listingType } = req.query;
+  const { categoryId, listingType } = req.query;
 
   if (business) {
     try {
       let condition = { ownerId: business.id };
-      if (category) {
-        condition = { ...condition, category };
+      if (categoryId) {
+        condition = { ...condition, categoryId };
       }
       if (listingType) {
         condition = { ...condition, listingType };
