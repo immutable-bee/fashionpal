@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
 import { NotificationManager } from "react-notifications";
@@ -24,10 +24,10 @@ export default function Home() {
   const [activeDeleteIndex, setActiveDeleteIndex] = useState(null);
   const [tagEditModal, setTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
-  const [notMatchesPage, setNotMatchesPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [loadingListings, setLoadingListings] = useState(false);
+  const [loadingListings, setLoadingListings] = useState(true);
   const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false);
   const [autoRefreshInterval, setAutoRefreshInterval] = useState(0);
   const [listings, setListings] = useState([]);
@@ -43,6 +43,12 @@ export default function Home() {
     has_next_page: false,
   });
 
+  const currentPageRef = useRef(pagination.current_page);
+
+  useEffect(() => {
+    currentPageRef.current = pagination.current_page;
+  }, [pagination.current_page]);
+
   // Cleanup the interval when the component is unmounted
   useEffect(() => {
     return () => {
@@ -54,8 +60,7 @@ export default function Home() {
 
   const fetchListings = useCallback(
     async (e) => {
-      setNotMatchesPage(e);
-      setLoadingListings(true);
+      console.log("e", e);
 
       try {
         const res = await fetch(
@@ -65,7 +70,9 @@ export default function Home() {
         if (res.status === 200) {
           const data = await res.json();
           setListings(data.results);
+          console.log(data.pagination);
           setPagination(data.pagination);
+          console.log(pagination);
         } else {
           const errorMessage = await res.text();
           console.error(
@@ -118,13 +125,16 @@ export default function Home() {
   };
 
   const handleAutoRefresh = (isOn) => {
+    console.log(pagination);
+
     if (autoRefreshInterval) {
       clearInterval(autoRefreshInterval);
       setAutoRefreshInterval(0);
     }
     if (isOn) {
       const interval = setInterval(async () => {
-        await fetchListings(1);
+        console.log(currentPageRef.current);
+        await fetchListings(currentPageRef.current);
       }, 5000);
       setAutoRefreshInterval(interval);
     }
@@ -142,7 +152,7 @@ export default function Home() {
       setDeleteLoading(false);
       if (res.status === 200) {
         setDeleteModal(false);
-        fetchListings();
+        fetchListings(pagination.current_page);
         NotificationManager.success(errorData.message);
       } else {
         // Handle error
@@ -162,7 +172,7 @@ export default function Home() {
           imageOnly={true}
           onClose={() => setDetailsModal(false)}
           data={listings[activeIndex]}
-          fetchListings={() => fetchListings(1)}
+          fetchListings={() => fetchListings(pagination.current_page)}
         />
       ) : (
         ""
@@ -278,6 +288,7 @@ export default function Home() {
                         ""
                       )}
                     </div>
+
                     <div
                       id="inventory-matches-pagination"
                       className="flex justify-center"
@@ -287,7 +298,7 @@ export default function Home() {
                         !loadingListings && (
                           <PaginationComponent
                             total={pagination.total}
-                            current={notMatchesPage}
+                            current={pagination.current_page}
                             pageSize={pagination.limit_per_page}
                             onChange={(e) => onPaginationChange(e)}
                           />
@@ -333,7 +344,7 @@ export default function Home() {
         open={tagEditModal}
         listingId={listings[activeTagIndex]?.id}
         tags={listings[activeTagIndex] && listings[activeTagIndex].tags}
-        onFetch={() => fetchListings(1)}
+        onFetch={() => fetchListings(pagination.current_page)}
         onClose={() => setTagEditModal(false)}
       />
     </div>

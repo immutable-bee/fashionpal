@@ -121,7 +121,7 @@ const HeaderComponent = () => {
           </svg>
         </div>
         {isDropdown && (
-          <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-60 sm:w-64  py-2 absolute top-12 right-0 z-50">
+          <div class="bg-white border border-gray-200 rounded-2xl shadow-lg w-60 sm:w-64  py-2 absolute top-14 right-3 z-50">
             <div class="sm:hidden block text-grayone border-b text-base px-4 py-2 rounded-lg w-full">
               <span class="ml-2 flex items-center text-gray-600 hover:opacity-80 break-words">
                 <svg
