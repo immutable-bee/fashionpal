@@ -45,216 +45,213 @@ const Dashboard = ({ onBack }) => {
   const [selectedRevenue, setSelectedRevenues] = useState([]);
 
   return (
-    <div className="max-w-7xl mx-auto  pb-8 sm:pt-6 pt-0">
-      <div className="  max-w-3xl mx-auto">
-        <div className="px-3 sm:px-5">
-          <div className="w-full   bg-white rounded-2xl shadow py-2 px-3 sm:px-6 flex justify-center mt-3">
-            <div className="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
-              <div
-                className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
-                  activeTab == "overview"
-                    ? "bg-primary text-white"
-                    : "text-gray-900 bg-gray-100"
-                }`}
-                onClick={() => setActiveTab("overview")}
-              >
-                Overview
-              </div>
-              <div
-                className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
-                  activeTab == "performance_comparison"
-                    ? "bg-primary text-white"
-                    : "text-gray-900 bg-gray-100"
-                }`}
-                onClick={() => setActiveTab("performance_comparison")}
-              >
-                Performance Comparison
-              </div>
+    <div className="  pb-8 sm:pt-6 pt-0">
+      <div className="px-3 sm:px-5">
+        <div className="w-full   bg-white rounded-2xl shadow py-2 px-3 sm:px-6 flex justify-center mt-3">
+          <div className="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">
+            <div
+              className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
+                activeTab == "overview"
+                  ? "bg-primary text-white"
+                  : "text-gray-900 bg-gray-100"
+              }`}
+              onClick={() => setActiveTab("overview")}
+            >
+              Overview
+            </div>
+            <div
+              className={`px-3 sm:px-5 rounded-lg py-1.5 sm:y-2 flex items-center justify-center shadow-sm cursor-pointer text-xs ${
+                activeTab == "performance_comparison"
+                  ? "bg-primary text-white"
+                  : "text-gray-900 bg-gray-100"
+              }`}
+              onClick={() => setActiveTab("performance_comparison")}
+            >
+              Performance Comparison
             </div>
           </div>
-
-          <div className="w-12 hidden sm:block"></div>
         </div>
-        {activeTab == "overview" ? (
-          <div>
-            <div className="sm:w-96 mx-auto px-3 sm:px-5">
-              <div className="py-2">
-                <label className="text-lg">Rule name</label>
-                <input
-                  value={ruleName}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setRuleName(e.target.value)}
-                />
-              </div>
-              <h2 className="text-xl mt-1 text-center">Or</h2>
-              <div className="sm:flex justify-center items-center gap-3">
-                <div className="">
-                  <label className="text-lg">Category</label>
-                  <select
-                    value={category}
-                    className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                    onChange={(e) => setCategory(e.target.value)}
-                  >
-                    <option value="">All</option>
-                    <option value="Clothing">Clothing</option>
-                    <option value="Footwear">Footwear</option>
-                    <option value="Hats">Hats</option>
-                    <option value="Bags">Bags</option>
-                  </select>
-                </div>
-                <div className="">
-                  <label className="text-lg">Week</label>
-                  <select
-                    value={week}
-                    className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                    onChange={(e) => setWeek(e.target.value)}
-                  >
-                    <option value="This Week">This Week</option>
-                    <option value="Last Week">Last Week</option>
-                    <option value="This Month">This Month</option>
-                    <option value="Last Month">Last Month</option>
-                    <option value="Last Three Months">Last Three Months</option>
-                    <option value="Last six months">Last six months</option>
-                    <option value="Last 12 months">Last 12 months</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div className="px-[6px] sm:px-5">
-              <div className="sm:max-w-fit  rounded-lg border shadow pt-3 sm:mx-auto mt-5">
-                <h3 className="text-xl text-center">
-                  Items Listed and Items Sold
-                </h3>
-                <ItemLinkedSoldChart />
-              </div>
-              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
-                <h3 className="text-xl text-center">ALP and ASP</h3>
-                <ALPASPChart />
-              </div>
-              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
-                <h3 className="text-xl text-center">Donations and Accepted</h3>
-                <DonationAcceptedChart />
-              </div>
-              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
-                <h3 className="text-xl text-center">AVG Days Listed</h3>
-                <AVGDayListedChart />
-              </div>
-              <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
-                <h3 className="text-xl text-center">Revenue</h3>
-                <RevenueChart />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="px-3 sm:px-5 sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
-            <div className="py-2 flex items-center justify-center w-full">
-              <select
-                value={week}
-                className=" mt-1 rounded-xl w-56 px-3 py-2 border border-gray-600"
-                onChange={(e) => setWeek(e.target.value)}
-              >
-                <option value="This Week">This Week</option>
-                <option value="Last Week">Last Week</option>
-                <option value="This Month">This Month</option>
-                <option value="Last Month">Last Month</option>
-                <option value="Last Three Months">Last Three Months</option>
-                <option value="Last six months">Last six months</option>
-                <option value="Last 12 months">Last 12 months</option>
-              </select>
-            </div>
-            <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
-              <table className="w-full text-sm text-left text-gray-500">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-1 py-3"
-                    >
-                      {
-                        <Dropdown>
-                          <Dropdown.Button light>
-                            {selectedCategories.join(", ") ||
-                              "Select Categories"}
-                          </Dropdown.Button>
-                          <Dropdown.Menu
-                            selectionMode="multiple"
-                            disallowEmptySelection
-                            selectedKeys={selectedCategories}
-                            onSelectionChange={(keys) => {
-                              const selectedKeys = Array.from(keys);
-                              setSelectedCategories(selectedKeys);
-                            }}
-                          >
-                            <Dropdown.Item key={"All"}>All</Dropdown.Item>
-                            <Dropdown.Item key={"Clothing"}>
-                              Clothing
-                            </Dropdown.Item>
-                            <Dropdown.Item key={"Footwear"}>
-                              Footwear
-                            </Dropdown.Item>
-                            <Dropdown.Item key={"Hats"}>Hats</Dropdown.Item>
-                            <Dropdown.Item key={"Bags"}>Bags</Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      }
-                    </th>
 
-                    <th
-                      scope="col"
-                      className="px-1 py-3"
-                    >
-                      {
-                        <Dropdown>
-                          <Dropdown.Button light>
-                            {selectedRevenue.join(", ") || "Select Types"}
-                          </Dropdown.Button>
-                          <Dropdown.Menu
-                            selectionMode="multiple"
-                            disallowEmptySelection
-                            selectedKeys={selectedRevenue}
-                            onSelectionChange={(keys) => {
-                              const selectedKeys = Array.from(keys);
-                              setSelectedRevenues(selectedKeys);
-                            }}
-                          >
-                            <Dropdown.Item key={"Listed"}>Listed</Dropdown.Item>
-                            <Dropdown.Item key={"Sold"}>Sold</Dropdown.Item>
-                            <Dropdown.Item key={"ALP"}>ALP</Dropdown.Item>
-                            <Dropdown.Item key={"ASP"}>ASP</Dropdown.Item>
-                            <Dropdown.Item key={"ADL"}>
-                              ADL (Average Days Listed)
-                            </Dropdown.Item>
-                            <Dropdown.Item key={"Donations Accepted"}>
-                              Donations Accepted
-                            </Dropdown.Item>
-                            <Dropdown.Item key={"Donations Rejected"}>
-                              Donations Rejected
-                            </Dropdown.Item>
-                          </Dropdown.Menu>
-                        </Dropdown>
-                      }
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {performanceComparison.map((row, key) => (
-                    <tr
-                      key={key}
-                      className="bg-white dark:bg-gray-800"
-                    >
-                      <td className="text-black px-6 py-4">
-                        {row.category ? row.category : "--"}
-                      </td>
-
-                      <td className="px-6 py-4">{row.revenue}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
+        <div className="w-12 hidden sm:block"></div>
       </div>
+      {activeTab == "overview" ? (
+        <div>
+          <div className="sm:w-96 mx-auto px-3 sm:px-5">
+            <div className="py-2">
+              <label className="text-lg">Rule name</label>
+              <input
+                value={ruleName}
+                className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                onChange={(e) => setRuleName(e.target.value)}
+              />
+            </div>
+            <h2 className="text-xl mt-1 text-center">Or</h2>
+            <div className="sm:flex justify-center items-center gap-3">
+              <div className="">
+                <label className="text-lg">Category</label>
+                <select
+                  value={category}
+                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  <option value="">All</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Footwear">Footwear</option>
+                  <option value="Hats">Hats</option>
+                  <option value="Bags">Bags</option>
+                </select>
+              </div>
+              <div className="">
+                <label className="text-lg">Week</label>
+                <select
+                  value={week}
+                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                  onChange={(e) => setWeek(e.target.value)}
+                >
+                  <option value="This Week">This Week</option>
+                  <option value="Last Week">Last Week</option>
+                  <option value="This Month">This Month</option>
+                  <option value="Last Month">Last Month</option>
+                  <option value="Last Three Months">Last Three Months</option>
+                  <option value="Last six months">Last six months</option>
+                  <option value="Last 12 months">Last 12 months</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="px-[6px] sm:px-5">
+            <div className="sm:max-w-fit  rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+              <h3 className="text-xl text-center">
+                Items Listed and Items Sold
+              </h3>
+              <ItemLinkedSoldChart />
+            </div>
+            <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+              <h3 className="text-xl text-center">ALP and ASP</h3>
+              <ALPASPChart />
+            </div>
+            <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+              <h3 className="text-xl text-center">Donations and Accepted</h3>
+              <DonationAcceptedChart />
+            </div>
+            <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+              <h3 className="text-xl text-center">AVG Days Listed</h3>
+              <AVGDayListedChart />
+            </div>
+            <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
+              <h3 className="text-xl text-center">Revenue</h3>
+              <RevenueChart />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="px-3 sm:px-5 sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
+          <div className="py-2 flex items-center justify-center w-full">
+            <select
+              value={week}
+              className=" mt-1 rounded-xl w-56 px-3 py-2 border border-gray-600"
+              onChange={(e) => setWeek(e.target.value)}
+            >
+              <option value="This Week">This Week</option>
+              <option value="Last Week">Last Week</option>
+              <option value="This Month">This Month</option>
+              <option value="Last Month">Last Month</option>
+              <option value="Last Three Months">Last Three Months</option>
+              <option value="Last six months">Last six months</option>
+              <option value="Last 12 months">Last 12 months</option>
+            </select>
+          </div>
+          <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
+            <table className="w-full text-sm text-left text-gray-500">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                <tr>
+                  <th
+                    scope="col"
+                    className="px-1 py-3"
+                  >
+                    {
+                      <Dropdown>
+                        <Dropdown.Button light>
+                          {selectedCategories.join(", ") || "Select Categories"}
+                        </Dropdown.Button>
+                        <Dropdown.Menu
+                          selectionMode="multiple"
+                          disallowEmptySelection
+                          selectedKeys={selectedCategories}
+                          onSelectionChange={(keys) => {
+                            const selectedKeys = Array.from(keys);
+                            setSelectedCategories(selectedKeys);
+                          }}
+                        >
+                          <Dropdown.Item key={"All"}>All</Dropdown.Item>
+                          <Dropdown.Item key={"Clothing"}>
+                            Clothing
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"Footwear"}>
+                            Footwear
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"Hats"}>Hats</Dropdown.Item>
+                          <Dropdown.Item key={"Bags"}>Bags</Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    }
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-1 py-3"
+                  >
+                    {
+                      <Dropdown>
+                        <Dropdown.Button light>
+                          {selectedRevenue.join(", ") || "Select Types"}
+                        </Dropdown.Button>
+                        <Dropdown.Menu
+                          selectionMode="multiple"
+                          disallowEmptySelection
+                          selectedKeys={selectedRevenue}
+                          onSelectionChange={(keys) => {
+                            const selectedKeys = Array.from(keys);
+                            setSelectedRevenues(selectedKeys);
+                          }}
+                        >
+                          <Dropdown.Item key={"Listed"}>Listed</Dropdown.Item>
+                          <Dropdown.Item key={"Sold"}>Sold</Dropdown.Item>
+                          <Dropdown.Item key={"ALP"}>ALP</Dropdown.Item>
+                          <Dropdown.Item key={"ASP"}>ASP</Dropdown.Item>
+                          <Dropdown.Item key={"ADL"}>
+                            ADL (Average Days Listed)
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"Donations Accepted"}>
+                            Donations Accepted
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"Donations Rejected"}>
+                            Donations Rejected
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    }
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {performanceComparison.map((row, key) => (
+                  <tr
+                    key={key}
+                    className="bg-white dark:bg-gray-800"
+                  >
+                    <td className="text-black px-6 py-4">
+                      {row.category ? row.category : "--"}
+                    </td>
+
+                    <td className="px-6 py-4">{row.revenue}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -7,7 +7,11 @@ class App extends Component {
 
     const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
     this.state = {
-      computedValue: isMobile ? document.documentElement.clientWidth - 0 : 700,
+      computedValue: isMobile
+        ? document.documentElement.clientWidth - 6
+        : document.documentElement.clientWidth * 0.75 > 1500
+        ? 1500
+        : document.documentElement.clientWidth * 0.75,
       options: {
         chart: {
           id: "line-chart",
@@ -36,7 +40,7 @@ class App extends Component {
           },
         },
         dataLabels: {
-          enabled: !isMobile, // Disable data labels on mobile
+          enabled: false,
         },
         yaxis: {
           labels: {
@@ -68,7 +72,11 @@ class App extends Component {
   handleResize = () => {
     const isMobile = document.documentElement.clientWidth <= 768;
     this.setState({
-      computedValue: isMobile ? document.documentElement.clientWidth - 0 : 700,
+      computedValue: isMobile
+        ? document.documentElement.clientWidth - 6
+        : document.documentElement.clientWidth * 0.75 > 1500
+        ? 1500
+        : document.documentElement.clientWidth * 0.75,
     });
   };
 

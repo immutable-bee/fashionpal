@@ -5,9 +5,13 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const isMobile = document.documentElement.clientWidth <= 614; // Adjust the threshold for mobile screens
+    const isMobile = document.documentElement.clientWidth <= 614;
     this.state = {
-      computedValue: isMobile ? document.documentElement.clientWidth - 6 : 700,
+      computedValue: isMobile
+        ? document.documentElement.clientWidth - 6
+        : document.documentElement.clientWidth * 0.75 > 1500
+        ? 1500
+        : document.documentElement.clientWidth * 0.75,
       options: {
         chart: {
           id: "basic-bar",
@@ -36,7 +40,7 @@ class App extends Component {
           },
         },
         dataLabels: {
-          enabled: !isMobile, // Disable data labels on mobile
+          enabled: false,
         },
       },
       series: [

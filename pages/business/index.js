@@ -98,6 +98,7 @@ export default function Home() {
   }, [category, status, size, fetchListings]);
 
   const onPaginationChange = (e) => {
+    setLoadingListings(true);
     fetchListings(e);
   };
 
