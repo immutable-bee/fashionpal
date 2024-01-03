@@ -1,6 +1,11 @@
 import { prisma } from "../../../db/prismaDB";
 import { verifySignature } from "@upstash/qstash/dist/nextjs";
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 function calculateDiscount(listing, pricingRule) {
   console.table(pricingRule);
   // Logic to calculate the difference in weeks
