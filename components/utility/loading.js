@@ -15,11 +15,19 @@ const LoadingComponent = ({
     md: "h-10 w-10",
     lg: "h-12 w-12",
     xl: "h-14 w-14",
+    "2xl": "h-16 w-16",
+    "3xl": "h-20 w-20",
+    "4xl": "h-24 w-24",
+    "5xl": "h-28 w-28",
+    "6xl": "h-32 w-32",
+    "7xl": "h-36 w-36",
+    "8xl": "h-40 w-40",
+    "9xl": "h-44 w-44",
   };
 
   const PrimarySpin = () => (
     <svg
-      class={`${sizeMap[size]} ${
+      className={`${sizeMap[size]} ${
         noMargin ? "my-0" : "my-5"
       } mx-auto animate-spin`}
       viewBox="3 3 18 18"
@@ -37,7 +45,7 @@ const LoadingComponent = ({
 
   const SecondarySpin = () => (
     <svg
-      class={`${sizeMap[size]} ${
+      className={`${sizeMap[size]} ${
         noMargin ? "my-0" : "my-5"
       } mx-auto animate-spin`}
       style={{ stroke: color }}
@@ -48,72 +56,72 @@ const LoadingComponent = ({
         y1="32"
         x2="128"
         y2="64"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="195.9"
         y1="60.1"
         x2="173.3"
         y2="82.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="224"
         y1="128"
         x2="192"
         y2="128"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="195.9"
         y1="195.9"
         x2="173.3"
         y2="173.3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="128"
         y1="224"
         x2="128"
         y2="192"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="60.1"
         y1="195.9"
         x2="82.7"
         y2="173.3"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="32"
         y1="128"
         x2="64"
         y2="128"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
       <line
         x1="60.1"
         y1="60.1"
         x2="82.7"
         y2="82.7"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="24"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="24"
       ></line>
     </svg>
   );

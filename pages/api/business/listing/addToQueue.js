@@ -82,7 +82,6 @@ const handler = async (req, res) => {
       res.status(200).json("Listing added to queue");
     }
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -95,7 +94,6 @@ async function uploadFiles(files, uploadPathPrefix) {
     const fileData = fs.readFileSync(filePath);
     const uploadPath = `${uploadPathPrefix}/${key}`;
 
-    console.log(">>>>> ", uploadPath);
     const { data, error } = await supabase.storage
       .from("queued-listings")
       .upload(uploadPath, fileData, {

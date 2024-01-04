@@ -4,10 +4,11 @@ import CustomerFilters from "@/components/consumer/CustomerFilters";
 import Loading from "@/components/utility/loading";
 import ProductDetails from "@/components/utility/ProductDetails";
 import PaginationComponent from "@/components/utility/Pagination";
-import { Swiper, SwiperSlide } from "swiper/react";
+
 import moment from "moment";
 import Image from "next/image";
-import "swiper/css";
+
+import placeholder from "@/public/images/icon.jpg";
 
 export default function Home() {
   const [store, setStore] = useState("");
@@ -180,19 +181,15 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-                <div className="w-screen overflow-hidden">
-                  <div className="sm:flex flex-wrap justify-center mt-2">
-                    <Swiper
-                      slidesPerView="auto"
-                      spaceBetween={14}
-                      navigation
-                    >
-                      {listings.length > 0 &&
+                <div className="w-full overflow-hidden">
+                  <div className=" mt-2">
+                    <div className="flex overflow-x-auto gap-3 medium-x-scrollbar">
+                      {listings &&
                         listings.map((row, index) => {
                           return (
-                            <SwiperSlide
+                            <div
                               key={index}
-                              className="!w-64"
+                              className="flex-shrink-0 !w-80"
                             >
                               <div
                                 style={{
@@ -203,11 +200,12 @@ export default function Home() {
                                 onClick={() => triggerDetailsModal(index)}
                               >
                                 <Image
-                                  src={row.mainImage ? row.mainImage : ""}
+                                  src={row.mainImageUrl || placeholder}
                                   width={100}
                                   height={100}
                                   className="rounded !w-full !h-64 object-cover"
                                   alt="image not found"
+
                                 />
 
                                 <div className="flex items-center justify-between w-40 pr-2 mt-6 mb-3 mx-auto">
@@ -217,17 +215,20 @@ export default function Home() {
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
+
                                       class={`w-12 h-12 ${
+
                                         row.isLiked ? "stroke-yellow-400 " : ""
                                       }`}
                                       width="44"
                                       height="44"
                                       viewBox="0 0 24 24"
-                                      stroke-width="1.5"
+                                      strokeWidth="1.5"
                                       stroke="#2c3e50"
                                       fill="none"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+
                                     >
                                       <path
                                         stroke="none"
@@ -244,17 +245,21 @@ export default function Home() {
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
+
                                       class={`w-12 h-12 ${
+
                                         row.isUnLiked ? "stroke-green-400 " : ""
                                       }`}
                                       width="44"
                                       height="44"
                                       viewBox="0 0 24 24"
-                                      stroke-width="1.5"
+
+                                      strokeWidth="1.5"
                                       stroke="#2c3e50"
                                       fill="none"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+
                                     >
                                       <path
                                         stroke="none"
@@ -269,10 +274,10 @@ export default function Home() {
                                   </h3>
                                 </div>
                               </div>
-                            </SwiperSlide>
+                            </div>
                           );
                         })}
-                    </Swiper>
+                    </div>
                   </div>
 
                   <div

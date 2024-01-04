@@ -30,9 +30,9 @@ function ButtonComponent({
   };
 
   const paddingMap = {
-    normal: "py-2 px-5",
-    no: "p-0",
-    small: "py-1.5 px-3",
+    normal: "!py-1.5 !px-6",
+    no: "!p-0",
+    small: "!py-1.5 !px-3",
   };
   const loadingMap = {
     normal: "h-4 w-4",
@@ -67,10 +67,10 @@ function ButtonComponent({
     >
       {loading ? (
         <div
-          class={`${colorMap[color]} rounded-full w-full absolute z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center`}
+          className={`${colorMap[color]} rounded-full w-full absolute z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center`}
         >
           <svg
-            class={`${loadingMap[padding]} animate-spin`}
+            className={`${loadingMap[padding]} animate-spin`}
             viewBox="3 3 18 18"
           >
             <path

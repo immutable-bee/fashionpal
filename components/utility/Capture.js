@@ -14,7 +14,6 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
     navigator.mediaDevices
       .getUserMedia({ video: { facingMode: "environment" } })
       .catch((error) => {
-        console.log(error);
         setFacingMode("user");
       });
   }, []);

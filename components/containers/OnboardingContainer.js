@@ -79,7 +79,7 @@ const OnboardingContainer = () => {
                 route.pathname = decodeURIComponent(redirectUrlParam);
               }
             }
-            console.log(route);
+
             router.push(route);
           }, [10000]);
         }
@@ -100,7 +100,7 @@ const OnboardingContainer = () => {
                 route.pathname = decodeURIComponent(redirectUrlParam);
               }
             }
-            console.log(route);
+
             router.push(route);
           }, [10000]);
         }
@@ -113,7 +113,7 @@ const OnboardingContainer = () => {
     const route = {
       pathname: userType === "consumer" ? "/consumer" : "/business",
     };
-    console.log(router);
+
     if (router.query && router.query.redirectUrl) {
       route.pathname = router.query.redirectUrl;
     } else if (router.query && router.query.callbackUrl) {
@@ -125,37 +125,37 @@ const OnboardingContainer = () => {
         route.pathname = decodeURIComponent(redirectUrlParam);
       }
     }
-    console.log(route);
+
     router.push(route);
   };
 
   return (
     <AuthContainer
       content={
-        <div className='auth-content-container pb-8'>
-          <h2 className='pb-2 text-2xl font-medium text-center border-b border-black border-dashed'>
+        <div className="auth-content-container pb-8">
+          <h2 className="pb-2 text-2xl font-medium text-center border-b border-black border-dashed">
             Onboarding Form
           </h2>
 
           {loading ? (
-            <div className='mt-5 py-10 flex justify-center'>
-              <Loading size='xl' />
+            <div className="mt-5 py-10 flex justify-center">
+              <Loading size="xl" />
             </div>
           ) : !userType ? (
             <>
-              <h2 className='pt-5 text-lg font-medium text-center'>
+              <h2 className="pt-5 text-lg font-medium text-center">
                 To get started please verify your account type.
               </h2>
-              <div className='flex flex-col items-center'>
+              <div className="flex flex-col items-center">
                 <button
                   onClick={handleBusinessOnboard}
-                  className=' text-white w-4/5 py-5 my-10 border border-black bg-blbBlue rounded'
+                  className=" text-white w-4/5 py-5 my-10 border border-black bg-blbBlue rounded"
                 >
                   Business
                 </button>
                 <button
                   onClick={handleConsumerOnboard}
-                  className='text-white w-4/5 py-5 my-5 border border-black bg-biblioGreen rounded'
+                  className="text-white w-4/5 py-5 my-5 border border-black bg-biblioGreen rounded"
                 >
                   Consumer
                 </button>
@@ -163,21 +163,24 @@ const OnboardingContainer = () => {
             </>
           ) : userType === "consumer" && !isOnboardingCompleted ? (
             <div>
-              <h2 className='pt-5 text-lg font-medium text-center'>
+              <h2 className="pt-5 text-lg font-medium text-center">
                 Please enter a username below.
               </h2>
               <form
-                className='flex flex-col items-center mt-6'
+                className="flex flex-col items-center mt-6"
                 onSubmit={handleSubmit}
               >
                 <Input
                   required={true}
                   onChange={handleChange}
-                  className='onboard-fields my-2'
-                  placeholder='Username'
-                  name='username'
+                  className="onboard-fields my-2"
+                  placeholder="Username"
+                  name="username"
                 />
-                <Button className='mt-5' type='submit'>
+                <Button
+                  className="mt-5"
+                  type="submit"
+                >
                   Submit
                 </Button>
               </form>
@@ -188,13 +191,12 @@ const OnboardingContainer = () => {
               isCompleteHandler={isCompleteHandler}
             />
           ) : (
-            <div className='flex flex-col items-center'>
-              <h2 className='pt-5 text-lg font-medium text-center'>
+            <div className="flex flex-col items-center">
+              <h2 className="pt-5 text-lg font-medium text-center">
                 Your account has been confirmed! You can now start using
                 FashionPal. You will be redirected in 10 seconds or you can
                 click the button below to enter FashionPal
               </h2>
-
 
               <Button
                 className="mt-5"
@@ -203,7 +205,6 @@ const OnboardingContainer = () => {
               >
                 Enter FashionPal
               </Button>
-
             </div>
           )}
         </div>

@@ -5,29 +5,43 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const isMobile = window.innerWidth <= 768; // Adjust the threshold for mobile screens
+    const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
 
     this.state = {
-      computedValue: isMobile ? 350 : 700,
+      computedValue: isMobile
+        ? document.documentElement.clientWidth - 6
+        : document.documentElement.clientWidth * 0.75 > 1500
+        ? 1500
+        : document.documentElement.clientWidth * 0.75,
       options: {
         chart: {
           id: "line-chart-donations",
         },
         xaxis: {
           categories: [
-            "January",
-            "February",
-            "March",
-            "April",
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
             "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
           ],
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              position: "top",
+            },
+          },
+        },
+        dataLabels: {
+          enabled: false,
         },
       },
       series: [
@@ -55,6 +69,25 @@ class App extends Component {
         },
       ],
     };
+    // Add event listener for window resize
+    window.addEventListener("resize", this.handleResize);
+  }
+
+  // Event handler for window resize
+  handleResize = () => {
+    const isMobile = document.documentElement.clientWidth <= 768;
+    this.setState({
+      computedValue: isMobile
+        ? document.documentElement.clientWidth - 6
+        : document.documentElement.clientWidth * 0.75 > 1500
+        ? 1500
+        : document.documentElement.clientWidth * 0.75,
+    });
+  };
+
+  componentWillUnmount() {
+    // Remove the event listener when the component is unmounted
+    window.removeEventListener("resize", this.handleResize);
   }
 
   render() {

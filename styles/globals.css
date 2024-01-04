@@ -118,7 +118,7 @@ body {
 }
 
 html {
-  overflowy: auto;
+  overflow: auto !important;
 }
 
 html::-webkit-scrollbar-thumb {
@@ -228,4 +228,19 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* CSS styles */
+@keyframes pulse-once {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-pulse-once {
+  animation: pulse-once 3s forwards;
 }

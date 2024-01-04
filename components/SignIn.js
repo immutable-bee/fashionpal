@@ -18,35 +18,38 @@ const SignIn = ({ props }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLoginEmailSent, setIsLoginEmailSent] = useState(false);
-  const [signInError, setSignInError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    if (!email) return false;
+    if (!email) {
+      setLoading(false);
+      return false;
+    }
 
-    signIn("email", { email, redirect: false })
-      .then((result) => {
-        setLoading(false);
-        if (result.error) {
-          setSignInError("Error sending sign-in email:", result.error);
-        } else {
-          setIsLoginEmailSent(true);
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        setSignInError("Error sending sign-in email:", error);
-      });
+    try {
+      await signIn("email", { email, redirect: false });
+
+      setLoading(false);
+      setIsLoginEmailSent(true);
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      setLoading(false);
+    }
   };
 
-  const handle0AuthSignIn = (provider) => () => signIn(provider);
+  const handle0AuthSignIn = (provider) => async () => {
+    try {
+      await signIn(provider);
+    } catch (error) {
+      // Handle the error if needed
+      console.error("Error during OAuth sign-in:", error);
+    }
+  };
 
   const validateEmail = (value) => {
-    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
-      value
-    );
+    return value.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/);
   };
 
   const helper = useMemo(() => {
@@ -82,8 +85,15 @@ const SignIn = ({ props }) => {
       >
         <div className="bg-white sm:pt-12 sm:pb-3 sm:border rounded-3xl sm:border-gray-700 min-h-screen sm:min-h-[auto] sm:block flex items-center sm:max-w-lg w-full mx-auto px-4 sm:px-12">
           <div className="w-full">
-            <div id="logo-container" className="flex justify-center mb-4">
-              <Image src={Logo} alt="Logo" className="!w-56" />
+            <div
+              id="logo-container"
+              className="flex justify-center mb-4"
+            >
+              <Image
+                src={Logo}
+                alt="Logo"
+                className="!w-56"
+              />
             </div>
 
             <div className="auth-content-container">
@@ -121,21 +131,49 @@ const SignIn = ({ props }) => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 {isLoginEmailSent ? (
-                  signInError ? (
-                    <h6 className="self-center mt-4">{signInError}</h6>
-                  ) : (
-                    <h6 className="self-center mt-4">
-                      Magic Sign In Link Sent!
-                    </h6>
-                  )
+                  <div className="bg-green-200 rounded-lg mt-5 py-3 px-2 flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6 flex-shrink-0 text-gray-600"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"
+                      />
+                    </svg>
+
+                    <div>
+                      <h6 className="text-gray-700">
+                        Magic Sign In link sent! Check your{" "}
+                        <a
+                          className="underline text-primary"
+                          href="https://mail.google.com/"
+                          target="_blank"
+                        >
+                          email
+                        </a>
+                      </h6>
+                    </div>
+                  </div>
                 ) : loading ? (
                   <Loading className="self-center mt-4" />
                 ) : (
-                  <Button id="login-btn" className="w-full mt-5" type="submit">
+                  <Button
+                    id="login-btn"
+                    disabled={!email || helper.color === "error"}
+                    className="w-full mt-5"
+                    type="submit"
+                  >
                     Continue with email
                   </Button>
                 )}
               </form>
+
               <div className="relative py-4">
                 <div
                   className="absolute inset-0 flex items-center"
@@ -156,7 +194,7 @@ const SignIn = ({ props }) => {
                 <Button
                   size={""}
                   light
-                  className="social-provider-btn rounded-full !w-fill"
+                  className="social-provider-btn rounded-full !w-fill "
                   onClick={handle0AuthSignIn(providers[0].name)}
                   icon={
                     <Image

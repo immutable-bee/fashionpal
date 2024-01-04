@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
 
-const RePricer = ({ onBack, onFetch }) => {
+const RePricer = ({ onBack }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
   const [listingType, setListingType] = useState("ALL");
@@ -40,7 +40,7 @@ const RePricer = ({ onBack, onFetch }) => {
       .then(() => {
         setIsLoading(false);
         NotificationManager.success("Rule added successfully!");
-        onFetch();
+        onBack();
       })
       .catch((error) => {
         // Handle error here
@@ -49,44 +49,6 @@ const RePricer = ({ onBack, onFetch }) => {
       });
   };
 
-  // const pushListing = async (status) => {
-  //   if (!price) {
-  //     NotificationManager.error("price is required!");
-  //     return;
-  //   }
-  //   console.log("Client Status: ", status);
-  //   setUploadFailed(false);
-  //   setLoading(true);
-
-  //   const formData = new FormData();
-  //   const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
-  //   formData.append("mainImage", mainFile);
-  //   if (brandImage) {
-  //     const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
-  //     formData.append("brandImage", brandFile);
-  //   }
-  //   formData.append("price", price);
-  //   formData.append("category", category);
-  //   formData.append("status", status);
-
-  //   const response = await fetch("/api/business/listing/standard/add", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   if (!response.ok) {
-  //     setUploadFailed(true);
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   const newSku = await response.json();
-
-  //   setNewListingSku(newSku);
-  //   setLoading(false);
-  //   setStep(3);
-  // };
-
   return (
     <div>
       <div className="sm:w-96 mx-auto">
@@ -94,14 +56,14 @@ const RePricer = ({ onBack, onFetch }) => {
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          stroke-width="1.5"
+          strokeWidth="1.5"
           stroke="currentColor"
-          class="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
+          className="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
           onClick={() => onBack()}
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             d="M15.75 19.5L8.25 12l7.5-7.5"
           />
         </svg>

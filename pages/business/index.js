@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
 import { NotificationManager } from "react-notifications";
@@ -27,11 +27,10 @@ export default function Home() {
   const [activeDeleteIndex, setActiveDeleteIndex] = useState(null);
   const [tagEditModal, setTagEditModal] = useState(false);
   const [activeTagIndex, setActiveTagIndex] = useState(0);
-  const [notMatchesPage, setNotMatchesPage] = useState(1);
   const [detailsModal, setDetailsModal] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [loadingListings, setLoadingListings] = useState(false);
-  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(true);
+  const [loadingListings, setLoadingListings] = useState(true);
+  const [isAutoRefreshOn, setIsAutoRefreshOn] = useState(false);
   const [autoRefreshInterval, setAutoRefreshInterval] = useState(0);
   const [listings, setListings] = useState([]);
   const [pagination, setPagination] = useState({
@@ -45,10 +44,24 @@ export default function Home() {
     limit_per_page: 15,
     has_next_page: false,
   });
+
+  const currentPageRef = useRef(pagination.current_page);
+
+  useEffect(() => {
+    currentPageRef.current = pagination.current_page;
+  }, [pagination.current_page]);
+
+  // Cleanup the interval when the component is unmounted
+  useEffect(() => {
+    return () => {
+      if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+      }
+    };
+  }, [autoRefreshInterval]);
+
   const fetchListings = useCallback(
     async (e) => {
-      setLoadingListings(true);
-
       try {
         const res = await fetch(
           `/api/common/fetch-listings?isBusiness=${true}&limit=15&page=${e}&searchText=${searchText}&apparel=${category}&status=${status}&size=${size}`
@@ -57,6 +70,7 @@ export default function Home() {
         if (res.status === 200) {
           const data = await res.json();
           setListings(data.results);
+
           setPagination(data.pagination);
         } else {
           const errorMessage = await res.text();
@@ -82,7 +96,7 @@ export default function Home() {
   }, [category, status, size, fetchListings]);
 
   const onPaginationChange = (e) => {
-    setNotMatchesPage(e);
+    setLoadingListings(true);
     fetchListings(e);
   };
 
@@ -116,7 +130,7 @@ export default function Home() {
     }
     if (isOn) {
       const interval = setInterval(async () => {
-        await fetchListings(1);
+        await fetchListings(currentPageRef.current);
       }, 5000);
       setAutoRefreshInterval(interval);
     }
@@ -134,7 +148,7 @@ export default function Home() {
       setDeleteLoading(false);
       if (res.status === 200) {
         setDeleteModal(false);
-        fetchListings();
+        fetchListings(pagination.current_page);
         NotificationManager.success(errorData.message);
       } else {
         // Handle error
@@ -160,7 +174,7 @@ export default function Home() {
           imageOnly={true}
           onClose={() => setDetailsModal(false)}
           data={listings[activeIndex]}
-          fetchListings={() => fetchListings(1)}
+          fetchListings={() => fetchListings(pagination.current_page)}
         />
       ) : (
         ""
@@ -207,7 +221,7 @@ export default function Home() {
 
               <div className="w-full mt-2">
                 {loadingListings ? (
-                  <div className="absolute w-full mt-10">
+                  <div className=" w-full mt-10">
                     <div>
                       <div className="">
                         <Loading size="xl" />
@@ -225,7 +239,6 @@ export default function Home() {
                         key={key}
                         onClick={() => triggerDetailsModal(key)}
                       >
-                        {console.log(row)}
                         <ListingItem
                           mainPhoto={
                             row?.mainImage ? row.mainImage : row.mainImageUrl
@@ -285,7 +298,7 @@ export default function Home() {
                     !loadingListings && (
                       <PaginationComponent
                         total={pagination.total}
-                        current={notMatchesPage}
+                        current={pagination.current_page}
                         pageSize={pagination.limit_per_page}
                         onChange={(e) => onPaginationChange(e)}
                       />
@@ -298,10 +311,9 @@ export default function Home() {
       ) : (
         <AddListing
           onBack={() => setMode("view")}
-          onFetch={() => fetchListings(1)}
+          onFetch={() => fetchListings(pagination.total_pages)}
         />
       )}
-
       <ModalComponent
         open={deleteModal}
         onClose={() => setDeleteModal(false)}
@@ -326,12 +338,11 @@ export default function Home() {
           </h4>
         </>
       </ModalComponent>
-
       <EditTagsModal
         open={tagEditModal}
         listingId={listings[activeTagIndex]?.id}
         tags={listings[activeTagIndex] && listings[activeTagIndex].tags}
-        onFetch={() => fetchListings(1)}
+        onFetch={() => fetchListings(pagination.current_page)}
         onClose={() => setTagEditModal(false)}
       />
       <ModalComponent

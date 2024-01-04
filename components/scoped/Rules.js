@@ -1,12 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import ButtonComponent from "@/components/utility/Button";
-import Slider from "rc-slider";
 import Loading from "@/components/utility/loading";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
 
-const RePricer = ({ onBack }) => {
+const RePricer = () => {
   const [loadingListings, setLoadingListings] = useState(false);
 
   const [isEditing, setIsEditing] = useState("");
@@ -40,7 +39,7 @@ const RePricer = ({ onBack }) => {
 
       if (res.status === 200) {
         const data = await res.json();
-        console.log(data);
+
         setRules(data);
       } else {
         const errorMessage = await res.text();
@@ -101,14 +100,12 @@ const RePricer = ({ onBack }) => {
     axios
       .put("/api/pricing-rules/update", data)
       .then(() => {
-        console.log("then");
         setIsLoading(false);
         setIsEditing(false);
         NotificationManager.success("Rule added successfully!");
         fetchListings();
       })
       .catch((error) => {
-        console.log("error");
         setIsLoading(false);
 
         if (
@@ -131,21 +128,6 @@ const RePricer = ({ onBack }) => {
       <div className="sm:w-96 mx-auto">
         {!isEditing ? (
           <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
-              onClick={() => onBack()}
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 19.5L8.25 12l7.5-7.5"
-              />
-            </svg>
             <div className="py-2">
               <input
                 value={searchText}
@@ -195,29 +177,35 @@ const RePricer = ({ onBack }) => {
               ) : (
                 <div>
                   <h3 className="text-xl font-medium mt-3">Rules</h3>
-                  {rules.map((rule, key) => (
-                    <div
-                      className="bg-white flex justify-between items-center rounded-xl shadow border my-2 py-2 px-3"
-                      key={key}
-                    >
-                      <h3>{rule.name}</h3>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="w-4 h-4 cursor-pointer hover:text-gray-700"
-                        onClick={() => onEditRule(rule)}
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                        />
-                      </svg>
+                  {rules && rules.length !== 0 ? (
+                    <div>
+                      {rules.map((rule, key) => (
+                        <div
+                          className="bg-white flex justify-between items-center rounded-xl shadow border my-2 py-2 px-3"
+                          key={key}
+                        >
+                          <h3>{rule.name}</h3>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className="w-4 h-4 cursor-pointer hover:text-gray-700"
+                            onClick={() => onEditRule(rule)}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                            />
+                          </svg>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    <h3 className="text-center mt-2 text-xl">No rules</h3>
+                  )}
                 </div>
               )}
             </div>
@@ -228,14 +216,14 @@ const RePricer = ({ onBack }) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
-              class="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
+              className="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
               onClick={() => setIsEditing(false)}
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M15.75 19.5L8.25 12l7.5-7.5"
               />
             </svg>

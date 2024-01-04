@@ -31,7 +31,7 @@ const handler = async (req, res) => {
     });
 
     const response = await client.catalogApi.listCatalog(undefined, "item");
-    console.log(response.result);
+
     res
       .status(200)
       .json(
@@ -42,7 +42,6 @@ const handler = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };

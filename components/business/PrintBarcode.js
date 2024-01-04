@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 
 const PrintBarcode = ({ sku, price }) => {
   const [template, setTemplate] = useState("1");
-  console.log(sku, price);
+
   const skuWithBaseURL = useMemo(() => {
     const baseUrl = window.location.origin || ""; // Replace with the actual property name
 

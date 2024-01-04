@@ -17,7 +17,7 @@ const PerksModalContent = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
               fill="currentColor"
-              class="w-6 h-6"
+              className="w-6 h-6"
             >
               <path
                 fill-rule="evenodd"
@@ -32,7 +32,7 @@ const PerksModalContent = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
               fill="currentColor"
-              class="w-6 h-6"
+              className="w-6 h-6"
             >
               <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
               <path
@@ -49,7 +49,7 @@ const PerksModalContent = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
               fill="currentColor"
-              class="w-6 h-6"
+              className="w-6 h-6"
             >
               <path d="M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z" />
               <path d="M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z" />
@@ -128,7 +128,7 @@ function Scan() {
       </Modal>
 
       {product.isSaleAllUsers && (
-        <div className="bg-red-500 rounded-xl uppercase text-black text-center py-3 sm:py-4 text-2xl sm:text-3xl">
+        <div className="bg-red-600 rounded-xl uppercase text-white text-center py-3 sm:py-4 text-2xl sm:text-3xl">
           {product.discountAllUsers}% Off
         </div>
       )}
@@ -144,36 +144,22 @@ function Scan() {
       </div>
 
       <div className="py-2">
-        <h3 className="text-xl text-center mt-3  uppercase">NON-SUBSCRIBER</h3>
-        <div className="flex items-center justify-center gap-2">
-          <div className="border-2 mt-2 !line-through max-w-fit py-1.5 border-yellow-500 rounded-2xl px-4 content-center text-2xl">
-            ${product.price.toFixed(2)}
-          </div>
-          <div className="border-2 mt-2 max-w-fit py-1.5 border-yellow-500 rounded-2xl px-4 content-center text-2xl">
-            ${discountedPrice}
-          </div>
-        </div>
-      </div>
-
-      <div className="py-2">
         <h3 className="text-xl text-center mt-3  uppercase">
           SUBSCRIBER PRICE
         </h3>
-        <div className="border-2 mx-auto mt-2 max-w-fit py-1.5 border-yellow-500 rounded-2xl px-4 content-center text-2xl">
-          ${discountedPriceForSubscribers}
+
+        <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
+          <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
+          <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
+            <h3 className="text-3xl">${discountedPriceForSubscribers}</h3>
+          </div>
         </div>
 
-        {product.isSaleSubscribers && (
-          <h3 className="text-2xl sm:text-3xl text-green-400 text-center mt-6">
-            {product.discountSubscribers}% Off
-          </h3>
-        )}
-
         <h3
-          className="text-base cursor-pointer text-blue-500 underline text-center mt-3"
+          className="text-2xl cursor-pointer text-blue-500 underline text-center mt-3"
           onClick={perksModalOpenHandler}
         >
-          perks
+          Perks
         </h3>
       </div>
 
