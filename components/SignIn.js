@@ -18,7 +18,9 @@ const SignIn = ({ props }) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [isLoginEmailSent, setIsLoginEmailSent] = useState(false);
+
   // const [loginEmailSentToEmail, setLoginEmailSentToEmail] = useState("");
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ const SignIn = ({ props }) => {
       setLoading(false);
       return false;
     }
+
 
     try {
       await signIn("email", { email, redirect: false });
@@ -40,6 +43,7 @@ const SignIn = ({ props }) => {
       console.error("Error during sign-in:", error);
       setLoading(false);
     }
+
   };
 
   const handle0AuthSignIn = (provider) => async () => {
@@ -52,7 +56,9 @@ const SignIn = ({ props }) => {
   };
 
   const validateEmail = (value) => {
+
     return value.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/);
+
   };
 
   const helper = useMemo(() => {
@@ -101,15 +107,8 @@ const SignIn = ({ props }) => {
       >
         <div className="bg-white sm:pt-12 sm:pb-3 sm:border rounded-3xl sm:border-gray-700 min-h-screen sm:min-h-[auto] sm:block flex items-center sm:max-w-lg w-full mx-auto px-4 sm:px-12">
           <div className="w-full">
-            <div
-              id="logo-container"
-              className="flex justify-center mb-4"
-            >
-              <Image
-                src={Logo}
-                alt="Logo"
-                className="!w-56"
-              />
+            <div id="logo-container" className="flex justify-center mb-4">
+              <Image src={Logo} alt="Logo" className="!w-56" />
             </div>
 
             <div className="auth-content-container">
@@ -147,6 +146,7 @@ const SignIn = ({ props }) => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
                 {isLoginEmailSent ? (
+
                   <div className="bg-green-200 rounded-lg mt-5 py-3 px-2 flex items-center gap-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -195,6 +195,7 @@ const SignIn = ({ props }) => {
                     className="w-full mt-5"
                     type="submit"
                   >
+
                     Continue with email
                   </Button>
                 )}

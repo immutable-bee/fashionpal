@@ -31,7 +31,6 @@ export const UserProvider = ({ children }) => {
   const isInitialRender = useRef(true);
   const [userDataFetched, setUserDataFetched] = useState(false);
 
-  // Function to update user's username
   const updateUserUsername = (newUsername) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -42,7 +41,6 @@ export const UserProvider = ({ children }) => {
     }));
   };
 
-  // Function to fetch user data from the server
   const fetchUserData = async () => {
     if (!session) return;
 
@@ -58,7 +56,6 @@ export const UserProvider = ({ children }) => {
       });
 
       if (!res.ok) {
-        console.error("Error fetching user data");
         return;
       }
 
@@ -73,36 +70,29 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // Function to fetch business data for a business user
   const fetchBusinessData = async () => {
-    try {
-      const res = await fetch("/api/business/getData", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(session.user.email),
-      });
+    const res = await fetch("/api/business/getData", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(session.user.email),
+    });
 
-      if (!res.ok) {
-        console.error("Error fetching business data");
-        return;
-      }
-
-      // Do something with the business data if needed
-      // const data = await res.json();
-
-      // Update the user state if necessary
-      setUser((prevUser) => ({
-        ...prevUser,
-      }));
-    } catch (error) {
-      console.error("Error fetching business data:", error);
+    if (!res.ok) {
+      return;
     }
+
+    // Do something with the business data if needed
+    // const data = await res.json();
+
+    setUser((prevUser) => ({
+      ...prevUser,
+    }));
   };
 
-  // useEffect to handle user-related logic on component mount and updates
   useEffect(() => {
+
     if (router.query.authenticating) {
       setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
       return;
@@ -156,38 +146,13 @@ export const UserProvider = ({ children }) => {
           setUserDataFetched(true); // Set to true even on error to prevent infinite loading
         });
 
-      // If the user is not yet onboarded
-      if (user && !user.onboardingComplete) {
-        if (router.pathname === "/auth/onboarding") {
-          return;
-        }
-        // Define allowed routes based on the user role
-        const allowedRoutes = ACCESS_RULES.business || [];
 
-        // Define the route object for redirection
-        const route = {
-          pathname: "/auth/onboarding",
-        };
-
-        // Determine the proper redirect URL for onboarding
-        if (
-          router.query &&
-          router.query.redirectUrl &&
-          router.query.redirectUrl !== "/auth/onboarding" &&
-          allowedRoutes.find((route) => router.query.redirectUrl === route)
-        ) {
-          // If conditions are met, set the redirectUrl in the route's query parameters
-          route.query = {};
-          route.query.redirectUrl = router.query.redirectUrl;
-        } else if (
-          // If no valid redirectUrl in query parameters, check if the current route is allowed
-          router.asPath !== "/auth/onboarding" &&
-          allowedRoutes.find((route) => router.asPath === route)
-        ) {
-          // If the current route is allowed, set it as the redirectUrl
-          route.query = {};
-          route.query.redirectUrl = router.pathname;
+      if (session) {
+        await fetchUserData();
+        if (user && !user.onboardingComplete) {
+          router.push("/auth/onboarding");
         }
+
 
         // Redirect the user to the determined route
         router.push(route);
@@ -227,9 +192,9 @@ export const UserProvider = ({ children }) => {
     } else {
       setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
     }
+
   }, [session, user?.onboardingComplete, router.pathname]);
 
-  // Provide the user context to the components
   return (
     <UserContext.Provider value={{ user, updateUserUsername, fetchUserData }}>
       {/* Conditionally render loading component until user data is fetched */}

@@ -15,6 +15,7 @@ const handler = async (req, res) => {
       },
       include: {
         business: true,
+        consumer: true,
       },
     });
 

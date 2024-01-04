@@ -9,6 +9,9 @@ function ListingItem({
   children = "",
   clickable = false,
   isSlot = true,
+  Barcode,
+  price,
+  printSKU,
 }) {
   const stopClick = (event) => {
     event.stopPropagation();
@@ -39,30 +42,30 @@ function ListingItem({
             : ""
         }`}
       >
-        <div className="absolute inset-0">
+        <div className='absolute inset-0'>
           <Image
             src={mainPhoto || placeholder}
             width={100}
             height={100}
-            className="rounded-xl !w-full !h-64 object-cover"
-            alt=""
+            className='rounded-xl !w-full !h-64 object-cover'
+            alt=''
           />
         </div>
         {brandPhoto ? (
-          <div className="absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+          <div className='absolute inset-0 h-full w-full rounded-xl text-center text-slate-200 [transform:rotateY(180deg)] [backface-visibility:hidden]'>
             <Image
               src={brandPhoto}
               width={100}
               height={100}
-              className="rounded-xl !w-full !h-64 object-cover"
-              alt=""
+              className='rounded-xl !w-full !h-64 object-cover'
+              alt=''
             />
           </div>
         ) : (
           ""
         )}
       </div>
-      <div className="mt-4">
+      <div className='mt-4 flex flex-wrap items-center justify-center gap-3'>
         {tags.length !== 0 &&
           tags.slice(0, 3).map((tag, tagIndex) => (
             <p
@@ -77,11 +80,18 @@ function ListingItem({
             className="mt-1.5"
             onClick={stopClick}
           >
+
             {children}
           </div>
         ) : (
           ""
         )}
+        <button
+          onClick={(e) => printSKU(e, Barcode, price)}
+          className={`hover:bg-green-500 hover:text-white duration-250 min-w-[10px] ease-in-out leading-5 rounded-sm px-2 text-base py-1  border-2 border-green-500`}
+        >
+          Print
+        </button>
       </div>
     </div>
   );

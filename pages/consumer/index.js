@@ -108,13 +108,13 @@ export default function Home() {
 
   const onSave = async (row) => {
     try {
-      const res = await fetch(`/api/edit-listing`, {
+      const res = await fetch(`/api/consumer/updateLikes`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: row.id,
+          listingId: row.id,
           isLiked: row.isLiked,
           isUnLiked: row.isUnLiked,
         }),
@@ -181,6 +181,7 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
+
                 <div className="w-full overflow-hidden">
                   <div className=" mt-2">
                     <div className="flex overflow-x-auto gap-3 medium-x-scrollbar">
@@ -191,6 +192,7 @@ export default function Home() {
                               key={index}
                               className="flex-shrink-0 !w-80"
                             >
+
                               <div
                                 style={{
                                   boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
@@ -204,7 +206,8 @@ export default function Home() {
                                   width={100}
                                   height={100}
                                   className="rounded !w-full !h-64 object-cover"
-                                  alt=""
+                                  alt="image not found"
+
                                 />
 
                                 <div className="flex items-center justify-between w-40 pr-2 mt-6 mb-3 mx-auto">
@@ -214,7 +217,9 @@ export default function Home() {
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
-                                      className={`w-12 h-12 ${
+
+                                      class={`w-12 h-12 ${
+
                                         row.isLiked ? "stroke-yellow-400 " : ""
                                       }`}
                                       width="44"
@@ -225,6 +230,7 @@ export default function Home() {
                                       fill="none"
                                       strokeLinecap="round"
                                       strokeLinejoin="round"
+
                                     >
                                       <path
                                         stroke="none"
@@ -241,17 +247,21 @@ export default function Home() {
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
-                                      className={`w-12 h-12 ${
+
+                                      class={`w-12 h-12 ${
+
                                         row.isUnLiked ? "stroke-green-400 " : ""
                                       }`}
                                       width="44"
                                       height="44"
                                       viewBox="0 0 24 24"
+
                                       strokeWidth="1.5"
                                       stroke="#2c3e50"
                                       fill="none"
                                       strokeLinecap="round"
                                       strokeLinejoin="round"
+
                                     >
                                       <path
                                         stroke="none"
