@@ -349,7 +349,7 @@ export default function Home() {
         open={printModal}
         onClose={() => setPrintModal(false)}
         title="Print SKU"
-        width="70%"
+        width="600px"
       >
         <>
           <PrintBarcode

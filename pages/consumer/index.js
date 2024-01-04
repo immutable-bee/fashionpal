@@ -50,7 +50,7 @@ export default function Home() {
 
       try {
         const res = await fetch(
-          `/api/common/fetch-listings?limit=15&page=${e}&store=${store}&chance=${chance}`
+          `/api/common/fetch-listings?limit=15&page=${e}&apparel=${store}&chance=${chance}`
         );
 
         if (res.status === 200) {
@@ -181,7 +181,6 @@ export default function Home() {
                   </div>
                 </div>
               ) : (
-
                 <div className="w-full overflow-hidden">
                   <div className=" mt-2">
                     <div className="flex overflow-x-auto gap-3 medium-x-scrollbar">
@@ -192,7 +191,6 @@ export default function Home() {
                               key={index}
                               className="flex-shrink-0 !w-80"
                             >
-
                               <div
                                 style={{
                                   boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",

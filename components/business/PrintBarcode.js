@@ -13,8 +13,21 @@ const PrintBarcode = ({ sku, price }) => {
 
   return (
     <>
-      <div className="flex flex-col items-center container mx-auto p-4">
-        <div className="border-[5px] border-gray-700 rounded-3xl px-8 py-4">
+      <div className="flex flex-col min-h-[460px] items-center container mx-auto ">
+        <label className=" text-lg">Template</label>
+        <select
+          value={template}
+          className="mt-1  rounded-xl px-3 py-2 border border-gray-600"
+          onChange={(e) => setTemplate(e.target.value)}
+        >
+          <option value={"1"}>QR Code (Sku) 1x1</option>
+          <option value={"2"}>QR Code (Product Link) 1x1</option>
+          <option value={"3"}>Barcode (Sku) 1.25 x 2.25</option>
+          <option value={"4"}>QR Code (Product Link) 1.25 x 2.25</option>
+          <option value={"5"}>Barcode & QR Code 4 x 6</option>
+        </select>
+
+        <div className="border-[5px] mt-5 border-gray-700 rounded-3xl px-8 py-4">
           <div
             id="barcode-to-print"
             className="print:barcode-container"
@@ -91,23 +104,10 @@ const PrintBarcode = ({ sku, price }) => {
 
         <button
           onClick={() => window.print()}
-          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
         >
           Print Label
         </button>
-
-        <label className="mt-5 text-lg">Template</label>
-        <select
-          value={template}
-          className="mt-1 rounded-xl px-3 py-2 border border-gray-600"
-          onChange={(e) => setTemplate(e.target.value)}
-        >
-          <option value={"1"}>QR Code (Sku) 1x1</option>
-          <option value={"2"}>QR Code (Product Link) 1x1</option>
-          <option value={"3"}>Barcode (Sku) 1.25 x 2.25</option>
-          <option value={"4"}>QR Code (Product Link) 1.25 x 2.25</option>
-          <option value={"5"}>Barcode & QR Code 4 x 6</option>
-        </select>
 
         <style>
           {`
