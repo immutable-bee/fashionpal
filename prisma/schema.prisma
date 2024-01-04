@@ -102,9 +102,10 @@ model ThriftList {
 }
 
 model Category {
-  id       String                 @id @default(uuid())
-  name     String                 @unique
-  listings CategoriesOnListings[]
+  id          String                 @id @default(uuid())
+  name        String                 @unique
+  listings    CategoriesOnListings[]
+  PricingRule PricingRule[]
 }
 
 model CategoriesOnListings {
@@ -137,6 +138,8 @@ model Listing {
   categories         CategoriesOnListings[]
   Business           Business?              @relation(fields: [businessId], references: [id])
   votes              Vote[]
+  discountPrice      Float?
+  discountPercentage Int?
 }
 
 model ListingQueue {
@@ -180,14 +183,15 @@ model ReferenceListing {
 model PricingRule {
   id            String            @id @default(uuid())
   name          String
-  category      String
   listingType   RepricingRuleType
   adjustPriceBy Int
   cycle         String
-  roundTo       Int
+  roundTo       Float
   floorPrice    Int
   ownerId       String
   owner         Business          @relation(fields: [ownerId], references: [id])
+  categoryId    String?
+  category      Category?         @relation(fields: [categoryId], references: [id])
 }
 
 enum VoteType {
