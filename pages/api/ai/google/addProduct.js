@@ -30,7 +30,6 @@ const handler = async (req, res) => {
     };
 
     const [createdProduct] = await client.createProduct(request);
-    console.log(`Product name: ${createdProduct.name}`);
   };
 
   await createProduct();
@@ -57,7 +56,6 @@ const handler = async (req, res) => {
     };
 
     await client.addProductToProductSet(request);
-    console.log("Product added to product set.");
   };
 
   addProductToProductSet();

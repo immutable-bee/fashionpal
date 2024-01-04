@@ -31,8 +31,6 @@ const ManageSubscriptionModal = (props) => {
   const [cancelMessage, setCancelMessage] = useState(null);
   const [subLoading, setSubLoading] = useState(false);
 
-  // const { data: session } = useSession({ required: true });
-
   const planDetailsHandler = (value) => {
     let details = {};
     if (value === "Not Subscribed") {

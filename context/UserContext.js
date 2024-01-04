@@ -90,7 +90,6 @@ export const UserProvider = ({ children }) => {
       }
 
       // Do something with the business data if needed
-      // const data = await res.json();
 
       // Update the user state if necessary
       setUser((prevUser) => ({

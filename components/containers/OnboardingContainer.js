@@ -61,17 +61,9 @@ const OnboardingContainer = () => {
   };
 
   useEffect(() => {
-    console.log(1);
-    console.log(user);
     if (user) {
-      console.log(1);
-      console.log(isOnboardingCompleted);
-      console.log(user);
-      console.log(userType);
       if (isOnboardingCompleted || user.onboardingComplete) {
-        console.log(1);
         if (userType === "consumer" || user.consumer) {
-          console.log(1);
           setTimeout(() => {
             const route = {
               pathname: "/consumer",
@@ -87,7 +79,7 @@ const OnboardingContainer = () => {
                 route.pathname = decodeURIComponent(redirectUrlParam);
               }
             }
-            console.log(route);
+
             router.push(route);
           }, [10000]);
         }
@@ -108,7 +100,7 @@ const OnboardingContainer = () => {
                 route.pathname = decodeURIComponent(redirectUrlParam);
               }
             }
-            console.log(route);
+
             router.push(route);
           }, [10000]);
         }
@@ -121,7 +113,7 @@ const OnboardingContainer = () => {
     const route = {
       pathname: userType === "consumer" ? "/consumer" : "/business",
     };
-    console.log(router);
+
     if (router.query && router.query.redirectUrl) {
       route.pathname = router.query.redirectUrl;
     } else if (router.query && router.query.callbackUrl) {
@@ -133,7 +125,7 @@ const OnboardingContainer = () => {
         route.pathname = decodeURIComponent(redirectUrlParam);
       }
     }
-    console.log(route);
+
     router.push(route);
   };
 

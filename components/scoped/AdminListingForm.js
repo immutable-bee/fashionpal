@@ -74,10 +74,6 @@ function AdminListingForm({ onBack, onFetch }) {
         setBrandImage(imageSrc);
         setShowCamera(false);
       }
-
-      //const file = convertDataURLtoFile(imageSrc, `${currentPhotoType}.jpg`);
-
-      // Set loading to true while uploading
     }
   };
 

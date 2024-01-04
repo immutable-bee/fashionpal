@@ -80,21 +80,6 @@ function AdminListingForm() {
     }
   };
 
-  // useEffect(() => {
-  //   if (mainImage && (brandImage || brandImageSkipped)) {
-  //     const formData = new FormData();
-  //     const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
-  //     formData.append("mainImage", mainFile);
-
-  //     if (brandImage) {
-  //       const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
-  //       formData.append("brandImage", brandFile);
-  //     }
-
-  //     addToQueue(formData);
-  //   }
-  // }, [mainImage, brandImage, brandImageSkipped]);
-
   const triggerAddToQueue = () => {
     if (mainImage && (brandImage || brandImageSkipped)) {
       onAdd();
@@ -134,7 +119,7 @@ function AdminListingForm() {
       brandTag: brandImage,
     };
     newListingQueue.push(queueItem);
-    console.log(newListingQueue);
+
     setListingQueue(newListingQueue);
   };
 
@@ -362,10 +347,6 @@ function AdminListingForm() {
                   d="M15.75 19.5L8.25 12l7.5-7.5"
                 />
               </svg>
-
-              {/* <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
-                Review List
-              </button> */}
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
@@ -433,10 +414,6 @@ function AdminListingForm() {
                   d="M15.75 19.5L8.25 12l7.5-7.5"
                 />
               </svg>
-
-              {/* <button className="bg-gray-300 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5">
-                Review List
-              </button> */}
             </div>
 
             <div className="border-2 mx-auto mt-10 w-40 py-1.5 border-black rounded-2xl px-4 content-center text-4xl">
@@ -616,11 +593,6 @@ function AdminListingForm() {
                         ""
                       )}
                     </div>
-
-                    {/* <LoadingComponent
-                      className="mt-6"
-                      size="md"
-                    /> */}
                   </div>
                 </>
               ))}

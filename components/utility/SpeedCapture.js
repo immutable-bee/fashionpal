@@ -11,7 +11,6 @@ function Capture({ onCapture, loading = false, onDone, totalAmount }) {
       .getUserMedia({ video: { facingMode: "environment" } })
       .catch((error) => {
         setFacingMode("user");
-        console.log(error);
       });
   }, []);
 

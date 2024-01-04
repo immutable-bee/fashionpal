@@ -67,7 +67,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
       NotificationManager.error("price is required!");
       return;
     }
-    console.log("Client Status: ", status);
+
     setUploadFailed(false);
     setLoading(true);
 

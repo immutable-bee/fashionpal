@@ -49,44 +49,6 @@ const RePricer = ({ onBack }) => {
       });
   };
 
-  // const pushListing = async (status) => {
-  //   if (!price) {
-  //     NotificationManager.error("price is required!");
-  //     return;
-  //   }
-  //   console.log("Client Status: ", status);
-  //   setUploadFailed(false);
-  //   setLoading(true);
-
-  //   const formData = new FormData();
-  //   const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
-  //   formData.append("mainImage", mainFile);
-  //   if (brandImage) {
-  //     const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
-  //     formData.append("brandImage", brandFile);
-  //   }
-  //   formData.append("price", price);
-  //   formData.append("category", category);
-  //   formData.append("status", status);
-
-  //   const response = await fetch("/api/business/listing/standard/add", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   if (!response.ok) {
-  //     setUploadFailed(true);
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   const newSku = await response.json();
-
-  //   setNewListingSku(newSku);
-  //   setLoading(false);
-  //   setStep(3);
-  // };
-
   return (
     <div>
       <div className="sm:w-96 mx-auto">

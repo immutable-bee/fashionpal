@@ -142,18 +142,6 @@ function Scan() {
           alt=""
         />
       </div>
-      {/* 
-      <div className="py-2">
-        <h3 className="text-xl text-center mt-3  uppercase">NON-SUBSCRIBER</h3>
-        <div className="flex items-center justify-center gap-2">
-          <div className="border-2 mt-2 !line-through max-w-fit py-1.5 border-yellow-500 rounded-2xl px-4 content-center text-2xl">
-            ${product.price.toFixed(2)}
-          </div>
-          <div className="border-2 mt-2 max-w-fit py-1.5 border-yellow-500 rounded-2xl px-4 content-center text-2xl">
-            ${discountedPrice}
-          </div>
-        </div>
-      </div> */}
 
       <div className="py-2">
         <h3 className="text-xl text-center mt-3  uppercase">
@@ -166,12 +154,6 @@ function Scan() {
             <h3 className="text-3xl">${discountedPriceForSubscribers}</h3>
           </div>
         </div>
-
-        {/* {product.isSaleSubscribers && (
-          <h3 className="text-2xl sm:text-3xl text-green-400 text-center mt-6">
-            {product.discountSubscribers}% Off
-          </h3>
-        )} */}
 
         <h3
           className="text-2xl cursor-pointer text-blue-500 underline text-center mt-3"

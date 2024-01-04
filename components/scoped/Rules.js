@@ -39,7 +39,7 @@ const RePricer = () => {
 
       if (res.status === 200) {
         const data = await res.json();
-        console.log(data);
+
         setRules(data);
       } else {
         const errorMessage = await res.text();
@@ -100,14 +100,12 @@ const RePricer = () => {
     axios
       .put("/api/pricing-rules/update", data)
       .then(() => {
-        console.log("then");
         setIsLoading(false);
         setIsEditing(false);
         NotificationManager.success("Rule added successfully!");
         fetchListings();
       })
       .catch((error) => {
-        console.log("error");
         setIsLoading(false);
 
         if (

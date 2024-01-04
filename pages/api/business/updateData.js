@@ -19,8 +19,6 @@ const handler = async (req, res) => {
     return res.status(404).json({ message: "Business record not found" });
   }
 
-  console.log(process.env.NEXTAUTH_SECRET);
-
   if (business.squareAccessToken !== data.squareAccessToken) {
     data.squareAccessToken = AES.encrypt(
       data.squareAccessToken,
