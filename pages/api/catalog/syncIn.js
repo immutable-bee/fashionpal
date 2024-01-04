@@ -1,6 +1,7 @@
 import { prisma } from "@/db/prismaDB";
 import { v4 as uuid } from "uuid";
 import { AES, enc } from "crypto-ts";
+import { Readable } from "stream";
 
 const { Client, Environment } = require("square");
 
@@ -21,142 +22,220 @@ const handler = async (req, res) => {
     });
 
     for (const business of businesses) {
-      const squareAccessToken = AES.decrypt(
-        business?.squareAccessToken,
-        process.env.NEXTAUTH_SECRET
-      ).toString(enc.Utf8);
+      try {
+        const squareAccessToken = AES.decrypt(
+          business?.squareAccessToken,
+          process.env.NEXTAUTH_SECRET
+        ).toString(enc.Utf8);
 
-      const client = new Client({
-        accessToken: squareAccessToken,
-        environment: Environment.Production,
-      });
+        const client = new Client({
+          accessToken: squareAccessToken,
+          environment: Environment.Production,
+        });
 
-      const listings = await prisma.listing.findMany({
-        where: {
-          status: "SALE",
-          isSyncedWithSquare: false,
-          businessId: business?.id,
-        },
-        include: {
-          categories: {
-            include: {
-              category: true,
+        const listings = await prisma.listing.findMany({
+          where: {
+            status: "SALE",
+            isSyncedWithSquare: false,
+            businessId: business?.id,
+          },
+          include: {
+            categories: {
+              include: {
+                category: true,
+              },
             },
           },
-        },
-      });
+        });
 
-      const items = [];
+        const items = [];
+        const allCategories = [];
+        for (const listing of listings) {
+          const listingId = `#${listing.id}`;
+          const mainImage = listing.mainImage
+            ? listing.mainImage
+            : listing.mainImageUrl;
+          const brandImage = listing.brandImage
+            ? listing.brandImage
+            : listing.brandImageUrl;
+          const price = parseInt(
+            (parseFloat(listing.price.toString()) * 100).toString()
+          );
+          let categories = listing?.categories.map(
+            (entry) => entry.category.name
+          );
+          categories = categories.filter((c) => c !== "");
+          allCategories.push(...categories);
+          const tags = listing?.tags?.join(" - ");
 
-      for (const listing of listings) {
-        const listingId = `#${listing.id}`;
-        const mainImage = listing.mainImage
-          ? listing.mainImage
-          : listing.mainImageUrl;
-        const brandImage = listing.brandImage
-          ? listing.brandImage
-          : listing.brandImageUrl;
-        const price = listing.price;
-        const categories = listing?.categories
-          .map((entry) => entry.category.name)
-          .join(" - ");
-        const tags = listing?.tags?.join(" - ");
-
-        const item = {
-          type: "ITEM",
-          id: listingId,
-          presentAtAllLocations: true,
-          custom_attribute_values: [],
-          itemData: {
-            name: categories && categories !== "" ? categories : mainImage,
-            description: tags,
-            variations: [
-              {
-                type: "ITEM_VARIATION",
-                id: `${listingId}-main`,
-                presentAtAllLocations: true,
-                itemVariationData: {
-                  itemId: listingId,
-                  name: mainImage,
-                  pricingType: "FIXED_PRICING",
-                  priceMoney: {
-                    amount: price ? price : 0,
-                    currency: "USD",
+          if (categories.length === 0) {
+            continue;
+          }
+          const item = {
+            type: "ITEM",
+            id: listingId,
+            presentAtAllLocations: true,
+            custom_attribute_values: [],
+            itemData: {
+              name:
+                categories.length > 0
+                  ? `${categories.join(" - ")} - ${mainImage}`
+                  : mainImage,
+              description: tags,
+              variations: [
+                {
+                  type: "ITEM_VARIATION",
+                  id: `${listingId}-subscriber`,
+                  presentAtAllLocations: true,
+                  itemVariationData: {
+                    itemId: listingId,
+                    sku: `${listingId}-subscriber`,
+                    name: "SUBSCRIBER",
+                    pricingType: "FIXED_PRICING",
+                    priceMoney: {
+                      amount: price ? price : 0,
+                      currency: "USD",
+                    },
                   },
                 },
-              },
-            ],
-          },
-        };
-        if (brandImage) {
-          item.itemData.variations.push({
-            type: "ITEM_VARIATION",
-            id: `${listingId}-brand`,
-            presentAtAllLocations: true,
-            itemVariationData: {
-              itemId: listingId,
-              name: brandImage,
-              pricingType: "FIXED_PRICING",
-              priceMoney: {
-                amount: price ? price : 0,
-                currency: "USD",
-              },
+                {
+                  type: "ITEM_VARIATION",
+                  id: `${listingId}-non-subscriber`,
+                  presentAtAllLocations: true,
+                  itemVariationData: {
+                    itemId: listingId,
+                    sku: `${listingId}-non-subscriber`,
+                    name: "NON-SUBSCRIBER",
+                    pricingType: "FIXED_PRICING",
+                    priceMoney: {
+                      amount: price ? price : 0,
+                      currency: "USD",
+                    },
+                  },
+                },
+              ],
+              productType: "REGULAR",
+              categories: categories,
             },
-          });
+          };
+
+          items.push(item);
         }
-        items.push(item);
-      }
-      if (items?.length === 0) {
-        res.status(200).json({ message: "No listings to sync." });
-        return;
-      }
 
-      const response = await client.catalogApi.batchUpsertCatalogObjects({
-        idempotencyKey: uuid(),
-        batches: [
-          {
-            objects: items,
-          },
-        ],
-      });
+        const uniqueCategories = [...new Set(allCategories)];
+        if (uniqueCategories.length > 0) {
+          const categoriesResponse = await client.catalogApi.listCatalog(
+            undefined,
+            "category"
+          );
+          const existentCategories = {};
 
-      if (response.statusCode === 200) {
-        const idsToUpdate = listings.map((listing) => listing.id);
-        allIdsToUpdate.push(...idsToUpdate);
-      }
-      allSyncedObjects.push(...response?.result?.objects);
+          for (const entry of categoriesResponse?.result?.objects) {
+            existentCategories[entry.categoryData.name] = entry.id;
+          }
+          const categoriesToAdd = [];
+          for (const category of uniqueCategories) {
+            if (!existentCategories[category]) {
+              categoriesToAdd.push({
+                type: "CATEGORY",
+                id: `#${category}`,
+                presentAtAllLocations: true,
+                categoryData: {
+                  name: category,
+                },
+              });
+            }
+          }
+          if (categoriesToAdd.length > 0) {
+            const addCategoriesResponse =
+              await client.catalogApi.batchUpsertCatalogObjects({
+                idempotencyKey: uuid(),
+                batches: [
+                  {
+                    objects: categoriesToAdd,
+                  },
+                ],
+              });
 
-      const changes = [];
-      const { result } = await client.locationsApi.listLocations();
-      const locations = result?.locations || [];
-      for (const item of response?.result?.objects) {
-        if (item.type === "ITEM") {
-          for (const location of locations) {
-            changes.push({
-              type: "PHYSICAL_COUNT",
-              physicalCount: {
-                catalogObjectId: item.itemData.variations[0].id,
-                state: "IN_STOCK",
-                quantity: "0",
-                locationId: location.id,
-                occurredAt: new Date().toISOString(),
-              },
-            });
+            if (addCategoriesResponse.statusCode === 200) {
+              for (const entry of addCategoriesResponse?.result?.objects) {
+                existentCategories[entry.categoryData.name] = entry.id;
+              }
+            }
+          }
+
+          for (const item of items) {
+            if (item.itemData.categories.length > 0) {
+              item.itemData.category_id =
+                existentCategories[item.itemData.categories[0]];
+            }
+
+            item.itemData.categories = item.itemData.categories.map(
+              (c, index) => ({
+                id: existentCategories[c],
+                ordinal: index + 1,
+              })
+            );
           }
         }
-      }
 
-      if (changes.length > 0) {
-        await client.inventoryApi.batchChangeInventory({
+        console.log(">>>> ", JSON.stringify(items));
+
+        if (items?.length === 0) {
+          continue;
+        }
+
+        const response = await client.catalogApi.batchUpsertCatalogObjects({
           idempotencyKey: uuid(),
-          changes,
-          ignoreUnchangedCounts: true,
+          batches: [
+            {
+              objects: items,
+            },
+          ],
         });
-      }
 
-      for (const mapping of response?.result?.idMappings) {
-        idMappings[mapping?.clientObjectId?.replace("#", "")] =
-          mapping.objectId;
+        if (response.statusCode === 200) {
+          const idsToUpdate = listings.map((listing) => listing.id);
+          allIdsToUpdate.push(...idsToUpdate);
+        }
+        allSyncedObjects.push(...response?.result?.objects);
+
+        const changes = [];
+        const { result } = await client.locationsApi.listLocations();
+        const locations = result?.locations || [];
+        for (const item of response?.result?.objects) {
+          if (item.type === "ITEM") {
+            for (const location of locations) {
+              for (const variation of item.itemData.variations) {
+                changes.push({
+                  type: "PHYSICAL_COUNT",
+                  physicalCount: {
+                    catalogObjectId: variation.id,
+                    state: "IN_STOCK",
+                    quantity: "1",
+                    locationId: location.id,
+                    occurredAt: new Date().toISOString(),
+                  },
+                });
+              }
+            }
+          }
+        }
+
+        if (changes.length > 0) {
+          await client.inventoryApi.batchChangeInventory({
+            idempotencyKey: uuid(),
+            changes,
+            ignoreUnchangedCounts: true,
+          });
+        }
+
+        for (const mapping of response?.result?.idMappings) {
+          idMappings[mapping?.clientObjectId?.replace("#", "")] =
+            mapping.objectId;
+        }
+      } catch (e) {
+        console.log(e.message);
       }
     }
 
@@ -175,16 +254,16 @@ const handler = async (req, res) => {
       );
     }
     await prisma.$transaction(transactions);
-
-    res
-      .status(200)
-      .json(
-        JSON.parse(
-          JSON.stringify(allSyncedObjects, (key, value) =>
-            typeof value === "bigint" ? value.toString() : value
+    const message =
+      allIdsToUpdate.length > 0
+        ? JSON.parse(
+            JSON.stringify(allSyncedObjects, (key, value) =>
+              typeof value === "bigint" ? value.toString() : value
+            )
           )
-        )
-      );
+        : { message: "No listings to sync." };
+
+    res.status(200).json(message);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
