@@ -53,12 +53,12 @@ function ButtonComponent({
     <button
       id={id}
       type={type}
-      className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-lg font-normal min-w-fit
+      className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-sm sm:text-lg font-normal min-w-fit
         ${rounded ? "rounded-full" : ""}
         ${full ? "w-full" : ""}
         ${border ? "border border-black" : ""}
         ${colorMap[color]}
-        ${paddingMap[padding]}
+        ${paddingMap[padding] && paddingMap[padding]}
         ${disabled ? "opacity-70 pointer-events-none" : ""}
         ${onlyIcon ? "rounded-xl h-8 w-9 ml-3" : ""}
         ${loading ? "!opacity-50 !pointer-events-none" : ""},

@@ -5,7 +5,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    const isMobile = document.documentElement.clientWidth <= 614;
+    const isMobile = document.documentElement.clientWidth <= 768;
     this.state = {
       computedValue: isMobile
         ? document.documentElement.clientWidth - 6
@@ -61,9 +61,13 @@ class App extends Component {
 
   // Event handler for window resize
   handleResize = () => {
-    const isMobile = document.documentElement.clientWidth <= 614;
+    const isMobile = document.documentElement.clientWidth <= 768;
     this.setState({
-      computedValue: isMobile ? document.documentElement.clientWidth - 10 : 700,
+      computedValue: isMobile
+        ? document.documentElement.clientWidth - 6
+        : document.documentElement.clientWidth * 0.75 > 1500
+        ? 1500
+        : document.documentElement.clientWidth * 0.75,
     });
   };
 

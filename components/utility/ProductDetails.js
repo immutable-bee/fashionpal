@@ -4,32 +4,19 @@ import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from "react-notifications";
 import Link from "next/link";
 import placeholder from "@/public/images/icon.jpg";
+import ButtonComponent from "@/components/utility/Button";
 
 import {
   FacebookShareButton,
   FacebookMessengerShareButton,
   TwitterShareButton,
-  TelegramShareButton,
   WhatsappShareButton,
-  LinkedinShareButton,
   PinterestShareButton,
-  VKShareButton,
-  OKShareButton,
-  RedditShareButton,
-  TumblrShareButton,
-  EmailShareButton,
   FacebookIcon,
   FacebookMessengerIcon,
   TwitterIcon,
-  TelegramIcon,
   WhatsappIcon,
-  LinkedinIcon,
   PinterestIcon,
-  VKIcon,
-  OKIcon,
-  RedditIcon,
-  TumblrIcon,
-  EmailIcon,
 } from "react-share";
 function ProductDetails({
   open,
@@ -44,6 +31,7 @@ function ProductDetails({
   const [saveLoading, setLoadingSave] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [openShareModal, setOpenShareModal] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   const onSave = async () => {
     if (saveLoading) {
@@ -80,10 +68,39 @@ function ProductDetails({
     }
   };
 
+  const downloadImage = (imageUrl, fileName) => {
+    setDownloading(true);
+    fetch(imageUrl, {
+      method: "GET",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch image: ${response.status} ${response.statusText}`
+          );
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName || "downloaded_image";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        NotificationManager.success("Image downloaded!");
+        setDownloading(false);
+      })
+      .catch((error) => {
+        console.error("Error downloading image:", error);
+        setDownloading(false);
+        // Handle error appropriately (e.g., show a message to the user)
+      });
+  };
   const triggerOpenShareModal = () => {
     setOpenShareModal(true);
   };
-  const productUrl = `http://fashionpal.vercel.app/store/${data?.id}`;
+  const productUrl = data.mainImageUrl;
 
   const handleShare = (platform) => {
     switch (platform) {
@@ -170,7 +187,7 @@ function ProductDetails({
           {openShareModal && (
             <ModalComponent
               open={openShareModal}
-              title="Share product"
+              title="Share image"
               onClose={closeShareModal}
               footer={
                 <div className="flex justify-end w-full">
@@ -202,63 +219,23 @@ function ProductDetails({
                     round
                   />
                 </TwitterShareButton>
-                <TelegramShareButton url={productUrl}>
-                  <TelegramIcon
-                    size={80}
-                    round
-                  />
-                </TelegramShareButton>
+
                 <WhatsappShareButton url={productUrl}>
                   <WhatsappIcon
                     size={80}
                     round
                   />
                 </WhatsappShareButton>
-                <LinkedinShareButton url={productUrl}>
-                  <LinkedinIcon
-                    size={80}
-                    round
-                  />
-                </LinkedinShareButton>
+
                 <PinterestShareButton
                   url={productUrl}
-                  media={data?.mainImage}
+                  media={data?.mainImageUrl}
                 >
                   <PinterestIcon
                     size={80}
                     round
                   />
                 </PinterestShareButton>
-                <VKShareButton url={productUrl}>
-                  <VKIcon
-                    size={80}
-                    round
-                  />
-                </VKShareButton>
-                <OKShareButton url={productUrl}>
-                  <OKIcon
-                    size={80}
-                    round
-                  />
-                </OKShareButton>
-                <RedditShareButton url={productUrl}>
-                  <RedditIcon
-                    size={80}
-                    round
-                  />
-                </RedditShareButton>
-                <TumblrShareButton url={productUrl}>
-                  <TumblrIcon
-                    size={80}
-                    round
-                  />
-                </TumblrShareButton>
-                <EmailShareButton url={productUrl}>
-                  <EmailIcon
-                    size={80}
-                    round
-                  />
-                </EmailShareButton>
 
                 <button
                   className="bg-pink-400 !m-0 w-20 h-20 rounded-full flex justify-center items-center"
@@ -314,6 +291,20 @@ function ProductDetails({
                     <path d="M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3z" />
                   </svg>
                 </button>
+              </div>
+
+              <h3 className="text-center text-xl">OR</h3>
+
+              <div className="flex justify-center">
+                <ButtonComponent
+                  onClick={() => downloadImage(data.mainImageUrl)}
+                  rounded
+                  loading={downloading}
+                  padding="none"
+                  className="!px-3 sm:!px-7 !py-1.5"
+                >
+                  Download Image
+                </ButtonComponent>
               </div>
             </ModalComponent>
           )}
@@ -432,7 +423,28 @@ function ProductDetails({
               </div>
             </div>
           ) : (
-            ""
+            <div className="flex justify-center !mt-3">
+              <svg
+                onClick={() => triggerOpenShareModal()}
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-12 h-12 mx-2 cursor-pointer"
+                width="44"
+                height="44"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="#2c3e50"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path
+                  stroke="none"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
+              </svg>
+            </div>
           )}
         </ModalComponent>
       ) : (
