@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
 
-const RePricer = () => {
+const RePricer = ({ categoryList }) => {
   const [loadingListings, setLoadingListings] = useState(false);
 
   const [isEditing, setIsEditing] = useState("");
@@ -16,7 +16,8 @@ const RePricer = () => {
   // edit
   const [ruleId, setRuleId] = useState("");
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState("");
+
   const [listingType, setListingType] = useState("ALL");
   const [isWeekly, setIsWeekly] = useState(false);
   const [isMonthly, setIsMonthly] = useState(false);
@@ -34,7 +35,7 @@ const RePricer = () => {
 
     try {
       const res = await fetch(
-        `/api/pricing-rules/list?name=${searchText}&category=${filterCategory}&listingType=${filterType}`
+        `/api/pricing-rules/list?name=${searchText}&categoryId=${filterCategory}&listingType=${filterType}`
       );
 
       if (res.status === 200) {
@@ -69,7 +70,7 @@ const RePricer = () => {
     setFilterCategory(rule.filterCategory);
     setFilterType(rule.filterType);
     setName(rule.name);
-    setCategory(rule.category);
+    setCategory(rule.categoryId);
     setListingType(rule.listingType);
     setIsWeekly(rule.isWeekly);
     setIsMonthly(rule.isMonthly);
@@ -81,13 +82,14 @@ const RePricer = () => {
 
   const onDone = () => {
     if (!name) {
-      NotificationManager.error("Rule is required!");
+      NotificationManager.error("Rule name is required!");
+      return;
     }
     setIsLoading(true);
     const data = {
       id: ruleId,
       name: name,
-      category: category,
+      categoryId: category,
       listingType: listingType,
       isWeekly: isWeekly,
       isMonthly: isMonthly,
@@ -125,86 +127,88 @@ const RePricer = () => {
 
   return (
     <div>
-      <div className="sm:w-96 mx-auto">
+      <div className='sm:w-96 mx-auto'>
         {!isEditing ? (
           <div>
-            <div className="py-2">
+            <div className='py-2'>
               <input
                 value={searchText}
-                placeholder="Search..."
-                className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                placeholder='Search...'
+                className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="py-2">
-                <label className="text-lg">Category</label>
+            <div className='grid grid-cols-2 gap-3'>
+              <div className='py-2'>
+                <label className='text-lg'>Category</label>
                 <select
                   value={filterCategory}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                  className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                   onChange={(e) => setFilterCategory(e.target.value)}
                 >
-                  <option value="">All</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Footwear">Footwear</option>
-                  <option value="Hats">Hats</option>
-                  <option value="Bags">Bags</option>
+                  <option value=''>All</option>
+                  {categoryList.length > 0 &&
+                    categoryList.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
                 </select>
               </div>
-              <div className="py-2">
-                <label className="text-lg">Type</label>
+              <div className='py-2'>
+                <label className='text-lg'>Type</label>
                 <select
                   value={filterType}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                  className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                   onChange={(e) => setFilterType(e.target.value)}
                 >
-                  <option value="ALL">Include premium</option>
-                  <option value="PREMIUM_ONLY">premium only</option>
-                  <option value="EXCLUDE_PREMIUM">Exclude premium</option>
+                  <option value='ALL'>Include premium</option>
+                  <option value='PREMIUM_ONLY'>premium only</option>
+                  <option value='EXCLUDE_PREMIUM'>Exclude premium</option>
                 </select>
               </div>
             </div>
 
-            <div className="w-full">
+            <div className='w-full'>
               {loadingListings ? (
-                <div className="sm:flex justify-center pb-10">
+                <div className='sm:flex justify-center pb-10'>
                   <div>
-                    <div className="pt-2.5 mt-10">
-                      <Loading size="xl" />
+                    <div className='pt-2.5 mt-10'>
+                      <Loading size='xl' />
                     </div>
                   </div>
                 </div>
               ) : (
                 <div>
-                  <h3 className="text-xl font-medium mt-3">Rules</h3>
+                  <h3 className='text-xl font-medium mt-3'>Rules</h3>
                   {rules && rules.length !== 0 ? (
                     <div>
                       {rules.map((rule, key) => (
                         <div
-                          className="bg-white flex justify-between items-center rounded-xl shadow border my-2 py-2 px-3"
+                          className='bg-white flex justify-between items-center rounded-xl shadow border my-2 py-2 px-3'
                           key={key}
                         >
                           <h3>{rule.name}</h3>
                           <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-4 h-4 cursor-pointer hover:text-gray-700"
+                            xmlns='http://www.w3.org/2000/svg'
+                            fill='none'
+                            viewBox='0 0 24 24'
+                            strokeWidth='1.5'
+                            stroke='currentColor'
+                            className='w-4 h-4 cursor-pointer hover:text-gray-700'
                             onClick={() => onEditRule(rule)}
                           >
                             <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                              strokeLinecap='round'
+                              strokeLinejoin='round'
+                              d='M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125'
                             />
                           </svg>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <h3 className="text-center mt-2 text-xl">No rules</h3>
+                    <h3 className='text-center mt-2 text-xl'>No rules</h3>
                   )}
                 </div>
               )}
@@ -213,100 +217,100 @@ const RePricer = () => {
         ) : (
           <div>
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth='1.5'
+              stroke='currentColor'
+              className='w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer'
               onClick={() => setIsEditing(false)}
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5L8.25 12l7.5-7.5"
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M15.75 19.5L8.25 12l7.5-7.5'
               />
             </svg>
 
-            <div className="py-2">
-              <label className="text-lg">Rule name</label>
+            <div className='py-2'>
+              <label className='text-lg'>Rule name</label>
               <input
                 value={name}
-                className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-            <div className="py-2">
-              <label className="text-lg">Category</label>
+            <div className='py-2'>
+              <label className='text-lg'>Category</label>
               <select
                 value={category}
-                className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">All</option>
-                <option value="Clothing">Clothing</option>
-                <option value="Footwear">Footwear</option>
-                <option value="Hats">Hats</option>
-                <option value="Bags">Bags</option>
+                <option value=''>All</option>
+                <option value='Clothing'>Clothing</option>
+                <option value='Footwear'>Footwear</option>
+                <option value='Hats'>Hats</option>
+                <option value='Bags'>Bags</option>
               </select>
             </div>
-            <div className="py-2">
-              <label className="text-lg">Premium</label>
+            <div className='py-2'>
+              <label className='text-lg'>Premium</label>
               <select
                 value={listingType}
-                className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                 onChange={(e) => setListingType(e.target.value)}
               >
-                <option value="ALL">Include premium</option>
-                <option value="PREMIUM_ONLY">premium only</option>
-                <option value="EXCLUDE_PREMIUM">Exclude premium</option>
+                <option value='ALL'>Include premium</option>
+                <option value='PREMIUM_ONLY'>premium only</option>
+                <option value='EXCLUDE_PREMIUM'>Exclude premium</option>
               </select>
             </div>
 
-            <div className="py-2 mt-4 max-w-fit mx-auto">
-              <h3 className="text-lg text-center">Price adjustment</h3>
-              <div className="py-2 flex items-center">
+            <div className='py-2 mt-4 max-w-fit mx-auto'>
+              <h3 className='text-lg text-center'>Price adjustment</h3>
+              <div className='py-2 flex items-center'>
                 <input
                   value={adjustPriceBy}
-                  className=" mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2"
-                  max="99"
-                  type="Number"
+                  className=' mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2'
+                  max='99'
+                  type='Number'
                   onChange={(e) => setAdjustPriceBy(e.target.value)}
                 />
-                <label className="text-lg min-w-fit">% off year</label>
+                <label className='text-lg min-w-fit'>% off year</label>
 
                 <select
                   value={cycle}
-                  className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
+                  className='w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2'
                   onChange={(e) => setCycle(e.target.value)}
                 >
-                  <option value="weekly">Weekly</option>
-                  <option value="bi-weely">Bi Weekly</option>
-                  <option value="monthly">Monthly</option>
+                  <option value='weekly'>Weekly</option>
+                  <option value='bi-weely'>Bi Weekly</option>
+                  <option value='monthly'>Monthly</option>
                 </select>
               </div>
             </div>
 
-            <div className="py-2 flex justify-between items-center">
-              <label className="text-lg min-w-fit">Round to</label>
+            <div className='py-2 flex justify-between items-center'>
+              <label className='text-lg min-w-fit'>Round to</label>
 
               <select
                 value={roundTo}
-                className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
+                className='w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2'
                 onChange={(e) => setRoundTo(e.target.value)}
               >
-                <option value="0.00">$0.00</option>
-                <option value="0.50">$0.50</option>
-                <option value="0.90">$0.99</option>
+                <option value='0.00'>$0.00</option>
+                <option value='0.50'>$0.50</option>
+                <option value='0.90'>$0.99</option>
               </select>
             </div>
-            <div className="py-2 flex justify-between items-center">
-              <label className="text-lg min-w-fit">Floor price</label>
+            <div className='py-2 flex justify-between items-center'>
+              <label className='text-lg min-w-fit'>Floor price</label>
 
               <input
                 value={floorPrice}
-                className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
-                type="number"
+                className='w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2'
+                type='number'
                 onChange={(e) => setFloorPrice(e.target.value)}
               />
             </div>
