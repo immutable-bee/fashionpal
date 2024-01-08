@@ -1,8 +1,7 @@
-// Modal.js
 import React, { useState } from "react";
 import ModalComponent from "@/components/utility/Modal";
 
-const Modal = ({ onClose, onDone }) => {
+const EditBusinessProfileModal = ({ onClose, onDone }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -163,4 +162,4 @@ const Modal = ({ onClose, onDone }) => {
   );
 };
 
-export default Modal;
+export default EditBusinessProfileModal;

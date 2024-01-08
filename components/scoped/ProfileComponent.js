@@ -4,7 +4,7 @@ import ButtonComponent from "@/components/utility/Button";
 import Loading from "@/components/utility/loading";
 import { signOut } from "next-auth/react";
 
-function App() {
+function ProfileComponent() {
   const [editModal, setEditModal] = useState(false);
   const [isWeeklyEmailReports, setisWeeklyEmailReports] = useState(false);
   const [daysThroughTraget, setDaysThroughTarget] = useState("1750");
@@ -263,4 +263,4 @@ function App() {
     </div>
   );
 }
-export default App;
+export default ProfileComponent;
