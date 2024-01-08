@@ -89,7 +89,9 @@ const handler = async (req, res) => {
                   presentAtAllLocations: true,
                   itemVariationData: {
                     itemId: listingId,
-                    sku: `${listingId}-subscriber`,
+                    sku: listing.Barcode
+                      ? `${listing.Barcode}-subscriber`
+                      : `${listingId}-subscriber`,
                     name: "SUBSCRIBER",
                     pricingType: "FIXED_PRICING",
                     priceMoney: {
@@ -104,7 +106,9 @@ const handler = async (req, res) => {
                   presentAtAllLocations: true,
                   itemVariationData: {
                     itemId: listingId,
-                    sku: `${listingId}-non-subscriber`,
+                    sku: listing.Barcode
+                      ? `${listing.Barcode}-non-subscriber`
+                      : `${listingId}-non-subscriber`,
                     name: "NON-SUBSCRIBER",
                     pricingType: "FIXED_PRICING",
                     priceMoney: {
