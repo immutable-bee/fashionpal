@@ -77,11 +77,8 @@ const handler = async (req, res) => {
             presentAtAllLocations: true,
             custom_attribute_values: [],
             itemData: {
-              name:
-                categories.length > 0
-                  ? `${categories.join(" - ")} - ${mainImage}`
-                  : mainImage,
-              description: tags,
+              name: categories.join(" - "),
+              description: `${mainImage} - ${tags}`,
               variations: [
                 {
                   type: "ITEM_VARIATION",
