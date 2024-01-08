@@ -2,28 +2,8 @@ import { prisma } from "@/db/prismaDB";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { RepricingRuleType } from "@prisma/client";
+import PayloadValidator from "../../../components/utility/payloadValidator";
 
-const validator = (payload, params) => {
-  let issueForParam = "";
-  const invalidParams = params.some((param) => {
-    console.log(param, payload[param]);
-    if (
-      payload[param] === null ||
-      payload[param] === undefined ||
-      payload[param] === ""
-    ) {
-      issueForParam = param;
-      return true;
-    }
-    return false;
-  });
-  console.log(invalidParams);
-  if (invalidParams) {
-    return { status: true, issueForParam: issueForParam };
-  } else {
-    return { status: false };
-  }
-};
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
   if (!session) {
@@ -51,7 +31,7 @@ const handler = async (req, res) => {
     payload["cycle"] = data.cycle;
     payload["roundTo"] = parseFloat(data.roundTo);
     payload["floorPrice"] = parseFloat(data.floorPrice);
-    const validatorResponse = validator(payload, requiredParam);
+    const validatorResponse = PayloadValidator(payload, requiredParam);
     if (validatorResponse.status) {
       return res.status(400).json({
         error: `${validatorResponse.issueForParam} cannot be empty`,

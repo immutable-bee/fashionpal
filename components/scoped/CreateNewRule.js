@@ -84,7 +84,6 @@ const RePricer = ({ onBack, categoryList }) => {
             className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
             onChange={(e) => setCategory(e.target.value)}
           >
-            <option value='All'>All</option>
             {categoryList.length > 0 &&
               categoryList.map((category) => (
                 <option key={category.id} value={category.id}>

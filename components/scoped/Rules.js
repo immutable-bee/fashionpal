@@ -242,16 +242,18 @@ const RePricer = ({ categoryList }) => {
             </div>
             <div className='py-2'>
               <label className='text-lg'>Category</label>
+              {console.log(category)}
               <select
                 value={category}
                 className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value=''>All</option>
-                <option value='Clothing'>Clothing</option>
-                <option value='Footwear'>Footwear</option>
-                <option value='Hats'>Hats</option>
-                <option value='Bags'>Bags</option>
+                {categoryList.length > 0 &&
+                  categoryList.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className='py-2'>
