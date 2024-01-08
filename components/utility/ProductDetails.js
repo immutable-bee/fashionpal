@@ -426,23 +426,138 @@ function ProductDetails({
           ) : (
             <div>
               <div className="flex justify-between w-full">
-                <h3 className="text-2xl font-semibold">${data.price}</h3>
+                <div>
+                  {data.price && (
+                    <h3 className="text-2xl font-semibold">${data.price}</h3>
+                  )}
 
+                  <div className="mt-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="icon icon-tabler icon-tabler-award"
+                      width="44"
+                      height="44"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="#000000"
+                      fill="none"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        stroke="none"
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                      />
+                      <path d="M12 9m-6 0a6 6 0 1 0 12 0a6 6 0 1 0 -12 0" />
+                      <path d="M12 15l3.4 5.89l1.598 -3.233l3.598 .232l-3.4 -5.889" />
+                      <path d="M6.802 12l-3.4 5.89l3.598 -.233l1.598 3.232l3.4 -5.889" />
+                    </svg>
+                  </div>
+                  {/* <div className="mt-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-chess-queen-filled"
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#000000"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    stroke="none"
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M12 2a2 2 0 0 1 1.572 3.236l.793 1.983l1.702 -1.702a2.003 2.003 0 0 1 1.933 -2.517a2 2 0 0 1 .674 3.884l-1.69 9.295a1 1 0 0 1 -.865 .814l-.119 .007h-8a1 1 0 0 1 -.956 -.705l-.028 -.116l-1.69 -9.295a2 2 0 1 1 2.607 -1.367l1.701 1.702l.794 -1.983a2 2 0 0 1 1.572 -3.236z"
+                    stroke-width="0"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M18 18h-12a1 1 0 0 0 -1 1a2 2 0 0 0 2 2h10a2 2 0 0 0 1.987 -1.768l.011 -.174a1 1 0 0 0 -.998 -1.058z"
+                    stroke-width="0"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div className="mt-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-diamond"
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#000000"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    stroke="none"
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5" />
+                  <path d="M10 12l-2 -2.2l.6 -1" />
+                </svg>
+              </div>
+              <div className="mt-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-discount-check"
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#000000"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    stroke="none"
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1" />
+                  <path d="M9 12l2 2l4 -4" />
+                </svg>
+              </div>
+              <div className="mt-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="icon icon-tabler icon-tabler-square-rounded-letter-p"
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="#000000"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    stroke="none"
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path d="M10 12h2a2 2 0 1 0 0 -4h-2v8" />
+                  <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                </svg>
+              </div> */}
+                  <div className="mt-3">
+                    <h3 className="text-lg text-gray-800">{data.Barcode}</h3>
+                  </div>
+                </div>
                 <h3 className="text-base text-gray-700">
                   {" "}
                   {moment(data.createdAt).fromNow()}
                 </h3>
-              </div>
-
-              <div className="mt-3">
-                <img
-                  src="https://static.thenounproject.com/png/791002-200.png"
-                  alt="premium icon"
-                  class="w-12 h-12"
-                />
-              </div>
-              <div className="mt-3">
-                <h3 className="text-lg text-gray-800">{data.Barcode}</h3>
               </div>
               <div className="flex justify-center !mt-3">
                 <svg
