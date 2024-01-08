@@ -2,6 +2,8 @@ import EditBusinessProfileModal from "./EditBusinessProfileModal";
 import React, { useEffect, useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import Loading from "@/components/utility/loading";
+import { signOut } from "next-auth/react";
+
 function App() {
   const [editModal, setEditModal] = useState(false);
   const [isWeeklyEmailReports, setisWeeklyEmailReports] = useState(false);
@@ -84,7 +86,7 @@ function App() {
   };
 
   return (
-    <div className="my-5 flex justify-center ">
+    <div className="my-5 sm:flex justify-center sm:px-0 px-3">
       <div className="sm:w-[420px]">
         <div>
           {fetchingUser ? (
@@ -144,7 +146,7 @@ function App() {
           )}
           <div className="mt-4 flex items-center justify-between">
             <div>
-              <h1 className="text-md text-gray-700">Weekly Email Reports </h1>
+              <h1 className="text-xl text-gray-700">Weekly Email Reports </h1>
             </div>
             <div>
               <div className="h-9 flex items-center">
@@ -169,7 +171,7 @@ function App() {
             </div>
           </div>
           <div className="mt-4">
-            <h1 className="text-xl">Key Performance Metrics</h1>
+            <h1 className="text-2xl text-center">Key Performance Metrics</h1>
             <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
               <div className="w-full ">
                 <div className="flex items-center justify-between">
@@ -236,13 +238,16 @@ function App() {
             <div className="flex justify-center">
               <button
                 onClick={onClose}
-                className="mt-3 bg-orange-500  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                className="mt-3 w-32 bg-orange-500  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
               >
                 Edit
               </button>
             </div>
             <div className="flex justify-center">
-              <button className="mt-3 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70">
+              <button
+                className="mt-3 w-32 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                onClick={() => signOut()}
+              >
                 Logout
               </button>
             </div>
