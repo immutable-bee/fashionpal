@@ -5,6 +5,7 @@ import { NotificationManager } from "react-notifications";
 import Link from "next/link";
 import placeholder from "@/public/images/icon.jpg";
 import ButtonComponent from "@/components/utility/Button";
+import moment from "moment";
 
 import {
   FacebookShareButton,
@@ -423,27 +424,48 @@ function ProductDetails({
               </div>
             </div>
           ) : (
-            <div className="flex justify-center !mt-3">
-              <svg
-                onClick={() => triggerOpenShareModal()}
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-12 h-12 mx-2 cursor-pointer"
-                width="44"
-                height="44"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="#2c3e50"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path
-                  stroke="none"
-                  d="M0 0h24v24H0z"
-                  fill="none"
+            <div>
+              <div className="flex justify-between w-full">
+                <h3 className="text-2xl font-semibold">${data.price}</h3>
+
+                <h3 className="text-base text-gray-700">
+                  {" "}
+                  {moment(data.createdAt).fromNow()}
+                </h3>
+              </div>
+
+              <div className="mt-3">
+                <img
+                  src="https://static.thenounproject.com/png/791002-200.png"
+                  alt="premium icon"
+                  class="w-12 h-12"
                 />
-                <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
-              </svg>
+              </div>
+              <div className="mt-3">
+                <h3 className="text-lg text-gray-800">{data.Barcode}</h3>
+              </div>
+              <div className="flex justify-center !mt-3">
+                <svg
+                  onClick={() => triggerOpenShareModal()}
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-12 h-12 mx-2 cursor-pointer"
+                  width="44"
+                  height="44"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="#2c3e50"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path
+                    stroke="none"
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
+                </svg>
+              </div>
             </div>
           )}
         </ModalComponent>
