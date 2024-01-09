@@ -13,14 +13,22 @@ const handler = async (req, res) => {
   let queuedListingBatchIds;
   let queuedListingBatch;
   try {
-    queuedListingBatch = await prisma.queuedListing.findMany({
-      where: { status: "QUEUED" },
+    processingListingBatch = await prisma.queuedListing.findMany({
+      where: { status: "PROCESSING" },
       take: parseInt(batchSize),
     });
-    if (queuedListingBatch.length === 0) {
-      return res.status(200).json("No listings are currently queued");
-    }
-    queuedListingBatchIds = queuedListingBatch.map((listing) => listing.id);
+
+    if (!processingListingBatch) {
+      queuedListingBatch = await prisma.queuedListing.findMany({
+        where: { status: "QUEUED" },
+        take: parseInt(batchSize),
+      });
+      if (queuedListingBatch.length === 0) {
+        return res.status(200).json("No listings are currently queued");
+      }
+      queuedListingBatchIds = queuedListingBatch.map((listing) => listing.id);
+    } else queuedListingBatch = processingListingBatch;
+    queuedListingBatchIds = processingListingBatch.map((listing) => listing.id);
   } catch (error) {
     return res.status(500).json({
       message: "Failed to fetch queued listings >>>> " + error.message,
