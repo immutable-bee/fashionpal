@@ -25,7 +25,7 @@ const RePricer = ({ onBack }) => {
     setIsLoading(true);
     const data = {
       name: name,
-      category: category,
+      categoryId: category,
       listingType: listingType,
       isWeekly: isWeekly,
       isMonthly: isMonthly,

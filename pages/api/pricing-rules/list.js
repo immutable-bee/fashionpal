@@ -13,7 +13,7 @@ const handler = async (req, res) => {
   const business = await prisma.business.findUnique({
     where: { email: session.user.email },
   });
-  const { categoryId, listingType } = req.query;
+  const { categoryId, listingType, name } = req.query;
 
   if (business) {
     try {
@@ -24,6 +24,10 @@ const handler = async (req, res) => {
       if (listingType) {
         condition = { ...condition, listingType };
       }
+      if (name) {
+        condition = { ...condition, name: { contains: name } };
+      }
+
       const PricingRules = await prisma.PricingRule.findMany({
         where: condition,
       });
