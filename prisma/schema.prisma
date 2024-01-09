@@ -135,11 +135,11 @@ model Listing {
   mainImageUrl       String?
   isSyncedWithSquare Boolean                @default(false)
   squareId           String?
+  discountPercentage Int?
+  discountPrice      Float?
   categories         CategoriesOnListings[]
   Business           Business?              @relation(fields: [businessId], references: [id])
   votes              Vote[]
-  discountPrice      Float?
-  discountPercentage Int?
 }
 
 model ListingQueue {
@@ -189,9 +189,9 @@ model PricingRule {
   roundTo       Float
   floorPrice    Int
   ownerId       String
-  owner         Business          @relation(fields: [ownerId], references: [id])
   categoryId    String?
   category      Category?         @relation(fields: [categoryId], references: [id])
+  owner         Business          @relation(fields: [ownerId], references: [id])
 }
 
 enum VoteType {
