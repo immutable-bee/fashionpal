@@ -381,14 +381,6 @@ const StandardListingForm = ({ onBack, onFetch }) => {
               <LoadingComponent size={"xl"} />
             )}
 
-            <div className="flex items-center justify-center mt-4">
-              <div className="">
-                <h3 className="text-2xl text-center">
-                  Follow us on FashionPal
-                </h3>
-              </div>
-            </div>
-
             <div className="flex justify-center gap-1 mt-1">
               <ButtonComponent
                 rounded

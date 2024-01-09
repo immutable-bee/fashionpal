@@ -18,6 +18,7 @@ export default function Home() {
   const [activeListingIndex, setActiveIndex] = useState(0);
   const [loadingListings, setLoadingListings] = useState(false);
   const [listings, setListings] = useState([]);
+  const [userVotes, setUserVotes] = useState([]);
   const [pagination, setPagination] = useState({
     total: 0,
     previous_page: 1,
@@ -42,6 +43,35 @@ export default function Home() {
     } else if (loadingSearchResults === true) {
       return "Searching";
     }
+  };
+
+  const fetchVotes = async (e) => {
+    try {
+      const res = await fetch(`/api/consumer/getVotes`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setUserVotes(data);
+      } else {
+        const errorMessage = await res.text();
+        console.error(
+          `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+        );
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching votes", error);
+    }
+  };
+
+  const voteUIHandler = (listingId) => {
+    const vote = userVotes.find((vote) => vote.listingId === listingId);
+
+    let voteType;
+
+    if (vote) {
+      voteType = vote.type;
+    }
+    return voteType;
   };
 
   const fetchListings = useCallback(
@@ -74,6 +104,7 @@ export default function Home() {
 
   useEffect(() => {
     const initialFetch = async () => {
+      await fetchVotes();
       await fetchListings(1);
     };
     initialFetch();
@@ -121,6 +152,7 @@ export default function Home() {
       });
 
       if (res.status === 200) {
+        fetchVotes();
       } else {
         const errorMessage = await res.text();
         console.error(
@@ -187,10 +219,7 @@ export default function Home() {
                       {listings &&
                         listings.map((row, index) => {
                           return (
-                            <div
-                              key={index}
-                              className="flex-shrink-0 !w-80"
-                            >
+                            <div key={index} className="flex-shrink-0 !w-80">
                               <div
                                 style={{
                                   boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
@@ -205,7 +234,6 @@ export default function Home() {
                                   height={100}
                                   className="rounded !w-full !h-64 object-cover"
                                   alt="image not found"
-
                                 />
 
                                 <div className="flex items-center justify-between w-40 pr-2 mt-6 mb-3 mx-auto">
@@ -215,10 +243,10 @@ export default function Home() {
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
-
                                       class={`w-12 h-12 ${
-
-                                        row.isLiked ? "stroke-yellow-400 " : ""
+                                        voteUIHandler(row.id) === "UP"
+                                          ? "stroke-yellow-400 "
+                                          : ""
                                       }`}
                                       width="44"
                                       height="44"
@@ -228,7 +256,6 @@ export default function Home() {
                                       fill="none"
                                       strokeLinecap="round"
                                       strokeLinejoin="round"
-
                                     >
                                       <path
                                         stroke="none"
@@ -245,21 +272,19 @@ export default function Home() {
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
-
                                       class={`w-12 h-12 ${
-
-                                        row.isUnLiked ? "stroke-green-400 " : ""
+                                        voteUIHandler(row.id) === "DOWN"
+                                          ? "stroke-green-400 "
+                                          : ""
                                       }`}
                                       width="44"
                                       height="44"
                                       viewBox="0 0 24 24"
-
                                       strokeWidth="1.5"
                                       stroke="#2c3e50"
                                       fill="none"
                                       strokeLinecap="round"
                                       strokeLinejoin="round"
-
                                     >
                                       <path
                                         stroke="none"

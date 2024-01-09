@@ -1,30 +1,27 @@
+import EditBusinessProfileModal from "./EditBusinessProfileModal";
 import React, { useEffect, useState } from "react";
-import TooltipComponent from "@/components/utility/Tooltip";
-import Head from "next/head";
 import ButtonComponent from "@/components/utility/Button";
-import { Dropdown } from "@nextui-org/react";
 import Loading from "@/components/utility/loading";
+import { signOut } from "next-auth/react";
+import { Checkbox } from "@nextui-org/react";
 
-import { signOut, useSession } from "next-auth/react";
-import useDateRangePicker from "../../hooks/useDateRangePicker";
-import { NotificationManager } from "react-notifications";
-
-const Profilecomponent = () => {
-  const { data: session } = useSession();
-  const { selectedRange, setSelectedRange, getRange } = useDateRangePicker();
-
-  const [isViewableForVoting, setIsViewableForVoting] = useState(true);
-  const [fetchingBusinessStats, setFetchingBusinessStats] = useState(true);
+function ProfileComponent() {
+  const [editModal, setEditModal] = useState(false);
+  const [isWeeklyEmailReports, setisWeeklyEmailReports] = useState(false);
+  const [treasures, setTreasures] = useState(false);
+  const [newlyListedPremium, setNewlyListedPremium] = useState(false);
+  const [isDiscountEmailReports, setisDiscountEmailReports] = useState(false);
+  const [oneTimeSpecials, setOneTimeSpecials] = useState(false);
+  const [recurring, setRecurring] = useState(false);
+  const [daysThroughTraget, setDaysThroughTarget] = useState("1750");
+  const [daysASPTarget, setDaysASPTarget] = useState("$12");
   const [fetchingUser, setFetchingUser] = useState(true);
-  const [businessStats, setBusinessStats] = useState({});
   const [businessData, setBusinessData] = useState({});
-
   const [updating, setUpdating] = useState(false);
 
-  const isValidEmail = (email) => {
-    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-    return regex.test(email);
-  };
+  useEffect(() => {
+    fetchBusinessData().then();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,322 +72,315 @@ const Profilecomponent = () => {
     }
   };
 
-  const fetchBusinessStats = async (dateTo = null, dateFrom = null) => {
-    setFetchingBusinessStats(true);
-    const path =
-      dateTo && dateFrom
-        ? `/api/business/fetchStats?dateTo=${dateTo}&dateFrom=${dateFrom}`
-        : "/api/business/fetchStats";
-
-    const response = await fetch(path, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
-    setFetchingBusinessStats(false);
-
-    if (response.ok) {
-      setBusinessStats(data);
-    } else {
-      return console.error("Failed to fetch business stats:", data.error);
-    }
+  const handleIsWeeklyEmailReports = () => {
+    setisWeeklyEmailReports(!isWeeklyEmailReports);
+  };
+  const handleIsDiscountEmailReports = () => {
+    setisDiscountEmailReports(!isDiscountEmailReports);
+  };
+  const onDone = () => {
+    setEditModal(!editModal);
+  };
+  const onClose = () => {
+    setEditModal(!editModal);
   };
 
-  const downloadCSV = async () => {
-    const rows = [
-      ["Stats Name", "value"],
-      ["This months # of scans", businessStats.totalListings],
-      ["Most common category", businessStats.mostCommonCategory],
-      ["# trashed", businessStats.listingsDamaged],
-      ["# disposed", businessStats.disposedListings],
-      ["# keep", businessStats.listingsToSell],
-      ["% trashed", businessStats.percentageDamaged],
-      ["% disposed", businessStats.percentageDisposed],
-      ["% to sell", businessStats.percentageToSell],
-    ];
-    const values = rows.map((entry) => entry.join(","));
-    const blob = new Blob([values.join("\n")], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("href", url);
-    a.setAttribute("download", `stats-${new Date().toISOString()}.csv`);
-    a.click();
+  const handleDaysThroughTarget = (e) => {
+    setDaysThroughTarget(e.target.value);
+    console.log(daysThroughTraget);
   };
-
-  useEffect(() => {
-    fetchBusinessData().then();
-  }, []);
-
-  useEffect(() => {
-    const range = getRange(selectedRange);
-    fetchBusinessStats(range.dateTo, range.dateFrom).then();
-  }, [selectedRange]);
+  const handleDaysASPTarget = (e) => {
+    setDaysASPTarget(e.target.value);
+    console.log(daysASPTarget);
+  };
 
   return (
-    <div className="bg-white ">
-      <div>
-        <section className="px-5 ">
-          <div className="max-w-lg mx-auto">
-            {fetchingUser ? (
+    <div className="my-5 sm:flex justify-center sm:px-0 px-3">
+      <div className="sm:w-[420px]">
+        <div>
+          {fetchingUser ? (
+            <div>
               <div>
+                <div className="h-[312px] flex justify-center items-center">
+                  <Loading size="xl" />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div className="py-2">
+                <label className="text-sm text-gray-700">Store name</label>
+                <input
+                  value={businessData?.businessName}
+                  name="businessName"
+                  type="text"
+                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="py-2">
+                <label className="text-sm text-gray-700">Email</label>
+                <input
+                  disabled={true}
+                  value={businessData?.email}
+                  name="email"
+                  type="text"
+                  className="bg-gray-100 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="py-2">
+                <label className="text-sm text-gray-700">
+                  Square Access Token
+                </label>
+                <input
+                  value={businessData?.squareAccessToken}
+                  name="squareAccessToken"
+                  type="password"
+                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                  onChange={handleChange}
+                />
+              </div>
+              <ButtonComponent
+                className="mt-3"
+                rounded
+                full
+                loading={updating}
+                type="submit"
+              >
+                Update
+              </ButtonComponent>
+            </form>
+          )}
+          <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
+            <h3 className=" text-green-600 font-semibold text-2xl">
+              Subscribed
+            </h3>
+
+            <div>
+              <div className="mt-1 flex items-center justify-between">
                 <div>
-                  <div className="h-[312px] flex justify-center items-center">
-                    <Loading size="xl" />
+                  <h1 className="text-xl text-gray-700">
+                    Weekly Email Reports{" "}
+                  </h1>
+                </div>
+                <div>
+                  <div className="h-9 flex items-center">
+                    <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
+                      <input
+                        value={isWeeklyEmailReports}
+                        type="checkbox"
+                        className="sr-only peer"
+                        data-gtm-form-interact-field-id="0"
+                      />
+
+                      <div
+                        onClick={handleIsWeeklyEmailReports}
+                        className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
+                          isWeeklyEmailReports === true
+                            ? "bg-primary"
+                            : "bg-gray-200"
+                        }`}
+                      ></div>
+                    </label>
                   </div>
                 </div>
               </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="py-2">
-                  <label className="text-sm text-gray-700">Store name</label>
-                  <input
-                    value={businessData?.businessName}
-                    name="businessName"
-                    type="text"
-                    className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="py-2">
-                  <label className="text-sm text-gray-700">Email</label>
-                  <input
-                    disabled={true}
-                    value={businessData?.email}
-                    name="email"
-                    type="text"
-                    className="bg-gray-100 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2"
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="py-2">
-                  <label className="text-sm text-gray-700">
-                    Square Access Token
-                  </label>
-                  <input
-                    value={businessData?.squareAccessToken}
-                    name="squareAccessToken"
-                    type="password"
-                    className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                    onChange={handleChange}
-                  />
-                </div>
-                <ButtonComponent
-                  className="mt-3"
-                  rounded
-                  full
-                  loading={updating}
-                  type="submit"
-                >
-                  Update
-                </ButtonComponent>
-              </form>
-            )}
-
-            <div className="sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
-              <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
-                <table className="w-full text-sm text-left text-gray-500">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-1 py-3"
-                      >
-                        {
-                          <Dropdown>
-                            <Dropdown.Button light>
-                              {selectedRange}
-                            </Dropdown.Button>
-                            <Dropdown.Menu
-                              selectionMode="single"
-                              disallowEmptySelection
-                              selectedKeys={selectedRange}
-                              onSelectionChange={(keys) => {
-                                const selectedKey = Array.from(keys)[0];
-
-                                setSelectedRange(selectedKey);
-                              }}
-                            >
-                              <Dropdown.Item key={"Current Month"}>
-                                Current Month
-                              </Dropdown.Item>
-                              <Dropdown.Item key={"Previous Month"}>
-                                Previous Month
-                              </Dropdown.Item>
-                              <Dropdown.Item key={"Last 30 Days"}>
-                                Last 30 Days
-                              </Dropdown.Item>
-                              <Dropdown.Item key={"Last 60 Days"}>
-                                Last 60 Days
-                              </Dropdown.Item>
-                              <Dropdown.Item key={"Last 90 Days"}>
-                                Last 90 Days
-                              </Dropdown.Item>
-                              <Dropdown.Item key={"Current Year"}>
-                                Current Year
-                              </Dropdown.Item>
-                              <Dropdown.Item key={"All"}>All</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
+              {isWeeklyEmailReports && (
+                <div className="ml-3">
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        Treasures for You{" "}
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() => setTreasures(!treasures)}
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        Newly Listed Premium{" "}
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() =>
+                          setNewlyListedPremium(!newlyListedPremium)
                         }
-                      </th>
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4">
-                        This months # of scans
-                      </td>
-                      {!fetchingBusinessStats ? (
-                        <td className="px-6 py-4">
-                          {businessStats ? businessStats.totalListings : ""}
-                        </td>
-                      ) : (
-                        <td>
-                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4">
-                        Most common category
-                      </td>
-                      {!fetchingBusinessStats ? (
-                        <td className="px-6 py-4">
-                          {businessStats
-                            ? businessStats.mostCommonCategory === "None"
-                              ? "--"
-                              : businessStats.mostCommonCategory
-                            : ""}
-                        </td>
-                      ) : (
-                        <td>
-                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4"> # disposed</td>
-                      {!fetchingBusinessStats ? (
-                        <td className="px-6 py-4">
-                          {businessStats ? businessStats.disposedListings : ""}
-                        </td>
-                      ) : (
-                        <td>
-                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4"> # keep</td>
-                      {!fetchingBusinessStats ? (
-                        <td className="px-6 py-4">
-                          {businessStats ? businessStats.listingsToSell : ""}
-                        </td>
-                      ) : (
-                        <td>
-                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
-                        </td>
-                      )}
-                    </tr>
-                    <tr className="bg-white dark:bg-gray-800">
-                      <td className="text-black px-6 py-4"> # trashed</td>
-                      {!fetchingBusinessStats ? (
-                        <td className="px-6 py-4">
-                          {businessStats ? businessStats.listingsDamaged : ""}
-                        </td>
-                      ) : (
-                        <td>
-                          <div className="h-5 mx-5 bg-gray-200 rounded-full w-16 my-4"></div>
-                        </td>
-                      )}
-                    </tr>
-                  </tbody>
-                </table>
+            <div>
+              <div className="mt-1 flex items-center justify-between">
+                <div>
+                  <h1 className="text-xl text-gray-700">
+                    Discount Email Reports{" "}
+                  </h1>
+                </div>
+                <div>
+                  <div className="h-9 flex items-center">
+                    <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
+                      <input
+                        value={isDiscountEmailReports}
+                        type="checkbox"
+                        className="sr-only peer"
+                        data-gtm-form-interact-field-id="0"
+                      />
+
+                      <div
+                        onClick={handleIsDiscountEmailReports}
+                        className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
+                          isDiscountEmailReports === true
+                            ? "bg-primary"
+                            : "bg-gray-200"
+                        }`}
+                      ></div>
+                    </label>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex justify-center mt-5">
-              <ButtonComponent
-                full
-                rounded
-                onClick={() => downloadCSV()}
-              >
-                Download Excel report
-              </ButtonComponent>
-            </div>
-
-            <div className="flex items-center justify-center mt-4 hidden">
-              <label className="relative flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  value=""
-                  className="sr-only peer"
-                  checked={isViewableForVoting}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#f7895e] dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#E44A1F]"></div>
-                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                  Viewable for voting
-                </span>
-              </label>
-              <TooltipComponent
-                rounded
-                placement="rightStart"
-                width="!w-64"
-                id="shipping-status-tooltip"
-                css={{ zIndex: 10000 }}
-                content={
-                  "Lorem ipsum dolar sit amit Lorem ipsum dolar sit amit Lorem ipsum dolar sit amit"
-                }
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-8 h-8 ml-3 cursor-pointer"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
-                  />
-                </svg>
-              </TooltipComponent>
-            </div>
-
-            <div className="flex justify-center mt-5 hidden">
-              <ButtonComponent
-                full
-                rounded
-              >
-                Invite a customer
-              </ButtonComponent>
-            </div>
-
-            <div className="mt-4 w-full flex justify-center">
-              <ButtonComponent
-                full
-                rounded
-                onClick={() => signOut()}
-              >
-                Sign Out
-              </ButtonComponent>
+              {isDiscountEmailReports && (
+                <div className="ml-3">
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        Recurring Discounts
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() => setRecurring(!recurring)}
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        One-time Specials
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() => setOneTimeSpecials(!oneTimeSpecials)}
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </section>
+          <div className="mt-4">
+            <h1 className="text-2xl text-center">Key Performance Metrics</h1>
+            <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
+              <div className="w-full ">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-md text-gray-700">
+                    90 day AVG Listings added:
+                  </h1>
+                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                    2500
+                  </h3>
+                </div>
+                <div className="flex items-center justify-between  mt-3">
+                  <h1 className="text-md text-gray-700">
+                    90 day Sell through:
+                  </h1>
+                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                    1500
+                  </h3>
+                </div>
+                <div className="flex items-center justify-between  mt-3">
+                  <h1 className="text-md text-gray-700">
+                    90 day Sell through Target:
+                  </h1>
+                  <input
+                    value={daysThroughTraget}
+                    type="number"
+                    onChange={handleDaysThroughTarget}
+                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-[#ffc71f] border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-1">
+            <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
+              <div className="w-full">
+                <div className="flex items-center justify-between">
+                  <h1 className="text-md text-gray-700">90 day ALP:</h1>
+                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                    $15
+                  </h3>
+                </div>
+                <div className="flex items-center justify-between  mt-3">
+                  <h1 className="text-md text-gray-700">90 day ASP:</h1>
+                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                    $10
+                  </h3>
+                </div>
+                <div className="flex items-center justify-between  mt-3">
+                  <h1 className="text-md text-gray-700">90 day ASP Target:</h1>
+                  <input
+                    value={daysASPTarget}
+                    type="number"
+                    onChange={handleDaysASPTarget}
+                    className="font-medium px-2 focus:ring-1 focus:ring-[#ffc71f] py-1 border border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>{" "}
+          <div className="mt-3 text-xl text-black">
+            <h1 className="text-xl text-center text-black">
+              Liquidation Thresholds
+            </h1>
+            <div className="flex justify-center">
+              <button
+                onClick={onClose}
+                className="mt-3 w-32 bg-orange-500  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+              >
+                Edit
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <button
+                className="mt-3 w-32 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                onClick={() => signOut()}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+        {editModal === true && (
+          <EditBusinessProfileModal
+            onClose={onClose}
+            onDone={onDone}
+          />
+        )}
       </div>
     </div>
   );
-};
-export default Profilecomponent;
+}
+export default ProfileComponent;

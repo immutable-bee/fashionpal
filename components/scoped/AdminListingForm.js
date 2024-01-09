@@ -522,9 +522,6 @@ function AdminListingForm({ onBack, onFetch }) {
             </h3>
             <div className="flex items-center justify-center mt-5">
               <div className="w-[260px] mr-20">
-                <h3 className="text-2xl text-center">
-                  Follow us on FashionPal
-                </h3>
                 <QRCode
                   id="customer-qrcode" // Set a unique id for this QR code
                   value={`https://fashionpal.vercel.app/store/KalisKloset-${

@@ -25,7 +25,7 @@ const RePricer = () => {
   }, []);
 
   return (
-    <div className='sm:w-96 mx-auto mt-4'>
+    <div className="sm:w-96 mx-auto mt-4 px-3">
       <>
         {addRule ? (
           <CreateNewRule
