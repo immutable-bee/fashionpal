@@ -3,43 +3,55 @@ import { prisma } from "../../../../db/prismaDB";
 const handler = async (req, res) => {
   const { data } = req.body;
 
-  const queuedListing = await prisma.queuedListing.findUnique({
-    where: { id: data.id },
-    include: {
-      queue: true,
-    },
-  });
-
-  if (!queuedListing) {
-    return res.status(404).json({ message: "Queued listing not found" });
-  }
-
-  const bucketPath = queuedListing.bucketPath;
-  const mainImageUrl = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${bucketPath}/mainImage`;
-  const brandImageUrl = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${bucketPath}/brandImage`;
-
-  let categories = [
-    queuedListing.topCategory,
-    queuedListing.mainCategory,
-    queuedListing.subCategory,
-  ];
-  categories = categories.filter(
-    (entry) => entry !== null && entry !== undefined
-  );
-  const categoriesToCreate = [];
-  for (const category of categories) {
-    categoriesToCreate.push({
-      category: {
-        connectOrCreate: {
-          where: { name: category },
-          create: { name: category },
-        },
-      },
-    });
-  }
-
   try {
-    const transactionResult = await prisma.$transaction(async (prisma) => {
+    // Start the transaction
+    await prisma.$executeRaw`BEGIN`;
+
+    try {
+      const queuedListing = await prisma.queuedListing.findUnique({
+        where: { id: data.id },
+        include: {
+          queue: true,
+          relatedProducts: true,
+        },
+      });
+
+      if (!queuedListing) {
+        await prisma.$executeRaw`ROLLBACK`;
+        return res.status(404).json({ message: "Queued listing not found" });
+      }
+
+      // Handle related products if needed
+      await prisma.relatedProduct.deleteMany({
+        where: {
+          queuedListingId: queuedListing.id,
+        },
+      });
+
+      // Log relevant information
+      console.log("Queued Listing:", queuedListing);
+
+      const bucketPath = queuedListing.bucketPath;
+      const mainImageUrl = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${bucketPath}/mainImage`;
+      const brandImageUrl = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${bucketPath}/brandImage`;
+
+      let categories = [
+        queuedListing.topCategory,
+        queuedListing.mainCategory,
+        queuedListing.subCategory,
+      ];
+      categories = categories.filter(
+        (entry) => entry !== null && entry !== undefined
+      );
+      const categoriesToCreate = categories.map((category) => ({
+        category: {
+          connectOrCreate: {
+            where: { name: category },
+            create: { name: category },
+          },
+        },
+      }));
+
       const newListing = await prisma.listing.create({
         data: {
           mainImageUrl,
@@ -59,15 +71,26 @@ const handler = async (req, res) => {
         },
       });
 
+      // Log relevant information
+      console.log("New Listing:", newListing);
+
       await prisma.queuedListing.delete({
         where: { id: data.id },
       });
 
-      return newListing;
-    });
+      // Commit the transaction
+      await prisma.$executeRaw`COMMIT`;
 
-    res.status(200).json(transactionResult);
+      return res.status(200).json({ message: "Successfully deleted" });
+    } catch (error) {
+      // Rollback the transaction in case of an error
+      await prisma.$executeRaw`ROLLBACK`;
+      console.error("Inner Transaction Error:", error);
+      throw error; // Rethrow the error to ensure the outer transaction is rolled back
+    }
   } catch (error) {
+    // Log the error for debugging purposes
+    console.error("Outer Transaction Error:", error);
     return res.status(500).json({ message: error.message });
   }
 };
