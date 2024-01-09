@@ -430,7 +430,7 @@ function ProductDetails({
                   {data.price && (
                     <h3 className="text-2xl font-semibold">${data.price}</h3>
                   )}
-                  <div className="mt-3 flex items-center gap-1">
+                  <div className="mt-3 flex items-center relative">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="icon icon-tabler icon-tabler-diamond"
@@ -451,7 +451,9 @@ function ProductDetails({
                       <path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5" />
                       <path d="M10 12l-2 -2.2l.6 -1" />
                     </svg>
-                    <h3 className="text-3xl font-normal">P</h3>
+                    <h3 className="text-3xl absolute z-50 left-5 font-normal">
+                      P
+                    </h3>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="icon icon-tabler icon-tabler-discount-check"

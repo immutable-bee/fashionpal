@@ -3,10 +3,16 @@ import React, { useEffect, useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import Loading from "@/components/utility/loading";
 import { signOut } from "next-auth/react";
+import { Checkbox } from "@nextui-org/react";
 
 function ProfileComponent() {
   const [editModal, setEditModal] = useState(false);
   const [isWeeklyEmailReports, setisWeeklyEmailReports] = useState(false);
+  const [treasures, setTreasures] = useState(false);
+  const [newlyListedPremium, setNewlyListedPremium] = useState(false);
+  const [isDiscountEmailReports, setisDiscountEmailReports] = useState(false);
+  const [oneTimeSpecials, setOneTimeSpecials] = useState(false);
+  const [recurring, setRecurring] = useState(false);
   const [daysThroughTraget, setDaysThroughTarget] = useState("1750");
   const [daysASPTarget, setDaysASPTarget] = useState("$12");
   const [fetchingUser, setFetchingUser] = useState(true);
@@ -68,6 +74,9 @@ function ProfileComponent() {
 
   const handleIsWeeklyEmailReports = () => {
     setisWeeklyEmailReports(!isWeeklyEmailReports);
+  };
+  const handleIsDiscountEmailReports = () => {
+    setisDiscountEmailReports(!isDiscountEmailReports);
   };
   const onDone = () => {
     setEditModal(!editModal);
@@ -144,30 +153,141 @@ function ProfileComponent() {
               </ButtonComponent>
             </form>
           )}
-          <div className="mt-4 flex items-center justify-between">
-            <div>
-              <h1 className="text-xl text-gray-700">Weekly Email Reports </h1>
-            </div>
-            <div>
-              <div className="h-9 flex items-center">
-                <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
-                  <input
-                    value={isWeeklyEmailReports}
-                    type="checkbox"
-                    className="sr-only peer"
-                    data-gtm-form-interact-field-id="0"
-                  />
+          <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
+            <h3 className=" text-green-600 font-semibold text-2xl">
+              Subscribed
+            </h3>
 
-                  <div
-                    onClick={handleIsWeeklyEmailReports}
-                    className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
-                      isWeeklyEmailReports === true
-                        ? "bg-primary"
-                        : "bg-gray-200"
-                    }`}
-                  ></div>
-                </label>
+            <div>
+              <div className="mt-1 flex items-center justify-between">
+                <div>
+                  <h1 className="text-xl text-gray-700">
+                    Weekly Email Reports{" "}
+                  </h1>
+                </div>
+                <div>
+                  <div className="h-9 flex items-center">
+                    <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
+                      <input
+                        value={isWeeklyEmailReports}
+                        type="checkbox"
+                        className="sr-only peer"
+                        data-gtm-form-interact-field-id="0"
+                      />
+
+                      <div
+                        onClick={handleIsWeeklyEmailReports}
+                        className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
+                          isWeeklyEmailReports === true
+                            ? "bg-primary"
+                            : "bg-gray-200"
+                        }`}
+                      ></div>
+                    </label>
+                  </div>
+                </div>
               </div>
+              {isWeeklyEmailReports && (
+                <div className="ml-3">
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        Treasures for You{" "}
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() => setTreasures(!treasures)}
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        Newly Listed Premium{" "}
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() =>
+                          setNewlyListedPremium(!newlyListedPremium)
+                        }
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <div className="mt-1 flex items-center justify-between">
+                <div>
+                  <h1 className="text-xl text-gray-700">
+                    Discount Email Reports{" "}
+                  </h1>
+                </div>
+                <div>
+                  <div className="h-9 flex items-center">
+                    <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
+                      <input
+                        value={isDiscountEmailReports}
+                        type="checkbox"
+                        className="sr-only peer"
+                        data-gtm-form-interact-field-id="0"
+                      />
+
+                      <div
+                        onClick={handleIsDiscountEmailReports}
+                        className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
+                          isDiscountEmailReports === true
+                            ? "bg-primary"
+                            : "bg-gray-200"
+                        }`}
+                      ></div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              {isDiscountEmailReports && (
+                <div className="ml-3">
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        Recurring Discounts
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() => setRecurring(!recurring)}
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                  <div className="mt-2 flex items-center justify-between">
+                    <div>
+                      <h1 className="text-lg text-gray-700">
+                        One-time Specials
+                      </h1>
+                    </div>
+                    <div>
+                      <Checkbox
+                        onChange={() => setOneTimeSpecials(!oneTimeSpecials)}
+                        id="onboarding-form-tc-checkbox"
+                        className="mr-2"
+                        size={"lg"}
+                      ></Checkbox>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <div className="mt-4">
