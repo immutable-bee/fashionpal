@@ -19,9 +19,9 @@ function ButtonComponent({
   onlyIcon = false,
 }) {
   const colorMap = {
-    primary: "bg-primary text-white",
-    secondary: "bg-secondary text-black border border-black",
-    light: "bg-lightprimary text-black",
+    primary: "bg-white border-2 border-primary text-primary ",
+    secondary: "bg-white border-2 border-secondary  text-secondary  ",
+    light: "bg-white border-2 border-lightprimary text-lightprimary ",
   };
   const alignMap = {
     start: "justify-start",
@@ -53,7 +53,7 @@ function ButtonComponent({
     <button
       id={id}
       type={type}
-      className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-sm sm:text-lg font-normal min-w-fit
+      className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-sm sm:text-lg font-medium min-w-fit
         ${rounded ? "rounded-lg" : ""}
         ${full ? "w-full" : ""}
         ${border ? "border border-black" : ""}
