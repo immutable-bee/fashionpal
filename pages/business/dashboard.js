@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown } from "@nextui-org/react";
 
 // Import the chart component using dynamic import
@@ -24,12 +24,12 @@ const DonationAcceptedChart = dynamic(
 
 const Dashboard = ({ onBack }) => {
   const [ruleName, setRuleName] = useState("");
-  const [category, setCategory] = useState("");
-  const [week, setWeek] = useState("");
+  const [category, setCategory] = useState("All");
+  const [dateRange, setDateRange] = useState("This Week");
   const [activeTab, setActiveTab] = useState("overview");
-  const [fetchingPerformanceComparison, setFetchingPerformanceComparison] =
+  const [fetchingComparisonReport, setFetchingComparisonReport] =
     useState(false);
-  const [performanceComparison, setPerformanceComparison] = useState([
+  const [comparisonReport, setComparisonReport] = useState([
     { category: "Hats", revenue: 1298 },
     { category: "Clothing Tops", revenue: 85 },
     { category: "Clothing Bottoms", revenue: 65 },
@@ -43,6 +43,122 @@ const Dashboard = ({ onBack }) => {
 
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedRevenue, setSelectedRevenues] = useState([]);
+
+  const [fetchingSquareReport, setFetchingSquareReport] = useState(false);
+  const [squareReport, setSquareReport] = useState();
+
+  const [sampleSquareReport, setSampleSquareReport] = useState({
+    statsByGroup: {
+      "01/23": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+      "02/23": {
+        revenue: 10000,
+        totalItemsSold: 17,
+        totalListingPrice: 13000,
+        totalDaysListed: 250,
+        donations: 28,
+        accepted: 28,
+
+        averageSalePrice: 250,
+        averageListingPrice: 325,
+        averageDaysListed: 6.25,
+      },
+      "03/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+    },
+  });
+
+  const getDateRange = (selection) => {
+    let fromDate, toDate;
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+
+    switch (selection) {
+      case "This Week":
+        fromDate = new Date(today.setDate(today.getDate() - dayOfWeek));
+        toDate = new Date();
+        break;
+      case "Last Week":
+        fromDate = new Date(today.setDate(today.getDate() - dayOfWeek - 7));
+        toDate = new Date(today.setDate(today.getDate() - dayOfWeek));
+        break;
+      case "This Month":
+        fromDate = new Date(today.getFullYear(), today.getMonth(), 1);
+        toDate = new Date();
+        break;
+      case "Last Month":
+        fromDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+        toDate = new Date(today.getFullYear(), today.getMonth(), 0);
+        break;
+      case "Last Three Months":
+        fromDate = new Date(today.getFullYear(), today.getMonth() - 3, 1);
+        toDate = new Date();
+        break;
+      case "Last six months":
+        fromDate = new Date(today.getFullYear(), today.getMonth() - 6, 1);
+        toDate = new Date();
+        break;
+      case "Last 12 months":
+        fromDate = new Date(
+          today.getFullYear() - 1,
+          today.getMonth(),
+          today.getDate()
+        );
+        toDate = new Date();
+        break;
+      default:
+        break;
+    }
+
+    return { fromDate, toDate };
+  };
+
+  const fetchSquareReport = async () => {
+    setFetchingSquareReport(true);
+    const { fromDate, toDate } = getDateRange(dateRange);
+    try {
+      const res = await fetch(
+        `/api/business/fetchSquareReport?fromDate=${fromDate}&toDate=${toDate}&category=${category}`
+      );
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setSquareReport(data);
+        setFetchingSquareReport(false);
+      } else {
+        const errorMessage = await res.text();
+        console.error(
+          `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+        );
+        setFetchingSquareReport(false);
+      }
+    } catch (error) {
+      console.error("An error occurred while Square report", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSquareReport();
+  }, [dateRange, category]);
 
   return (
     <div className="  pb-8 sm:pt-6 pt-0">
@@ -94,7 +210,7 @@ const Dashboard = ({ onBack }) => {
                   className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value="">All</option>
+                  <option value="All">All</option>
                   <option value="Clothing">Clothing</option>
                   <option value="Footwear">Footwear</option>
                   <option value="Hats">Hats</option>
@@ -104,9 +220,9 @@ const Dashboard = ({ onBack }) => {
               <div className="">
                 <label className="text-lg">Week</label>
                 <select
-                  value={week}
+                  value={dateRange}
                   className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setWeek(e.target.value)}
+                  onChange={(e) => setDateRange(e.target.value)}
                 >
                   <option value="This Week">This Week</option>
                   <option value="Last Week">Last Week</option>
@@ -124,23 +240,23 @@ const Dashboard = ({ onBack }) => {
               <h3 className="text-xl text-center">
                 Items Listed and Items Sold
               </h3>
-              <ItemLinkedSoldChart />
+              <ItemLinkedSoldChart chartData={sampleSquareReport} />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">ALP and ASP</h3>
-              <ALPASPChart />
+              <ALPASPChart chartData={sampleSquareReport} />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">Donations and Accepted</h3>
-              <DonationAcceptedChart />
+              <DonationAcceptedChart chartData={sampleSquareReport} />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">AVG Days Listed</h3>
-              <AVGDayListedChart />
+              <AVGDayListedChart chartData={sampleSquareReport} />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">Revenue</h3>
-              <RevenueChart />
+              <RevenueChart chartData={sampleSquareReport} />
             </div>
           </div>
         </div>
@@ -148,9 +264,9 @@ const Dashboard = ({ onBack }) => {
         <div className="px-3 sm:px-5 sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
           <div className="py-2 flex items-center justify-center w-full">
             <select
-              value={week}
+              value={dateRange}
               className=" mt-1 rounded-xl w-56 px-3 py-2 border border-gray-600"
-              onChange={(e) => setWeek(e.target.value)}
+              onChange={(e) => setDateRange(e.target.value)}
             >
               <option value="This Week">This Week</option>
               <option value="Last Week">Last Week</option>
@@ -165,10 +281,7 @@ const Dashboard = ({ onBack }) => {
             <table className="w-full text-sm text-left text-gray-500">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    className="px-1 py-3"
-                  >
+                  <th scope="col" className="px-1 py-3">
                     {
                       <Dropdown>
                         <Dropdown.Button light>
@@ -197,10 +310,7 @@ const Dashboard = ({ onBack }) => {
                     }
                   </th>
 
-                  <th
-                    scope="col"
-                    className="px-1 py-3"
-                  >
+                  <th scope="col" className="px-1 py-3">
                     {
                       <Dropdown>
                         <Dropdown.Button light>
@@ -235,11 +345,8 @@ const Dashboard = ({ onBack }) => {
                 </tr>
               </thead>
               <tbody>
-                {performanceComparison.map((row, key) => (
-                  <tr
-                    key={key}
-                    className="bg-white dark:bg-gray-800"
-                  >
+                {comparisonReport.map((row, key) => (
+                  <tr key={key} className="bg-white dark:bg-gray-800">
                     <td className="text-black px-6 py-4">
                       {row.category ? row.category : "--"}
                     </td>
