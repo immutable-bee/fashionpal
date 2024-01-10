@@ -71,7 +71,10 @@ const handler = async (req, res) => {
 
           allCategories.push(...categories);
           const tags = listing?.tags?.join(" - ");
-
+          const description = [mainImage];
+          if (tags.length > 0) {
+            description.push(tags);
+          }
           const item = {
             type: "ITEM",
             id: listingId,
@@ -79,7 +82,7 @@ const handler = async (req, res) => {
             custom_attribute_values: [],
             itemData: {
               name: categories.join(" - "),
-              description: `${mainImage} - ${tags}`,
+              description: description.join(" - "),
               variations: [
                 {
                   type: "ITEM_VARIATION",
