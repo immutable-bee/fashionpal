@@ -25,7 +25,8 @@ const DonationAcceptedChart = dynamic(
 const Dashboard = ({ onBack }) => {
   const [ruleName, setRuleName] = useState("");
   const [category, setCategory] = useState("All");
-  const [dateRange, setDateRange] = useState("This Week");
+  const [reportDateRange, setReportDateRange] = useState("This Week");
+  const [comparisonDateRange, setComparisonDateRange] = useState("This Week");
   const [activeTab, setActiveTab] = useState("overview");
   const [fetchingComparisonReport, setFetchingComparisonReport] =
     useState(false);
@@ -258,12 +259,11 @@ const Dashboard = ({ onBack }) => {
 
   useEffect(() => {
     fetchSquareReport();
-  }, [dateRange, category]);
+  }, [reportDateRange, category]);
 
-  // Only fetch once, then filter clientside by selected categories and stats
   useEffect(() => {
     fetchComparisonReport();
-  }, []);
+  }, [comparisonDateRange]);
 
   return (
     <div className="  pb-8 sm:pt-6 pt-0">
@@ -327,7 +327,7 @@ const Dashboard = ({ onBack }) => {
                 <select
                   value={dateRange}
                   className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setDateRange(e.target.value)}
+                  onChange={(e) => setReportDateRange(e.target.value)}
                 >
                   <option value="This Week">This Week</option>
                   <option value="Last Week">Last Week</option>
@@ -371,7 +371,7 @@ const Dashboard = ({ onBack }) => {
             <select
               value={dateRange}
               className=" mt-1 rounded-xl w-56 px-3 py-2 border border-gray-600"
-              onChange={(e) => setDateRange(e.target.value)}
+              onChange={(e) => setComparisonDateRange(e.target.value)}
             >
               <option value="This Week">This Week</option>
               <option value="Last Week">Last Week</option>
