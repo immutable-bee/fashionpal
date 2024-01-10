@@ -6,22 +6,22 @@ export default async function handler(
     res: NextApiResponse
 ) {
     if (req.method === "GET") {
-        const barcode = req.query.barcode as string;
+        const id = req.query.id as string;
 
         try {
-            const listingByBarcode = await prisma.listing.findUnique({
+            const listingByid = await prisma.listing.findUnique({
                 where: {
-                    Barcode: barcode,
+                    id: id,
                     isActive: true,
                 },
             });
 
-            if (!listingByBarcode) {
+            if (!listingByid) {
                 return res.status(404).json({ message: "Listing not found" });
             }
 
             res.status(200).json({
-                result: listingByBarcode,
+                result: listingByid,
             });
         } catch (error) {
             console.error("Error fetching listing by barcode:", error);

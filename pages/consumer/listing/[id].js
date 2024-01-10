@@ -82,9 +82,7 @@ function Scan() {
 
   const fetchListing = useCallback(async () => {
     try {
-      const res = await fetch(
-        `/api/common/fetch-listing/${router.query.barcode}`
-      );
+      const res = await fetch(`/api/common/fetch-listing/${router.query.id}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -103,6 +101,7 @@ function Scan() {
   }, []);
 
   useEffect(() => {
+    console.log(router);
     const initialFetch = async () => {
       await fetchListing();
     };

@@ -108,7 +108,7 @@ export const UserProvider = ({ children }) => {
         return;
       }
 
-      if (router.pathname === "/scan/[type.js]/[id]") {
+      if (router.pathname === "/consumer/listing/[id]") {
         setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
         return;
       }
