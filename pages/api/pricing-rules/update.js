@@ -28,7 +28,7 @@ export default async function handler(req, res) {
   payload.roundTo = parseFloat(payload.roundTo);
   payload.floorPrice = parseFloat(payload.floorPrice);
   const requiredParam = ["name", "categoryId", "listingType"];
-  console.log(payload.categoryId, payload.ownerId, payload.listingType);
+
   try {
     const validatorResponse = PayloadValidator(payload, requiredParam);
     if (validatorResponse.status) {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
           },
         },
       });
-      console.log(records);
+
       if (records.length > 0) {
         let recordName = "";
         const hasIssue = records.some((record) => {

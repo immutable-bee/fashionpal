@@ -242,7 +242,7 @@ const RePricer = ({ categoryList }) => {
             </div>
             <div className='py-2'>
               <label className='text-lg'>Category</label>
-              {console.log(category)}
+              {
               <select
                 value={category}
                 className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'

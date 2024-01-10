@@ -71,7 +71,7 @@ const handler = async (req, res) => {
           });
         }
       }
-      // console.log(records);
+
       const newListing = await prisma.PricingRule.create({ data: payload });
 
       res.status(200).json(newListing);

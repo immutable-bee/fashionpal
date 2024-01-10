@@ -46,109 +46,112 @@ const RePricer = ({ onBack, categoryList }) => {
       } else {
         NotificationManager.error("Error adding pricing rule:", error);
       }
-      console.log(error?.response?.data?.error);
+
       setIsLoading(false);
     }
   };
 
   return (
     <div>
-      <div className='sm:w-96 mx-auto'>
+      <div className="sm:w-96 mx-auto">
         <svg
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          strokeWidth='1.5'
-          stroke='currentColor'
-          className='w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer'
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-8 h-8 bg-gray-300 border border-gray-600 rounded-full p-1.5 cursor-pointer"
           onClick={() => onBack()}
         >
           <path
-            strokeLinecap='round'
-            strokeLinejoin='round'
-            d='M15.75 19.5L8.25 12l7.5-7.5'
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 19.5L8.25 12l7.5-7.5"
           />
         </svg>
-        <div className='py-2'>
-          <label className='text-lg'>Rule name</label>
+        <div className="py-2">
+          <label className="text-lg">Rule name</label>
           <input
             value={name}
-            className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
+            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div className='py-2'>
-          <label className='text-lg'>Category</label>
+        <div className="py-2">
+          <label className="text-lg">Category</label>
           <select
             value={category}
-            className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
+            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setCategory(e.target.value)}
           >
             {categoryList.length > 0 &&
               categoryList.map((category) => (
-                <option key={category.id} value={category.id}>
+                <option
+                  key={category.id}
+                  value={category.id}
+                >
                   {category.name}
                 </option>
               ))}
           </select>
         </div>
-        <div className='py-2'>
-          <label className='text-lg'>Type</label>
+        <div className="py-2">
+          <label className="text-lg">Type</label>
           <select
             value={listingType}
-            className='w-full mt-1 rounded-xl px-3 py-2 border border-gray-600'
+            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setListingType(e.target.value)}
           >
-            <option value='ALL'>Include premium</option>
-            <option value='PREMIUM_ONLY'>premium only</option>
-            <option value='EXCLUDE_PREMIUM'>Exclude premium</option>
+            <option value="ALL">Include premium</option>
+            <option value="PREMIUM_ONLY">premium only</option>
+            <option value="EXCLUDE_PREMIUM">Exclude premium</option>
           </select>
         </div>
 
-        <div className='py-2 mt-4 max-w-fit mx-auto'>
-          <h3 className='text-lg text-center'>Price adjustment</h3>
-          <div className='py-2 flex items-center'>
+        <div className="py-2 mt-4 max-w-fit mx-auto">
+          <h3 className="text-lg text-center">Price adjustment</h3>
+          <div className="py-2 flex items-center">
             <input
               value={adjustPriceBy}
-              className=' mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2'
-              max='99'
-              type='Number'
+              className=" mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2"
+              max="99"
+              type="Number"
               onChange={(e) => setAdjustPriceBy(e.target.value)}
             />
-            <label className='text-lg min-w-fit'>% off</label>
+            <label className="text-lg min-w-fit">% off</label>
 
             <select
               value={cycle}
-              className='w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2'
+              className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
               onChange={(e) => setCycle(e.target.value)}
             >
-              <option value='weekly'>Weekly</option>
-              <option value='bi-weely'>Bi Weekly</option>
-              <option value='monthly'>Monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="bi-weely">Bi Weekly</option>
+              <option value="monthly">Monthly</option>
             </select>
           </div>
         </div>
 
-        <div className='py-2 flex justify-between items-center'>
-          <label className='text-lg min-w-fit'>Round to</label>
+        <div className="py-2 flex justify-between items-center">
+          <label className="text-lg min-w-fit">Round to</label>
 
           <select
             value={roundTo}
-            className='w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2'
+            className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
             onChange={(e) => setRoundTo(e.target.value)}
           >
-            <option value='0.00'>$0.00</option>
-            <option value='0.50'>$0.50</option>
-            <option value='0.90'>$0.99</option>
+            <option value="0.00">$0.00</option>
+            <option value="0.50">$0.50</option>
+            <option value="0.90">$0.99</option>
           </select>
         </div>
-        <div className='py-2 flex justify-between items-center'>
-          <label className='text-lg min-w-fit'>Floor price</label>
+        <div className="py-2 flex justify-between items-center">
+          <label className="text-lg min-w-fit">Floor price</label>
 
           <input
             value={floorPrice}
-            className='w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2'
-            type='number'
+            className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
+            type="number"
             onChange={(e) => setFloorPrice(e.target.value)}
           />
         </div>

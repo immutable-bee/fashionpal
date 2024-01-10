@@ -87,11 +87,9 @@ function ProfileComponent() {
 
   const handleDaysThroughTarget = (e) => {
     setDaysThroughTarget(e.target.value);
-    console.log(daysThroughTraget);
   };
   const handleDaysASPTarget = (e) => {
     setDaysASPTarget(e.target.value);
-    console.log(daysASPTarget);
   };
 
   return (

@@ -23,12 +23,6 @@ const handler = async (req, res) => {
   const [result] = await client.annotateImage(request);
   const textDetections = result.textAnnotations;
   const logoDetections = result.logoAnnotations;
-
-  console.log("Text:");
-  textDetections.forEach((text) => console.log(text.description));
-
-  console.log("Logos:");
-  logoDetections.forEach((logo) => console.log(logo.description));
 };
 
 export default handler;

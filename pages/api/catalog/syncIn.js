@@ -180,8 +180,6 @@ const handler = async (req, res) => {
           }
         }
 
-        console.log(">>>> ", JSON.stringify(items));
-
         if (items?.length === 0) {
           continue;
         }

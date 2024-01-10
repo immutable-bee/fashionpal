@@ -22,10 +22,22 @@ const handler = async (req, res) => {
       },
     },
   });
+
+  if (!queue) {
+    // Handle the case where the queue is not found
+    return res.status(200).json({ listings: [] });
+  }
+
+  if (!queue.listings) {
+    // Handle the case where listings is not found or is null
+    return res.status(200).json({ listings: [] });
+  }
+
   queue.listings = queue.listings.map((listing) => {
     listing.mainImage = `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}/mainImage`;
     return listing;
   });
+
   res.status(200).json(queue);
 };
 

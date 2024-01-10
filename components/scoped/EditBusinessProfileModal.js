@@ -46,7 +46,6 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
       data: clothingValues,
     };
 
-    console.log(JSON);
     onDone();
   };
 
