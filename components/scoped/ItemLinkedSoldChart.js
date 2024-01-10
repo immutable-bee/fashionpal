@@ -6,6 +6,16 @@ class App extends Component {
     super(props);
 
     const isMobile = document.documentElement.clientWidth <= 768;
+    const { chartData } = this.props;
+
+    const dateGroup = Object.keys(chartData.statsByGroup);
+    const totalItemsListed = dateGroup.map(
+      (group) => chartData.statsByGroup[group].donations || 0
+    );
+    const totalItemsSold = dateGroup.map(
+      (group) => chartData.statsByGroup[group].totalItemsSold || 0
+    );
+
     this.state = {
       computedValue: isMobile
         ? document.documentElement.clientWidth - 6
@@ -17,20 +27,7 @@ class App extends Component {
           id: "basic-bar",
         },
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ],
+          categories: dateGroup,
         },
         plotOptions: {
           bar: {
@@ -46,11 +43,11 @@ class App extends Component {
       series: [
         {
           name: "Listed",
-          data: [720, 960, 400, 560, 720, 960, 400, 560, 720, 960, 400, 560],
+          data: totalItemsListed,
         },
         {
           name: "Sold",
-          data: [640, 80, 320, 400, 640, 80, 320, 400, 640, 80, 320, 400],
+          data: totalItemsSold,
         },
       ],
     };
@@ -72,7 +69,6 @@ class App extends Component {
   };
 
   componentWillUnmount() {
-    // Remove the event listener when the component is unmounted
     window.removeEventListener("resize", this.handleResize);
   }
 

@@ -6,6 +6,16 @@ class App extends Component {
     super(props);
 
     const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
+    const { chartData } = this.props;
+
+    const dateGroup = Object.keys(chartData.statsByGroup);
+    const ALP = dateGroup.map(
+      (group) => chartData.statsByGroup[group].averageListingPrice || 0
+    );
+    const ASP = dateGroup.map(
+      (group) => chartData.statsByGroup[group].averageSalePrice || 0
+    );
+
     this.state = {
       computedValue: isMobile
         ? document.documentElement.clientWidth - 6
@@ -17,20 +27,7 @@ class App extends Component {
           id: "line-chart",
         },
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ],
+          categories: dateGroup,
         },
         plotOptions: {
           bar: {
@@ -54,12 +51,12 @@ class App extends Component {
         {
           name: "ALP",
           type: "line",
-          data: [6, 8, 10, 6, 8, 10, 6, 8, 10, 6, 8, 10],
+          data: ALP,
         },
         {
           name: "ASP",
           type: "line",
-          data: [4, 3, 7, 4, 3, 7, 4, 3, 7, 4, 3, 7],
+          data: ASP,
         },
       ],
     };

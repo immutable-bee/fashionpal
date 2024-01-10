@@ -7,6 +7,16 @@ class App extends Component {
 
     const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
 
+    const { chartData } = this.props;
+
+    const dateGroup = Object.keys(chartData.statsByGroup);
+    const donations = dateGroup.map(
+      (group) => chartData.statsByGroup[group].donations || 0
+    );
+    const accepted = dateGroup.map(
+      (group) => chartData.statsByGroup[group].accepted || 0
+    );
+
     this.state = {
       computedValue: isMobile
         ? document.documentElement.clientWidth - 6
@@ -18,20 +28,7 @@ class App extends Component {
           id: "line-chart-donations",
         },
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ],
+          categories: dateGroup,
         },
         plotOptions: {
           bar: {
@@ -47,10 +44,7 @@ class App extends Component {
       series: [
         {
           name: "Donations",
-          data: [
-            4000, 5000, 5500, 4000, 5000, 5500, 4000, 5000, 5500, 4000, 5000,
-            5500,
-          ],
+          data: donations,
           type: "area",
           fill: {
             color: "#FF0000", // Red background for Donations
@@ -58,10 +52,7 @@ class App extends Component {
         },
         {
           name: "Accepted",
-          data: [
-            1000, 2000, 2500, 1000, 2000, 2500, 1000, 2000, 2500, 1000, 2000,
-            2500,
-          ],
+          data: accepted,
           type: "area",
           fill: {
             color: "#0000FF", // Blue background for Accepted

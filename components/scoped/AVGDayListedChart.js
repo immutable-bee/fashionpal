@@ -6,6 +6,14 @@ class App extends Component {
     super(props);
 
     const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
+
+    const { chartData } = this.props;
+
+    const dateGroup = Object.keys(chartData.statsByGroup);
+    const averageDaysListed = dateGroup.map(
+      (group) => chartData.statsByGroup[group].averageDaysListed || 0
+    );
+
     this.state = {
       computedValue: isMobile
         ? document.documentElement.clientWidth - 6
@@ -17,20 +25,7 @@ class App extends Component {
           id: "line-chart",
         },
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ],
+          categories: dateGroup,
         },
         plotOptions: {
           bar: {
@@ -47,7 +42,7 @@ class App extends Component {
         {
           name: "AVG Days Listed",
           type: "line",
-          data: [60, 66, 56, 55, 62, 58, 69, 72, 59, 58, 55, 51],
+          data: averageDaysListed,
         },
       ],
     };

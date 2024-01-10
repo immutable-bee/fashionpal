@@ -6,6 +6,14 @@ class App extends Component {
     super(props);
 
     const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
+
+    const { chartData } = this.props;
+
+    const dateGroup = Object.keys(chartData.statsByGroup);
+    const revenue = dateGroup.map(
+      (group) => chartData.statsByGroup[group].revenue || 0
+    );
+
     this.state = {
       computedValue: isMobile
         ? document.documentElement.clientWidth - 6
@@ -20,20 +28,7 @@ class App extends Component {
           },
         },
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ],
+          categories: dateGroup,
         },
         plotOptions: {
           bar: {
@@ -93,10 +88,7 @@ class App extends Component {
       series: [
         {
           name: "Revenue",
-          data: [
-            4000, 5500, 2600, 4000, 5500, 2600, 4000, 5500, 2600, 4000, 5500,
-            2600,
-          ],
+          data: revenue,
         },
       ],
     };
