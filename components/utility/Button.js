@@ -54,7 +54,7 @@ function ButtonComponent({
       id={id}
       type={type}
       className={`flex items-center hover:bg-opacity-90 duration-150 ease-in-out relative overflow-hidden my-1 text-sm sm:text-lg font-normal min-w-fit
-        ${rounded ? "rounded-full" : ""}
+        ${rounded ? "rounded-lg" : ""}
         ${full ? "w-full" : ""}
         ${border ? "border border-black" : ""}
         ${colorMap[color]}
@@ -67,7 +67,7 @@ function ButtonComponent({
     >
       {loading ? (
         <div
-          className={`${colorMap[color]} rounded-full w-full absolute z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center`}
+          className={`${colorMap[color]} rounded-lg w-full absolute z-10 top-0 right-0 left-0 bottom-0 flex justify-center items-center`}
         >
           <svg
             className={`${loadingMap[padding]} animate-spin`}
