@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
 import { Modal } from "@nextui-org/react";
 import { NotificationManager } from "react-notifications";
+import { useRouter } from "next/router";
 
 const PerksModalContent = () => {
   return (
@@ -64,8 +65,11 @@ const PerksModalContent = () => {
 };
 
 function Scan() {
+  const router = useRouter();
   const [isPerksModalOpen, setIsPerksModalOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [loadingListings, setLoadingListings] = useState(true);
+
   const [product, setProduct] = useState({
     price: 10.0,
     isSaleAllUsers: true,
@@ -75,6 +79,34 @@ function Scan() {
     mainImageUrl:
       "https://jhkrtmranrjztkixgfgf.supabase.co/storage/v1/object/public/standard-listings/05e56499-0cd1-4683-ad8e-1c24c9b977d4/clq52jr0s000kx4kjnvna75ry/brandImage",
   });
+
+  const fetchListing = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/common/fetch-listing/20231214103958`);
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setProduct(data.result);
+      } else {
+        const errorMessage = await res.text();
+        console.error(
+          `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+        );
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching listings:", error);
+    } finally {
+      setLoadingListings(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log(router.query.barcode);
+    const initialFetch = async () => {
+      await fetchListing();
+    };
+    initialFetch();
+  }, [fetchListing]);
 
   const perksModalOpenHandler = () => {
     setIsPerksModalOpen(true);
