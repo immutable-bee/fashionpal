@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Dropdown } from "@nextui-org/react";
 
 // Import the chart component using dynamic import
@@ -42,7 +42,7 @@ const Dashboard = ({ onBack }) => {
   ]);
 
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedRevenue, setSelectedRevenues] = useState([]);
+  const [selectedStats, setSelectedStats] = useState([]);
 
   const [fetchingSquareReport, setFetchingSquareReport] = useState(false);
   const [squareReport, setSquareReport] = useState();
@@ -86,6 +86,72 @@ const Dashboard = ({ onBack }) => {
       },
     },
   });
+
+  const [sampleComparisonReport, setSampleComparisonReport] = useState({
+    statsByCategory: {
+      Clothing: {
+        revenue: 12000,
+        totalItemsSold: 60,
+        totalListingPrice: 15000,
+        totalDaysListed: 180,
+        accepted: 50,
+        donations: 70,
+        averageSalePrice: 200,
+        averageListingPrice: 214.29,
+        averageDaysListed: 2.57,
+        rejected: 20,
+      },
+      Footwear: {
+        revenue: 8000,
+        totalItemsSold: 40,
+        totalListingPrice: 10000,
+        totalDaysListed: 160,
+        accepted: 35,
+        donations: 50,
+        averageSalePrice: 200,
+        averageListingPrice: 200,
+        averageDaysListed: 3.2,
+        rejected: 15,
+      },
+      Bags: {
+        revenue: 6000,
+        totalItemsSold: 30,
+        totalListingPrice: 7500,
+        totalDaysListed: 120,
+        accepted: 25,
+        donations: 40,
+        averageSalePrice: 200,
+        averageListingPrice: 187.5,
+        averageDaysListed: 3,
+        rejected: 15,
+      },
+      Hats: {
+        revenue: 4000,
+        totalItemsSold: 20,
+        totalListingPrice: 5000,
+        totalDaysListed: 80,
+        accepted: 15,
+        donations: 25,
+        averageSalePrice: 200,
+        averageListingPrice: 200,
+        averageDaysListed: 3.2,
+        rejected: 10,
+      },
+    },
+  });
+
+  const categoryGroups = Object.keys(sampleComparisonReport.statsByCategory);
+
+  const statNames = {
+    revenue: "Revenue",
+    donations: "Listed",
+    totalItemsSold: "Sold",
+    averageListingPrice: "ALP",
+    averageSalePrice: "ASP",
+    averageDaysListed: "ADL (Average Days Listed)",
+    accepted: "Donations Accepted",
+    rejected: "Donations Rejected",
+  };
 
   const getDateRange = (selection) => {
     let fromDate, toDate;
@@ -137,7 +203,7 @@ const Dashboard = ({ onBack }) => {
     const { fromDate, toDate } = getDateRange(dateRange);
     try {
       const res = await fetch(
-        `/api/business/fetchSquareReport?fromDate=${fromDate}&toDate=${toDate}&category=${category}`
+        `/api/business/square/fetchSquareReport?fromDate=${fromDate}&toDate=${toDate}&category=${category}`
       );
 
       if (res.status === 200) {
@@ -153,12 +219,51 @@ const Dashboard = ({ onBack }) => {
       }
     } catch (error) {
       console.error("An error occurred while Square report", error);
+      setFetchingSquareReport(false);
+    }
+  };
+
+  const fetchComparisonReport = async () => {
+    setFetchingComparisonReport(true);
+    const { fromDate, toDate } = getDateRange(dateRange);
+
+    try {
+      const res = await fetch("/api/business/square/fetchComparisonReport", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fromDate,
+          toDate,
+        }),
+      });
+
+      if (res.status === 200) {
+        const data = await res.json();
+        setComparisonReport(data);
+        setFetchingComparisonReport(false);
+      } else {
+        const errorMessage = await res.text();
+        console.error(
+          `Fetch failed with status: ${res.status}, message: ${errorMessage}`
+        );
+        setFetchingComparisonReport(false);
+      }
+    } catch (error) {
+      console.error("An error occurred while Square report", error);
+      setFetchingComparisonReport(false);
     }
   };
 
   useEffect(() => {
     fetchSquareReport();
   }, [dateRange, category]);
+
+  // Only fetch once, then filter clientside by selected categories and stats
+  useEffect(() => {
+    fetchComparisonReport();
+  }, []);
 
   return (
     <div className="  pb-8 sm:pt-6 pt-0">
@@ -278,7 +383,7 @@ const Dashboard = ({ onBack }) => {
             </select>
           </div>
           <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
-            <table className="w-full text-sm text-left text-gray-500">
+            <table className="w-full text-sm text-left text-gray-500 table-fixed">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
                   <th scope="col" className="px-1 py-3">
@@ -293,18 +398,29 @@ const Dashboard = ({ onBack }) => {
                           selectedKeys={selectedCategories}
                           onSelectionChange={(keys) => {
                             const selectedKeys = Array.from(keys);
-                            setSelectedCategories(selectedKeys);
+                            if (selectedKeys.includes("All")) {
+                              setSelectedCategories(["All"]);
+                            } else {
+                              setSelectedCategories(
+                                selectedKeys.filter((key) => key !== "All")
+                              );
+                            }
+                          }}
+                          onAction={(key) => {
+                            if (
+                              key !== "All" &&
+                              selectedCategories.includes("All")
+                            ) {
+                              setSelectedCategories([key]);
+                            }
                           }}
                         >
                           <Dropdown.Item key={"All"}>All</Dropdown.Item>
-                          <Dropdown.Item key={"Clothing"}>
-                            Clothing
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"Footwear"}>
-                            Footwear
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"Hats"}>Hats</Dropdown.Item>
-                          <Dropdown.Item key={"Bags"}>Bags</Dropdown.Item>
+                          {categoryGroups.map((category) => (
+                            <Dropdown.Item key={category}>
+                              {category}
+                            </Dropdown.Item>
+                          ))}
                         </Dropdown.Menu>
                       </Dropdown>
                     }
@@ -314,28 +430,41 @@ const Dashboard = ({ onBack }) => {
                     {
                       <Dropdown>
                         <Dropdown.Button light>
-                          {selectedRevenue.join(", ") || "Select Types"}
+                          {selectedStats.length > 0
+                            ? selectedStats
+                                .map((stat) => statNames[stat])
+                                .join(", ")
+                            : "Select Types"}
                         </Dropdown.Button>
                         <Dropdown.Menu
                           selectionMode="multiple"
                           disallowEmptySelection
-                          selectedKeys={selectedRevenue}
+                          selectedKeys={selectedStats}
                           onSelectionChange={(keys) => {
                             const selectedKeys = Array.from(keys);
-                            setSelectedRevenues(selectedKeys);
+                            setSelectedStats(selectedKeys);
                           }}
                         >
-                          <Dropdown.Item key={"Listed"}>Listed</Dropdown.Item>
-                          <Dropdown.Item key={"Sold"}>Sold</Dropdown.Item>
-                          <Dropdown.Item key={"ALP"}>ALP</Dropdown.Item>
-                          <Dropdown.Item key={"ASP"}>ASP</Dropdown.Item>
-                          <Dropdown.Item key={"ADL"}>
+                          <Dropdown.Item key={"revenue"}>Revenue</Dropdown.Item>
+                          <Dropdown.Item key={"donations"}>
+                            Listed
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"totalItemsSold"}>
+                            Sold
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"averageListingPrice"}>
+                            ALP
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"averageSalePrice"}>
+                            ASP
+                          </Dropdown.Item>
+                          <Dropdown.Item key={"averageDaysListed"}>
                             ADL (Average Days Listed)
                           </Dropdown.Item>
-                          <Dropdown.Item key={"Donations Accepted"}>
+                          <Dropdown.Item key={"accepted"}>
                             Donations Accepted
                           </Dropdown.Item>
-                          <Dropdown.Item key={"Donations Rejected"}>
+                          <Dropdown.Item key={"rejected"}>
                             Donations Rejected
                           </Dropdown.Item>
                         </Dropdown.Menu>
@@ -345,15 +474,42 @@ const Dashboard = ({ onBack }) => {
                 </tr>
               </thead>
               <tbody>
-                {comparisonReport.map((row, key) => (
-                  <tr key={key} className="bg-white dark:bg-gray-800">
-                    <td className="text-black px-6 py-4">
-                      {row.category ? row.category : "--"}
-                    </td>
-
-                    <td className="px-6 py-4">{row.revenue}</td>
-                  </tr>
-                ))}
+                {categoryGroups.map((categoryName) => {
+                  if (
+                    !selectedCategories.length ||
+                    selectedCategories.includes("All") ||
+                    selectedCategories.includes(categoryName)
+                  ) {
+                    return (
+                      <tr
+                        key={categoryName}
+                        className="bg-white dark:bg-gray-800"
+                      >
+                        <td className="text-black px-6 py-4">{categoryName}</td>
+                        {selectedStats.length ? (
+                          selectedStats.map((stat, index) => (
+                            <td key={index} className="px-6 py-4 text-center">
+                              {
+                                sampleComparisonReport.statsByCategory[
+                                  categoryName
+                                ][stat]
+                              }
+                            </td>
+                          ))
+                        ) : (
+                          <td className="px-6 py-4 text-center">
+                            {
+                              sampleComparisonReport.statsByCategory[
+                                categoryName
+                              ].revenue
+                            }
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  }
+                  return null;
+                })}
               </tbody>
             </table>
           </div>
