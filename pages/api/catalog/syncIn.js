@@ -64,13 +64,14 @@ const handler = async (req, res) => {
           let categories = listing?.categories.map(
             (entry) => entry.category.name
           );
-          categories = categories.filter((c) => c !== "");
+          categories = categories.map((c) => (c === "" ? "General" : c));
+          if (categories.length === 0) {
+            categories.push("General");
+          }
+
           allCategories.push(...categories);
           const tags = listing?.tags?.join(" - ");
 
-          if (categories.length === 0) {
-            continue;
-          }
           const item = {
             type: "ITEM",
             id: listingId,
