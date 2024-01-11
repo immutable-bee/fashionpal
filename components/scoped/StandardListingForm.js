@@ -95,7 +95,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
     }
 
     const newSku = await response.json();
-
+    console.log(newSku);
     setNewListingSku(newSku);
     onFetch();
     setLoading(false);
@@ -369,7 +369,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                 </h3>
               </div>
             </div>
-
+            {newListingSku}
             {newListingSku ? (
               <>
                 <PrintBarcode

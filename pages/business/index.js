@@ -160,9 +160,9 @@ export default function Home() {
     }
   };
 
-  const printSKU = (e, barcode, price) => {
+  const printSKU = (e, id, price) => {
     e.stopPropagation();
-    setPrintData({ barcode, price });
+    setPrintData({ id, price });
     setPrintModal(true);
   };
 
@@ -266,7 +266,7 @@ export default function Home() {
                               ]}
                               status={row.status}
                               clickable={true}
-                              Barcode={row.Barcode}
+                              Barcode={row.id}
                               price={row.price}
                               printSKU={printSKU}
                             >
@@ -372,7 +372,7 @@ export default function Home() {
       >
         <>
           <PrintBarcode
-            sku={printData.barcode}
+            sku={printData.id}
             price={printData.price}
           />
         </>
