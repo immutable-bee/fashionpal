@@ -23,32 +23,220 @@ const DonationAcceptedChart = dynamic(
 );
 
 const Dashboard = ({ onBack }) => {
+  // global
+  const [activeTab, setActiveTab] = useState("overview");
+
+  // For default view
   const [ruleName, setRuleName] = useState("");
   const [category, setCategory] = useState("All");
   const [reportDateRange, setReportDateRange] = useState("This Week");
-  const [comparisonDateRange, setComparisonDateRange] = useState("This Week");
-  const [activeTab, setActiveTab] = useState("overview");
-  const [fetchingComparisonReport, setFetchingComparisonReport] =
-    useState(false);
-  const [comparisonReport, setComparisonReport] = useState([
-    { category: "Hats", revenue: 1298 },
-    { category: "Clothing Tops", revenue: 85 },
-    { category: "Clothing Bottoms", revenue: 65 },
-    { category: "Footwear", revenue: 30 },
-    { category: "", revenue: 320 },
-    { category: "", revenue: 40 },
-    { category: "", revenue: 45 },
-    { category: "", revenue: 76 },
-    { category: "", revenue: 48 },
-  ]);
-
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedStats, setSelectedStats] = useState([]);
-
   const [fetchingSquareReport, setFetchingSquareReport] = useState(false);
   const [squareReport, setSquareReport] = useState();
 
-  const [sampleSquareReport, setSampleSquareReport] = useState({
+  // For comparison View
+  const [comparisonDateRange, setComparisonDateRange] = useState("This Week");
+  const [fetchingComparisonReport, setFetchingComparisonReport] =
+    useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedStats, setSelectedStats] = useState([]);
+  const [comparisonReport, setComparisonReport] = useState();
+
+  // for nate to test, delete when finished
+
+  const [activeReportIndex, setActiveReportIndex] = useState(0);
+
+  const sampleThisWeekReport = {
+    statsByGroup: {
+      "01/07/24": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+    },
+  };
+
+  const sampleLastWeekReport = {
+    statsByGroup: {
+      "12/31/23": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+    },
+  };
+
+  const sampleThisMonthReport = {
+    statsByGroup: {
+      "01/01/24": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+      "01/07/24": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+    },
+  };
+
+  const sampleLastMonthReport = {
+    statsByGroup: {
+      "12/23": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+    },
+  };
+
+  const sampleThreeMonthReport = {
+    statsByGroup: {
+      "10/23": {
+        revenue: 12000,
+        totalItemsSold: 12,
+        totalListingPrice: 15000,
+        totalDaysListed: 300,
+        donations: 25,
+        accepted: 20,
+        averageSalePrice: 240,
+        averageListingPrice: 300,
+        averageDaysListed: 6,
+      },
+      "11/23": {
+        revenue: 10000,
+        totalItemsSold: 17,
+        totalListingPrice: 13000,
+        totalDaysListed: 250,
+        donations: 28,
+        accepted: 28,
+        averageSalePrice: 250,
+        averageListingPrice: 325,
+        averageDaysListed: 6.25,
+      },
+      "12/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+    },
+  };
+
+  const sampleSixMonthReport = {
+    statsByGroup: {
+      "07/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "08/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "09/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "10/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "11/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "12/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+    },
+  };
+
+  const sampleTwelveMonthReport = {
     statsByGroup: {
       "01/23": {
         revenue: 12000,
@@ -68,12 +256,107 @@ const Dashboard = ({ onBack }) => {
         totalDaysListed: 250,
         donations: 28,
         accepted: 28,
-
         averageSalePrice: 250,
         averageListingPrice: 325,
         averageDaysListed: 6.25,
       },
-      "03/23": {
+      "04/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "05/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "06/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "07/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "08/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "09/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "10/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "11/23": {
+        revenue: 15000,
+        totalItemsSold: 31,
+        totalListingPrice: 20000,
+        totalDaysListed: 360,
+        donations: 35,
+        accepted: 26,
+
+        averageSalePrice: 250,
+        averageListingPrice: 333.33,
+        averageDaysListed: 6,
+      },
+      "12/23": {
         revenue: 15000,
         totalItemsSold: 31,
         totalListingPrice: 20000,
@@ -86,7 +369,17 @@ const Dashboard = ({ onBack }) => {
         averageDaysListed: 6,
       },
     },
-  });
+  };
+
+  const sampleReports = [
+    sampleThisWeekReport,
+    sampleLastWeekReport,
+    sampleThisMonthReport,
+    sampleLastMonthReport,
+    sampleThreeMonthReport,
+    sampleSixMonthReport,
+    sampleTwelveMonthReport,
+  ];
 
   const [sampleComparisonReport, setSampleComparisonReport] = useState({
     statsByCategory: {
@@ -141,6 +434,9 @@ const Dashboard = ({ onBack }) => {
     },
   });
 
+  //
+
+  // using sampleComparisonReport for testing, update to "comparisonReport" when finished
   const categoryGroups = Object.keys(sampleComparisonReport.statsByCategory);
 
   const statNames = {
@@ -325,10 +621,24 @@ const Dashboard = ({ onBack }) => {
               <div className="">
                 <label className="text-lg">Week</label>
                 <select
-                  value={reportDateRange}
+                  //value={reportDateRange}
+                  // for testing, when finished delete the line below and uncomment the line above
+                  value={activeReportIndex}
                   className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setReportDateRange(e.target.value)}
+                  //onChange={(e) => setReportDateRange(e.target.value)}
+                  // for testing, when finished delete the line below and uncomment the line above
+                  onChange={(e) => setActiveReportIndex(e.target.value)}
                 >
+                  {/* For testing, when finished delete this snippet and uncomment the snippet below */}
+                  <option value={0}>This Week</option>
+                  <option value={1}>Last Week</option>
+                  <option value={2}>This Month</option>
+                  <option value={3}>Last Month</option>
+                  <option value={4}>Last Three Months</option>
+                  <option value={5}>Last six months</option>
+                  <option value={6}>Last 12 months</option>
+
+                  {/*
                   <option value="This Week">This Week</option>
                   <option value="Last Week">Last Week</option>
                   <option value="This Month">This Month</option>
@@ -336,6 +646,7 @@ const Dashboard = ({ onBack }) => {
                   <option value="Last Three Months">Last Three Months</option>
                   <option value="Last six months">Last six months</option>
                   <option value="Last 12 months">Last 12 months</option>
+      */}
                 </select>
               </div>
             </div>
@@ -345,23 +656,28 @@ const Dashboard = ({ onBack }) => {
               <h3 className="text-xl text-center">
                 Items Listed and Items Sold
               </h3>
-              <ItemLinkedSoldChart chartData={sampleSquareReport} />
+              {/* prop for each chart component is populated with test data, update each to "chartData={squareReport}" when finished */}
+              <ItemLinkedSoldChart
+                chartData={sampleReports[activeReportIndex]}
+              />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">ALP and ASP</h3>
-              <ALPASPChart chartData={sampleSquareReport} />
+              <ALPASPChart chartData={sampleReports[activeReportIndex]} />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">Donations and Accepted</h3>
-              <DonationAcceptedChart chartData={sampleSquareReport} />
+              <DonationAcceptedChart
+                chartData={sampleReports[activeReportIndex]}
+              />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">AVG Days Listed</h3>
-              <AVGDayListedChart chartData={sampleSquareReport} />
+              <AVGDayListedChart chartData={sampleReports[activeReportIndex]} />
             </div>
             <div className="sm:max-w-fit rounded-lg border shadow pt-3 sm:mx-auto mt-5">
               <h3 className="text-xl text-center">Revenue</h3>
-              <RevenueChart chartData={sampleSquareReport} />
+              <RevenueChart chartData={sampleReports[activeReportIndex]} />
             </div>
           </div>
         </div>
@@ -486,7 +802,7 @@ const Dashboard = ({ onBack }) => {
                       <tr
                         key={categoryName}
                         className={`${
-                          index % 2 === 0 ? "bg-primary/50" : "bg-white"
+                          index % 2 === 0 ? "bg-primary/25" : "bg-white"
                         }`}
                       >
                         <td className="text-black px-6 py-4 text-center w-auto">
