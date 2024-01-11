@@ -201,7 +201,7 @@ const Dashboard = ({ onBack }) => {
 
   const fetchSquareReport = async () => {
     setFetchingSquareReport(true);
-    const { fromDate, toDate } = getDateRange(dateRange);
+    const { fromDate, toDate } = getDateRange(reportDateRange);
     try {
       const res = await fetch(
         `/api/business/square/fetchSquareReport?fromDate=${fromDate}&toDate=${toDate}&category=${category}`
@@ -226,7 +226,7 @@ const Dashboard = ({ onBack }) => {
 
   const fetchComparisonReport = async () => {
     setFetchingComparisonReport(true);
-    const { fromDate, toDate } = getDateRange(dateRange);
+    const { fromDate, toDate } = getDateRange(comparisonDateRange);
 
     try {
       const res = await fetch("/api/business/square/fetchComparisonReport", {
