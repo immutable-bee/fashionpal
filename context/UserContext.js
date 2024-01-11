@@ -20,6 +20,7 @@ const ACCESS_RULES = {
     "/business/profile",
     "/business/listing-queue",
     "/business/dashboard",
+    "/business/liquidation",
   ],
 };
 

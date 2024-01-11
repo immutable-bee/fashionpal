@@ -4,6 +4,7 @@ import ButtonComponent from "@/components/utility/Button";
 import Loading from "@/components/utility/loading";
 import { signOut } from "next-auth/react";
 import { Checkbox } from "@nextui-org/react";
+import { NotificationManager } from "react-notifications";
 
 function ProfileComponent() {
   const [editModal, setEditModal] = useState(false);
