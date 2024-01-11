@@ -4,22 +4,19 @@ import Chart from "react-apexcharts";
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = this.initializeState(props);
+    window.addEventListener("resize", this.handleResize);
+  }
 
-    const isMobile = document.documentElement.clientWidth <= 768; // Adjust the threshold for mobile screens
-
-    const { chartData } = this.props;
-
-    const dateGroup = Object.keys(chartData.statsByGroup);
+  initializeState = (props) => {
+    const isMobile = document.documentElement.clientWidth <= 768;
+    const dateGroup = Object.keys(props.chartData.statsByGroup);
     const revenue = dateGroup.map(
-      (group) => chartData.statsByGroup[group].revenue || 0
+      (group) => props.chartData.statsByGroup[group].revenue || 0
     );
 
-    this.state = {
-      computedValue: isMobile
-        ? document.documentElement.clientWidth - 6
-        : document.documentElement.clientWidth * 0.75 > 1500
-        ? 1500
-        : document.documentElement.clientWidth * 0.75,
+    return {
+      computedValue: this.computeValue(isMobile),
       options: {
         chart: {
           id: "basic-bar",
@@ -34,10 +31,18 @@ class App extends Component {
           bar: {
             dataLabels: {
               position: "top",
+              formatter: function (val) {
+                return (
+                  "$" +
+                  val.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                );
+              },
             },
           },
         },
-
         yaxis: {
           labels: {
             formatter: function (value) {
@@ -51,34 +56,9 @@ class App extends Component {
             },
           },
         },
-        plotOptions: {
-          bar: {
-            dataLabels: {
-              position: "top", // You can change the position as needed
-              formatter: function (val) {
-                return (
-                  "$" +
-                  val.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  })
-                );
-              },
-            },
-          },
-        },
         dataLabels: {
           enabled: false,
-          formatter: function (val) {
-            return (
-              "$" +
-              val.toLocaleString("en-US", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })
-            );
-          },
-          offsetY: -20, // Adjust the offset as needed
+          offsetY: -20,
           style: {
             fontSize: "12px",
             colors: ["#304758"],
@@ -92,24 +72,28 @@ class App extends Component {
         },
       ],
     };
-    // Add event listener for window resize
-    window.addEventListener("resize", this.handleResize);
-  }
-
-  // Event handler for window resize
-  handleResize = () => {
-    const isMobile = document.documentElement.clientWidth <= 768;
-    this.setState({
-      computedValue: isMobile
-        ? document.documentElement.clientWidth - 6
-        : document.documentElement.clientWidth * 0.75 > 1500
-        ? 1500
-        : document.documentElement.clientWidth * 0.75,
-    });
   };
 
+  computeValue = (isMobile) => {
+    return isMobile
+      ? document.documentElement.clientWidth - 6
+      : document.documentElement.clientWidth * 0.75 > 1500
+      ? 1500
+      : document.documentElement.clientWidth * 0.75;
+  };
+
+  handleResize = () => {
+    const isMobile = document.documentElement.clientWidth <= 768;
+    this.setState({ computedValue: this.computeValue(isMobile) });
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.chartData !== prevProps.chartData) {
+      this.setState(this.initializeState(this.props));
+    }
+  }
+
   componentWillUnmount() {
-    // Remove the event listener when the component is unmounted
     window.removeEventListener("resize", this.handleResize);
   }
 

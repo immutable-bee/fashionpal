@@ -4,24 +4,22 @@ import Chart from "react-apexcharts";
 class App extends Component {
   constructor(props) {
     super(props);
+    this.state = this.initializeState(props);
+    window.addEventListener("resize", this.handleResize);
+  }
 
+  initializeState = (props) => {
     const isMobile = document.documentElement.clientWidth <= 768;
-    const { chartData } = this.props;
-
-    const dateGroup = Object.keys(chartData.statsByGroup);
+    const dateGroup = Object.keys(props.chartData.statsByGroup);
     const totalItemsListed = dateGroup.map(
-      (group) => chartData.statsByGroup[group].donations || 0
+      (group) => props.chartData.statsByGroup[group].donations || 0
     );
     const totalItemsSold = dateGroup.map(
-      (group) => chartData.statsByGroup[group].totalItemsSold || 0
+      (group) => props.chartData.statsByGroup[group].totalItemsSold || 0
     );
 
-    this.state = {
-      computedValue: isMobile
-        ? document.documentElement.clientWidth - 6
-        : document.documentElement.clientWidth * 0.75 > 1500
-        ? 1500
-        : document.documentElement.clientWidth * 0.75,
+    return {
+      computedValue: this.computeValue(isMobile),
       options: {
         chart: {
           id: "basic-bar",
@@ -51,22 +49,26 @@ class App extends Component {
         },
       ],
     };
+  };
 
-    // Add event listener for window resize
-    window.addEventListener("resize", this.handleResize);
-  }
+  computeValue = (isMobile) => {
+    return isMobile
+      ? document.documentElement.clientWidth - 6
+      : document.documentElement.clientWidth * 0.75 > 1500
+      ? 1500
+      : document.documentElement.clientWidth * 0.75;
+  };
 
-  // Event handler for window resize
   handleResize = () => {
     const isMobile = document.documentElement.clientWidth <= 768;
-    this.setState({
-      computedValue: isMobile
-        ? document.documentElement.clientWidth - 6
-        : document.documentElement.clientWidth * 0.75 > 1500
-        ? 1500
-        : document.documentElement.clientWidth * 0.75,
-    });
+    this.setState({ computedValue: this.computeValue(isMobile) });
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.chartData !== prevProps.chartData) {
+      this.setState(this.initializeState(this.props));
+    }
+  }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.handleResize);
