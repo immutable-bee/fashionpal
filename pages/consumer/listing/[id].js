@@ -3,6 +3,7 @@ import Image from "next/image";
 import ButtonComponent from "@/components/utility/Button";
 import { Modal } from "@nextui-org/react";
 import { NotificationManager } from "react-notifications";
+import Loading from "@/components/utility/loading";
 import { useRouter } from "next/router";
 
 const PerksModalContent = () => {
@@ -70,19 +71,11 @@ function Scan() {
   const [email, setEmail] = useState("");
   const [loadingListings, setLoadingListings] = useState(true);
 
-  const [product, setProduct] = useState({
-    price: 10.0,
-    isSaleAllUsers: true,
-    discountAllUsers: 20, // 20% off for all users
-    isSaleSubscribers: true,
-    discountSubscribers: 30, // 30% off for subscribers
-    mainImageUrl:
-      "https://jhkrtmranrjztkixgfgf.supabase.co/storage/v1/object/public/standard-listings/05e56499-0cd1-4683-ad8e-1c24c9b977d4/clq52jr0s000kx4kjnvna75ry/brandImage",
-  });
+  const [product, setProduct] = useState({});
 
-  const fetchListing = useCallback(async () => {
+  const fetchListing = useCallback(async (e) => {
     try {
-      const res = await fetch(`/api/common/fetch-listing/${router.query.id}`);
+      const res = await fetch(`/api/common/fetch-listing/${e}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -101,12 +94,14 @@ function Scan() {
   }, []);
 
   useEffect(() => {
-    console.log(router);
-    const initialFetch = async () => {
-      await fetchListing();
+    const initialFetch = async (e) => {
+      await fetchListing(e);
     };
-    initialFetch();
-  }, [fetchListing]);
+    console.log(router.query.id);
+    if (router.query.id) {
+      initialFetch(router.query.id);
+    }
+  }, [router.query, fetchListing]);
 
   const perksModalOpenHandler = () => {
     setIsPerksModalOpen(true);
@@ -135,22 +130,8 @@ function Scan() {
     }
   };
 
-  const discountedPrice = useMemo(() => {
-    const price = product.price;
-    const discount = product.discountAllUsers / 100; // Convert percentage to decimal
-
-    return (price - price * discount).toFixed(2);
-  }, [product.price, product.discountAllUsers]);
-
-  const discountedPriceForSubscribers = useMemo(() => {
-    const price = parseFloat(discountedPrice); // Access the computed value
-    const discount = product.discountSubscribers / 100; // Convert percentage to decimal
-
-    return (price - price * discount).toFixed(2);
-  }, [discountedPrice, product.discountSubscribers]);
-
   return (
-    <div className="sm:w-96 mx-auto mt-6 sm:mt-8 mb-10 sm:px-0 px-3">
+    <div className="sm:w-96 sm:shadow sm:rounded-lg px-3 sm:py-3 mx-auto mt-6 sm:mt-8 mb-10 ">
       <Modal
         open={isPerksModalOpen}
         closeButton
@@ -158,63 +139,84 @@ function Scan() {
       >
         <PerksModalContent />
       </Modal>
-
-      {product.isSaleAllUsers && (
-        <div className="bg-red-600 rounded-xl uppercase text-white text-center py-3 sm:py-4 text-2xl sm:text-3xl">
-          {product.discountAllUsers}% Off
-        </div>
-      )}
-
-      <div className=" mx-auto mt-6 sm:mt-8  rounded-2xl w-full   relative">
-        <Image
-          src={product.mainImageUrl}
-          width={100}
-          height={100}
-          className="rounded-xl w-full mx-auto object-cover"
-          alt=""
-        />
-      </div>
-
-      <div className="py-2">
-        <h3 className="text-xl text-center mt-3  uppercase">
-          SUBSCRIBER PRICE
-        </h3>
-
-        <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
-          <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
-          <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
-            <h3 className="text-3xl">${discountedPriceForSubscribers}</h3>
+      {loadingListings ? (
+        <div className=" w-full mt-10">
+          <div>
+            <div className="">
+              <Loading size="xl" />
+            </div>
           </div>
         </div>
+      ) : (
+        <>
+          {product.isSaleAllUsers && (
+            <div className="bg-red-600 rounded-xl uppercase text-white text-center py-3 sm:py-4 text-2xl sm:text-3xl">
+              {product.discountAllUsers}% Off
+            </div>
+          )}
 
-        <h3
-          className="text-2xl cursor-pointer text-blue-500 underline text-center mt-3"
-          onClick={perksModalOpenHandler}
-        >
-          Perks
-        </h3>
-      </div>
+          <div className=" mx-auto   rounded-2xl w-full   relative">
+            <Image
+              src={product.mainImageUrl}
+              width={100}
+              height={100}
+              className="rounded-xl w-full mx-auto object-cover"
+              alt=""
+            />
+          </div>
 
-      <div className="py-2">
-        <input
-          name="email"
-          type="text"
-          placeholder="example@email.com"
-          value={email}
-          onChange={handleEmailChange}
-          className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg px-4 my-1 py-2"
-        />
-      </div>
+          <div className="py-2">
+            {product.discountPercentage ||
+              (product.price && (
+                <div>
+                  <h3 className="text-xl text-center mt-3  uppercase">
+                    SUBSCRIBER PRICE
+                  </h3>
 
-      <ButtonComponent
-        rounded
-        className="mt-5"
-        full
-        type="submit"
-        onClick={handleSubscribe}
-      >
-        Subscribe to save
-      </ButtonComponent>
+                  <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
+                    <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
+                    <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
+                      <h3 className="text-3xl">
+                        $
+                        {product.discountPercentage
+                          ? product.discountPercentage
+                          : product.price}
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+            <h3
+              className="text-2xl cursor-pointer text-blue-500 underline text-center mt-3"
+              onClick={perksModalOpenHandler}
+            >
+              Perks
+            </h3>
+          </div>
+
+          <div className="py-2">
+            <input
+              name="email"
+              type="text"
+              placeholder="example@email.com"
+              value={email}
+              onChange={handleEmailChange}
+              className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg px-4 my-1 py-2"
+            />
+          </div>
+
+          <ButtonComponent
+            rounded
+            className="mt-5"
+            full
+            type="submit"
+            onClick={handleSubscribe}
+          >
+            Subscribe to save
+          </ButtonComponent>
+        </>
+      )}
     </div>
   );
 }

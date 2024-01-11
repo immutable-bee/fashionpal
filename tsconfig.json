@@ -24,7 +24,8 @@
     "**/*.tsx",
     "pages/api/fetch-isbnDB.js",
     "components/Actions.js",
-    "pages/business/uploadlistings/index.js"
+    "pages/business/uploadlistings/index.js",
+    "pages/index/listing/[id].js"
   ],
   "exclude": ["node_modules"]
 }
