@@ -382,99 +382,101 @@ const Dashboard = ({ onBack }) => {
               <option value="Last 12 months">Last 12 months</option>
             </select>
           </div>
+
+          <div className="flex w-full justify-evenly py-5">
+            <div>
+              <Dropdown>
+                <div className="border rounded-md border-primary">
+                  <Dropdown.Button light>Select Categories</Dropdown.Button>
+                </div>
+                <Dropdown.Menu
+                  selectionMode="multiple"
+                  disallowEmptySelection
+                  selectedKeys={selectedCategories}
+                  onSelectionChange={(keys) => {
+                    const selectedKeys = Array.from(keys);
+                    if (selectedKeys.includes("All")) {
+                      setSelectedCategories(["All"]);
+                    } else {
+                      setSelectedCategories(
+                        selectedKeys.filter((key) => key !== "All")
+                      );
+                    }
+                  }}
+                  onAction={(key) => {
+                    if (key !== "All" && selectedCategories.includes("All")) {
+                      setSelectedCategories([key]);
+                    }
+                  }}
+                >
+                  <Dropdown.Item key={"All"}>All</Dropdown.Item>
+                  {categoryGroups.map((category) => (
+                    <Dropdown.Item key={category}>{category}</Dropdown.Item>
+                  ))}
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+
+            <div>
+              <Dropdown>
+                <div className="border rounded-md border-primary">
+                  <Dropdown.Button light>Select Metrics</Dropdown.Button>
+                </div>
+                <Dropdown.Menu
+                  selectionMode="multiple"
+                  disallowEmptySelection
+                  selectedKeys={selectedStats}
+                  onSelectionChange={(keys) => {
+                    const selectedKeys = Array.from(keys);
+                    setSelectedStats(selectedKeys);
+                  }}
+                >
+                  <Dropdown.Item key={"revenue"}>Revenue</Dropdown.Item>
+                  <Dropdown.Item key={"donations"}>Listed</Dropdown.Item>
+                  <Dropdown.Item key={"totalItemsSold"}>Sold</Dropdown.Item>
+                  <Dropdown.Item key={"averageListingPrice"}>ALP</Dropdown.Item>
+                  <Dropdown.Item key={"averageSalePrice"}>ASP</Dropdown.Item>
+                  <Dropdown.Item key={"averageDaysListed"}>
+                    ADL (Average Days Listed)
+                  </Dropdown.Item>
+                  <Dropdown.Item key={"accepted"}>
+                    Donations Accepted
+                  </Dropdown.Item>
+                  <Dropdown.Item key={"rejected"}>
+                    Donations Rejected
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
+
           <div className="relative w-full overflow-x-auto medium-x-scrollbar shadow-md sm:rounded-lg">
             <table className="w-full text-sm text-left text-gray-500 table-fixed">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" className="px-1 py-3">
-                    {
-                      <Dropdown>
-                        <Dropdown.Button light>
-                          {selectedCategories.join(", ") || "Select Categories"}
-                        </Dropdown.Button>
-                        <Dropdown.Menu
-                          selectionMode="multiple"
-                          disallowEmptySelection
-                          selectedKeys={selectedCategories}
-                          onSelectionChange={(keys) => {
-                            const selectedKeys = Array.from(keys);
-                            if (selectedKeys.includes("All")) {
-                              setSelectedCategories(["All"]);
-                            } else {
-                              setSelectedCategories(
-                                selectedKeys.filter((key) => key !== "All")
-                              );
-                            }
-                          }}
-                          onAction={(key) => {
-                            if (
-                              key !== "All" &&
-                              selectedCategories.includes("All")
-                            ) {
-                              setSelectedCategories([key]);
-                            }
-                          }}
-                        >
-                          <Dropdown.Item key={"All"}>All</Dropdown.Item>
-                          {categoryGroups.map((category) => (
-                            <Dropdown.Item key={category}>
-                              {category}
-                            </Dropdown.Item>
-                          ))}
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    }
+                  <th scope="col" className="px-6 py-4 text-center w-auto">
+                    Category
                   </th>
 
-                  <th scope="col" className="px-1 py-3">
-                    {
-                      <Dropdown>
-                        <Dropdown.Button light>
-                          {selectedStats.length > 0
-                            ? selectedStats
-                                .map((stat) => statNames[stat])
-                                .join(", ")
-                            : "Select Types"}
-                        </Dropdown.Button>
-                        <Dropdown.Menu
-                          selectionMode="multiple"
-                          disallowEmptySelection
-                          selectedKeys={selectedStats}
-                          onSelectionChange={(keys) => {
-                            const selectedKeys = Array.from(keys);
-                            setSelectedStats(selectedKeys);
-                          }}
-                        >
-                          <Dropdown.Item key={"revenue"}>Revenue</Dropdown.Item>
-                          <Dropdown.Item key={"donations"}>
-                            Listed
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"totalItemsSold"}>
-                            Sold
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"averageListingPrice"}>
-                            ALP
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"averageSalePrice"}>
-                            ASP
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"averageDaysListed"}>
-                            ADL (Average Days Listed)
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"accepted"}>
-                            Donations Accepted
-                          </Dropdown.Item>
-                          <Dropdown.Item key={"rejected"}>
-                            Donations Rejected
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-                    }
-                  </th>
+                  {selectedStats.length === 0 ? (
+                    <th scope="col" className="px-6 py-4 text-center w-auto">
+                      Revenue
+                    </th>
+                  ) : (
+                    selectedStats.map((stat) => (
+                      <th
+                        key={stat}
+                        scope="col"
+                        className="px-6 py-4 text-center w-auto"
+                      >
+                        {statNames[stat]}
+                      </th>
+                    ))
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {categoryGroups.map((categoryName) => {
+                {categoryGroups.map((categoryName, index) => {
                   if (
                     !selectedCategories.length ||
                     selectedCategories.includes("All") ||
@@ -483,12 +485,19 @@ const Dashboard = ({ onBack }) => {
                     return (
                       <tr
                         key={categoryName}
-                        className="bg-white dark:bg-gray-800"
+                        className={`${
+                          index % 2 === 0 ? "bg-primary/50" : "bg-white"
+                        }`}
                       >
-                        <td className="text-black px-6 py-4">{categoryName}</td>
+                        <td className="text-black px-6 py-4 text-center w-auto">
+                          {categoryName}
+                        </td>
                         {selectedStats.length ? (
                           selectedStats.map((stat, index) => (
-                            <td key={index} className="px-6 py-4 text-center">
+                            <td
+                              key={index}
+                              className="text-black px-6 py-4 text-center w-auto"
+                            >
                               {
                                 sampleComparisonReport.statsByCategory[
                                   categoryName
@@ -497,7 +506,7 @@ const Dashboard = ({ onBack }) => {
                             </td>
                           ))
                         ) : (
-                          <td className="px-6 py-4 text-center">
+                          <td className="text-black px-6 py-4 text-center w-auto">
                             {
                               sampleComparisonReport.statsByCategory[
                                 categoryName
