@@ -325,7 +325,7 @@ const Dashboard = ({ onBack }) => {
               <div className="">
                 <label className="text-lg">Week</label>
                 <select
-                  value={dateRange}
+                  value={reportDateRange}
                   className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                   onChange={(e) => setReportDateRange(e.target.value)}
                 >
@@ -369,7 +369,7 @@ const Dashboard = ({ onBack }) => {
         <div className="px-3 sm:px-5 sm:flex flex-wrap justify-center sm:justify-start mt-8 items-center">
           <div className="py-2 flex items-center justify-center w-full">
             <select
-              value={dateRange}
+              value={comparisonDateRange}
               className=" mt-1 rounded-xl w-56 px-3 py-2 border border-gray-600"
               onChange={(e) => setComparisonDateRange(e.target.value)}
             >
