@@ -127,7 +127,7 @@ html::-webkit-scrollbar-thumb {
 }
 
 html::-webkit-scrollbar {
-  width: 2px;
+  width: 5px;
   height: 2px;
 }
 
@@ -140,7 +140,7 @@ html::-webkit-scrollbar {
   }
 
   &::-webkit-scrollbar {
-    width: 2px;
+    width: 5px;
     height: 2px;
   }
   /* background-color: var(--primary); */
@@ -159,7 +159,7 @@ html::-webkit-scrollbar {
   }
 
   &::-webkit-scrollbar {
-    width: 2px;
+    width: 5px;
     height: 2px;
   }
   /* background-color: var(--primary); */
