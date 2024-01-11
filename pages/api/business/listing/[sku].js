@@ -20,7 +20,6 @@ export default async function handler(req, res) {
     const business = await prisma.business.findUnique({
       where: { email: session.user.email },
     });
-    console.error(business);
     if (!business) {
       return res.status(404).json({ message: "Business record not found" });
     }
@@ -30,7 +29,6 @@ export default async function handler(req, res) {
       },
       data: { isActive: false },
     });
-    console.error("working");
     const listings = await prisma.listing.findMany({
       where: {
         businessId: business.id,
