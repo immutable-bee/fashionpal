@@ -251,7 +251,7 @@ const handler = async (req, res) => {
           },
           data: {
             isSyncedWithSquare: true,
-            squareId: idMappings[`${id}-main`],
+            squareId: idMappings[`${id}`],
           },
         })
       );
