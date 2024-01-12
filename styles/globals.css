@@ -244,3 +244,15 @@ input:checked + .slider:before {
 .animate-pulse-once {
   animation: pulse-once 3s forwards;
 }
+
+#html5qr-code-full-region__scan_region img {
+  @apply mx-auto;
+}
+
+img[alt="Info icon"] {
+  display: none;
+}
+
+#html5qr-code-full-region {
+  @apply rounded-2xl border border-gray-300;
+}

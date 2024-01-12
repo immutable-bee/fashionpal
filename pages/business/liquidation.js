@@ -1,21 +1,38 @@
 import { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
+import Scanner from "@/components/scoped/Scanner";
 import { NotificationManager } from "react-notifications";
 import Barcode from "react-barcode";
 import ModalComponent from "@/components/utility/Modal";
+import cloneDeep from "lodash.clonedeep";
 
 const PrintBarcode = () => {
-  const [sku, setSKU] = useState("100523-0048");
+  const [sku, setSKU] = useState("");
   const [step, setStep] = useState(1);
   const [updating, setUpdating] = useState(false);
   const [price, setPrice] = useState(0);
   const [tagFetching, setTagFetching] = useState(false);
+  const [scans, setScans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
   const [confirmModalType, setConfirmModalType] = useState("");
   const [category, setCategory] = useState("Clothing");
   const [days, setDays] = useState(96);
   const [liquidationThreshold, setLiquidationThreshold] = useState(90);
+
+  const onNewScanResult = (decodedText, decodedResult) => {
+    console.log(decodedText);
+    console.log(decodedResult);
+
+    var match = decodedText.match(/\/([^\/]+)$/);
+
+    var id = match ? match[1] : null;
+
+    setSKU(id);
+    setStep(2);
+
+    // handle decoded results here
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,32 +66,50 @@ const PrintBarcode = () => {
     setConfirmModal(true);
     setConfirmModalType(e);
   };
-  const pushQueuedListing = async () => {
+
+  const onFinish = async () => {
     setLoading(true);
 
     const payload = {
-      id: confirmModalType,
-      sku,
-      price,
+      scans,
     };
+    console.log(payload);
 
-    const response = await fetch("/api/business/listing/pushQueuedListing", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    // const response = await fetch("/api/business/listing/pushQueuedListing", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(payload),
+    // });
 
-    if (!response.ok) {
-      return;
-    }
+    // if (!response.ok) {
+    //   return;
+    // }
 
     setStep(3);
     setLoading(false);
-    setConfirmModal(false);
+  };
 
-    return;
+  const pushQueuedListing = () => {
+    setScans((prevScans) => [
+      ...prevScans,
+      { sku: sku, type: confirmModalType },
+    ]);
+
+    setSKU("");
+    setConfirmModalType("");
+    setConfirmModal(false);
+    setStep(1);
+    console.log(scans);
+  };
+  const onBack = async () => {
+    setScans([]);
+
+    setSKU("");
+    setConfirmModalType("");
+    setConfirmModal(false);
+    setStep(1);
   };
 
   return (
@@ -152,6 +187,23 @@ const PrintBarcode = () => {
                 Submit
               </ButtonComponent> */}
             </form>
+            <h2 className="text-xl my-3 text-center">Or</h2>
+            <Scanner
+              fps={10}
+              qrbox={250}
+              disableFlip={false}
+              qrCodeSuccessCallback={onNewScanResult}
+            />
+            {scans && scans.length !== 0 && (
+              <div className="flex justify-center mt-4">
+                <button
+                  className={`bg-green-400  w-2/3  border border-green-600 hover:opacity-90 rounded-xl px-8 text-lg py-1.5`}
+                  onClick={onFinish}
+                >
+                  Finish
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -182,9 +234,9 @@ const PrintBarcode = () => {
               <div className="text-lg  text-center rounded-2xl border px-3 py-2">
                 <div className="price-text ">{`$${price}`}</div>
 
-                <div className="w-full mx-auto max-w-fit">
+                <div className="w-full mx-auto max-w-fit ">
                   <Barcode
-                    width={2}
+                    width={1}
                     height={60}
                     value={sku}
                     fontSize={10}
@@ -213,6 +265,56 @@ const PrintBarcode = () => {
               </button>
             </div>
           </div>
+        )}
+
+        {step === 3 && (
+          <>
+            <div className="mx-4">
+              <h3 className="text-xl text-gray-700 text-center my-2">
+                Summary
+              </h3>
+              <div className="relative overflow-x-auto shadow-md sm:rounded-lg ">
+                <table className="w-full text-sm text-left text-gray-500">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
+                        Disposed
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
+                        Scanned
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-white dark:bg-gray-800">
+                      <td className="px-6 py-4">
+                        {scans.filter((x) => x.type === "DISPOSED").length}
+                      </td>
+                      <td className="px-6 py-4">
+                        {scans.filter((x) => x.type === "FINISH").length}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="flex justify-center  mt-1">
+                <ButtonComponent
+                  rounded
+                  className="!w-48 mt-6"
+                  onClick={() => onBack()}
+                >
+                  Go back
+                </ButtonComponent>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </>

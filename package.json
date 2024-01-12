@@ -32,6 +32,7 @@
     "faker": "^6.6.6",
     "formidable": "^3.5.1",
     "fs": "^0.0.1-security",
+    "html5-qrcode": "^2.3.8",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.4",
@@ -59,14 +60,14 @@
     "react-select": "^5.7.4",
     "react-share": "^4.4.1",
     "react-slider": "^2.0.6",
+    "react-square-web-payments-sdk": "^3.2.1",
     "react-tagsinput": "^3.20.3",
     "react-webcam": "^7.1.1",
     "serpapi": "^2.0.0",
+    "square": "^33.0.0",
     "swiper": "^10.2.0",
     "tailwindcss": "3.3.3",
-    "uuid": "^9.0.1",
-    "square": "^33.0.0",
-    "react-square-web-payments-sdk": "^3.2.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20.5.0",
