@@ -256,3 +256,9 @@ img[alt="Info icon"] {
 #html5qr-code-full-region {
   @apply rounded-2xl border border-gray-300;
 }
+
+#html5-qrcode-button-camera-start,
+#html5-qrcode-button-camera-permission,
+#html5-qrcode-button-camera-stop {
+  @apply rounded-lg border border-gray-300 px-4 py-1 mb-1;
+}
