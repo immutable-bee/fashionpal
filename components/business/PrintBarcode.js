@@ -1,6 +1,6 @@
+import { useMemo, useState } from "react";
 import Barcode from "react-barcode";
 import { QRCode } from "react-qrcode-logo";
-import { useState, useMemo } from "react";
 
 const PrintBarcode = ({ sku, price }) => {
   const [template, setTemplate] = useState(
@@ -20,11 +20,11 @@ const PrintBarcode = ({ sku, price }) => {
 
   return (
     <>
-      <div className='flex flex-col min-h-[460px] items-center container mx-auto '>
-        <label className=' text-lg'>Template</label>
+      <div className="flex flex-col min-h-[460px] items-center container mx-auto ">
+        <label className=" text-lg">Template</label>
         <select
           value={template}
-          className='mt-1  rounded-xl px-3 py-2 border border-gray-600'
+          className="mt-1  rounded-xl px-3 py-2 border border-gray-600"
           onChange={(e) => onChangeHandler(e.target.value)}
         >
           <option value={"1"}>QR Code (Sku) 1x1</option>
@@ -34,18 +34,18 @@ const PrintBarcode = ({ sku, price }) => {
           <option value={"5"}>Barcode & QR Code 4 x 6</option>
         </select>
 
-        <div className='border-[5px] mt-5 border-gray-700 rounded-3xl px-8 py-4'>
-          <div id='barcode-to-print' className='print:barcode-container'>
+        <div className="border-[5px] mt-5 border-gray-700 rounded-3xl px-8 py-4">
+          <div id="barcode-to-print" className="print:barcode-container">
             {template === "1" && (
-              <div className='print:qr-container flex flex-col items-center'>
-                <h6 className='price-text'>Sku</h6>
+              <div className="print:qr-container print:qr-code print:sku flex flex-col items-center">
+                <h6 className="price-text font-bold">{`$${price}`}</h6>
 
-                <QRCode value={`${skuWithBaseURL}sku/${sku}`} size={175} />
+                <QRCode value={`${sku}`} size={175} />
               </div>
             )}
             {template === "2" && (
-              <div className='print:qr-container flex flex-col items-center'>
-                <h6 className='price-text'>Members Price</h6>
+              <div className="print:qr-container print:qr-code flex flex-col items-center">
+                <h6 className="label-text font-bold">Member Price</h6>
 
                 <QRCode
                   value={`${skuWithBaseURL}product/${price}`}
@@ -54,17 +54,14 @@ const PrintBarcode = ({ sku, price }) => {
               </div>
             )}
             {template === "3" && (
-              <div className='w-full h-full flex flex-col items-center'>
-                <div className='price-text '>{`$${price}`}</div>
-
-                <div className='w-full'>
-                  <Barcode width={2} height={60} value={sku} fontSize={10} />
-                </div>
+              <div className="w-full h-full flex flex-col items-center print:qr-container print:barcode">
+                <h6 className="price-text font-bold">{`$${price}`}</h6>
+                <Barcode width={2} height={60} value={sku} fontSize={16} />
               </div>
             )}
             {template === "4" && (
-              <div className='print:qr-container flex flex-col items-center'>
-                <h6 className='price-text'>Members Price</h6>
+              <div className="print:qr-container print:qr-code flex flex-col items-center">
+                <h6 className="label-text font-bold">Member Price</h6>
 
                 <QRCode
                   value={`${skuWithBaseURL}product/${price}`}
@@ -73,20 +70,20 @@ const PrintBarcode = ({ sku, price }) => {
               </div>
             )}
             {template === "5" && (
-              <div className='sm:flex'>
-                <div className='print:qr-container flex flex-col items-center'>
-                  <h6 className='sm:w-2/3 text-center text-sm'>
-                    Members Price
+              <div className="sm:flex print:qr-container print:double-code flex">
+                <div className="flex-1 flex flex-col items-center print:qr-code">
+                  <h6 className="w-full text-center text-sm font-bold label-text">
+                    Member Price
                   </h6>
                   <QRCode
                     value={`${skuWithBaseURL}product/${price}`}
                     size={175}
                   />
                 </div>
-                <div className='mt-2 mb-2 sm:mb-0 sm:ml-2 sm:border-l-2 border-t-2 border-black'></div>
-                <div className='flex flex-col items-center justify-center'>
-                  <div className='w-full mr-3 text-center'>{`$${price}`}</div>
-                  <Barcode width={2} height={55} value={sku} fontSize={10} />
+                <div className="mt-2 mb-2 sm:mb-0 sm:ml-2 sm:border-l-2 border-t-2 border-black print:min-h-[60%]"></div>
+                <div className="flex-1 flex flex-col items-center justify-center print:barcode">
+                  <h6 className="w-full text-center font-bold price-text">{`$${price}`}</h6>
+                  <Barcode width={2} height={55} value={sku} fontSize={16} />
                 </div>
               </div>
             )}
@@ -95,13 +92,17 @@ const PrintBarcode = ({ sku, price }) => {
 
         <button
           onClick={() => window.print()}
-          className='mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700'
+          className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
         >
           Print Label
         </button>
 
         <style>
           {`
+          .label-text {
+            font-size: 14px;
+            white-space: nowrap;
+          }
           .price-text {
             font-size: 14px;
             white-space: nowrap;
@@ -114,15 +115,21 @@ const PrintBarcode = ({ sku, price }) => {
             body * {
               visibility: hidden;
             }
+
+            * {
+              -webkit-print-color-adjust: exact !important;
+              color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+
             #barcode-to-print, #barcode-to-print * {
               visibility: visible;
             }
+
             @page {
-              margin-top: 15px;
-
               size: auto;
-
             }
+
             html, body {
               height: 100vh;
               overflow: hidden;
@@ -130,24 +137,71 @@ const PrintBarcode = ({ sku, price }) => {
               padding: 0;
             }
 
+            .label-text {
+              font-size: 11px;
+              white-space: nowrap;
+            }
+
+            .price-text {
+              font-size: 32px;
+              white-space: nowrap;
+            }
+
             .print\\:barcode-container {
               position: absolute;
-              max-width: 100vw;
-              max-height: 100vh;
+              width: 100% !important;
+              height: 100% !important;
               top: 0;
-              left: 25px;
+              left: 0;
               display: flex;
               align-items: center;
               justify-content: center;
-            }
-
-            .print\\:qr-container {
-              margin-left: 10px
+              overflow: hidden;
             }
 
             .print\\:barcode-container > div {
-              max-width: 100%;
-              max-height: 100%;
+              width: 100%;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 4px;
+            }
+
+            .print\\:barcode-container .print\\:qr-code > canvas {
+              width: auto !important;
+              height: 76% !important;
+            }
+
+            .print\\:barcode-container .print\\:sku {
+              transform: rotate(-90deg) !important;
+            }
+
+            .print\\:barcode-container .print\\:sku .price-text {
+              font-size: 18px;
+            }
+
+            .print\\:barcode-container .print\\:barcode {
+              padding-top: 2%;
+            }
+
+            .print\\:barcode-container .print\\:barcode > svg {
+              width: 82% !important;
+              height: auto !important;
+              margin-top: 0 !important;
+            }
+
+            .print\\:barcode-container .print\\:double-code > div > .label-text {
+              font-size: 8px;
+            }
+
+            .print\\:barcode-container .print\\:double-code > div > .price-text {
+              font-size: 16px;
+            }
+
+            .print\\:barcode-container .print\\:double-code .print\\:qr-code > canvas {
+              width: 80% !important;
+              height: auto !important;
             }
           }
         `}
