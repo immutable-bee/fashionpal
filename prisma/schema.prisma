@@ -137,6 +137,7 @@ model Listing {
   squareId           String?
   discountPercentage Int?
   discountPrice      Float?
+  isPremiun          Boolean                @default(false)
   categories         CategoriesOnListings[]
   Business           Business?              @relation(fields: [businessId], references: [id])
   votes              Vote[]
