@@ -190,12 +190,17 @@ model PricingRule {
   id            String            @id @default(uuid())
   name          String
   listingType   RepricingRuleType
+  ruleType      RepricingType
   adjustPriceBy Int
   cycle         String
   roundTo       Float
   floorPrice    Int
   ownerId       String
   categoryId    String?
+  isRecurring   Boolean
+  saleStartDate DateTime?
+  saleEndDate   DateTime?
+  daysOfWeek    Int[]
   category      Category?         @relation(fields: [categoryId], references: [id])
   owner         Business          @relation(fields: [ownerId], references: [id])
 }
@@ -232,4 +237,14 @@ enum RepricingRuleType {
   PREMIUM_ONLY
   EXCLUDE_PREMIUM
   ALL
+}
+
+enum RepricingType {
+  SALE
+  STANDARD
+}
+
+enum SaleType {
+  RECURRING
+  ONETIME
 }

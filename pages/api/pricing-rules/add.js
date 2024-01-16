@@ -13,7 +13,7 @@ const handler = async (req, res) => {
     return res.status(405).json({ error: "Method not allowed" });
   }
   const data = req.body;
-  const requiredParam = ["name", "categoryId", "listingType"];
+  const requiredParam = ["name", "categoryId", "listingType", "type"];
   try {
     const payload = {};
 
@@ -24,6 +24,7 @@ const handler = async (req, res) => {
     if (business) {
       payload["ownerId"] = business.id;
     }
+    payload["type"] = data.type;
     payload["name"] = data.name;
     payload["categoryId"] = data.categoryId;
     payload["listingType"] = data.listingType;
@@ -31,6 +32,23 @@ const handler = async (req, res) => {
     payload["cycle"] = data.cycle;
     payload["roundTo"] = parseFloat(data.roundTo);
     payload["floorPrice"] = parseFloat(data.floorPrice);
+    if (data.type === "SALE") {
+      payload["isRecurring"] = data.isRecurring;
+      if (data.isRecurring) {
+        payload["daysOfWeek"] = data.saleDays;
+      } else {
+        if (data.startDate) {
+          payload["saleStartDate"] = data.startDate;
+        } else {
+          return res.status(400).json({
+            error: `Start Date cannot be empty`,
+          });
+        }
+        if (data.endDate) {
+          payload["saleEndDate"] = data.endDate;
+        }
+      }
+    }
     const validatorResponse = PayloadValidator(payload, requiredParam);
     if (validatorResponse.status) {
       return res.status(400).json({

@@ -27,6 +27,24 @@ export default async function handler(req, res) {
   payload.adjustPriceBy = parseFloat(payload.adjustPriceBy);
   payload.roundTo = parseFloat(payload.roundTo);
   payload.floorPrice = parseFloat(payload.floorPrice);
+  if (payload.type === "SALE") {
+    if (payload.isRecurring) {
+      payload.startDate = null;
+      payload.endDate = null;
+    } else {
+      if (payload.startDate) {
+        payload.saleStartDate = payload.startDate;
+      } else {
+        return res.status(400).json({
+          error: `Start Date cannot be empty`,
+        });
+      }
+      if (payload.endDate) {
+        payload.saleEndDate = payload.endDate;
+      }
+      payload.isRecurring = false;
+    }
+  }
   const requiredParam = ["name", "categoryId", "listingType"];
 
   try {
