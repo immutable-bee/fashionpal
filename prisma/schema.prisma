@@ -142,6 +142,7 @@ model Listing {
   discountPercentage Int?
   discountPrice      Float?
   isPremiun          Boolean                @default(false)
+  tinyUrl            String?                @unique
   categories         CategoriesOnListings[]
   Business           Business?              @relation(fields: [businessId], references: [id])
   votes              Vote[]
