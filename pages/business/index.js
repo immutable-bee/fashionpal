@@ -162,7 +162,7 @@ export default function Home() {
 
   const printSKU = (e, Barcode, price) => {
     e.stopPropagation();
-    setPrintData({ Barcode, price });
+    setPrintData({ Barcode, price, tinyUrl });
     setPrintModal(true);
   };
 
@@ -374,6 +374,7 @@ export default function Home() {
           <PrintBarcode
             sku={printData.Barcode}
             price={printData.price}
+            tinyUr={printData.tinyUrl}
           />
         </>
       </ModalComponent>

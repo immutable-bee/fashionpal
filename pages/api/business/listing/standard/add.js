@@ -4,11 +4,26 @@ import fs from "fs";
 import { IncomingForm } from "formidable";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../../auth/[...nextauth]";
+import { nanoid } from "nanoid";
 
 export const config = {
   api: {
     bodyParser: false,
   },
+};
+
+const generateUniqueTinyUrl = async () => {
+  let unique = false;
+  let tinyUrl;
+  while (!unique) {
+    const hash = nanoid(10);
+    tinyUrl = `https://faspl.co/${hash}`;
+    const existing = await prisma.listing.findUnique({ where: { tinyUrl } });
+    if (!existing) {
+      unique = true;
+    }
+  }
+  return tinyUrl;
 };
 
 const handler = async (req, res) => {
@@ -55,12 +70,15 @@ const handler = async (req, res) => {
 
         newListingSku = timestampSku;
 
+        const newTinyUrl = await generateUniqueTinyUrl();
+
         const newListing = await tx.listing.create({
           data: {
             price,
             status,
             Barcode: timestampSku,
             businessId: business.id,
+            tinyUrl: newTinyUrl,
             categories: {
               create: {
                 category: {
@@ -119,7 +137,7 @@ const handler = async (req, res) => {
       }
     );
 
-    res.status(200).json(newListingSku);
+    res.status(200).json({ newListingSku, newTinyUrl });
   } catch (error) {
     for (const key in files) {
       const uploadPath = `${businessId}/${newListingId}/${key}`;

@@ -1,4 +1,19 @@
 import { prisma } from "../../../../db/prismaDB";
+import { nanoid } from "nanoid";
+
+const generateUniqueTinyUrl = async () => {
+  let unique = false;
+  let tinyUrl;
+  while (!unique) {
+    const hash = nanoid(10);
+    tinyUrl = `https://faspl.co/${hash}`;
+    const existing = await prisma.listing.findUnique({ where: { tinyUrl } });
+    if (!existing) {
+      unique = true;
+    }
+  }
+  return tinyUrl;
+};
 
 const handler = async (req, res) => {
   const { data } = req.body;
@@ -49,6 +64,8 @@ const handler = async (req, res) => {
         },
       }));
 
+      const newTinyUrl = await generateUniqueTinyUrl();
+
       const newListing = await prisma.listing.create({
         data: {
           mainImageUrl,
@@ -59,6 +76,7 @@ const handler = async (req, res) => {
           isActive: true,
           daysToExpiry: 7,
           Barcode: "1",
+          tinyUrl: newTinyUrl,
           Business: {
             connect: { id: queuedListing.queue.ownerId },
           },

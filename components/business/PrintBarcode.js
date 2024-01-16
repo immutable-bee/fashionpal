@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import Barcode from "react-barcode";
 import { QRCode } from "react-qrcode-logo";
 
-const PrintBarcode = ({ sku, price }) => {
+const PrintBarcode = ({ sku, price, tinyUrl }) => {
   const [template, setTemplate] = useState(
     localStorage.getItem("printOption") || "1"
   );
@@ -47,10 +47,7 @@ const PrintBarcode = ({ sku, price }) => {
               <div className="print:qr-container print:qr-code flex flex-col items-center">
                 <h6 className="label-text font-bold">Member Price</h6>
 
-                <QRCode
-                  value={`${skuWithBaseURL}product/${price}`}
-                  size={175}
-                />
+                <QRCode value={tinyUrl} size={175} />
               </div>
             )}
             {template === "3" && (
@@ -63,10 +60,7 @@ const PrintBarcode = ({ sku, price }) => {
               <div className="print:qr-container print:qr-code flex flex-col items-center">
                 <h6 className="label-text font-bold">Member Price</h6>
 
-                <QRCode
-                  value={`${skuWithBaseURL}product/${price}`}
-                  size={175}
-                />
+                <QRCode value={tinyUrl} size={175} />
               </div>
             )}
             {template === "5" && (
@@ -75,10 +69,7 @@ const PrintBarcode = ({ sku, price }) => {
                   <h6 className="w-full text-center text-sm font-bold label-text">
                     Member Price
                   </h6>
-                  <QRCode
-                    value={`${skuWithBaseURL}product/${price}`}
-                    size={175}
-                  />
+                  <QRCode value={tinyUrl} size={175} />
                 </div>
                 <div className="mt-2 mb-2 sm:mb-0 sm:ml-2 sm:border-l-2 border-t-2 border-black print:min-h-[60%]"></div>
                 <div className="flex-1 flex flex-col items-center justify-center print:barcode">

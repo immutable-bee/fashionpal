@@ -3,6 +3,21 @@ import prisma from "../../../../prisma/client";
 import { createClient } from "@supabase/supabase-js";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { nanoid } from "nanoid";
+
+const generateUniqueTinyUrl = async () => {
+  let unique = false;
+  let tinyUrl: string;
+  while (!unique) {
+    const hash = nanoid(10);
+    tinyUrl = `https://faspl.co/${hash}`;
+    const existing = await prisma.listing.findUnique({ where: { tinyUrl } });
+    if (!existing) {
+      unique = true;
+    }
+  }
+  return tinyUrl;
+};
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
@@ -27,6 +42,8 @@ export default async function handler(
     try {
       let payload: any = {};
 
+      const newTinyUrl = generateUniqueTinyUrl();
+
       switch (listing.type) {
         case "employee":
           payload = {
@@ -36,6 +53,7 @@ export default async function handler(
             tags: listing.tags,
             status: listing.listType,
             Barcode: listing.barcode,
+            tinyUrl: newTinyUrl,
           };
           break;
 
@@ -56,6 +74,7 @@ export default async function handler(
             mainImage: listing.mainImage,
             brandImage: listing.brandImage,
             tags: listing.tags,
+            tinyUrl: newTinyUrl,
           };
           break;
 
