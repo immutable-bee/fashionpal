@@ -55,21 +55,24 @@ model User {
 }
 
 model Business {
-  id                String        @id @default(uuid())
-  uid               String        @unique
-  businessName      String
-  email             String        @unique
-  businessState     String
-  businessCity      String
-  businessStreet    String
-  businessZip       String
-  url               String?
-  phoneNumber       String?
-  squareAccessToken String?
-  user              User          @relation(fields: [uid], references: [id])
-  listings          Listing[]
-  listingQueue      ListingQueue?
-  pricingRules      PricingRule[]
+  id                    String                 @id @default(uuid())
+  uid                   String                 @unique
+  businessName          String
+  email                 String                 @unique
+  businessState         String
+  businessCity          String
+  businessStreet        String
+  businessZip           String
+  url                   String?
+  phoneNumber           String?
+  squareAccessToken     String?
+  discountEmailReport   Boolean                @default(false)
+  weeklyEmailReport     Boolean                @default(false)
+  user                  User                   @relation(fields: [uid], references: [id])
+  LiquidationThresholds LiquidationThreshold[]
+  listings              Listing[]
+  listingQueue          ListingQueue?
+  pricingRules          PricingRule[]
 }
 
 model Consumer {
@@ -102,10 +105,11 @@ model ThriftList {
 }
 
 model Category {
-  id          String                 @id @default(uuid())
-  name        String                 @unique
-  listings    CategoriesOnListings[]
-  PricingRule PricingRule[]
+  id                    String                 @id @default(uuid())
+  name                  String                 @unique
+  listings              CategoriesOnListings[]
+  LiquidationThresholds LiquidationThreshold[]
+  PricingRule           PricingRule[]
 }
 
 model CategoriesOnListings {
@@ -193,6 +197,16 @@ model PricingRule {
   categoryId    String?
   category      Category?         @relation(fields: [categoryId], references: [id])
   owner         Business          @relation(fields: [ownerId], references: [id])
+}
+
+model LiquidationThreshold {
+  id         String    @id @default(uuid())
+  name       String
+  days       Int
+  ownerId    String
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+  owner      Business  @relation(fields: [ownerId], references: [id])
 }
 
 enum VoteType {

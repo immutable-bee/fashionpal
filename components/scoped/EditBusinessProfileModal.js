@@ -67,26 +67,6 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
       }
     >
       <div>
-        <div>
-          <h1 className="text-md text-gray-700">Store Name</h1>
-          <input
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-          />
-        </div>
-        <div className="mt-3">
-          <h1 className="text-md text-gray-700">Email</h1>
-          <input
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-            className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-          />
-        </div>
         <div className=" rounded-2xl mt-4 py-3 px-3 border shadow-sm">
           <h1 className="text-xl text-black text-center">
             Liquidation Thresholds
