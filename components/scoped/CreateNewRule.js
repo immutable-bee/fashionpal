@@ -4,13 +4,19 @@ import Slider from "rc-slider";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
-
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 const RePricer = ({ onBack, categoryList }) => {
+  const [type, setType] = useState("standard");
+  const [saleTimeType, setSaleTimeType] = useState("recurring");
+  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [saleDays, setSaleDays] = useState("");
+  const [appliedTo, setAppliedTo] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
   const [listingType, setListingType] = useState("ALL");
-  const [isWeekly, setIsWeekly] = useState(false);
-  const [isMonthly, setIsMonthly] = useState(false);
+
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
   const [cycle, setCycle] = useState("weekly");
   const [roundTo, setRoundTo] = useState("0.50");
@@ -28,8 +34,12 @@ const RePricer = ({ onBack, categoryList }) => {
       name: name,
       categoryId: category,
       listingType: listingType,
-      isWeekly: isWeekly,
-      isMonthly: isMonthly,
+      type: type,
+      saleTimeType: saleTimeType,
+      endDate: endDate,
+      startDate: startDate,
+      saleDays: saleDays,
+      appliedTo: appliedTo,
       adjustPriceBy: adjustPriceBy,
       cycle: cycle,
       roundTo: roundTo,
@@ -95,8 +105,69 @@ const RePricer = ({ onBack, categoryList }) => {
               ))}
           </select>
         </div>
+        <ul
+          class="
+            flex flex-wrap
+            mt-4
+            text-xs
+            sm:text-sm
+            px-4
+            py-2
+            font-medium
+            rounded-3xl
+            text-center text-gray-500
+            overflow-x-auto
+            bg-gray-100
+          "
+        >
+          <span
+            className={`
+              py-2
+              w-6/12
+              sm:py-2.5
+              flex
+              items-center
+              justify-center
+              capitalize
+              cursor-pointer
+              text-xl  ${
+                type === "sale"
+                  ? "text-white hover:text-white bg-primary rounded-2xl shadow-sm !px-3 sm:!px-14"
+                  : "!text-gray-500 !px-2.5 sm:!px-12"
+              }
+            `}
+            onClick={() => setType("sale")}
+          >
+            Sale
+          </span>
+
+          <span
+            className={`
+              py-2
+              w-6/12
+              sm:py-2.5
+              flex
+              items-center
+              justify-center
+              capitalize
+              cursor-pointer
+              text-xl  ${
+                type === "standard"
+                  ? "text-white hover:text-white bg-primary rounded-2xl shadow-sm !px-3 sm:!px-14"
+                  : "!text-gray-500 !px-2.5 sm:!px-12"
+              }
+            `}
+            onClick={() => {
+              setType("standard");
+              setSaleTimeType("recurring");
+            }}
+          >
+            Standard
+          </span>
+        </ul>
+
         <div className="py-2">
-          <label className="text-lg">Type</label>
+          <label className="text-lg">Listing Type</label>
           <select
             value={listingType}
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
@@ -107,6 +178,152 @@ const RePricer = ({ onBack, categoryList }) => {
             <option value="EXCLUDE_PREMIUM">Exclude premium</option>
           </select>
         </div>
+        <div className="py-2">
+          <label className="text-lg">Applies To</label>
+          <select
+            value={appliedTo}
+            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+            onChange={(e) => setAppliedTo(e.target.value)}
+          >
+            <option value="ALL">Include Members</option>
+            <option value="MEMBERS_ONLY">Members</option>
+            <option value="EXCLUDE_MEMBERS">Non Members</option>
+          </select>
+        </div>
+        {type === "sale" && (
+          <>
+            <ul
+              class="
+            flex flex-wrap
+            mt-4
+            text-xs
+            sm:text-sm
+            px-4
+            py-2
+            font-normal
+            rounded-2xl
+            text-center text-gray-500
+            overflow-x-auto
+            bg-gray-100 max-w-fit w-full
+          "
+            >
+              <span
+                className={`
+              py-2
+              
+              sm:py-2
+              flex
+              items-center
+              justify-center
+              capitalize
+              cursor-pointer
+              text-base  ${
+                saleTimeType === "recurring"
+                  ? "text-white hover:text-white bg-primary rounded-xl shadow-sm !px-3 sm:!px-6"
+                  : "!text-gray-500 !px-2.5 sm:!px-4"
+              }
+            `}
+                onClick={() => setSaleTimeType("recurring")}
+              >
+                Recurring
+              </span>
+
+              <span
+                className={`
+              py-2
+              
+              sm:py-2
+              flex
+              items-center
+              justify-center
+              capitalize
+              cursor-pointer
+              text-base  ${
+                saleTimeType === "one_time"
+                  ? "text-white hover:text-white bg-primary rounded-xl shadow-sm !px-3 sm:!px-6"
+                  : "!text-gray-500 !px-2.5 sm:!px-4"
+              }
+            `}
+                onClick={() => setSaleTimeType("one_time")}
+              >
+                One Time
+              </span>
+            </ul>
+
+            {saleTimeType === "one_time" && (
+              <>
+                {" "}
+                <div className="py-2 ">
+                  <label className="block">Start date</label>
+                  <div className="relative">
+                    <DatePicker
+                      selected={startDate}
+                      onChange={(e) => setStartDate(e)}
+                      dateFormat="yyyy/MM/dd"
+                      className=" w-full mt-0.5 rounded-xl px-3 h-10 border border-gray-600"
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6 absolute right-2 top-2.5 pointer-events-none"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <div className="py-2 ">
+                  <label className="block">End date</label>
+                  <div className="relative">
+                    <DatePicker
+                      selected={endDate}
+                      onChange={(e) => setEndDate(e)}
+                      minDate={startDate}
+                      dateFormat="yyyy/MM/dd"
+                      className=" w-full mt-0.5 rounded-xl px-3 h-10 border border-gray-600"
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-6 h-6 absolute right-2 top-2.5 z-0 pointer-events-none"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </>
+            )}
+            {saleTimeType === "recurring" && (
+              <div className="py-2">
+                <label className="text-lg">Select week days</label>
+                <select
+                  value={saleDays}
+                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                  onChange={(e) => setSaleDays(e.target.value)}
+                >
+                  <option value={"Monday-Friday"}>Monday-Friday</option>
+                  <option value={"Monday-Friday"}>Monday-Friday</option>
+                  <option value={"Monday-Friday"}>Monday-Friday</option>
+                  <option value={"Monday-Friday"}>Monday-Friday</option>
+                  <option value={"Monday-Friday"}>Monday-Friday</option>
+                </select>
+              </div>
+            )}
+          </>
+        )}
 
         <div className="py-2 mt-4 max-w-fit mx-auto">
           <h3 className="text-lg text-center">Price adjustment</h3>
@@ -119,16 +336,17 @@ const RePricer = ({ onBack, categoryList }) => {
               onChange={(e) => setAdjustPriceBy(e.target.value)}
             />
             <label className="text-lg min-w-fit">% off</label>
-
-            <select
-              value={cycle}
-              className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
-              onChange={(e) => setCycle(e.target.value)}
-            >
-              <option value="weekly">Weekly</option>
-              <option value="bi-weely">Bi Weekly</option>
-              <option value="monthly">Monthly</option>
-            </select>
+            {type === "standard" && (
+              <select
+                value={cycle}
+                className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
+                onChange={(e) => setCycle(e.target.value)}
+              >
+                <option value="weekly">Weekly</option>
+                <option value="bi-weely">Bi Weekly</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            )}
           </div>
         </div>
 

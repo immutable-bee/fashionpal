@@ -369,7 +369,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                 </h3>
               </div>
             </div>
-            {newListingSku}
+
             {newListingSku ? (
               <>
                 <PrintBarcode

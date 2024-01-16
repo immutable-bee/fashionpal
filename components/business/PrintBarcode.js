@@ -101,14 +101,12 @@ const PrintBarcode = ({ sku, price }) => {
             )}
           </div>
         </div>
-
         <button
           onClick={() => window.print()}
           className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
         >
           Print Label
         </button>
-
         <style>
           {`
           .price-text {
