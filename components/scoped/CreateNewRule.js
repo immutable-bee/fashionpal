@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
 import Slider from "rc-slider";
+import { Dropdown } from "@nextui-org/react";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
@@ -11,7 +12,7 @@ const RePricer = ({ onBack, categoryList }) => {
   const [saleTimeType, setSaleTimeType] = useState("recurring");
   const [endDate, setEndDate] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [saleDays, setSaleDays] = useState("");
+  const [saleDays, setSaleDays] = useState([]);
   const [appliedTo, setAppliedTo] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
@@ -23,6 +24,15 @@ const RePricer = ({ onBack, categoryList }) => {
   const [floorPrice, setFloorPrice] = useState(0);
   //
   const [isLoading, setIsLoading] = useState(0);
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   const onStart = async () => {
     if (!name) {
@@ -309,17 +319,30 @@ const RePricer = ({ onBack, categoryList }) => {
             {saleTimeType === "recurring" && (
               <div className="py-2">
                 <label className="text-lg">Select week days</label>
-                <select
-                  value={saleDays}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setSaleDays(e.target.value)}
+                <div
+                  id="days-dropdown"
+                  className="w-full rounded-xl border border-gray-600 mt-1"
                 >
-                  <option value={"Monday-Friday"}>Monday-Friday</option>
-                  <option value={"Monday-Friday"}>Monday-Friday</option>
-                  <option value={"Monday-Friday"}>Monday-Friday</option>
-                  <option value={"Monday-Friday"}>Monday-Friday</option>
-                  <option value={"Monday-Friday"}>Monday-Friday</option>
-                </select>
+                  <Dropdown>
+                    <Dropdown.Button light>
+                      {saleDays.map((day) => day.slice(0, 3)).join(", ") ||
+                        "Select week days"}
+                    </Dropdown.Button>
+                    <Dropdown.Menu
+                      selectionMode="multiple"
+                      disallowEmptySelection
+                      selectedKeys={saleDays}
+                      onSelectionChange={(keys) => {
+                        const selectedKeys = Array.from(keys);
+                        setSaleDays(selectedKeys);
+                      }}
+                    >
+                      {daysOfWeek.map((day, index) => (
+                        <Dropdown.Item key={day}>{day}</Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
               </div>
             )}
           </>
