@@ -38,6 +38,7 @@ const handler = async (req, res) => {
   let businessId;
   let newListingId;
   let newListingSku;
+  let newTinyUrl;
 
   const form = new IncomingForm();
   const [fields, files] = await new Promise((resolve, reject) => {
@@ -70,7 +71,7 @@ const handler = async (req, res) => {
 
         newListingSku = timestampSku;
 
-        const newTinyUrl = await generateUniqueTinyUrl();
+        newTinyUrl = await generateUniqueTinyUrl();
 
         const newListing = await tx.listing.create({
           data: {
