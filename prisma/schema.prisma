@@ -200,7 +200,7 @@ model PricingRule {
   isRecurring   Boolean
   saleStartDate DateTime?
   saleEndDate   DateTime?
-  daysOfWeek    Int[]
+  daysOfWeek    String[]
   category      Category?         @relation(fields: [categoryId], references: [id])
   owner         Business          @relation(fields: [ownerId], references: [id])
 }
