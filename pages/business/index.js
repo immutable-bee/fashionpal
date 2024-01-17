@@ -160,7 +160,7 @@ export default function Home() {
     }
   };
 
-  const printSKU = (e, Barcode, price) => {
+  const printSKU = (e, Barcode, price, tinyUrl) => {
     e.stopPropagation();
     setPrintData({ Barcode, price, tinyUrl });
     setPrintModal(true);
@@ -269,6 +269,7 @@ export default function Home() {
                               Barcode={row.Barcode}
                               price={row.price}
                               printSKU={printSKU}
+                              tinyUrl={row.tinyUrl}
                             >
                               <button
                                 onClick={() => triggerEditTagsModal(key)}
