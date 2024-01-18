@@ -1,18 +1,18 @@
 import { useState } from "react";
 import ButtonComponent from "@/components/utility/Button";
-import Slider from "rc-slider";
 import { Dropdown } from "@nextui-org/react";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+
 const RePricer = ({ onBack, categoryList }) => {
-  const [type, setType] = useState("standard");
-  const [saleTimeType, setSaleTimeType] = useState("recurring");
-  const [endDate, setEndDate] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [saleDays, setSaleDays] = useState([]);
+  const [type, setType] = useState("STANDARD");
+  const [isRecurring, setIsRecurring] = useState(true);
+  const [saleEndDate, setSaleEndDate] = useState("");
+  const [saleStartDate, setSaleStartDate] = useState("");
+  const [daysOfWeek, setDaysOfWeek] = useState([]);
   const [appliedTo, setAppliedTo] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
@@ -24,7 +24,7 @@ const RePricer = ({ onBack, categoryList }) => {
   const [floorPrice, setFloorPrice] = useState(0);
   //
   const [isLoading, setIsLoading] = useState(0);
-  const daysOfWeek = [
+  const days = [
     "Monday",
     "Tuesday",
     "Wednesday",
@@ -45,10 +45,10 @@ const RePricer = ({ onBack, categoryList }) => {
       categoryId: category,
       listingType: listingType,
       type: type,
-      saleTimeType: saleTimeType,
-      endDate: endDate,
-      startDate: startDate,
-      saleDays: saleDays,
+      isRecurring: isRecurring,
+      saleEndDate: saleEndDate,
+      saleStartDate: saleStartDate,
+      daysOfWeek: daysOfWeek,
       appliedTo: appliedTo,
       adjustPriceBy: adjustPriceBy,
       cycle: cycle,
@@ -141,12 +141,12 @@ const RePricer = ({ onBack, categoryList }) => {
               capitalize
               cursor-pointer
               text-xl  ${
-                type === "sale"
+                type === "SALE"
                   ? "text-white hover:text-white bg-primary rounded-2xl shadow-sm !px-3 sm:!px-14"
                   : "!text-gray-500 !px-2.5 sm:!px-12"
               }
             `}
-            onClick={() => setType("sale")}
+            onClick={() => setType("SALE")}
           >
             Sale
           </span>
@@ -162,14 +162,14 @@ const RePricer = ({ onBack, categoryList }) => {
               capitalize
               cursor-pointer
               text-xl  ${
-                type === "standard"
+                type === "STANDARD"
                   ? "text-white hover:text-white bg-primary rounded-2xl shadow-sm !px-3 sm:!px-14"
                   : "!text-gray-500 !px-2.5 sm:!px-12"
               }
             `}
             onClick={() => {
-              setType("standard");
-              setSaleTimeType("recurring");
+              setType("STANDARD");
+              setIsRecurring(true);
             }}
           >
             Standard
@@ -200,7 +200,7 @@ const RePricer = ({ onBack, categoryList }) => {
             <option value="EXCLUDE_MEMBERS">Non Members</option>
           </select>
         </div>
-        {type === "sale" && (
+        {type === "SALE" && (
           <>
             <ul
               class="
@@ -228,12 +228,12 @@ const RePricer = ({ onBack, categoryList }) => {
               capitalize
               cursor-pointer
               text-base  ${
-                saleTimeType === "recurring"
+                isRecurring === true
                   ? "text-white hover:text-white bg-primary rounded-xl shadow-sm !px-3 sm:!px-6"
                   : "!text-gray-500 !px-2.5 sm:!px-4"
               }
             `}
-                onClick={() => setSaleTimeType("recurring")}
+                onClick={() => setIsRecurring(true)}
               >
                 Recurring
               </span>
@@ -249,26 +249,26 @@ const RePricer = ({ onBack, categoryList }) => {
               capitalize
               cursor-pointer
               text-base  ${
-                saleTimeType === "one_time"
+                isRecurring === false
                   ? "text-white hover:text-white bg-primary rounded-xl shadow-sm !px-3 sm:!px-6"
                   : "!text-gray-500 !px-2.5 sm:!px-4"
               }
             `}
-                onClick={() => setSaleTimeType("one_time")}
+                onClick={() => setIsRecurring(false)}
               >
                 One Time
               </span>
             </ul>
 
-            {saleTimeType === "one_time" && (
+            {isRecurring === "one_time" && (
               <>
                 {" "}
                 <div className="py-2 ">
                   <label className="block">Start date</label>
                   <div className="relative">
                     <DatePicker
-                      selected={startDate}
-                      onChange={(e) => setStartDate(e)}
+                      selected={saleStartDate}
+                      onChange={(e) => setSaleStartDate(e)}
                       dateFormat="yyyy/MM/dd"
                       className=" w-full mt-0.5 rounded-xl px-3 h-10 border border-gray-600"
                     />
@@ -292,9 +292,9 @@ const RePricer = ({ onBack, categoryList }) => {
                   <label className="block">End date</label>
                   <div className="relative">
                     <DatePicker
-                      selected={endDate}
-                      onChange={(e) => setEndDate(e)}
-                      minDate={startDate}
+                      selected={saleEndDate}
+                      onChange={(e) => setSaleEndDate(e)}
+                      minDate={saleStartDate}
                       dateFormat="yyyy/MM/dd"
                       className=" w-full mt-0.5 rounded-xl px-3 h-10 border border-gray-600"
                     />
@@ -316,7 +316,7 @@ const RePricer = ({ onBack, categoryList }) => {
                 </div>
               </>
             )}
-            {saleTimeType === "recurring" && (
+            {isRecurring === true && (
               <div className="py-2">
                 <label className="text-lg">Select week days</label>
                 <div
@@ -325,19 +325,19 @@ const RePricer = ({ onBack, categoryList }) => {
                 >
                   <Dropdown>
                     <Dropdown.Button light>
-                      {saleDays.map((day) => day.slice(0, 3)).join(", ") ||
+                      {daysOfWeek.map((day) => day.slice(0, 3)).join(", ") ||
                         "Select week days"}
                     </Dropdown.Button>
                     <Dropdown.Menu
                       selectionMode="multiple"
                       disallowEmptySelection
-                      selectedKeys={saleDays}
+                      selectedKeys={daysOfWeek}
                       onSelectionChange={(keys) => {
                         const selectedKeys = Array.from(keys);
-                        setSaleDays(selectedKeys);
+                        setDaysOfWeek(selectedKeys);
                       }}
                     >
-                      {daysOfWeek.map((day, index) => (
+                      {days.map((day, index) => (
                         <Dropdown.Item key={day}>{day}</Dropdown.Item>
                       ))}
                     </Dropdown.Menu>
@@ -359,7 +359,7 @@ const RePricer = ({ onBack, categoryList }) => {
               onChange={(e) => setAdjustPriceBy(e.target.value)}
             />
             <label className="text-lg min-w-fit">% off</label>
-            {type === "standard" && (
+            {type === "STANDARD" && (
               <select
                 value={cycle}
                 className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"

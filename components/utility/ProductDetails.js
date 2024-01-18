@@ -127,6 +127,23 @@ function ProductDetails({
       });
   };
 
+  const copyListingUrl = () => {
+    const baseUrl = window.location.origin || ""; // Replace with the actual property name
+    const productUrl = `${baseUrl}/consumer/listing/${data.Barcode}`;
+
+    console.log(productUrl);
+    navigator.clipboard
+      .writeText(productUrl)
+      .then(() => {
+        NotificationManager.success("Listing URL copied to clipboard!");
+      })
+      .catch((err) => {
+        NotificationManager.error(
+          "Failed to copy Listing URL. Please copy manually."
+        );
+      });
+  };
+
   const closeShareModal = () => {
     setOpenShareModal(false);
   };
@@ -296,16 +313,30 @@ function ProductDetails({
 
               <h3 className="text-center text-xl">OR</h3>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center items-center gap-4">
                 <ButtonComponent
-                  onClick={() => downloadImage(data.mainImageUrl)}
+                  onClick={() => copyListingUrl()}
                   rounded
-                  loading={downloading}
                   padding="none"
                   className="!px-3 sm:!px-7 !py-1.5"
                 >
-                  Download Image
+                  Copy Listing URL
                 </ButtonComponent>
+                <svg
+                  onClick={() => downloadImage(data.mainImageUrl)}
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="w-10 h-10 border-2 border-primary text-primary rounded-lg p-1.5 cursor-pointer"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                  />
+                </svg>
               </div>
             </ModalComponent>
           )}
