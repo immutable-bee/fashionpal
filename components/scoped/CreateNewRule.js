@@ -16,7 +16,7 @@ const RePricer = ({ onBack, categoryList }) => {
   const [appliedTo, setAppliedTo] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
-  const [listingruleType, setListingruleType] = useState("ALL");
+  const [listingType, setListingType] = useState("ALL");
 
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
   const [cycle, setCycle] = useState("weekly");
@@ -43,7 +43,7 @@ const RePricer = ({ onBack, categoryList }) => {
     const data = {
       name: name,
       categoryId: category,
-      listingruleType: listingruleType,
+      listingType: listingType,
       ruleType: ruleType,
       isRecurring: isRecurring,
       saleEndDate: saleEndDate,
@@ -177,11 +177,11 @@ const RePricer = ({ onBack, categoryList }) => {
         </ul>
 
         <div className="py-2">
-          <label className="text-lg">Listing ruleType</label>
+          <label className="text-lg">Listing Type</label>
           <select
-            value={listingruleType}
+            value={listingType}
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-            onChange={(e) => setListingruleType(e.target.value)}
+            onChange={(e) => setListingType(e.target.value)}
           >
             <option value="ALL">Include premium</option>
             <option value="PREMIUM_ONLY">premium only</option>
