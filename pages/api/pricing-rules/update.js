@@ -34,16 +34,11 @@ export default async function handler(req, res) {
       payload.daysOfWeek = data.daysOfWeek;
     } else {
       if (payload.saleStartDate) {
-        payload.saleStartDate = payload.saleStartDate;
-      } else {
         return res.status(400).json({
           error: `Start Date cannot be empty`,
         });
       }
-      if (payload.saleEndDate) {
-        payload.saleEndDate = payload.saleEndDate;
-      }
-      payload.isRecurring = false;
+      payload.daysOfWeek = [];
     }
   }
   const requiredParam = ["name", "categoryId", "listingType", "ruleType"];
