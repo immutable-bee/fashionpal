@@ -21,7 +21,7 @@ const compiledHtml = `<html>
 	</tr>
 	<tr>
 		<td>
-			<img src="i{{loginImageFive}}" width="223" height="239" alt=""></td>
+			<img src="{{loginImageFive}}" width="223" height="239" alt=""></td>
 	</tr>
 </table>
 <!-- End Save for Web Slices -->
