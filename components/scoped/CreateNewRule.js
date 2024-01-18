@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 
 const RePricer = ({ onBack, categoryList }) => {
-  const [type, setType] = useState("STANDARD");
+  const [ruleType, setRuleruleType] = useState("STANDARD");
   const [isRecurring, setIsRecurring] = useState(true);
   const [saleEndDate, setSaleEndDate] = useState("");
   const [saleStartDate, setSaleStartDate] = useState("");
@@ -16,7 +16,7 @@ const RePricer = ({ onBack, categoryList }) => {
   const [appliedTo, setAppliedTo] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("All");
-  const [listingType, setListingType] = useState("ALL");
+  const [listingruleType, setListingruleType] = useState("ALL");
 
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
   const [cycle, setCycle] = useState("weekly");
@@ -43,8 +43,8 @@ const RePricer = ({ onBack, categoryList }) => {
     const data = {
       name: name,
       categoryId: category,
-      listingType: listingType,
-      type: type,
+      listingruleType: listingruleType,
+      ruleType: ruleType,
       isRecurring: isRecurring,
       saleEndDate: saleEndDate,
       saleStartDate: saleStartDate,
@@ -141,12 +141,12 @@ const RePricer = ({ onBack, categoryList }) => {
               capitalize
               cursor-pointer
               text-xl  ${
-                type === "SALE"
+                ruleType === "SALE"
                   ? "text-white hover:text-white bg-primary rounded-2xl shadow-sm !px-3 sm:!px-14"
                   : "!text-gray-500 !px-2.5 sm:!px-12"
               }
             `}
-            onClick={() => setType("SALE")}
+            onClick={() => setRuleruleType("SALE")}
           >
             Sale
           </span>
@@ -162,13 +162,13 @@ const RePricer = ({ onBack, categoryList }) => {
               capitalize
               cursor-pointer
               text-xl  ${
-                type === "STANDARD"
+                ruleType === "STANDARD"
                   ? "text-white hover:text-white bg-primary rounded-2xl shadow-sm !px-3 sm:!px-14"
                   : "!text-gray-500 !px-2.5 sm:!px-12"
               }
             `}
             onClick={() => {
-              setType("STANDARD");
+              setRuleruleType("STANDARD");
               setIsRecurring(true);
             }}
           >
@@ -177,11 +177,11 @@ const RePricer = ({ onBack, categoryList }) => {
         </ul>
 
         <div className="py-2">
-          <label className="text-lg">Listing Type</label>
+          <label className="text-lg">Listing ruleType</label>
           <select
-            value={listingType}
+            value={listingruleType}
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-            onChange={(e) => setListingType(e.target.value)}
+            onChange={(e) => setListingruleType(e.target.value)}
           >
             <option value="ALL">Include premium</option>
             <option value="PREMIUM_ONLY">premium only</option>
@@ -200,7 +200,7 @@ const RePricer = ({ onBack, categoryList }) => {
             <option value="EXCLUDE_MEMBERS">Non Members</option>
           </select>
         </div>
-        {type === "SALE" && (
+        {ruleType === "SALE" && (
           <>
             <ul
               class="
@@ -355,11 +355,11 @@ const RePricer = ({ onBack, categoryList }) => {
               value={adjustPriceBy}
               className=" mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2"
               max="99"
-              type="Number"
+              ruleType="Number"
               onChange={(e) => setAdjustPriceBy(e.target.value)}
             />
             <label className="text-lg min-w-fit">% off</label>
-            {type === "STANDARD" && (
+            {ruleType === "STANDARD" && (
               <select
                 value={cycle}
                 className="w-full max-w-[8rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
@@ -392,7 +392,7 @@ const RePricer = ({ onBack, categoryList }) => {
           <input
             value={floorPrice}
             className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
-            type="number"
+            ruleType="number"
             onChange={(e) => setFloorPrice(e.target.value)}
           />
         </div>
