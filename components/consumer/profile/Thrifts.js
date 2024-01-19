@@ -7,6 +7,8 @@ import debounce from "lodash.debounce";
 
 const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
   const [dataList, setDataList] = useState([]);
+  const [addLoading, setAddLoading] = useState(false);
+  const [checkLoading, setCheckLoading] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [activeDeleteId, setActiveDeleteId] = useState(null);
@@ -52,6 +54,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
     setDeleteModal(true);
   };
   const updateThriftListItem = async (fieldValue, id) => {
+    setCheckLoading(true);
     try {
       const response = await fetch("/api/consumer/profile/thriftList/update", {
         method: "PUT",
@@ -66,6 +69,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
 
       if (response.ok) {
         const resp = await response.json();
+        setCheckLoading(false);
         const index = consumerData.ThriftList.findIndex(
           (elem) => elem.id === id
         );
@@ -75,9 +79,11 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
           setConsumerData({ ...updatedConsumerData });
         }
       } else {
+        setCheckLoading(false);
         console.error(`Error updating ${fieldName}`);
       }
     } catch (error) {
+      setCheckLoading(false);
       console.error("Error:", error);
     }
   };
@@ -91,6 +97,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
     setNewThrift(e.target.value);
   };
   const addNewThrift = async () => {
+    setAddLoading(true);
     try {
       if (newThrift) {
         const res = await fetch(`/api/consumer/profile/thriftList/add`, {
@@ -102,7 +109,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
           }),
         });
         const response = await res.json();
-        setDeleteLoading(false);
+        setAddLoading(false);
         if (res.ok) {
           setNewThrift("");
           setConsumerData({
@@ -117,34 +124,49 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
           NotificationManager.error(errorData);
         }
       } else {
+        setAddLoading(false);
         NotificationManager.error("input field is required");
       }
     } catch (error) {
+      setAddLoading(false);
       console.error("An error occurred while deleting the listing", error);
     }
   };
   return (
-
-  <div className='w-full xl:w-3/4 lg:w-3/4 md:w-full sm:w-full xs:w-full bg-white '>
-      <div className=' flex items-center justify-center'>
-        <div className='bg-white rounded shadow  p-6 m-4 w-full lg:max-xl '>
-          <div class=' p-4 flex items-center'>
-            <button onClick={toggleThrift} class=' text-lg font-semibold mr-2'>
-
-              &#8592;
+    <div className="w-full xl:w-3/4 lg:w-3/4 md:w-full sm:w-full xs:w-full bg-white ">
+      <div className=" flex items-center justify-center">
+        <div className="sm:bg-white sm:rounded-lg sm:shadow  sm:p-6 sm:m-4 w-full lg:max-xl ">
+          <div class=" py-2 sm:py-4 flex items-center">
+            <button onClick={toggleThrift}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6 cursor-pointer mr-3"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                />
+              </svg>
             </button>
-            <h1 className="text-2xl text-center font-bold">Thrift List</h1>
+            <h1 className="text-2xl text-center font-semibold">Thrift List</h1>
           </div>
-          <div className="flex mt-4 mb-4">
+          <div className="flex sm:mt-4 mb-3 sm:mb-4">
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
+              className="shadow appearance-none border rounded-lg w-full py-2 px-3 mr-4 text-grey-darker"
               placeholder="Add Thrift Item"
               value={newThrift}
               onChange={handleInputChange}
             />
             <button
               onClick={addNewThrift}
-              className="flex-no-shrink p-2 border-2 rounded text-teal border-teal  hover:border-light"
+              className={`flex-no-shrink px-5 hover:bg-gray-50 border-2 rounded-lg text-teal border-teal  hover:border-light ${
+                addLoading && "pointer-events-none"
+              }`}
             >
               Add
             </button>
@@ -154,7 +176,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
               dataList.map((listItem) => (
                 <div
                   key={listItem.id}
-                  className="flex mb-4 items-center"
+                  className="flex mb-3 items-center bg-white shadow px-3 sm:px-4 py-2 rounded-lg"
                 >
                   <input
                     id="checkbox"
@@ -163,7 +185,9 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
                     type="checkbox"
                     checked={listItem.isChecked}
                     onChange={(e) => handleUpdate(e, listItem.id)}
-                    className="h-6 w-6 mr-2 rounded accent-white border-solid border-2 border-black"
+                    className={`h-6 w-6 mr-2 rounded cursor-pointer accent-white border-solid border-2 border-black ${
+                      checkLoading && " pointer-events-none"
+                    }`}
                   />
                   <p
                     className={`w-full text-grey-darkest ${
@@ -175,7 +199,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
 
                   <button
                     onClick={() => triggerDeleteModal(listItem.id)}
-                    className="flex-no-shrink p-2 ml-4 mr-2 text-red-600"
+                    className="flex-no-shrink  text-red-600"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +219,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
                 </div>
               ))
             ) : (
-              <h5>No Record Found</h5>
+              <h5 className="text-center mt-3">No Record Found</h5>
             )}
           </div>
         </div>
