@@ -9,7 +9,7 @@ const OnboardingContainer = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [isOnboardingCompleted, setIsOnboardingCompleted] = useState(false);
-  const [userType, setUserType] = useState("consumer");
+  const [userType, setUserType] = useState("");
   const [username, setUsername] = useState("");
 
   const handleConsumerOnboard = () => {
@@ -177,10 +177,7 @@ const OnboardingContainer = () => {
                   placeholder="Username"
                   name="username"
                 />
-                <Button
-                  className="mt-5"
-                  type="submit"
-                >
+                <Button className="mt-5" type="submit">
                   Submit
                 </Button>
               </form>
@@ -198,11 +195,7 @@ const OnboardingContainer = () => {
                 click the button below to enter FashionPal
               </h2>
 
-              <Button
-                className="mt-5"
-                type="button"
-                onClick={() => onEnter()}
-              >
+              <Button className="mt-5" type="button" onClick={() => onEnter()}>
                 Enter FashionPal
               </Button>
             </div>
