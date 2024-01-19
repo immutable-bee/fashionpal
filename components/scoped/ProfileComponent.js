@@ -38,22 +38,29 @@ function ProfileComponent() {
     }
     setUpdating(true);
     try {
+      const payload = {
+        email: businessData.email,
+        data: {
+          businessName: businessData.businessName,
+          squareAccessToken: businessData.squareAccessToken,
+        },
+      };
+      await sendAPIRequest(payload);
+      await fetchBusinessData();
+    } catch (error) {}
+    setUpdating(false);
+  };
+
+  const sendAPIRequest = async (payload) => {
+    try {
       await fetch("/api/business/updateData", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: businessData.email,
-          data: {
-            businessName: businessData.businessName,
-            squareAccessToken: businessData.squareAccessToken,
-          },
-        }),
+        body: JSON.stringify(payload),
       });
-      await fetchBusinessData();
     } catch (error) {}
-    setUpdating(false);
   };
 
   const fetchBusinessData = async () => {
@@ -67,19 +74,50 @@ function ProfileComponent() {
     const data = await response.json();
     setFetchingUser(false);
     if (response.ok) {
-      setBusinessData(data.business);
+      if (data) {
+        setBusinessData(data.business);
+      }
     } else {
       return console.error("Failed to fetch user data:", data.error);
     }
   };
 
-  const handleIsWeeklyEmailReports = () => {
-    setisWeeklyEmailReports(!isWeeklyEmailReports);
+  const handleIsWeeklyEmailReports = async () => {
+    const toggle = !isWeeklyEmailReports;
+    const payload = {
+      data: {
+        weeklyEmailReport: toggle,
+      },
+    };
+    await sendAPIRequest(payload);
+    setisWeeklyEmailReports(toggle);
   };
-  const handleIsDiscountEmailReports = () => {
-    setisDiscountEmailReports(!isDiscountEmailReports);
+  const handleTreasuresChange = async () => {
+    const toggle = !treasures;
+
+    const payload = {
+      data: {
+        weeklyEmailReport: toggle,
+      },
+    };
+    // await sendAPIRequest(payload);
+    setTreasures(toggle);
   };
-  const onDone = () => {
+  const handleIsDiscountEmailReports = async () => {
+    const toggle = !isDiscountEmailReports;
+    const payload = {
+      data: {
+        discountEmailReport: toggle,
+      },
+    };
+    await sendAPIRequest(payload);
+    setisDiscountEmailReports(toggle);
+  };
+  const onDone = async (data) => {
+    console.log("data", data);
+    try {
+      //TODO: add the end point here
+    } catch (error) {}
     setEditModal(!editModal);
   };
   const onClose = () => {
@@ -94,84 +132,84 @@ function ProfileComponent() {
   };
 
   return (
-    <div className="my-5 sm:flex justify-center sm:px-0 px-3">
-      <div className="sm:w-[420px]">
+    <div className='my-5 sm:flex justify-center sm:px-0 px-3'>
+      <div className='sm:w-[420px]'>
         <div>
           {fetchingUser ? (
             <div>
               <div>
-                <div className="h-[312px] flex justify-center items-center">
-                  <Loading size="xl" />
+                <div className='h-[312px] flex justify-center items-center'>
+                  <Loading size='xl' />
                 </div>
               </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="py-2">
-                <label className="text-sm text-gray-700">Store name</label>
+              <div className='py-2'>
+                <label className='text-sm text-gray-700'>Store name</label>
                 <input
                   value={businessData?.businessName}
-                  name="businessName"
-                  type="text"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                  name='businessName'
+                  type='text'
+                  className='bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2'
                   onChange={handleChange}
                 />
               </div>
-              <div className="py-2">
-                <label className="text-sm text-gray-700">Email</label>
+              <div className='py-2'>
+                <label className='text-sm text-gray-700'>Email</label>
                 <input
                   disabled={true}
                   value={businessData?.email}
-                  name="email"
-                  type="text"
-                  className="bg-gray-100 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2"
+                  name='email'
+                  type='text'
+                  className='bg-gray-100 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2'
                   onChange={handleChange}
                 />
               </div>
 
-              <div className="py-2">
-                <label className="text-sm text-gray-700">
+              <div className='py-2'>
+                <label className='text-sm text-gray-700'>
                   Square Access Token
                 </label>
                 <input
                   value={businessData?.squareAccessToken}
-                  name="squareAccessToken"
-                  type="password"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                  name='squareAccessToken'
+                  type='password'
+                  className='bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2'
                   onChange={handleChange}
                 />
               </div>
               <ButtonComponent
-                className="mt-3"
+                className='mt-3'
                 rounded
                 full
                 loading={updating}
-                type="submit"
+                type='submit'
               >
                 Update
               </ButtonComponent>
             </form>
           )}
-          <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
-            <h3 className=" text-green-600 font-semibold text-2xl">
+          <div className=' rounded-2xl mt-2 py-3 px-3 border shadow-sm'>
+            <h3 className=' text-green-600 font-semibold text-2xl'>
               Subscribed
             </h3>
 
             <div>
-              <div className="mt-1 flex items-center justify-between">
+              <div className='mt-1 flex items-center justify-between'>
                 <div>
-                  <h1 className="text-xl text-gray-700">
+                  <h1 className='text-xl text-gray-700'>
                     Weekly Email Reports{" "}
                   </h1>
                 </div>
                 <div>
-                  <div className="h-9 flex items-center">
-                    <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
+                  <div className='h-9 flex items-center'>
+                    <label className='relative w-12 inline-flex items-center cursor-pointer mx-1'>
                       <input
                         value={isWeeklyEmailReports}
-                        type="checkbox"
-                        className="sr-only peer"
-                        data-gtm-form-interact-field-id="0"
+                        type='checkbox'
+                        className='sr-only peer'
+                        data-gtm-form-interact-field-id='0'
                       />
 
                       <div
@@ -187,25 +225,25 @@ function ProfileComponent() {
                 </div>
               </div>
               {isWeeklyEmailReports && (
-                <div className="ml-3">
-                  <div className="mt-2 flex items-center justify-between">
+                <div className='ml-3'>
+                  <div className='mt-2 flex items-center justify-between'>
                     <div>
-                      <h1 className="text-lg text-gray-700">
+                      <h1 className='text-lg text-gray-700'>
                         Treasures for You{" "}
                       </h1>
                     </div>
                     <div>
                       <Checkbox
-                        onChange={() => setTreasures(!treasures)}
-                        id="onboarding-form-tc-checkbox"
-                        className="mr-2"
+                        onChange={handleTreasuresChange}
+                        id='onboarding-form-tc-checkbox'
+                        className='mr-2'
                         size={"lg"}
                       ></Checkbox>
                     </div>
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
+                  <div className='mt-2 flex items-center justify-between'>
                     <div>
-                      <h1 className="text-lg text-gray-700">
+                      <h1 className='text-lg text-gray-700'>
                         Newly Listed Premium{" "}
                       </h1>
                     </div>
@@ -214,8 +252,8 @@ function ProfileComponent() {
                         onChange={() =>
                           setNewlyListedPremium(!newlyListedPremium)
                         }
-                        id="onboarding-form-tc-checkbox"
-                        className="mr-2"
+                        id='onboarding-form-tc-checkbox'
+                        className='mr-2'
                         size={"lg"}
                       ></Checkbox>
                     </div>
@@ -225,20 +263,20 @@ function ProfileComponent() {
             </div>
 
             <div>
-              <div className="mt-1 flex items-center justify-between">
+              <div className='mt-1 flex items-center justify-between'>
                 <div>
-                  <h1 className="text-xl text-gray-700">
+                  <h1 className='text-xl text-gray-700'>
                     Discount Email Reports{" "}
                   </h1>
                 </div>
                 <div>
-                  <div className="h-9 flex items-center">
-                    <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
+                  <div className='h-9 flex items-center'>
+                    <label className='relative w-12 inline-flex items-center cursor-pointer mx-1'>
                       <input
                         value={isDiscountEmailReports}
-                        type="checkbox"
-                        className="sr-only peer"
-                        data-gtm-form-interact-field-id="0"
+                        type='checkbox'
+                        className='sr-only peer'
+                        data-gtm-form-interact-field-id='0'
                       />
 
                       <div
@@ -254,33 +292,33 @@ function ProfileComponent() {
                 </div>
               </div>
               {isDiscountEmailReports && (
-                <div className="ml-3">
-                  <div className="mt-2 flex items-center justify-between">
+                <div className='ml-3'>
+                  <div className='mt-2 flex items-center justify-between'>
                     <div>
-                      <h1 className="text-lg text-gray-700">
+                      <h1 className='text-lg text-gray-700'>
                         Recurring Discounts
                       </h1>
                     </div>
                     <div>
                       <Checkbox
                         onChange={() => setRecurring(!recurring)}
-                        id="onboarding-form-tc-checkbox"
-                        className="mr-2"
+                        id='onboarding-form-tc-checkbox'
+                        className='mr-2'
                         size={"lg"}
                       ></Checkbox>
                     </div>
                   </div>
-                  <div className="mt-2 flex items-center justify-between">
+                  <div className='mt-2 flex items-center justify-between'>
                     <div>
-                      <h1 className="text-lg text-gray-700">
+                      <h1 className='text-lg text-gray-700'>
                         One-time Specials
                       </h1>
                     </div>
                     <div>
                       <Checkbox
                         onChange={() => setOneTimeSpecials(!oneTimeSpecials)}
-                        id="onboarding-form-tc-checkbox"
-                        className="mr-2"
+                        id='onboarding-form-tc-checkbox'
+                        className='mr-2'
                         size={"lg"}
                       ></Checkbox>
                     </div>
@@ -289,82 +327,82 @@ function ProfileComponent() {
               )}
             </div>
           </div>
-          <div className="mt-4">
-            <h1 className="text-2xl text-center">Key Performance Metrics</h1>
-            <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
-              <div className="w-full ">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-md text-gray-700">
+          <div className='mt-4'>
+            <h1 className='text-2xl text-center'>Key Performance Metrics</h1>
+            <div className=' rounded-2xl mt-2 py-3 px-3 border shadow-sm'>
+              <div className='w-full '>
+                <div className='flex items-center justify-between'>
+                  <h1 className='text-md text-gray-700'>
                     90 day AVG Listings added:
                   </h1>
-                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                  <h3 className='flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10'>
                     2500
                   </h3>
                 </div>
-                <div className="flex items-center justify-between  mt-3">
-                  <h1 className="text-md text-gray-700">
+                <div className='flex items-center justify-between  mt-3'>
+                  <h1 className='text-md text-gray-700'>
                     90 day Sell through:
                   </h1>
-                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                  <h3 className='flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10'>
                     1500
                   </h3>
                 </div>
-                <div className="flex items-center justify-between  mt-3">
-                  <h1 className="text-md text-gray-700">
+                <div className='flex items-center justify-between  mt-3'>
+                  <h1 className='text-md text-gray-700'>
                     90 day Sell through Target:
                   </h1>
                   <input
                     value={daysThroughTraget}
-                    type="number"
+                    type='number'
                     onChange={handleDaysThroughTarget}
-                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-[#ffc71f] border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                    className='font-medium px-2 py-1 border focus:ring-1 focus:ring-[#ffc71f] border-green-500 focus:outline-none text-black rounded-xl w-28 h-10'
                   />
                 </div>
               </div>
             </div>
           </div>
-          <div className="mt-1">
-            <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
-              <div className="w-full">
-                <div className="flex items-center justify-between">
-                  <h1 className="text-md text-gray-700">90 day ALP:</h1>
-                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+          <div className='mt-1'>
+            <div className=' rounded-2xl mt-2 py-3 px-3 border shadow-sm'>
+              <div className='w-full'>
+                <div className='flex items-center justify-between'>
+                  <h1 className='text-md text-gray-700'>90 day ALP:</h1>
+                  <h3 className='flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10'>
                     $15
                   </h3>
                 </div>
-                <div className="flex items-center justify-between  mt-3">
-                  <h1 className="text-md text-gray-700">90 day ASP:</h1>
-                  <h3 className="flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10">
+                <div className='flex items-center justify-between  mt-3'>
+                  <h1 className='text-md text-gray-700'>90 day ASP:</h1>
+                  <h3 className='flex items-center justify-between font-medium px-2 py-1 border border-gray-950 text-black rounded-xl w-28 h-10'>
                     $10
                   </h3>
                 </div>
-                <div className="flex items-center justify-between  mt-3">
-                  <h1 className="text-md text-gray-700">90 day ASP Target:</h1>
+                <div className='flex items-center justify-between  mt-3'>
+                  <h1 className='text-md text-gray-700'>90 day ASP Target:</h1>
                   <input
                     value={daysASPTarget}
-                    type="number"
+                    type='number'
                     onChange={handleDaysASPTarget}
-                    className="font-medium px-2 focus:ring-1 focus:ring-[#ffc71f] py-1 border border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                    className='font-medium px-2 focus:ring-1 focus:ring-[#ffc71f] py-1 border border-green-500 focus:outline-none text-black rounded-xl w-28 h-10'
                   />
                 </div>
               </div>
             </div>
           </div>{" "}
-          <div className="mt-3 text-xl text-black">
-            <h1 className="text-xl text-center text-black">
+          <div className='mt-3 text-xl text-black'>
+            <h1 className='text-xl text-center text-black'>
               Liquidation Thresholds
             </h1>
-            <div className="flex justify-center">
+            <div className='flex justify-center'>
               <button
                 onClick={onClose}
-                className="mt-3 w-32 bg-orange-500  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                className='mt-3 w-32 bg-orange-500  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70'
               >
                 Edit
               </button>
             </div>
-            <div className="flex justify-center">
+            <div className='flex justify-center'>
               <button
-                className="mt-3 w-32 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                className='mt-3 w-32 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70'
                 onClick={() => signOut()}
               >
                 Logout
@@ -373,10 +411,7 @@ function ProfileComponent() {
           </div>
         </div>
         {editModal === true && (
-          <EditBusinessProfileModal
-            onClose={onClose}
-            onDone={onDone}
-          />
+          <EditBusinessProfileModal onClose={onClose} onDone={onDone} />
         )}
       </div>
     </div>
