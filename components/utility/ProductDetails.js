@@ -101,7 +101,10 @@ function ProductDetails({
   const triggerOpenShareModal = () => {
     setOpenShareModal(true);
   };
-  const productUrl = data.mainImageUrl;
+  const productUrl = data?.mainImageUrl;
+  if (!productUrl) {
+    return;
+  }
 
   const handleShare = (platform) => {
     switch (platform) {
@@ -220,39 +223,24 @@ function ProductDetails({
             >
               <div className="flex flex-wrap gap-3">
                 <FacebookShareButton url={productUrl}>
-                  <FacebookIcon
-                    size={80}
-                    round
-                  />
+                  <FacebookIcon size={80} round />
                 </FacebookShareButton>
                 <FacebookMessengerShareButton url={productUrl}>
-                  <FacebookMessengerIcon
-                    size={80}
-                    round
-                  />
+                  <FacebookMessengerIcon size={80} round />
                 </FacebookMessengerShareButton>
                 <TwitterShareButton url={productUrl}>
-                  <TwitterIcon
-                    size={80}
-                    round
-                  />
+                  <TwitterIcon size={80} round />
                 </TwitterShareButton>
 
                 <WhatsappShareButton url={productUrl}>
-                  <WhatsappIcon
-                    size={80}
-                    round
-                  />
+                  <WhatsappIcon size={80} round />
                 </WhatsappShareButton>
 
                 <PinterestShareButton
                   url={productUrl}
                   media={data?.mainImageUrl}
                 >
-                  <PinterestIcon
-                    size={80}
-                    round
-                  />
+                  <PinterestIcon size={80} round />
                 </PinterestShareButton>
 
                 <button
@@ -271,11 +259,7 @@ function ProductDetails({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path
-                      stroke="none"
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
 
                     <path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h3m9 -9v-5a2 2 0 0 0 -2 -2h-2" />
                     <path d="M13 17v-1a1 1 0 0 1 1 -1h1m3 0h1a1 1 0 0 1 1 1v1m0 3v1a1 1 0 0 1 -1 1h-1m-3 0h-1a1 1 0 0 1 -1 -1v-1" />
@@ -298,15 +282,29 @@ function ProductDetails({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path
-                      stroke="none"
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
 
                     <path d="M8 9h8" />
                     <path d="M8 13h6" />
                     <path d="M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3z" />
+                  </svg>
+                </button>
+                <button
+                  className="bg-blue-400 !m-0 w-20 h-20 rounded-full flex justify-center items-center"
+                  onClick={() => downloadImage(data.mainImageUrl)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
                   </svg>
                 </button>
               </div>
@@ -322,21 +320,6 @@ function ProductDetails({
                 >
                   Copy Listing URL
                 </ButtonComponent>
-                <svg
-                  onClick={() => downloadImage(data.mainImageUrl)}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  class="w-10 h-10 border-2 border-primary text-primary rounded-lg p-1.5 cursor-pointer"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                  />
-                </svg>
               </div>
             </ModalComponent>
           )}
@@ -378,11 +361,7 @@ function ProductDetails({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path
-                    stroke="none"
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
                 </svg>
 
@@ -406,11 +385,7 @@ function ProductDetails({
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path
-                      stroke="none"
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
 
                     <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
                   </svg>
@@ -492,11 +467,7 @@ function ProductDetails({
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path
-                    stroke="none"
-                    d="M0 0h24v24H0z"
-                    fill="none"
-                  />
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                   <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
                 </svg>
               </div>
