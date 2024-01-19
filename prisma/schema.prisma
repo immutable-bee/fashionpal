@@ -196,6 +196,11 @@ model PricingRule {
   cycle         String
   roundTo       Float
   floorPrice    Int
+  ruleType      RepricingRuleOption
+  isRecurring   Boolean?
+  daysOfWeek    String[]            @default([])
+  saleStartDate DateTime?
+  saleEndDate   DateTime?
   ownerId       String
   categoryId    String?
   category      Category?           @relation(fields: [categoryId], references: [id])
@@ -262,4 +267,9 @@ enum RepricingRuleApply {
   ALL
   MEMBERS_ONLY
   EXCLUDE_MEMBERS
+}
+
+enum RepricingRuleOption {
+  SALE
+  STANDARD
 }
