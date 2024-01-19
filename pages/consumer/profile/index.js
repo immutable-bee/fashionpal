@@ -27,9 +27,10 @@ const ProfileComponent = ({}) => {
   }, []);
 
   return (
-    <div className='min-h-screen bg-white '>
+    <div className="min-h-screen bg-white ">
       <HeaderComponent />
-      <div className='h-full flex flex-col items-center justify-center'>
+
+      <div className="h-full flex flex-col items-center justify-center px-3 sm:px-8">
         {displatThrift ? (
           <ThriftList
             toggleThrift={toggleThriftList}
@@ -43,23 +44,28 @@ const ProfileComponent = ({}) => {
           />
         )}
         {!displatThrift && (
-          <div className='mt-4 w-full max-w-lg'>
-            <ButtonComponent
-              className='my-7'
-              rounded
-              full
-              onClick={() => toggleThriftList()}
-
-            >
-              Thrift List
-            </ButtonComponent>
-          </div>
+          <>
+            <div className=" w-full max-w-lg">
+              <ButtonComponent
+                className=""
+                rounded
+                full
+                onClick={() => toggleThriftList()}
+              >
+                Thrift List
+              </ButtonComponent>
+            </div>
+            <div className="mt-4 w-full max-w-lg mb-5">
+              <ButtonComponent
+                full
+                rounded
+                onClick={() => signOut()}
+              >
+                Sign Out
+              </ButtonComponent>
+            </div>
+          </>
         )}
-        <div className='mt-4 w-full max-w-lg'>
-          <ButtonComponent full rounded onClick={() => signOut()}>
-            Sign Out
-          </ButtonComponent>
-        </div>
       </div>
     </div>
   );

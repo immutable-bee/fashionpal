@@ -219,7 +219,10 @@ export default function Home() {
                       {listings &&
                         listings.map((row, index) => {
                           return (
-                            <div key={index} className="flex-shrink-0 !w-80">
+                            <div
+                              key={index}
+                              className="flex-shrink-0 !w-80"
+                            >
                               <div
                                 style={{
                                   boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)",
