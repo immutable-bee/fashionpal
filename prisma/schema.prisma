@@ -190,13 +190,13 @@ model PricingRule {
   id            String              @id @default(uuid())
   name          String
   listingType   RepricingRuleType
+  appliedTo     RepricingRuleApply?
   adjustPriceBy Int
   cycle         String
   roundTo       Float
   floorPrice    Int
   ownerId       String
   categoryId    String?
-  appliedTo     RepricingRuleApply?
   category      Category?           @relation(fields: [categoryId], references: [id])
   owner         Business            @relation(fields: [ownerId], references: [id])
 }

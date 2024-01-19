@@ -27,6 +27,7 @@ const handler = async (req, res) => {
     payload["ruleType"] = data.ruleType;
     payload["name"] = data.name;
     payload["categoryId"] = data.categoryId;
+    payload["appliedTo"] = data.appliedTo;
     payload["listingType"] = data.listingType;
     payload["adjustPriceBy"] = parseFloat(data.adjustPriceBy);
     payload["cycle"] = data.cycle;
