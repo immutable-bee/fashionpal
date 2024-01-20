@@ -16,7 +16,7 @@ const HeaderComponent = () => {
 
   return (
     <header className="flex  mx-auto w-full justify-between items-center px-2 sm:px-4 py-3">
-      <button
+      {/* <button
         onClick={() => setOpen(!open)}
         data-collapse-toggle="navbar-default"
         type="button"
@@ -40,7 +40,7 @@ const HeaderComponent = () => {
             d="M1 1h15M1 7h15M1 13h15"
           />
         </svg>
-      </button>
+      </button> */}
       <div>
         <Link href="">
           <Image
@@ -60,7 +60,10 @@ const HeaderComponent = () => {
         id="navbar-default"
       >
         <ul className="font-medium sm:w-auto w-full text-lg flex flex-col p-4 md:p-0 mt-4 border border-gray-100 sm:border-transparent rounded-lg sm:bg-transparent bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
-          <li>
+          <h1 className="text-lg sm:text-2xl font-medium text-center ">
+            Profile Page
+          </h1>
+          {/* <li>
             <Link
               href="/consumer"
               style={{ color: linkColor("/consumer") }}
@@ -69,8 +72,8 @@ const HeaderComponent = () => {
             >
               Home
             </Link>
-          </li>
-
+          </li> */}
+          {/* 
           <li>
             <Link
               href="/consumer/saved"
@@ -98,7 +101,7 @@ const HeaderComponent = () => {
             >
               Business
             </Link>
-          </li>
+          </li> */}
         </ul>
       </div>
 

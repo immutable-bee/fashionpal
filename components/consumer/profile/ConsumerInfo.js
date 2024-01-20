@@ -53,11 +53,11 @@ function ConsumerInfo({ consumerData, setConsumerData }) {
 
   return (
     <>
-      <div className="max-w-xl w-full bg-whit  py-3 sm:py-6 rounded">
-        <h1 className="text-lg sm:text-2xl font-medium text-center ">
+      <div className="max-w-xl w-full bg-whit  pb-3 sm:pb-6 rounded">
+        {/* <h1 className="text-lg sm:text-2xl font-medium text-center ">
           Profile Page
-        </h1>
-        <div className="mt-2 sm:mt-6">
+        </h1> */}
+        <div className="">
           <div className="py-2">
             <label className="text-sm text-gray-700">Full Name</label>
             <input
