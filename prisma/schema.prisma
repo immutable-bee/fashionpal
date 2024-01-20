@@ -55,10 +55,10 @@ model User {
 }
 
 model Business {
-  id                    String                 @id @default(uuid())
-  uid                   String                 @unique
+  id                    String                       @id @default(uuid())
+  uid                   String                       @unique
   businessName          String
-  email                 String                 @unique
+  email                 String                       @unique
   businessState         String
   businessCity          String
   businessStreet        String
@@ -66,24 +66,25 @@ model Business {
   url                   String?
   phoneNumber           String?
   squareAccessToken     String?
-  discountEmailReport   Boolean                @default(false)
-  weeklyEmailReport     Boolean                @default(false)
-  user                  User                   @relation(fields: [uid], references: [id])
+  user                  User                         @relation(fields: [uid], references: [id])
+  emailPreferences      EmailPreferences?
   LiquidationThresholds LiquidationThreshold[]
   listings              Listing[]
   listingQueue          ListingQueue?
+  performanceMetrics    PerformanceMetricsVariables?
   pricingRules          PricingRule[]
 }
 
 model Consumer {
-  id            String       @id @default(uuid())
-  uid           String       @unique
-  username      String
-  email         String       @unique
-  emailAlertsOn Boolean      @default(true)
-  user          User         @relation(fields: [uid], references: [id])
-  ThriftList    ThriftList[]
-  votes         Vote[]
+  id               String            @id @default(uuid())
+  uid              String            @unique
+  username         String
+  email            String            @unique
+  emailAlertsOn    Boolean           @default(true)
+  user             User              @relation(fields: [uid], references: [id])
+  emailPreferences EmailPreferences?
+  ThriftList       ThriftList[]
+  votes            Vote[]
 }
 
 model Vote {
@@ -195,6 +196,11 @@ model PricingRule {
   cycle         String
   roundTo       Float
   floorPrice    Int
+  ruleType      RepricingRuleOption
+  isRecurring   Boolean?
+  daysOfWeek    String[]            @default([])
+  saleStartDate DateTime?
+  saleEndDate   DateTime?
   ownerId       String
   categoryId    String?
   category      Category?           @relation(fields: [categoryId], references: [id])
@@ -209,6 +215,28 @@ model LiquidationThreshold {
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
   owner      Business  @relation(fields: [ownerId], references: [id])
+}
+
+model EmailPreferences {
+  id                        String   @id @default(uuid())
+  discountEmailReport       Boolean  @default(false)
+  weeklyEmailReport         Boolean  @default(false)
+  reveiceTreasures          Boolean  @default(false)
+  receiveNewlyListedPremium Boolean  @default(false)
+  receiveRecurringDiscounts Boolean  @default(false)
+  receiveOneTimeSpecials    Boolean  @default(false)
+  businessId                String   @unique
+  consumerId                String   @unique
+  business                  Business @relation(fields: [businessId], references: [id])
+  consume                   Consumer @relation(fields: [consumerId], references: [id])
+}
+
+model PerformanceMetricsVariables {
+  id                String   @id @default(uuid())
+  sellThroughTarget Float
+  aspTarget         Float
+  businessId        String   @unique
+  business          Business @relation(fields: [businessId], references: [id])
 }
 
 enum VoteType {
@@ -239,4 +267,9 @@ enum RepricingRuleApply {
   ALL
   MEMBERS_ONLY
   EXCLUDE_MEMBERS
+}
+
+enum RepricingRuleOption {
+  SALE
+  STANDARD
 }

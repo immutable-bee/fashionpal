@@ -13,7 +13,13 @@ const handler = async (req, res) => {
     return res.status(405).json({ error: "Method not allowed" });
   }
   const data = req.body;
-  const requiredParam = ["name", "categoryId", "listingType", "ruleType"];
+  const requiredParam = [
+    "name",
+    "categoryId",
+    "listingType",
+    "ruleType",
+    "appliedTo",
+  ];
   try {
     const payload = {};
 

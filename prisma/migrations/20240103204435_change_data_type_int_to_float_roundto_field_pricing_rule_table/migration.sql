@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "PricingRule" ALTER COLUMN "roundTo" SET DATA TYPE DOUBLE PRECISION;
