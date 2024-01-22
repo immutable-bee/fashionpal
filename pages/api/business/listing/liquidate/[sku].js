@@ -7,9 +7,7 @@ export default async function handler(req, res) {
   if (!session) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  if (req.method !== "PUT") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+
   const { sku } = req.query;
 
   if (!sku) {
