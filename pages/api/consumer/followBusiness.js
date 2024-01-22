@@ -11,20 +11,24 @@ const handler = async (req, res) => {
 
   const { businessId } = req.body;
 
-  const consumer = await prisma.consumer.findUnique({
-    where: {
-      email: session.user.email,
-    },
-  });
+  try {
+    const consumer = await prisma.consumer.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    });
 
-  const follow = prisma.follow.create({
-    data: {
-      businessId: businessId,
-      consumerId: consumer.id,
-    },
-  });
+    const follow = await prisma.follow.create({
+      data: {
+        businessId: businessId,
+        consumerId: consumer.id,
+      },
+    });
 
-  res.status(200).json({ message: "Store successfully followed" });
+    res.status(200).json({ message: "Store successfully followed" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 export default handler;

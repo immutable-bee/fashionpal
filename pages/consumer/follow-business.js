@@ -17,13 +17,13 @@ const BusinessPage = () => {
     setBusinessData(data);
   };
 
-  const onFollow = async (req, res) => {
+  const onFollow = async () => {
     const response = await fetch("/api/consumer/followBusiness", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(businessData.id),
+      body: JSON.stringify({ businessId: businessData.id }),
     });
 
     if (!response.ok) {
@@ -31,7 +31,19 @@ const BusinessPage = () => {
     return;
   };
 
-  const onUnfollow = async () => {};
+  const onUnfollow = async () => {
+    const response = await fetch("/api/consumer/unfollowBusiness", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ businessId: businessData.id }),
+    });
+
+    if (!response.ok) {
+    }
+    return;
+  };
 
   useEffect(() => {
     const initialFetch = async (id) => {
@@ -45,7 +57,7 @@ const BusinessPage = () => {
     <div>
       <h6>Business</h6>
       {businessData?.isFollowing ? (
-        <Button onclick={onUnfollow}>Unfollow</Button>
+        <Button onClick={onUnfollow}>Unfollow</Button>
       ) : (
         <Button onClick={onFollow}>Follow</Button>
       )}
