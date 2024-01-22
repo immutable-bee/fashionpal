@@ -39,11 +39,14 @@ const handler = async (req, res) => {
     process.env.NEXTAUTH_SECRET
   ).toString();
 
+  const currentDate = new Date().toISOString();
+
   const business = await prisma.business.update({
     where: { email: session.user.email },
     data: {
       squareAccessToken: encryptedAccessToken,
       squareRefreshToken: encryptedRefreshToken,
+      squareTokenIssueDate: currentDate,
     },
   });
 
