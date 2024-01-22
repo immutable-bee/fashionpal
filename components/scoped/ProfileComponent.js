@@ -109,7 +109,7 @@ function ProfileComponent() {
 
   useEffect(() => {
     if (businessData) {
-      if (!business.squareAccessToken) {
+      if (!businessData.squareAccessToken) {
         const state = handleSquareStateCode();
         sessionStorage.setItem("squareStateCode", state);
       }
