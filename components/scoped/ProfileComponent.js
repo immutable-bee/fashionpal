@@ -5,7 +5,6 @@ import Loading from "@/components/utility/loading";
 import { signOut } from "next-auth/react";
 import { NotificationManager } from "react-notifications";
 import { useRouter } from "next/router";
-const crypto = require("crypto");
 
 function ProfileComponent() {
   const router = useRouter();
