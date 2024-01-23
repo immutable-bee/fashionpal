@@ -13,6 +13,7 @@ const ACCESS_RULES = {
     "/consumer/profile",
     "/consumer/saved",
     "/consumer/sales",
+    "/consumer/follow-business",
   ],
   business: [
     "/business",

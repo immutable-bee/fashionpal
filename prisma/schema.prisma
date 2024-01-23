@@ -57,6 +57,7 @@ model User {
 model Business {
   id                    String                       @id @default(uuid())
   uid                   String                       @unique
+  tinyUrl               String?                      @unique
   businessName          String
   email                 String                       @unique
   businessState         String
@@ -66,6 +67,8 @@ model Business {
   url                   String?
   phoneNumber           String?
   squareAccessToken     String?
+  squareRefreshToken    String?
+  squareTokenIssueDate  DateTime?
   user                  User                         @relation(fields: [uid], references: [id])
   emailPreferences      EmailPreferences?
   LiquidationThresholds LiquidationThreshold[]
@@ -73,6 +76,7 @@ model Business {
   listingQueue          ListingQueue?
   performanceMetrics    PerformanceMetricsVariables?
   pricingRules          PricingRule[]
+  followedBy Follow[]
 }
 
 model Consumer {
@@ -85,7 +89,17 @@ model Consumer {
   emailPreferences EmailPreferences?
   ThriftList       ThriftList[]
   votes            Vote[]
+  following Follow[]
 }
+
+model Follow {
+  id String @id @default(uuid())
+  businessId String
+  consumerId String
+  business Business @relation(fields: [businessId], references: [id])
+  consumer Consumer @relation(fields: [consumerId], references: [id])
+}
+
 
 model Vote {
   id        String   @id @default(uuid())

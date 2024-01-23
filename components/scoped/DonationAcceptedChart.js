@@ -27,6 +27,9 @@ class App extends Component {
         xaxis: {
           categories: dateGroup,
         },
+        yaxis: {
+          min: 0,
+        },
         plotOptions: {
           bar: {
             dataLabels: {

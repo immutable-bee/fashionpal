@@ -1,7 +1,22 @@
 import { prisma } from "../../../../db/prismaDB";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
+import { nanoid } from "nanoid";
 //import * as notify from "../../notifier/notify";
+
+const generateUniqueTinyUrl = async () => {
+  let unique = false;
+  let tinyUrl;
+  while (!unique) {
+    const hash = nanoid(10);
+    tinyUrl = `https://faspl.co/b/${hash}`;
+    const existing = await prisma.business.findUnique({ where: { tinyUrl } });
+    if (!existing) {
+      unique = true;
+    }
+  }
+  return tinyUrl;
+};
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -32,11 +47,14 @@ const handler = async (req, res) => {
     });
   }
 
+  const newTinyUrl = await generateUniqueTinyUrl();
+
   try {
     const business = await prisma.business.create({
       data: {
         ...data,
         email: session.user.email,
+        tinyUrl: newTinyUrl,
         user: {
           connect: {
             id: user.id,

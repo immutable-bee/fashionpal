@@ -4,8 +4,11 @@ import ButtonComponent from "@/components/utility/Button";
 import Loading from "@/components/utility/loading";
 import { signOut } from "next-auth/react";
 import { NotificationManager } from "react-notifications";
+import { useRouter } from "next/router";
+const crypto = require("crypto");
 
 function ProfileComponent() {
+  const router = useRouter();
   const [editModal, setEditModal] = useState(false);
   const [isWeeklyEmailReports, setisWeeklyEmailReports] = useState(false);
   const [treasures, setTreasures] = useState(false);
@@ -16,6 +19,7 @@ function ProfileComponent() {
   const [fetchingUser, setFetchingUser] = useState(true);
   const [businessData, setBusinessData] = useState({});
   const [updating, setUpdating] = useState(false);
+  const [squareStateCode, setSquareStateCode] = useState("");
 
   useEffect(() => {
     fetchBusinessData().then();
@@ -97,6 +101,27 @@ function ProfileComponent() {
     setDaysASPTarget(e.target.value);
   };
 
+  const handleSquareStateCode = () => {
+    const state = crypto.randomBytes(16).toString("hex");
+    setSquareStateCode(state);
+    return state;
+  };
+
+  useEffect(() => {
+    if (businessData) {
+      if (!businessData.squareAccessToken) {
+        const state = handleSquareStateCode();
+        sessionStorage.setItem("squareStateCode", state);
+      }
+    }
+  }, [businessData]);
+
+  const handleSquareAuth = () => {
+    router.push(
+      `https://connect.squareup.com/oauth2/authorize?client_id=sq0idp-aFxBr4NKKAfjaET0GpKLKA&scope=ITEMS_WRITE+ITEMS_READ+MERCHANT_PROFILE_READ+MERCHANT_PROFILE_WRITE+ORDERS_WRITE+ORDERS_READ&session=false&state=${squareStateCode}`
+    );
+  };
+
   return (
     <div className="my-5 sm:flex justify-center sm:px-0 px-3">
       <div className="sm:w-[420px]">
@@ -132,19 +157,6 @@ function ProfileComponent() {
                   onChange={handleChange}
                 />
               </div>
-
-              <div className="py-2">
-                <label className="text-sm text-gray-700">
-                  Square Access Token
-                </label>
-                <input
-                  value={businessData?.squareAccessToken}
-                  name="squareAccessToken"
-                  type="password"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-                  onChange={handleChange}
-                />
-              </div>
               <ButtonComponent
                 className="mt-3"
                 rounded
@@ -153,6 +165,26 @@ function ProfileComponent() {
                 type="submit"
               >
                 Update
+              </ButtonComponent>
+
+              <div className="py-2">
+                <label className="text-sm text-gray-700">
+                  Square Authorization Status
+                </label>
+                <h2>
+                  {businessData?.squareAccessToken ? "Active" : "Not Connected"}
+                </h2>
+              </div>
+              <ButtonComponent
+                className="mt-3"
+                rounded
+                full
+                loading={updating}
+                onClick={handleSquareAuth}
+              >
+                {businessData?.squareAccessToken
+                  ? "Revoke Access"
+                  : "Connect Square Account"}
               </ButtonComponent>
             </form>
           )}
@@ -240,10 +272,7 @@ function ProfileComponent() {
           </div>
         </div>
         {editModal === true && (
-          <EditBusinessProfileModal
-            onClose={onClose}
-            onDone={onDone}
-          />
+          <EditBusinessProfileModal onClose={onClose} onDone={onDone} />
         )}
       </div>
     </div>

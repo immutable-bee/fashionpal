@@ -262,7 +262,7 @@ export default function Home() {
                                   : row.brandImageUrl
                               }
                               tags={[
-                                row.status === "SALE" ? "SELL" : row.status,
+                                row.status === "SALE" ? "Active" : row.status,
                               ]}
                               status={row.status}
                               clickable={true}

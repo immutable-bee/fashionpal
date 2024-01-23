@@ -44,6 +44,7 @@ class App extends Component {
           },
         },
         yaxis: {
+          min: 0,
           labels: {
             formatter: function (value) {
               return (

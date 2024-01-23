@@ -20,7 +20,6 @@ const handler = async (req, res) => {
     const businesses = await prisma.business.findMany({
       where: { NOT: [{ squareAccessToken: null }] },
     });
-
     for (const business of businesses) {
       try {
         const squareAccessToken = AES.decrypt(

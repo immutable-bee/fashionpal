@@ -69,7 +69,7 @@ const TCModalContent = () => {
           <p>
             1.1. Welcome to FashionPal. These Terms and Conditions
             &quot;Terms&quot; govern your use of our website, available at
-            Fashionpal.com, and the services provided therein.
+            FashionPal.app, and the services provided therein.
           </p>
           <p>
             1.2. By using our website, you accept these Terms in full. If you
@@ -284,11 +284,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
               </Button>
             </div>
           ) : (
-            <form
-              id="onboarding-form"
-              className="mt-6"
-              onSubmit={handleSubmit}
-            >
+            <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <Input
                   onChange={handleChange}
@@ -318,10 +314,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                       "
                 >
                   {stateOptions.map((state) => (
-                    <option
-                      key={state.key}
-                      value={state.value}
-                    >
+                    <option key={state.key} value={state.value}>
                       {state.text}
                     </option>
                   ))}
@@ -354,21 +347,14 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                 </h6>
               </div>
               <div className="flex justify-center">
-                <Button
-                  className="mt-5"
-                  type="submit"
-                >
+                <Button className="mt-5" type="submit">
                   Submit
                 </Button>
               </div>
             </form>
           )}
         </div>
-        <Modal
-          open={isTCModalOpen}
-          closeButton
-          onClose={tcModalCloseHandler}
-        >
+        <Modal open={isTCModalOpen} closeButton onClose={tcModalCloseHandler}>
           <TCModalContent />
         </Modal>
       </div>

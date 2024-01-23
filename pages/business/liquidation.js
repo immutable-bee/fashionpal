@@ -5,7 +5,7 @@ import { NotificationManager } from "react-notifications";
 import Barcode from "react-barcode";
 import ModalComponent from "@/components/utility/Modal";
 
-const PrintBarcode = () => {
+const Liquidation = () => {
   const [sku, setSKU] = useState("");
   const [activeSKU, setActiveSKU] = useState("");
   const [step, setStep] = useState(1);
@@ -21,109 +21,121 @@ const PrintBarcode = () => {
   const [days, setDays] = useState(96);
   const [liquidationThreshold, setLiquidationThreshold] = useState(90);
 
+  const [skusToLiquidate, setSkusToLiquidate] = useState([]);
+  const [skuToDispose, setSkuToDispose] = useState();
+  const [skusLiquidated, setSkusLiquidated] = useState([]);
+
   const onNewScanResult = (decodedText, decodedResult) => {
+    setUpdating(true);
     console.log(decodedText);
     console.log(decodedResult);
 
     var match = decodedText.match(/\/([^\/]+)$/);
 
     var id = match ? match[1] : null;
-
     setActiveSKU(id);
-    setIsDisposed(false);
-    setScans((prevScans) => [...prevScans, { sku: activeSKU, type: "FINISH" }]);
-    setStep(2);
 
-    // handle decoded results here
+    fetchListingBySku();
+    setUpdating(false);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSkuInput = (e) => {
     e.preventDefault();
 
-    if (!sku) {
+    if (!activeSKU) {
       NotificationManager.error("SKU is required!");
       return;
     }
-
     setUpdating(true);
-    setActiveSKU(sku);
-    setIsDisposed(false);
-    setScans((prevScans) => [...prevScans, { sku: activeSKU, type: "FINISH" }]);
 
-    setSKU("");
-    setStep(2);
-    // try {
-    //   await fetch("/api/business/updateData", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       email: businessData.email,
-    //       data: {
-    //         businessName: businessData.businessName,
-    //         squareAccessToken: businessData.squareAccessToken,
-    //       },
-    //     }),
-    //   });
-    //   await fetchBusinessData();
-    // } catch (error) {}
+    fetchListingBySku();
+
     setUpdating(false);
   };
 
   const triggerConfirmModal = (e) => {
+    setSkuToDispose(e);
     setConfirmModal(true);
-    setConfirmModalType(e);
+    setConfirmModalType("DISPOSED");
+  };
+
+  const triggerConfirmFinishModal = () => {
+    setConfirmModal(true);
+    setConfirmModalType("FINISH");
   };
 
   const onConfirmed = () => {
     if (confirmModalType === "DISPOSED") {
-      onDispose();
+      onDispose(skuToDispose);
     } else {
-      pushQueuedListing();
+      setStep(3);
+      setConfirmModal(false);
+      setConfirmModalType("");
     }
   };
 
-  const onDispose = () => {
-    // Make a copy of the scans array to avoid mutating the state directly
-    const newScans = [...scans];
+  const onDispose = async () => {
+    setLoading(true);
 
-    // Check if there are any items in the scans array
-    if (newScans.length > 0) {
-      // Update the type of the last item to "DISPOSE"
-      newScans[newScans.length - 1].type = "DISPOSED";
-
-      // Update the state with the modified scans array
-      setScans(newScans);
+    const response = await fetch(
+      `/api/business/listing/liquidate/${skuToDispose}`
+    );
+    if (!response.ok) {
+      return;
     }
 
-    setIsDisposed(true);
+    setSkusToLiquidate(
+      skusToLiquidate.map((sku) =>
+        sku.sku === skuToDispose ? { ...sku, disposed: true } : sku
+      )
+    );
+
+    setSkusLiquidated([...skusLiquidated, skuToDispose]);
+
     setConfirmModal(false);
     setConfirmModalType("");
+
+    setLoading(false);
   };
 
   const onFinish = async () => {
-    setLoading(true);
-
-    const payload = {
-      scans,
-    };
-    console.log(payload);
-
-    // const response = await fetch("/api/business/listing/pushQueuedListing", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(payload),
-    // });
-
-    // if (!response.ok) {
-    //   return;
-    // }
-
     setStep(3);
-    setLoading(false);
+  };
+
+  const fetchListingBySku = async () => {
+    const response = await fetch(
+      "/api/business/listing/liquidate/fetchListingBySku",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(activeSKU),
+      }
+    );
+
+    if (!response.ok) {
+    }
+    const data = (await response.json())[0];
+
+    const differenceInDays = (dateString) => {
+      const date = new Date(dateString);
+      const now = new Date();
+      const differenceInTime = now.getTime() - date.getTime();
+      const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+
+      return differenceInDays;
+    };
+    const daysSince = differenceInDays(data.createdAt);
+
+    const newSkuObject = {
+      sku: data.Barcode,
+      type: "FINISH",
+      price: data.price,
+      disposed: false,
+      daysSince,
+    };
+    setSkusToLiquidate([...skusToLiquidate, newSkuObject]);
   };
 
   const pushQueuedListing = () => {
@@ -176,64 +188,31 @@ const PrintBarcode = () => {
           <>
             {step === 1 && (
               <div className="px-3 sm:py-3">
+                <div className="flex py-2 justify-evenly">
+                  {skusToLiquidate.length > 0 && (
+                    <h6>Listings added: {skusToLiquidate.length}</h6>
+                  )}
+                  {skusLiquidated.length > 0 && (
+                    <h6>Listings Liquidated: {skusLiquidated.length}</h6>
+                  )}
+                </div>
                 <div className="text-lg  text-center rounded-2xl border px-3 py-2">
                   Scan with barcode scanner or phones camera
                 </div>
               </div>
             )}
-            {step === 2 && (
-              <>
-                <div
-                  className={`sm:rounded-t-2xl px-3 py-2  ${
-                    days < liquidationThreshold ? "bg-green-400" : "bg-red-500"
-                  }`}
-                >
-                  <h3 className="text-lg text-gray-700 text-center">
-                    SKU: <span className="font-medium">{activeSKU}</span>
-                  </h3>
-                  <h3 className="text-lg text-gray-700 text-center">
-                    Category: <span className="font-medium">{category}</span>
-                  </h3>
-                  <h2 className="text-2xl text-center text-gray-800">
-                    {days} Days
-                  </h2>
-                </div>
-
-                <h3 className="text-sm mt-0.5 mr-2 text-gray-700 text-right">
-                  Liquidation Threshold:{" "}
-                  <span className="font-medium">
-                    {liquidationThreshold} Days
-                  </span>
-                </h3>
-
-                <div className="mt-8 px-3 sm:py-3">
-                  <div className="text-lg  text-center rounded-2xl border px-3 py-2">
-                    <div className="price-text ">{`$${price}`}</div>
-
-                    <div className="w-full mx-auto max-w-fit ">
-                      <Barcode
-                        width={1}
-                        height={60}
-                        value={activeSKU}
-                        fontSize={10}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-
             <div className="px-3 sm:py-3">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSkuInput}>
                 <div className="mt-8">
                   <label className=" text-base">Barcode scanner(SKU)</label>
                   <div className="flex items-center gap-1">
                     <input
-                      value={sku}
                       placeholder="100523-0048"
                       type="text"
                       className="mt-1 w-full rounded-xl px-3 py-2 border border-gray-600"
-                      onChange={(e) => setSKU(e.target.value)}
+                      onChange={(e) => {
+                        setActiveSKU(e.target.value);
+                      }}
                     />
                     <button
                       className={updating && " pointer-events-none opacity-70"}
@@ -263,22 +242,75 @@ const PrintBarcode = () => {
                 qrCodeSuccessCallback={onNewScanResult}
               />
             </div>
-            <div className="flex flex-wrap flex-col gap-3 mt-8 px-3 sm:py-3">
-              {activeSKU && (
-                <button
-                  onClick={() => triggerConfirmModal("DISPOSED")}
-                  className={`${
-                    isDisposed ? " pointer-events-none bg-gray-300" : ""
-                  } hover:bg-red-500 max-w-[150px] mx-auto hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
-                >
-                  Dispose
-                </button>
-              )}
 
-              {scans && scans.length !== 0 && (
+            {skusToLiquidate.map((sku) => (
+              <div key={sku.sku} className="mt-8 px-3 sm:py-3 flex flex-col ">
+                <div
+                  className={`sm:rounded-t-2xl px-3 py-2 ${
+                    days < liquidationThreshold ? "bg-green-400" : "bg-red-500"
+                  }`}
+                >
+                  <h3 className="text-lg text-gray-700 text-center">
+                    SKU: <span className="font-medium">{sku.sku}</span>
+                  </h3>
+                  {sku.disposed ? (
+                    <h2 className="text-2xl text-center text-gray-800">
+                      DISPOSED
+                    </h2>
+                  ) : (
+                    <>
+                      <h3 className="text-lg text-gray-700 text-center">
+                        Category:{" "}
+                        <span className="font-medium">{category}</span>
+                      </h3>
+                      <h2 className="text-2xl text-center text-gray-800">
+                        {sku.daysSince} Days
+                      </h2>
+                    </>
+                  )}
+                </div>
+                {!sku.disposed && (
+                  <h3 className="text-sm mt-0.5 mr-2 text-gray-700 text-right">
+                    Liquidation Threshold:{" "}
+                    <span className="font-medium">
+                      {liquidationThreshold} Days
+                    </span>
+                  </h3>
+                )}
+                {!sku.disposed && (
+                  <>
+                    <div className="text-lg text-center rounded-2xl border px-3 py-2">
+                      <div className="price-text">{`$${sku.price}`}</div>
+                      <div className="w-full mx-auto max-w-fit">
+                        <Barcode
+                          width={1}
+                          height={60}
+                          value={sku.sku}
+                          fontSize={10}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center mt-2">
+                      <button
+                        onClick={() => triggerConfirmModal(sku.sku)}
+                        className={`${
+                          isDisposed ? " pointer-events-none bg-gray-300" : ""
+                        } hover:bg-red-500 max-w-[150px] mx-auto hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
+                      >
+                        Dispose
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+
+            <div className="flex flex-wrap flex-col gap-3 mt-8 px-3 sm:py-3">
+              {skusToLiquidate && skusToLiquidate.length !== 0 && (
                 <button
                   disabled={tagFetching}
-                  onClick={() => triggerConfirmModal("FINISH")}
+                  onClick={() => triggerConfirmFinishModal()}
                   className={`${
                     tagFetching ? " pointer-events-none bg-gray-300" : ""
                   } hover:bg-green-500 mt-5 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-green-500`}
@@ -299,28 +331,18 @@ const PrintBarcode = () => {
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Disposed
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Scanned
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="bg-white dark:bg-gray-800">
-                      <td className="px-6 py-4">
-                        {scans.filter((x) => x.type === "DISPOSED").length}
-                      </td>
-                      <td className="px-6 py-4">
-                        {scans.filter((x) => x.type === "FINISH").length}
-                      </td>
+                      <td className="px-6 py-4">{skusLiquidated.length}</td>
+                      <td className="px-6 py-4">{skusToLiquidate.length}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -343,4 +365,4 @@ const PrintBarcode = () => {
   );
 };
 
-export default PrintBarcode;
+export default Liquidation;
