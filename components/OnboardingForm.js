@@ -102,7 +102,7 @@ const TCModalContent = () => {
           <h1 className="text-lg">4. Payments</h1>
           <p>
             4.1. All payments made on FashionPal are processed securely through
-            our payment partner, Stripe. Please refer to Stripe&#39;s terms of
+            our payment partner, Square. Please refer to Square&#39;s terms of
             service and privacy policy for more details on payment processing.
           </p>
 
