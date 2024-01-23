@@ -26,7 +26,11 @@ const handler = async (req, res) => {
     );
 
     if (!tokenResponse.ok) {
-      return res.status(500).json({ error: "Failed to exchange token" });
+      const errorData = await tokenResponse.json();
+      const errorMessage =
+        errorData.error_description ||
+        "Unknown error occurred during token exchange.";
+      return res.status(tokenResponse.status).json({ error: errorMessage });
     }
 
     const data = await tokenResponse.json();
