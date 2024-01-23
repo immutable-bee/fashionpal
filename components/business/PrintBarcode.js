@@ -35,32 +35,48 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
         </select>
 
         <div className="border-[5px] mt-5 border-gray-700 rounded-3xl px-8 py-4">
-          <div id="barcode-to-print" className="print:barcode-container">
+          <div
+            id="barcode-to-print"
+            className="print:barcode-container"
+          >
             {template === "1" && (
               <div className="print:qr-container print:qr-code print:sku flex flex-col items-center">
                 <h6 className="price-text font-bold">{`$${price}`}</h6>
-
-                <QRCode value={`${sku}`} size={175} />
+                <QRCode
+                  value={`${sku}`}
+                  size={175}
+                />
               </div>
             )}
             {template === "2" && (
               <div className="print:qr-container print:qr-code flex flex-col items-center">
                 <h6 className="label-text font-bold">Member Price</h6>
 
-                <QRCode value={tinyUrl} size={175} />
+                <QRCode
+                  value={tinyUrl}
+                  size={175}
+                />
               </div>
             )}
             {template === "3" && (
               <div className="w-full h-full flex flex-col items-center print:qr-container print:barcode">
                 <h6 className="price-text font-bold">{`$${price}`}</h6>
-                <Barcode width={2} height={60} value={sku} fontSize={16} />
+                <Barcode
+                  width={2}
+                  height={60}
+                  value={sku}
+                  fontSize={16}
+                />
               </div>
             )}
             {template === "4" && (
               <div className="print:qr-container print:qr-code flex flex-col items-center">
                 <h6 className="label-text font-bold">Member Price</h6>
 
-                <QRCode value={tinyUrl} size={175} />
+                <QRCode
+                  value={tinyUrl}
+                  size={175}
+                />
               </div>
             )}
             {template === "5" && (
@@ -69,12 +85,20 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
                   <h6 className="w-full text-center text-sm font-bold label-text">
                     Member Price
                   </h6>
-                  <QRCode value={tinyUrl} size={175} />
+                  <QRCode
+                    value={tinyUrl}
+                    size={175}
+                  />
                 </div>
                 <div className="mt-2 mb-2 sm:mb-0 sm:ml-2 sm:border-l-2 border-t-2 border-black print:min-h-[60%]"></div>
                 <div className="flex-1 flex flex-col items-center justify-center print:barcode">
                   <h6 className="w-full text-center font-bold price-text">{`$${price}`}</h6>
-                  <Barcode width={2} height={55} value={sku} fontSize={16} />
+                  <Barcode
+                    width={2}
+                    height={55}
+                    value={sku}
+                    fontSize={16}
+                  />
                 </div>
               </div>
             )}

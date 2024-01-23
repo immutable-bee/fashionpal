@@ -375,7 +375,7 @@ export default function Home() {
           <PrintBarcode
             sku={printData.Barcode}
             price={printData.price}
-            tinyUr={printData.tinyUrl}
+            tinyUrl={printData.tinyUrl}
           />
         </>
       </ModalComponent>

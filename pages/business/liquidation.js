@@ -4,6 +4,7 @@ import Scanner from "@/components/scoped/Scanner";
 import { NotificationManager } from "react-notifications";
 import Barcode from "react-barcode";
 import ModalComponent from "@/components/utility/Modal";
+import cloneDeep from "lodash.clonedeep";
 
 const Liquidation = () => {
   const [sku, setSKU] = useState("");
@@ -25,18 +26,12 @@ const Liquidation = () => {
   const [skuToDispose, setSkuToDispose] = useState();
   const [skusLiquidated, setSkusLiquidated] = useState([]);
 
-  const onNewScanResult = (decodedText, decodedResult) => {
-    setUpdating(true);
-    console.log(decodedText);
-    console.log(decodedResult);
+  const onNewScanResult = (decodedText) => {
+    const sku = cloneDeep(decodedText);
 
-    var match = decodedText.match(/\/([^\/]+)$/);
+    setActiveSKU(sku);
 
-    var id = match ? match[1] : null;
-    setActiveSKU(id);
-
-    fetchListingBySku();
-    setUpdating(false);
+    fetchListingBySku(decodedText);
   };
 
   const handleSkuInput = (e) => {
@@ -46,11 +41,8 @@ const Liquidation = () => {
       NotificationManager.error("SKU is required!");
       return;
     }
-    setUpdating(true);
 
-    fetchListingBySku();
-
-    setUpdating(false);
+    fetchListingBySku(activeSKU);
   };
 
   const triggerConfirmModal = (e) => {
@@ -102,7 +94,20 @@ const Liquidation = () => {
     setStep(3);
   };
 
-  const fetchListingBySku = async () => {
+  const fetchListingBySku = async (e) => {
+    console.log(e);
+
+    // Define the expected format using a regular expression
+    const skuFormatRegex = /^\d{14}$/;
+
+    // Check if the user-entered SKU matches the expected format
+    if (!skuFormatRegex.test(e)) {
+      NotificationManager.error(
+        "Entered SKU does not match the expected format, You need to scan the sku label not the link label"
+      );
+      return;
+    }
+    setUpdating(true);
     const response = await fetch(
       "/api/business/listing/liquidate/fetchListingBySku",
       {
@@ -110,9 +115,10 @@ const Liquidation = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(activeSKU),
+        body: JSON.stringify(e),
       }
     );
+    setUpdating(false);
 
     if (!response.ok) {
     }
@@ -244,7 +250,10 @@ const Liquidation = () => {
             </div>
 
             {skusToLiquidate.map((sku) => (
-              <div key={sku.sku} className="mt-8 px-3 sm:py-3 flex flex-col ">
+              <div
+                key={sku.sku}
+                className="mt-8 px-3 sm:py-3 flex flex-col "
+              >
                 <div
                   className={`sm:rounded-t-2xl px-3 py-2 ${
                     days < liquidationThreshold ? "bg-green-400" : "bg-red-500"
@@ -331,10 +340,16 @@ const Liquidation = () => {
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th scope="col" className="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Disposed
                       </th>
-                      <th scope="col" className="px-6 py-3">
+                      <th
+                        scope="col"
+                        className="px-6 py-3"
+                      >
                         Scanned
                       </th>
                     </tr>

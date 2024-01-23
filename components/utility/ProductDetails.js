@@ -285,6 +285,7 @@ function ProductDetails({
                     <path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" />
                   </svg>
                 </button>
+
                 <button
                   className="bg-green-400 !m-0 w-20 h-20 rounded-full flex justify-center items-center"
                   onClick={() => handleShare("textMessage")}
@@ -312,6 +313,7 @@ function ProductDetails({
                     <path d="M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3z" />
                   </svg>
                 </button>
+
                 <button
                   className="bg-blue-400 !m-0 w-20 h-20 rounded-full flex justify-center items-center"
                   onClick={() => downloadImage(data.mainImageUrl)}
