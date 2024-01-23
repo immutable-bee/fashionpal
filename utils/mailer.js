@@ -13,7 +13,7 @@ let transporter = createTransport({
 export default async function sendMail(to, subject, html) {
   try {
     let info = await transporter.sendMail({
-      from: `"BiblioPal" <${process.env.EMAIL_FROM}>`,
+      from: `"FashionPal" <${process.env.EMAIL_FROM}>`,
       to: to,
       subject: subject,
       html: html,
