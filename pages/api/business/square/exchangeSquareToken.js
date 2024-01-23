@@ -24,11 +24,11 @@ const handler = async (req, res) => {
     }
   );
 
-  const data = await tokenResponse.json();
-
   if (!tokenResponse.ok) {
     return res.status(500).json({ error: "Failed to exchange token" });
   }
+
+  const data = await tokenResponse.json();
 
   const encryptedAccessToken = AES.encrypt(
     data.access_token,
