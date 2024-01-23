@@ -26,6 +26,7 @@ const handler = async (req, res) => {
     );
 
     if (!tokenResponse.ok) {
+      const errorData = await tokenResponse.json();
       console.error("Token exchange error:", errorData);
       const errorMessage =
         errorData.error_description ||
