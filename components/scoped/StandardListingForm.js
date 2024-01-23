@@ -116,7 +116,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
         {step === 1 && (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div>
@@ -234,7 +237,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
         {step === 2 && (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -267,7 +273,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                       className="mr-2"
                       size={"xl"}
                     ></Checkbox>
-                    <h6 id="onboarding-form-tc-agree-text" className="text-2xl">
+                    <h6
+                      id="onboarding-form-tc-agree-text"
+                      className="text-2xl"
+                    >
                       Premium
                     </h6>
                   </div>
