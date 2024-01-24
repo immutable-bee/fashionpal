@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       payload.saleEndDate = null;
       payload.daysOfWeek = data.daysOfWeek;
     } else {
-      if (payload.saleStartDate) {
+      if (!payload.saleStartDate) {
         return res.status(400).json({
           error: `Start Date cannot be empty`,
         });
