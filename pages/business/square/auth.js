@@ -21,8 +21,8 @@ const SquareAuth = () => {
   useEffect(() => {
     if (router.query.state) {
       const storedState = sessionStorage.getItem("squareStateCode");
-      sessionStorage.removeItem("squareStateCode");
       if (storedState === router.query.state) {
+        sessionStorage.removeItem("squareStateCode");
         if (router.query.code) {
           exchangeTokens(router.query.code);
         }

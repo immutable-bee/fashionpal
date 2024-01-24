@@ -1,32 +1,57 @@
 const compiledHtml = `<html>
 <head>
-<title>Login</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Login</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
-<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-<!-- Save for Web Slices (Login.psd) -->
-<table id="Table_01" width="1044" height="1060" border="0" cellpadding="0" cellspacing="0">
+<body
+  bgcolor="#FFFFFF"
+  leftmargin="0"
+  topmargin="0"
+  marginwidth="0"
+  marginheight="0"
+>
+  <!-- Save for Web Slices (Login.psd) -->
+  <table
+	id="Table_01"
+	width="680"
+	height="864"
+	border="0"
+	cellpadding="0"
+	cellspacing="0"
+  >
 	<tr>
-		<td colspan="3">
-			<img src="{{loginImageOne}}" width="1044" height="747" alt=""></td>
+	  <td colspan="3">
+		<img src="{{loginImageOne}}" width="680" height="774" alt="" />
+	  </td>
 	</tr>
 	<tr>
-		<td rowspan="2">
-			<img src="{{loginImageTwo}}" width="582" height="313" alt=""></td>
-		<td>
-			<a href="https://web.blank.com/" target="_blank">
-				<img src="{{loginImageThree}}" width="223" height="74" border="0" alt=""></a></td>
-		<td rowspan="2">
-			<img src="{{loginImageFour}}" width="239" height="313" alt=""></td>
+	  <td rowspan="2">
+		<img src="{{loginImageTwo}}" width="460" height="90" alt="" />
+	  </td>
+	  <td>
+		<a href="https://web.blank.com/" target="_Blank">
+		  <img
+			src="{{loginImageThree}}"
+			width="156"
+			height="46"
+			border="0"
+			alt=""
+		/></a>
+	  </td>
+	  <td rowspan="2">
+		<img src="{{loginImageFour}}" width="64" height="90" alt="" />
+	  </td>
 	</tr>
 	<tr>
-		<td>
-			<img src="{{loginImageFive}}" width="223" height="239" alt=""></td>
+	  <td>
+		<img src="{{loginImageFive}}" width="156" height="44" alt="" />
+	  </td>
 	</tr>
-</table>
-<!-- End Save for Web Slices -->
+  </table>
+  <!-- End Save for Web Slices -->
 </body>
-</html>`;
+</html>
+`;
 
 const onboardingEmail = { compiledHtml: compiledHtml };
 
