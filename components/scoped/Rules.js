@@ -3,8 +3,10 @@ import ButtonComponent from "@/components/utility/Button";
 import Loading from "@/components/utility/loading";
 import { NotificationManager } from "react-notifications";
 import axios from "axios";
+import { Dropdown } from "@nextui-org/react";
 import "rc-slider/assets/index.css";
-
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 const RePricer = ({ categoryList }) => {
   const [loadingListings, setLoadingListings] = useState(false);
 
@@ -37,6 +39,16 @@ const RePricer = ({ categoryList }) => {
   const [cycle, setCycle] = useState("weekly");
   const [roundTo, setRoundTo] = useState("0.50");
   const [floorPrice, setFloorPrice] = useState(0);
+
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   const fetchListings = useCallback(async () => {
     setLoadingListings(true);
