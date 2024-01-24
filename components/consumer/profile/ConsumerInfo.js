@@ -82,18 +82,21 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
     }
   };
 
-  const handleUnfollow = async () => {
+  const handleUnfollow = async (id) => {
+    console.log("Unfollowing store with ID:", id);
+
     const response = await fetch("/api/consumer/unfollowBusiness", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ businessId: "", hash: followCode }),
+      body: JSON.stringify({ businessId: id, hash: "" }),
     });
 
     if (!response.ok) {
-      setFollowBusinessMessage("Failed to unfollow business, please try again");
+      console.error("Failed to unfollow business");
     } else {
+      console.log("Successfully unfollowed business");
       await fetchConsumerDetails();
     }
   };
@@ -317,12 +320,12 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
             <caption className="pb-3 text-xl">Store Name</caption>
 
             {consumerData?.following.map((store) => (
-              <tr className="border border-black" key={store.id}>
+              <tr className="border border-black" key={store.businessId}>
                 <td className="text-lg pl-2">{store.businessName}</td>
                 <td>
                   <img
                     class="cursor-pointer"
-                    onClick={handleUnfollow}
+                    onClick={() => handleUnfollow(store.businessId)}
                     src="/images/close-circle.svg"
                     width={20}
                     height={20}
