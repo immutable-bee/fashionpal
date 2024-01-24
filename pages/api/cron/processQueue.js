@@ -12,8 +12,9 @@ const handler = async (req, res) => {
   const { baseUrl, batchSize } = req.query;
   let queuedListingBatchIds;
   let queuedListingBatch;
+
   try {
-    processingListingBatch = await prisma.queuedListing.findMany({
+    const processingListingBatch = await prisma.queuedListing.findMany({
       where: { status: "PROCESSING" },
       take: parseInt(batchSize),
     });
