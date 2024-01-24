@@ -43,6 +43,16 @@ const RePricer = ({ onBack, categoryList }) => {
       NotificationManager.error("Category is required!");
       return;
     }
+    if (isRecurring) {
+      if (!saleStartDate) {
+        NotificationManager.error("Start Date is required!");
+        return;
+      }
+      if (!saleEndDate) {
+        NotificationManager.error("End Date is required!");
+        return;
+      }
+    }
     setIsLoading(true);
     const data = {
       name: name,
@@ -271,7 +281,7 @@ const RePricer = ({ onBack, categoryList }) => {
               </span>
             </ul>
 
-            {isRecurring === "one_time" && (
+            {isRecurring && (
               <>
                 {" "}
                 <div className="py-2 ">
