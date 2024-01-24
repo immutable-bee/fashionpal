@@ -11,18 +11,43 @@ const handler = async (req, res) => {
 
     const consumer = await prisma.consumer.findUnique({
       where: { email: session.user.email },
+      include: {
+        ThriftList: true,
+        following: {
+          include: {
+            business: {
+              select: {
+                id: true,
+                businessName: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!consumer) {
       return res.status(404).json({ message: "Consumer record not found" });
     }
-    const listings = await prisma.consumer.findUnique({
-      where: { email: session.user.email },
-      include: {
-        ThriftList: true,
-      },
+
+    const followingBusinesses = consumer.following.map((follow) => {
+      return {
+        businessName: follow.business.businessName,
+        businessId: follow.business.id,
+      };
     });
-    res.status(200).json(listings);
+
+    const consumerWithFollowing = {
+      ...consumer,
+      following: followingBusinesses,
+    };
+
+    const { ThriftList, following, ...rest } = consumerWithFollowing;
+
+    res.status(200).json({
+      ...rest,
+      following: followingBusinesses,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
