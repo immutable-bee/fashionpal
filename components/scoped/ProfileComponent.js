@@ -119,10 +119,21 @@ function ProfileComponent() {
     }
   }, [businessData]);
 
-  const handleSquareAuth = () => {
-    router.push(
-      `https://connect.squareup.com/oauth2/authorize?client_id=sq0idp-aFxBr4NKKAfjaET0GpKLKA&scope=ITEMS_WRITE+ITEMS_READ+MERCHANT_PROFILE_READ+MERCHANT_PROFILE_WRITE+ORDERS_WRITE+ORDERS_READ&session=false&state=${squareStateCode}`
-    );
+  const handleSquareAuth = async () => {
+    if (!businessData.squareAccessToken) {
+      router.push(
+        `https://connect.squareup.com/oauth2/authorize?client_id=sq0idp-aFxBr4NKKAfjaET0GpKLKA&scope=ITEMS_WRITE+ITEMS_READ+MERCHANT_PROFILE_READ+MERCHANT_PROFILE_WRITE+ORDERS_WRITE+ORDERS_READ&session=false&state=${squareStateCode}`
+      );
+    }
+    if (business.squareAccessToken) {
+      await revokeSquareAuth();
+    }
+  };
+
+  const revokeSquareAuth = async () => {
+    try {
+      await fetch("/api/business/square/revokeSquareToken");
+    } catch (error) {}
   };
 
   return (
