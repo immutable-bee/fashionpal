@@ -12,13 +12,17 @@ const handler = async (req, res) => {
   const { businessId, hash } = req.body;
 
   try {
-    if (!hash) {
-      const consumer = await prisma.consumer.findUnique({
-        where: {
-          email: session.user.email,
-        },
-      });
+    const consumer = await prisma.consumer.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    });
 
+    if (!consumer) {
+      return res.status(404).json({ message: "Consumer not found" });
+    }
+
+    if (!hash) {
       const follow = await prisma.follow.create({
         data: {
           businessId: businessId,
