@@ -13,9 +13,9 @@ const RePricer = ({ onBack, categoryList }) => {
   const [saleEndDate, setSaleEndDate] = useState("");
   const [saleStartDate, setSaleStartDate] = useState("");
   const [daysOfWeek, setDaysOfWeek] = useState([]);
-  const [appliedTo, setAppliedTo] = useState("");
+  const [appliedTo, setAppliedTo] = useState("ALL");
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState("");
   const [listingType, setListingType] = useState("ALL");
 
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
@@ -37,6 +37,10 @@ const RePricer = ({ onBack, categoryList }) => {
   const onStart = async () => {
     if (!name) {
       NotificationManager.error("Rule name is required!");
+      return;
+    }
+    if (!category) {
+      NotificationManager.error("Category is required!");
       return;
     }
     setIsLoading(true);
@@ -104,6 +108,13 @@ const RePricer = ({ onBack, categoryList }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setCategory(e.target.value)}
           >
+            <option
+              value=""
+              selected
+              disabled
+            >
+              Select category
+            </option>
             {categoryList.length > 0 &&
               categoryList.map((category) => (
                 <option
