@@ -41,6 +41,7 @@ const ProfileComponent = ({}) => {
           <ConsumerInfo
             consumerData={consumerData}
             setConsumerData={setConsumerData}
+            fetchConsumerDetails={fetchConsumerDetails}
           />
         )}
         {!displatThrift && (
@@ -56,11 +57,7 @@ const ProfileComponent = ({}) => {
               </ButtonComponent>
             </div>
             <div className="mt-4 w-full max-w-lg mb-5">
-              <ButtonComponent
-                full
-                rounded
-                onClick={() => signOut()}
-              >
+              <ButtonComponent full rounded onClick={() => signOut()}>
                 Sign Out
               </ButtonComponent>
             </div>

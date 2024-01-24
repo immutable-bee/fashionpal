@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { QRCode } from "react-qrcode-logo";
 import { Checkbox } from "@nextui-org/react";
 
-function ConsumerInfo({ consumerData, setConsumerData }) {
+function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
+  const [followCode, setFollowCode] = useState("");
+  const [followBusinessMessage, setFollowBusinessMessage] = useState("");
   // const isValidEmail = (email) => {
   //   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
   //   return regex.test(email);
@@ -50,6 +52,61 @@ function ConsumerInfo({ consumerData, setConsumerData }) {
 
     debouncedSendFieldUpdate(name, modifyValue);
   };
+
+  const handleFollowCodeChange = (e) => {
+    setFollowCode(e.target.value);
+  };
+
+  const followBusiness = async (e) => {
+    e.preventDefault();
+
+    if (followCode.length === 10) {
+      const response = await fetch("/api/consumer/followBusiness", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ businessId: "", hash: followCode }),
+      });
+
+      if (!response.ok) {
+        setFollowBusinessMessage("Failed to follow business, please try again");
+      } else {
+        setFollowBusinessMessage("Success");
+        await fetchConsumerDetails();
+      }
+    } else {
+      setFollowBusinessMessage(
+        "Invalid code, please check your code and try again"
+      );
+    }
+  };
+
+  const handleUnfollow = async () => {
+    const response = await fetch("/api/consumer/unfollowBusiness", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ businessId: "", hash: followCode }),
+    });
+
+    if (!response.ok) {
+      setFollowBusinessMessage("Failed to unfollow business, please try again");
+    } else {
+      await fetchConsumerDetails();
+    }
+  };
+
+  useEffect(() => {
+    let timer;
+    if (followBusinessMessage) {
+      timer = setTimeout(() => {
+        setFollowBusinessMessage("");
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [followBusinessMessage]);
 
   return (
     <>
@@ -248,12 +305,54 @@ function ConsumerInfo({ consumerData, setConsumerData }) {
           </div>
         </div>
         <div className="flex justify-center mt-2">
-          <QRCode
-            value={consumerData.email}
-            size={250}
-          />
+          <QRCode value={consumerData.email} size={250} />
         </div>
         <label className="flex justify-center">{consumerData.email}</label>
+      </div>
+
+      <div className="w-1/3 pt-5 pb-10 flex flex-col items-center">
+        <h2 className="text-3xl text-gray-700 mb-3">Following</h2>
+        {consumerData?.following?.length > 0 ? (
+          <table className="w-1/2">
+            <caption className="pb-3 text-xl">Store Name</caption>
+
+            {consumerData?.following.map((store) => (
+              <tr className="border border-black" key={store.id}>
+                <td className="text-lg pl-2">{store.businessName}</td>
+                <td>
+                  <img
+                    class="cursor-pointer"
+                    onClick={handleUnfollow}
+                    src="/images/close-circle.svg"
+                    width={20}
+                    height={20}
+                  />
+                </td>
+              </tr>
+            ))}
+          </table>
+        ) : (
+          <h2>You are not currently following any stores</h2>
+        )}
+        <h2 className="mt-9 text-lg text-gray-700">Enter Store Code</h2>
+        <form className="flex flex-col" onSubmit={followBusiness}>
+          <input
+            type="text"
+            value={followCode}
+            onChange={handleFollowCodeChange}
+            className="w-96 bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+          ></input>
+          <label
+            className={
+              followBusinessMessage !== "Success"
+                ? "text-red-500"
+                : "text-green-500"
+            }
+          >
+            {followBusinessMessage}
+          </label>
+          <button type="submit" className="hidden"></button>
+        </form>
       </div>
     </>
   );
