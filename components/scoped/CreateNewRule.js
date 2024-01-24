@@ -8,19 +8,19 @@ import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 
 const RePricer = ({ onBack, categoryList }) => {
-  const [ruleType, setRuleruleType] = useState("STANDARD");
+  const [ruleType, setRuleType] = useState("STANDARD");
   const [isRecurring, setIsRecurring] = useState(true);
   const [saleEndDate, setSaleEndDate] = useState("");
   const [saleStartDate, setSaleStartDate] = useState("");
   const [daysOfWeek, setDaysOfWeek] = useState([]);
-  const [appliedTo, setAppliedTo] = useState("");
+  const [appliedTo, setAppliedTo] = useState("ALL");
   const [name, setName] = useState("");
-  const [category, setCategory] = useState("All");
+  const [category, setCategory] = useState("");
   const [listingType, setListingType] = useState("ALL");
 
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
   const [cycle, setCycle] = useState("weekly");
-  const [roundTo, setRoundTo] = useState("0.50");
+  const [roundTo, setRoundTo] = useState("0.5");
   const [floorPrice, setFloorPrice] = useState(0);
   //
   const [isLoading, setIsLoading] = useState(0);
@@ -39,6 +39,16 @@ const RePricer = ({ onBack, categoryList }) => {
       NotificationManager.error("Rule name is required!");
       return;
     }
+    if (!category) {
+      NotificationManager.error("Category is required!");
+      return;
+    }
+    if (!isRecurring) {
+      if (!saleStartDate) {
+        NotificationManager.error("Start Date is required!");
+        return;
+      }
+    }
     setIsLoading(true);
     const data = {
       name: name,
@@ -46,8 +56,6 @@ const RePricer = ({ onBack, categoryList }) => {
       listingType: listingType,
       ruleType: ruleType,
       isRecurring: isRecurring,
-      saleEndDate: saleEndDate,
-      saleStartDate: saleStartDate,
       daysOfWeek: daysOfWeek,
       appliedTo: appliedTo,
       adjustPriceBy: adjustPriceBy,
@@ -55,6 +63,14 @@ const RePricer = ({ onBack, categoryList }) => {
       roundTo: roundTo,
       floorPrice: floorPrice,
     };
+
+    if (saleStartDate) {
+      data.saleStartDate = saleStartDate;
+    }
+    if (saleEndDate) {
+      data.saleEndDate = saleEndDate;
+    }
+
     try {
       await axios.post("/api/pricing-rules/add", data);
       setIsLoading(false);
@@ -104,6 +120,13 @@ const RePricer = ({ onBack, categoryList }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setCategory(e.target.value)}
           >
+            <option
+              value=""
+              selected
+              disabled
+            >
+              Select category
+            </option>
             {categoryList.length > 0 &&
               categoryList.map((category) => (
                 <option
@@ -146,7 +169,7 @@ const RePricer = ({ onBack, categoryList }) => {
                   : "!text-gray-500 !px-2.5 sm:!px-12"
               }
             `}
-            onClick={() => setRuleruleType("SALE")}
+            onClick={() => setRuleType("SALE")}
           >
             Sale
           </span>
@@ -168,7 +191,7 @@ const RePricer = ({ onBack, categoryList }) => {
               }
             `}
             onClick={() => {
-              setRuleruleType("STANDARD");
+              setRuleType("STANDARD");
               setIsRecurring(true);
             }}
           >
@@ -260,7 +283,7 @@ const RePricer = ({ onBack, categoryList }) => {
               </span>
             </ul>
 
-            {isRecurring === "one_time" && (
+            {!isRecurring && (
               <>
                 {" "}
                 <div className="py-2 ">
@@ -355,7 +378,7 @@ const RePricer = ({ onBack, categoryList }) => {
               value={adjustPriceBy}
               className=" mt-1 w-16 rounded-xl px-3 py-2 border border-gray-600 mr-2"
               max="99"
-              ruleType="Number"
+              type="Number"
               onChange={(e) => setAdjustPriceBy(e.target.value)}
             />
             <label className="text-lg min-w-fit">% off</label>
@@ -381,9 +404,9 @@ const RePricer = ({ onBack, categoryList }) => {
             className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
             onChange={(e) => setRoundTo(e.target.value)}
           >
-            <option value="0.00">$0.00</option>
-            <option value="0.50">$0.50</option>
-            <option value="0.90">$0.99</option>
+            <option value="0.0">$0.00</option>
+            <option value="0.5">$0.50</option>
+            <option value="0.9">$0.99</option>
           </select>
         </div>
         <div className="py-2 flex justify-between items-center">
@@ -392,7 +415,7 @@ const RePricer = ({ onBack, categoryList }) => {
           <input
             value={floorPrice}
             className="w-full max-w-[12rem] mt-1 rounded-xl px-3 py-2 border border-gray-600 ml-2"
-            ruleType="number"
+            type="number"
             onChange={(e) => setFloorPrice(e.target.value)}
           />
         </div>
