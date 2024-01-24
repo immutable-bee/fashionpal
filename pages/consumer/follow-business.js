@@ -23,7 +23,7 @@ const BusinessPage = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ businessId: businessData.id }),
+      body: JSON.stringify({ businessId: businessData.id, hash: "" }),
     });
 
     if (!response.ok) {
@@ -37,7 +37,7 @@ const BusinessPage = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ businessId: businessData.id }),
+      body: JSON.stringify({ businessId: businessData.id, hash: "" }),
     });
 
     if (!response.ok) {

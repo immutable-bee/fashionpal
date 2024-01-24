@@ -9,21 +9,39 @@ const handler = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const { businessId } = req.body;
+  const { businessId, hash } = req.body;
 
   try {
-    const consumer = await prisma.consumer.findUnique({
-      where: {
-        email: session.user.email,
-      },
-    });
+    if (!hash) {
+      const consumer = await prisma.consumer.findUnique({
+        where: {
+          email: session.user.email,
+        },
+      });
 
-    const follow = await prisma.follow.create({
-      data: {
-        businessId: businessId,
-        consumerId: consumer.id,
-      },
-    });
+      const follow = await prisma.follow.create({
+        data: {
+          businessId: businessId,
+          consumerId: consumer.id,
+        },
+      });
+    } else {
+      const tinyUrl = `https://faspl.co/b/${hash}`;
+      const business = await prisma.business.findUnique({
+        where: {
+          tinyUrl: tinyUrl,
+        },
+        select: {
+          id: true,
+        },
+      });
+      const followByUrl = await prisma.follow.create({
+        data: {
+          businessId: business.id,
+          consumerId: consumer.id,
+        },
+      });
+    }
 
     res.status(200).json({ message: "Store successfully followed" });
   } catch (error) {
