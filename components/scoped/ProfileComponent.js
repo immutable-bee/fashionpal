@@ -19,6 +19,7 @@ function ProfileComponent() {
   const [businessData, setBusinessData] = useState({});
   const [updating, setUpdating] = useState(false);
   const [squareStateCode, setSquareStateCode] = useState("");
+  const [copiedToClipboardMessage, setCopiedToClipboardMessage] = useState("");
 
   useEffect(() => {
     fetchBusinessData().then();
@@ -82,6 +83,11 @@ function ProfileComponent() {
     }
   };
 
+  const copyToClipboard = async (text) => {
+    await navigator.clipboard.writeText(text);
+    setCopiedToClipboardMessage("Code copied to clipboard");
+  };
+
   const onDone = async (data) => {
     console.log("data", data);
     try {
@@ -135,6 +141,16 @@ function ProfileComponent() {
       await fetch("/api/business/square/revokeSquareToken");
     } catch (error) {}
   };
+
+  useEffect(() => {
+    let timer;
+    if (copiedToClipboardMessage) {
+      timer = setTimeout(() => {
+        setCopiedToClipboardMessage("");
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [copiedToClipboardMessage]);
 
   return (
     <div className="my-5 sm:flex justify-center sm:px-0 px-3">
@@ -275,6 +291,24 @@ function ProfileComponent() {
                 Edit
               </button>
             </div>
+
+            <div className="pt-8 pb-4 flex flex-col items-center">
+              <h2 className="text-2xl pb-2">Store Code</h2>
+              <h2
+                className="text-lg text-blue-500 italic cursor-pointer"
+                onClick={() =>
+                  copyToClipboard(businessData?.tinyUrl?.split("/b/")[1])
+                }
+              >
+                {businessData?.tinyUrl?.split("/b/")[1]}
+              </h2>
+              {copiedToClipboardMessage && (
+                <label className="text-green-500">
+                  {copiedToClipboardMessage}
+                </label>
+              )}
+            </div>
+
             <div className="flex justify-center">
               <button
                 className="mt-3 w-32 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
