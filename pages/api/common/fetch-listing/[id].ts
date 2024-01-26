@@ -14,6 +14,9 @@ export default async function handler(
           id: id,
           isActive: true,
         },
+        include: {
+          Business: true,
+        },
       });
 
       if (!listingByid) {

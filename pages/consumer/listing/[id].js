@@ -10,7 +10,7 @@ const PerksModalContent = () => {
   return (
     <>
       <Modal.Header>
-        <h1 className="text-2xl">SUBSCRIBE</h1>
+        <h1 className="text-2xl">Member Benefits</h1>
       </Modal.Header>
       <Modal.Body>
         <div>
@@ -27,7 +27,7 @@ const PerksModalContent = () => {
                 clip-rule="evenodd"
               />
             </svg>
-            <h1 className="text-lg"> EXCLUSIVE SUBSCRIBER DISCOUNTS</h1>
+            <h1 className="text-lg"> EXCLUSIVE MEMBER DISCOUNTS</h1>
           </div>
           <div className="flex items-center gap-3">
             <svg
@@ -75,7 +75,7 @@ function Scan() {
 
   const fetchListing = useCallback(async (e) => {
     try {
-      const res = await fetch(`/api/common/fetch-listing/${e}`);
+      const res = await fetch(`/api/consumer/fetchListingWithFollowing/${e}`);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -119,15 +119,15 @@ function Scan() {
     return value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
   };
 
-  const handleSubscribe = () => {
-    if (!email) {
-      NotificationManager.error("Email is required!");
-      return;
-    }
-    if (!validateEmail(email)) {
-      NotificationManager.error("Email must be valid!");
-      return;
-    }
+  const followBusiness = async () => {
+    const response = await fetch("/api/consumer/followBusiness", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ businessId: product.Business.id, hash: "" }),
+    });
+    await fetchListing(router.query.id);
   };
 
   return (
@@ -170,7 +170,7 @@ function Scan() {
               (product.price && (
                 <div>
                   <h3 className="text-xl text-center mt-3  uppercase">
-                    SUBSCRIBER PRICE
+                    MEMBER PRICE
                   </h3>
 
                   <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
@@ -194,26 +194,23 @@ function Scan() {
               Perks
             </h3>
           </div>
-
-          <div className="py-2">
-            <input
-              name="email"
-              type="text"
-              placeholder="example@email.com"
-              value={email}
-              onChange={handleEmailChange}
-              className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg px-4 my-1 py-2"
-            />
-          </div>
+          {!product.isFollowing && (
+            <div className="pt-2  flex flex-col items-center">
+              <h2>Become a member by following this store to save</h2>
+            </div>
+          )}
 
           <ButtonComponent
             rounded
             className="mt-5"
             full
             type="submit"
-            onClick={handleSubscribe}
+            disabled={product.isFollowing}
+            onClick={followBusiness}
           >
-            Subscribe to save
+            {product.isFollowing
+              ? `Following ${product.Business?.businessName}`
+              : `Follow ${product.Business?.businessName}`}
           </ButtonComponent>
         </>
       )}
