@@ -42,7 +42,7 @@ export default async function handler(
     try {
       let payload: any = {};
 
-      const newTinyUrl = generateUniqueTinyUrl();
+      const newTinyUrl = await generateUniqueTinyUrl();
 
       switch (listing.type) {
         case "employee":
