@@ -235,14 +235,14 @@ model EmailPreferences {
   id                        String   @id @default(uuid())
   discountEmailReport       Boolean  @default(false)
   weeklyEmailReport         Boolean  @default(false)
-  reveiceTreasures          Boolean  @default(false)
+  receiveTreasures          Boolean  @default(false)
   receiveNewlyListedPremium Boolean  @default(false)
   receiveRecurringDiscounts Boolean  @default(false)
   receiveOneTimeSpecials    Boolean  @default(false)
   businessId                String   @unique
   consumerId                String   @unique
   business                  Business @relation(fields: [businessId], references: [id])
-  consume                   Consumer @relation(fields: [consumerId], references: [id])
+  consumer                   Consumer @relation(fields: [consumerId], references: [id])
 }
 
 model PerformanceMetricsVariables {
