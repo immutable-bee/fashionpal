@@ -13,6 +13,7 @@ const handler = async (req, res) => {
       where: { email: session.user.email },
       include: {
         ThriftList: true,
+        emailPreferences: true,
         following: {
           include: {
             business: {

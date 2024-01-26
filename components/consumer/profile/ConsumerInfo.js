@@ -6,10 +6,30 @@ import { Checkbox } from "@nextui-org/react";
 function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
   const [followCode, setFollowCode] = useState("");
   const [followBusinessMessage, setFollowBusinessMessage] = useState("");
-  // const isValidEmail = (email) => {
-  //   const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  //   return regex.test(email);
-  // };
+  const [emailPreferences, setEmailPreferences] = useState({
+    weekly: {
+      active: false,
+      receiveTreasures: false,
+      receiveNewlyListedPremium: false,
+    },
+    discount: {
+      active: false,
+      receiveRecurringDiscounts: false,
+      receiveOneTimeSpecials: false,
+    },
+  });
+  const [emailPrefsInitialized, setEmailPrefsInitialized] = useState(false);
+
+  const togglePreference = (category, preference) => {
+    setEmailPreferences((prevState) => ({
+      ...prevState,
+      [category]: {
+        ...prevState[category],
+        [preference]: !prevState[category][preference],
+      },
+    }));
+  };
+
   const sendFieldUpdate = async (fieldName, fieldValue) => {
     try {
       const response = await fetch("/api/consumer/profile/update", {
@@ -101,6 +121,19 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
     }
   };
 
+  const updateEmailPreferences = async () => {
+    const response = await fetch(
+      "/api/consumer/profile/updateEmailPreferences",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ emailPreferences }),
+      }
+    );
+  };
+
   useEffect(() => {
     let timer;
     if (followBusinessMessage) {
@@ -110,6 +143,32 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
     }
     return () => clearTimeout(timer);
   }, [followBusinessMessage]);
+
+  useEffect(() => {
+    if (consumerData.emailPreferences && !emailPrefsInitialized) {
+      const pref = consumerData.emailPreferences;
+
+      setEmailPreferences({
+        weekly: {
+          active: pref.weeklyEmailReport,
+          receiveTreasures: pref.receiveTreasures,
+          receiveNewlyListedPremium: pref.receiveNewlyListedPremium,
+        },
+        discount: {
+          active: pref.discountEmailReport,
+          receiveRecurringDiscounts: pref.receiveRecurringDiscounts,
+          receiveOneTimeSpecials: pref.receiveOneTimeSpecials,
+        },
+      });
+      setEmailPrefsInitialized(true);
+    }
+  }, [consumerData.emailPreferences]);
+
+  useEffect(() => {
+    if (emailPrefsInitialized) {
+      updateEmailPreferences();
+    }
+  }, [emailPreferences]);
 
   return (
     <>
@@ -157,16 +216,16 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                   <div className="h-9 flex items-center">
                     <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
                       <input
-                        value={consumerData.emailAlertsOn}
+                        value={emailPreferences.weekly.active}
                         type="checkbox"
                         className="sr-only peer"
                         name="emailAlertsOn"
-                        onChange={handleInputChange}
+                        onChange={() => togglePreference(`weekly`, `active`)}
                       />
 
                       <div
                         className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
-                          consumerData.emailAlertsOn === true
+                          emailPreferences.weekly.active === true
                             ? "bg-primary"
                             : "bg-gray-200"
                         }`}
@@ -175,7 +234,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                   </div>
                 </div>
               </div>
-              {consumerData.emailAlertsOn && (
+              {emailPreferences.weekly.active && (
                 <div className="ml-3">
                   <div className="mt-2 flex items-center justify-between">
                     <div>
@@ -186,12 +245,9 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                     <div>
                       <Checkbox
                         onChange={() =>
-                          handleCheckboxChange(
-                            "treasures",
-                            !consumerData.treasures
-                          )
+                          togglePreference("weekly", "receiveTreasures")
                         }
-                        isSelected={consumerData.treasures}
+                        isSelected={emailPreferences.weekly.receiveTreasures}
                         id="onboarding-form-tc-checkbox"
                         className="mr-2"
                         size={"lg"}
@@ -207,12 +263,14 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                     <div>
                       <Checkbox
                         onChange={() =>
-                          handleCheckboxChange(
-                            "newlyListedPremium",
-                            !consumerData.newlyListedPremium
+                          togglePreference(
+                            "weekly",
+                            "receiveNewlyListedPremium"
                           )
                         }
-                        isSelected={consumerData.newlyListedPremium}
+                        isSelected={
+                          emailPreferences.weekly.receiveNewlyListedPremium
+                        }
                         id="onboarding-form-tc-checkbox"
                         className="mr-2"
                         size={"lg"}
@@ -234,16 +292,16 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                   <div className="h-9 flex items-center">
                     <label className="relative w-12 inline-flex items-center cursor-pointer mx-1">
                       <input
-                        value={consumerData.discountEmailAlertsOn}
+                        value={emailPreferences.discount.active}
                         name="discountEmailAlertsOn"
-                        onChange={handleInputChange}
+                        onChange={() => togglePreference("discount", "active")}
                         type="checkbox"
                         className="sr-only peer"
                       />
 
                       <div
                         className={`w-11 h-6  peer-focus:outline-none rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px]  after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all ${
-                          consumerData.discountEmailAlertsOn === true
+                          emailPreferences.discount.active === true
                             ? "bg-primary"
                             : "bg-gray-200"
                         }`}
@@ -252,7 +310,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                   </div>
                 </div>
               </div>
-              {consumerData.discountEmailAlertsOn && (
+              {emailPreferences.discount.active && (
                 <div className="ml-3">
                   <div className="mt-2 flex items-center justify-between">
                     <div>
@@ -263,12 +321,14 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                     <div>
                       <Checkbox
                         onChange={() =>
-                          handleCheckboxChange(
-                            "recurringDiscounts",
-                            !consumerData.recurringDiscounts
+                          togglePreference(
+                            "discount",
+                            "receiveRecurringDiscounts"
                           )
                         }
-                        isSelected={consumerData.recurringDiscounts}
+                        isSelected={
+                          emailPreferences.discount.receiveRecurringDiscounts
+                        }
                         id="onboarding-form-tc-checkbox"
                         className="mr-2"
                         size={"lg"}
@@ -284,12 +344,11 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                     <div>
                       <Checkbox
                         onChange={() =>
-                          handleCheckboxChange(
-                            "oneTimeSpecials",
-                            !consumerData.oneTimeSpecials
-                          )
+                          togglePreference("discount", "receiveOneTimeSpecials")
                         }
-                        isSelected={consumerData.oneTimeSpecials}
+                        isSelected={
+                          emailPreferences.discount.receiveOneTimeSpecials
+                        }
                         id="onboarding-form-tc-checkbox"
                         className="mr-2"
                         size={"lg"}
