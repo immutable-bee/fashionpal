@@ -22,7 +22,7 @@ export async function getServerSideProps(context) {
 
     return {
       redirect: {
-        destination: `https://fashionpal.app/consumer}`,
+        destination: `https://fashionpal.app/consumer`,
         permanent: false,
       },
     };
