@@ -6,12 +6,17 @@ import DeleteModalComponent from "@/components/utility/DeleteModalComponent";
 
 import LoadingComponent from "../utility/loading";
 import { useRouter } from "next/router";
+import { topLevelCategories } from "../../constants/categories";
+import { secondLevelCategories } from "../../constants/categories";
+import { thirdLevelCategories } from "../../constants/categories";
 
 function AdminListingForm() {
   const router = useRouter();
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [listingQueue, setListingQueue] = useState([]);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Clothing");
+  const [subcategory, setSubcategory] = useState("");
+  const [thirdLevelCategory, setThirdLevelCategory] = useState("");
 
   const [listings, setListings] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -27,6 +32,13 @@ function AdminListingForm() {
   const skipBrandImage = () => {
     setBrandImageSkipped(true);
     setStep(4);
+  };
+
+  const capitalizeFirstLetter = (string) => {
+    if (typeof string !== "string" || string.length === 0) {
+      return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
   const [showCamera, setShowCamera] = useState(false); // Control the visibility of the camera
@@ -143,10 +155,7 @@ function AdminListingForm() {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div>
@@ -161,13 +170,59 @@ function AdminListingForm() {
                         className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                         onChange={(e) => setCategory(e.target.value)}
                       >
-                        <option value="">All</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Footwear">Footwear</option>
-                        <option value="Hats">Hats</option>
-                        <option value="Bags">Bags</option>
+                        {topLevelCategories.map((category) => {
+                          return (
+                            <option key={category} value={category}>
+                              {category}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
+
+                    {category && secondLevelCategories[category] && (
+                      <div className="sm:w-96 mx-auto">
+                        <label className="text-lg">Subcategory</label>
+                        <select
+                          value={subcategory}
+                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                          onChange={(e) => setSubcategory(e.target.value)}
+                        >
+                          {secondLevelCategories[category].map(
+                            (subcategory) => {
+                              return (
+                                <option key={subcategory} value={subcategory}>
+                                  {subcategory}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
+                      </div>
+                    )}
+
+                    {subcategory && thirdLevelCategories[subcategory] && (
+                      <div className="sm:w-96 mx-auto">
+                        <label className="text-lg">Subcategory</label>
+                        <select
+                          value={thirdLevelCategory}
+                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                          onChange={(e) =>
+                            setThirdLevelCategory(e.target.value)
+                          }
+                        >
+                          {thirdLevelCategories[subcategory].map(
+                            (subcategory) => {
+                              return (
+                                <option key={subcategory} value={subcategory}>
+                                  {capitalizeFirstLetter(subcategory)}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
+                      </div>
+                    )}
                     <div className=" flex items-center mt-5">
                       <label className="text-lg">
                         Default price suggestion %

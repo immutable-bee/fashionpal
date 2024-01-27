@@ -8,13 +8,18 @@ import { QRCode } from "react-qrcode-logo";
 import Image from "next/image";
 import moment from "moment";
 import LoadingComponent from "../utility/loading";
+import { topLevelCategories } from "../../constants/categories";
+import { secondLevelCategories } from "../../constants/categories";
+import { thirdLevelCategories } from "../../constants/categories";
 
 function AdminListingForm({ onBack, onFetch }) {
   const [price, setPrice] = useState(0);
   const [defaultPriceSuggestion, setDefaultPriceSuggestion] = useState(-10);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Clothing");
+  const [subcategory, setSubcategory] = useState("");
+  const [thirdLevelCategory, setThirdLevelCategory] = useState("");
   const [tagFetching, setTagFetching] = useState(false);
   const [uploadedImages, setUploadedImages] = useState({
     main: null,
@@ -33,6 +38,13 @@ function AdminListingForm({ onBack, onFetch }) {
 
   const [pendingListingId, setPendingListingId] = useState();
   const [similarProducts, setSimilarProducts] = useState([]);
+
+  const capitalizeFirstLetter = (string) => {
+    if (typeof string !== "string" || string.length === 0) {
+      return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   const skipBrandImage = () => {
     setBrandImageSkipped(true);
@@ -235,10 +247,7 @@ function AdminListingForm({ onBack, onFetch }) {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div>
@@ -250,13 +259,59 @@ function AdminListingForm({ onBack, onFetch }) {
                         className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                         onChange={(e) => setCategory(e.target.value)}
                       >
-                        <option value="">All</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Footwear">Footwear</option>
-                        <option value="Hats">Hats</option>
-                        <option value="Bags">Bags</option>
+                        {topLevelCategories.map((category) => {
+                          return (
+                            <option key={category} value={category}>
+                              {category}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
+
+                    {category && secondLevelCategories[category] && (
+                      <div className="sm:w-96 mx-auto">
+                        <label className="text-lg">Subcategory</label>
+                        <select
+                          value={subcategory}
+                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                          onChange={(e) => setSubcategory(e.target.value)}
+                        >
+                          {secondLevelCategories[category].map(
+                            (subcategory) => {
+                              return (
+                                <option key={subcategory} value={subcategory}>
+                                  {subcategory}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
+                      </div>
+                    )}
+
+                    {subcategory && thirdLevelCategories[subcategory] && (
+                      <div className="sm:w-96 mx-auto">
+                        <label className="text-lg">Subcategory</label>
+                        <select
+                          value={thirdLevelCategory}
+                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                          onChange={(e) =>
+                            setThirdLevelCategory(e.target.value)
+                          }
+                        >
+                          {thirdLevelCategories[subcategory].map(
+                            (subcategory) => {
+                              return (
+                                <option key={subcategory} value={subcategory}>
+                                  {capitalizeFirstLetter(subcategory)}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
+                      </div>
+                    )}
                     <div className=" flex items-center mt-5">
                       <label className="text-lg">
                         Default price suggestion %
@@ -359,10 +414,7 @@ function AdminListingForm({ onBack, onFetch }) {
         {step === 2 ? (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -588,28 +640,16 @@ function AdminListingForm({ onBack, onFetch }) {
                 <table className="w-full text-sm text-left text-gray-500">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Disposed
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Listed
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         Start time
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3"
-                      >
+                      <th scope="col" className="px-6 py-3">
                         End time
                       </th>
                     </tr>
