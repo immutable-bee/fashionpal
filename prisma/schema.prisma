@@ -121,7 +121,10 @@ model ThriftList {
 
 model Category {
   id                    String                 @id @default(uuid())
-  name                  String                 @unique
+  name                  String?                 @unique
+  top                   String?
+  sub                   String?
+  taxonomicPath         String?               @unique
   listings              CategoriesOnListings[]
   LiquidationThresholds LiquidationThreshold[]
   PricingRule           PricingRule[]
