@@ -82,7 +82,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
       formData.append("brandImage", brandFile);
     }
     formData.append("price", price);
-    formData.append("categoryParams", categoryParams);
+    formData.append("categoryParams", JSON.stringify(categoryParams));
     formData.append("status", status);
     formData.append("premium", isPremium);
 

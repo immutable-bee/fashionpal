@@ -60,7 +60,7 @@ const handler = async (req, res) => {
 
         businessId = business.id;
 
-        const categoryParams = fields.categoryParams;
+        const categoryParams = JSON.parse(fields.categoryParams);
         const price = parseFloat(fields.price);
         const status = fields.status[0];
 
