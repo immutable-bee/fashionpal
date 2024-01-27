@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import IconGoogle from "../assets/svg/icon-google.svg";
 import { signIn } from "next-auth/react";
 import IconEnvelope from "../assets/svg/icons_envelope.svg";
+import ButtonComponent from "@/components/utility/Button";
 
 const providers = [
   {
@@ -160,17 +161,28 @@ const SignIn = ({ props }) => {
                       </h6>
                     </div>
                   </div>
-                ) : loading ? (
-                  <Loading className="self-center mt-4" />
                 ) : (
-                  <Button
-                    id="login-btn"
-                    disabled={!email || helper.color === "error"}
-                    className="w-full mt-5"
-                    type="submit"
-                  >
-                    Continue with email
-                  </Button>
+                  // ) : loading ? (
+                  //   <Loading className="self-center mt-4" />
+                  <div className="mt-6">
+                    <ButtonComponent
+                      loading={loading}
+                      full
+                      rounded
+                      type="submit"
+                      disabled={!email || helper.color === "error"}
+                    >
+                      Continue with email
+                    </ButtonComponent>
+                  </div>
+                  // <Button
+                  //   id="login-btn"
+                  //   disabled={!email || helper.color === "error"}
+                  //   className="w-full mt-5"
+                  //   type="submit"
+                  // >
+                  //   Continue with email
+                  // </Button>
                 )}
               </form>
 

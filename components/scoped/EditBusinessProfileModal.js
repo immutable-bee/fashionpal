@@ -74,7 +74,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 max-w-[16rem] rounded-lg px-4 my-1 py-2"
+              className="bg-white focus:ring-1 focus:ring-primary focus:outline-none form-input border border-gray-500 max-w-[16rem] rounded-lg px-4 my-1 py-2"
             >
               <option value="">Add Category</option>
               <option value="Clothing">Clothing</option>
@@ -83,7 +83,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
             </select>
             <button
               onClick={addCategory}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+              className="bg-primary text-white px-4 py-2 rounded-lg"
             >
               Add Category
             </button>
@@ -107,7 +107,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
                       viewBox="0 0 24 24"
                       stroke-width="1.5"
                       stroke="currentColor"
-                      class="w-4 h-4 cursor-pointer hover:opacity-70 text-orange-500 mr-[10px]"
+                      class="w-4 h-4 cursor-pointer hover:opacity-70 text-red-500 mr-[10px]"
                     >
                       <path
                         stroke-linecap="round"
@@ -126,7 +126,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
                         [category]: e.target.value,
                       })
                     }
-                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-[#ffc71f] border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
                   />
                 </div>
               ))}

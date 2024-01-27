@@ -6,6 +6,7 @@ import { Checkbox } from "@nextui-org/react";
 function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
   const [followCode, setFollowCode] = useState("");
   const [followBusinessMessage, setFollowBusinessMessage] = useState("");
+  const [updating, setUpdating] = useState(false);
   const [emailPreferences, setEmailPreferences] = useState({
     weekly: {
       active: false,
@@ -81,6 +82,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
     e.preventDefault();
 
     if (followCode.length === 10) {
+      setUpdating(true);
       const response = await fetch("/api/consumer/followBusiness", {
         method: "POST",
         headers: {
@@ -95,6 +97,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
         setFollowBusinessMessage("Success");
         await fetchConsumerDetails();
       }
+      setUpdating(false);
     } else {
       setFollowBusinessMessage(
         "Invalid code, please check your code and try again"
@@ -201,9 +204,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
           {/*  */}
           {/*  */}
           <div className=" rounded-2xl mt-2 py-3 px-3 border shadow-sm">
-            <h3 className=" text-green-600 font-semibold text-2xl">
-              Subscribed
-            </h3>
+            <h3 className=" text-primary font-semibold text-2xl">Subscribed</h3>
 
             <div>
               <div className="mt-1 flex items-center justify-between">
@@ -367,7 +368,10 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
           </div>
         </div>
         <div className="flex justify-center mt-2">
-          <QRCode value={consumerData.email} size={250} />
+          <QRCode
+            value={consumerData.email}
+            size={250}
+          />
         </div>
         <label className="flex justify-center">{consumerData.email}</label>
       </div>
@@ -379,7 +383,10 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
             <caption className="pb-3 text-xl">Store Name</caption>
 
             {consumerData?.following.map((store) => (
-              <tr className="border border-black" key={store.businessId}>
+              <tr
+                className="border border-black"
+                key={store.businessId}
+              >
                 <td className="text-lg pl-2">{store.businessName}</td>
                 <td>
                   <img
@@ -396,14 +403,38 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
         ) : (
           <h2>You are not currently following any stores</h2>
         )}
-        <h2 className="mt-9 text-lg text-gray-700">Enter Store Code</h2>
-        <form className="flex flex-col" onSubmit={followBusiness}>
-          <input
-            type="text"
-            value={followCode}
-            onChange={handleFollowCodeChange}
-            className="w-96 bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
-          ></input>
+
+        <form
+          className="flex flex-col w-full"
+          onSubmit={followBusiness}
+        >
+          <h2 className="mt-9 text-lg pl-1 text-gray-700">Enter Store Code</h2>
+          <div className="flex items-center gap-1">
+            <input
+              type="text"
+              className="mt-1 w-full rounded-xl px-3 py-2 border border-gray-600"
+              value={followCode}
+              onChange={handleFollowCodeChange}
+            />
+            <button
+              className={updating && " pointer-events-none opacity-70"}
+              type="submit"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                class="w-10 h-10 text-primary"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm.53 5.47a.75.75 0 0 0-1.06 0l-3 3a.75.75 0 1 0 1.06 1.06l1.72-1.72v5.69a.75.75 0 0 0 1.5 0v-5.69l1.72 1.72a.75.75 0 1 0 1.06-1.06l-3-3Z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+
           <label
             className={
               followBusinessMessage !== "Success"
@@ -413,7 +444,6 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
           >
             {followBusinessMessage}
           </label>
-          <button type="submit" className="hidden"></button>
         </form>
       </div>
     </>

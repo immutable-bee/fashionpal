@@ -106,7 +106,7 @@ const HeaderComponent = () => {
       </div>
 
       <Link
-        href="/consumer/profile"
+        href="/consumer"
         className="flex items-center no-underline"
       >
         {" "}
