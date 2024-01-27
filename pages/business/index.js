@@ -10,7 +10,7 @@ import ModalComponent from "@/components/utility/Modal";
 import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
 import AddListing from "@/components/scoped/AddListing";
-import PrintBarcode from "../../components/business/PrintBarcode";
+import PrintBarcodeForModal from "../../components/business/PrintBarcodeForModal";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -372,7 +372,7 @@ export default function Home() {
         width="600px"
       >
         <>
-          <PrintBarcode
+          <PrintBarcodeForModal
             sku={printData.Barcode}
             price={printData.price}
             tinyUrl={printData.tinyUrl}
