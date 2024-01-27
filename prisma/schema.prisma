@@ -128,6 +128,7 @@ model Category {
   listings              CategoriesOnListings[]
   LiquidationThresholds LiquidationThreshold[]
   PricingRule           PricingRule[]
+
 }
 
 model CategoriesOnListings {
@@ -136,6 +137,7 @@ model CategoriesOnListings {
   categoryId String
   category   Category @relation(fields: [categoryId], references: [id])
   listing    Listing  @relation(fields: [listingId], references: [id])
+  probability Decimal? @db.Decimal(10,9)
 }
 
 model Listing {
