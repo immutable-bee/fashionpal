@@ -60,7 +60,7 @@ const handler = async (req, res) => {
 
         businessId = business.id;
 
-        const category = fields.category[0];
+        const categoryParams = fields.categoryParams;
         const price = parseFloat(fields.price);
         const status = fields.status[0];
 
@@ -72,6 +72,13 @@ const handler = async (req, res) => {
         newListingSku = timestampSku;
 
         newTinyUrl = await generateUniqueTinyUrl();
+
+        const createCategoryData = {
+          taxonomicPath: categoryParams.taxonomicPath,
+          top: categoryParams.top,
+          name: categoryParams.name,
+          sub: categoryParams.sub ? categoryParams.sub : null,
+        };
 
         const newListing = await tx.listing.create({
           data: {
@@ -85,10 +92,10 @@ const handler = async (req, res) => {
                 category: {
                   connectOrCreate: {
                     where: {
-                      name: category,
+                      taxonomicPath: categoryParams.taxonomicPath,
                     },
                     create: {
-                      name: category,
+                      ...createCategoryData,
                     },
                   },
                 },

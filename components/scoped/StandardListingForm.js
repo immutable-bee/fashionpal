@@ -5,9 +5,7 @@ import Capture from "../utility/Capture";
 import PrintBarcode from "../business/PrintBarcode";
 import { NotificationManager } from "react-notifications";
 import { Checkbox } from "@nextui-org/react";
-import { topLevelCategories } from "../../constants/categories";
-import { secondLevelCategories } from "../../constants/categories";
-import { thirdLevelCategories } from "../../constants/categories";
+import SelectCategory from "../business/SelectCategory";
 
 const StandardListingForm = ({ onBack, onFetch }) => {
   const [step, setStep] = useState(1);
@@ -18,9 +16,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
 
-  const [category, setCategory] = useState("Clothing");
-  const [subcategory, setSubcategory] = useState("");
-  const [thirdLevelCategory, setThirdLevelCategory] = useState("");
+  const [categoryParams, setCategoryParams] = useState({});
 
   const [price, setPrice] = useState(5);
 
@@ -42,7 +38,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
     setStep(1);
     setMainImage("");
     setBrandImage("");
-    setCategory("");
+    setCategoryParams({});
     setPrice(defaultPrice);
     setNewListingSku("");
   };
@@ -93,7 +89,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
       formData.append("brandImage", brandFile);
     }
     formData.append("price", price);
-    formData.append("category", category);
+    formData.append("categoryParams", categoryParams);
     formData.append("status", status);
     formData.append("premium", isPremium);
 
@@ -134,66 +130,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
               <div>
                 <div>
                   <div className="sm:w-96 mx-auto">
-                    <div className="sm:w-96 mx-auto">
-                      <label className="text-lg">Category</label>
-                      <select
-                        value={category}
-                        className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                        onChange={(e) => setCategory(e.target.value)}
-                      >
-                        {topLevelCategories.map((category) => {
-                          return (
-                            <option key={category} value={category}>
-                              {category}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    </div>
-
-                    {category && secondLevelCategories[category] && (
-                      <div className="sm:w-96 mx-auto">
-                        <label className="text-lg">Subcategory</label>
-                        <select
-                          value={subcategory}
-                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                          onChange={(e) => setSubcategory(e.target.value)}
-                        >
-                          {secondLevelCategories[category].map(
-                            (subcategory) => {
-                              return (
-                                <option key={subcategory} value={subcategory}>
-                                  {subcategory}
-                                </option>
-                              );
-                            }
-                          )}
-                        </select>
-                      </div>
-                    )}
-
-                    {subcategory && thirdLevelCategories[subcategory] && (
-                      <div className="sm:w-96 mx-auto">
-                        <label className="text-lg">Subcategory</label>
-                        <select
-                          value={thirdLevelCategory}
-                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                          onChange={(e) =>
-                            setThirdLevelCategory(e.target.value)
-                          }
-                        >
-                          {thirdLevelCategories[subcategory].map(
-                            (subcategory) => {
-                              return (
-                                <option key={subcategory} value={subcategory}>
-                                  {capitalizeFirstLetter(subcategory)}
-                                </option>
-                              );
-                            }
-                          )}
-                        </select>
-                      </div>
-                    )}
+                    <SelectCategory
+                      categoryParams={categoryParams}
+                      setCategoryParams={setCategoryParams}
+                    />
 
                     <div className="mt-5  mx-auto flex items-center justify-center  ">
                       <label className="block text-gray-600 text-xl ">
