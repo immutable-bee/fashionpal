@@ -27,13 +27,6 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [newListingSku, setNewListingSku] = useState("");
   const [newListingTinyUrl, setNewListingTinyUrl] = useState("");
 
-  const capitalizeFirstLetter = (string) => {
-    if (typeof string !== "string" || string.length === 0) {
-      return "";
-    }
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
   const resetListingForm = () => {
     setStep(1);
     setMainImage("");
