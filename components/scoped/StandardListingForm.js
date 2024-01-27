@@ -5,6 +5,9 @@ import Capture from "../utility/Capture";
 import PrintBarcode from "../business/PrintBarcode";
 import { NotificationManager } from "react-notifications";
 import { Checkbox } from "@nextui-org/react";
+import { topLevelCategories } from "../../constants/categories";
+import { secondLevelCategories } from "../../constants/categories";
+import { thirdLevelCategories } from "../../constants/categories";
 
 const StandardListingForm = ({ onBack, onFetch }) => {
   const [step, setStep] = useState(1);
@@ -15,7 +18,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
 
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState("Clothing");
+  const [subcategory, setSubcategory] = useState("");
+  const [thirdLevelCategory, setThirdLevelCategory] = useState("");
+
   const [price, setPrice] = useState(5);
 
   const [showCamera, setShowCamera] = useState(false);
@@ -24,6 +30,13 @@ const StandardListingForm = ({ onBack, onFetch }) => {
 
   const [newListingSku, setNewListingSku] = useState("");
   const [newListingTinyUrl, setNewListingTinyUrl] = useState("");
+
+  const capitalizeFirstLetter = (string) => {
+    if (typeof string !== "string" || string.length === 0) {
+      return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   const resetListingForm = () => {
     setStep(1);
@@ -116,10 +129,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
         {step === 1 && (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div>
@@ -131,13 +141,59 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                         className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                         onChange={(e) => setCategory(e.target.value)}
                       >
-                        <option value="">All</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Footwear">Footwear</option>
-                        <option value="Hats">Hats</option>
-                        <option value="Bags">Bags</option>
+                        {topLevelCategories.map((category) => {
+                          return (
+                            <option key={category} value={category}>
+                              {category}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
+
+                    {category && secondLevelCategories[category] && (
+                      <div className="sm:w-96 mx-auto">
+                        <label className="text-lg">Subcategory</label>
+                        <select
+                          value={subcategory}
+                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                          onChange={(e) => setSubcategory(e.target.value)}
+                        >
+                          {secondLevelCategories[category].map(
+                            (subcategory) => {
+                              return (
+                                <option key={subcategory} value={subcategory}>
+                                  {subcategory}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
+                      </div>
+                    )}
+
+                    {subcategory && thirdLevelCategories[subcategory] && (
+                      <div className="sm:w-96 mx-auto">
+                        <label className="text-lg">Subcategory</label>
+                        <select
+                          value={thirdLevelCategory}
+                          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                          onChange={(e) =>
+                            setThirdLevelCategory(e.target.value)
+                          }
+                        >
+                          {thirdLevelCategories[subcategory].map(
+                            (subcategory) => {
+                              return (
+                                <option key={subcategory} value={subcategory}>
+                                  {capitalizeFirstLetter(subcategory)}
+                                </option>
+                              );
+                            }
+                          )}
+                        </select>
+                      </div>
+                    )}
 
                     <div className="mt-5  mx-auto flex items-center justify-center  ">
                       <label className="block text-gray-600 text-xl ">
@@ -237,10 +293,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
         {step === 2 && (
           <div>
             {loading ? (
-              <LoadingComponent
-                className="mt-6"
-                size="xl"
-              />
+              <LoadingComponent className="mt-6" size="xl" />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -273,10 +326,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                       className="mr-2"
                       size={"xl"}
                     ></Checkbox>
-                    <h6
-                      id="onboarding-form-tc-agree-text"
-                      className="text-2xl"
-                    >
+                    <h6 id="onboarding-form-tc-agree-text" className="text-2xl">
                       Premium
                     </h6>
                   </div>
