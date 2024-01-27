@@ -181,7 +181,7 @@ function ProfileComponent() {
                   value={businessData?.businessName}
                   name="businessName"
                   type="text"
-                  className="bg-white focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+                  className="bg-white focus:ring-1 focus:ring-primary focus:outline-none form-input border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
                   onChange={handleChange}
                 />
               </div>
@@ -192,7 +192,7 @@ function ProfileComponent() {
                   value={businessData?.email}
                   name="email"
                   type="text"
-                  className="bg-gray-100 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2"
+                  className="bg-gray-100 focus:ring-1 focus:ring-primary focus:outline-none form-input border border-gray-300 w-full rounded-lg  px-4 my-1 py-2"
                   onChange={handleChange}
                 />
               </div>
@@ -255,7 +255,7 @@ function ProfileComponent() {
                     value={daysThroughTraget}
                     type="number"
                     onChange={handleDaysThroughTarget}
-                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-[#ffc71f] border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
                   />
                 </div>
               </div>
@@ -282,7 +282,7 @@ function ProfileComponent() {
                     value={daysASPTarget}
                     type="number"
                     onChange={handleDaysASPTarget}
-                    className="font-medium px-2 focus:ring-1 focus:ring-[#ffc71f] py-1 border border-green-500 focus:outline-none text-black rounded-xl w-28 h-10"
+                    className="font-medium px-2 focus:ring-1 focus:ring-primary py-1 border border-primary focus:outline-none text-black rounded-xl w-28 h-10"
                   />
                 </div>
               </div>
