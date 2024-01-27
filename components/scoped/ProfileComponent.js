@@ -19,7 +19,7 @@ function ProfileComponent() {
   const [businessData, setBusinessData] = useState({});
   const [updating, setUpdating] = useState(false);
   const [squareStateCode, setSquareStateCode] = useState("");
-  const [copiedToClipboardMessage, setCopiedToClipboardMessage] = useState("");
+  // const [copiedToClipboardMessage, setCopiedToClipboardMessage] = useState("");
 
   useEffect(() => {
     fetchBusinessData().then();
@@ -84,8 +84,17 @@ function ProfileComponent() {
   };
 
   const copyToClipboard = async (text) => {
-    await navigator.clipboard.writeText(text);
-    setCopiedToClipboardMessage("Code copied to clipboard");
+    // await navigator.clipboard.writeText(text);
+    // setCopiedToClipboardMessage("Code copied to clipboard");
+
+    await navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        NotificationManager.success("Code copied to clipboard!");
+      })
+      .catch(() => {
+        NotificationManager.error("Failed to copy Code. Please copy manually.");
+      });
   };
 
   const onDone = async (data) => {
@@ -142,15 +151,15 @@ function ProfileComponent() {
     } catch (error) {}
   };
 
-  useEffect(() => {
-    let timer;
-    if (copiedToClipboardMessage) {
-      timer = setTimeout(() => {
-        setCopiedToClipboardMessage("");
-      }, 5000);
-    }
-    return () => clearTimeout(timer);
-  }, [copiedToClipboardMessage]);
+  // useEffect(() => {
+  //   let timer;
+  //   if (copiedToClipboardMessage) {
+  //     timer = setTimeout(() => {
+  //       setCopiedToClipboardMessage("");
+  //     }, 5000);
+  //   }
+  //   return () => clearTimeout(timer);
+  // }, [copiedToClipboardMessage]);
 
   return (
     <div className="my-5 sm:flex justify-center sm:px-0 px-3">
@@ -286,7 +295,7 @@ function ProfileComponent() {
             <div className="flex justify-center">
               <button
                 onClick={onClose}
-                className="mt-3 w-32 bg-orange-500  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                className="mt-3 w-32 bg-primary  border border-black text-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
               >
                 Edit
               </button>
@@ -294,24 +303,48 @@ function ProfileComponent() {
 
             <div className="pt-8 pb-4 flex flex-col items-center">
               <h2 className="text-2xl pb-2">Store Code</h2>
-              <h2
+              <div
+                className="flex items-center gap-2 bg-white px-5 py-1.5 rounded-lg shadow cursor-pointer"
+                onClick={() =>
+                  copyToClipboard(businessData?.tinyUrl?.split("/b/")[1])
+                }
+              >
+                <h2 className="text-lg text-primary italic cursor-pointer">
+                  {businessData?.tinyUrl?.split("/b/")[1]}
+                </h2>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                  />
+                </svg>
+              </div>
+              {/* <h2
                 className="text-lg text-blue-500 italic cursor-pointer"
                 onClick={() =>
                   copyToClipboard(businessData?.tinyUrl?.split("/b/")[1])
                 }
               >
                 {businessData?.tinyUrl?.split("/b/")[1]}
-              </h2>
-              {copiedToClipboardMessage && (
+              </h2> */}
+              {/* {copiedToClipboardMessage && (
                 <label className="text-green-500">
                   {copiedToClipboardMessage}
                 </label>
-              )}
+              )} */}
             </div>
 
             <div className="flex justify-center">
               <button
-                className="mt-3 w-32 text-orange-500 border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
+                className="mt-3 w-32 text-primary border border-black bg-white rounded-lg text-base px-10 py-[6px] hover:opacity-70"
                 onClick={() => signOut()}
               >
                 Logout
@@ -320,7 +353,10 @@ function ProfileComponent() {
           </div>
         </div>
         {editModal === true && (
-          <EditBusinessProfileModal onClose={onClose} onDone={onDone} />
+          <EditBusinessProfileModal
+            onClose={onClose}
+            onDone={onDone}
+          />
         )}
       </div>
     </div>

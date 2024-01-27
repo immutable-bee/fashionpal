@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Checkbox, Input, Button, Modal } from "@nextui-org/react";
 // import * as notify from "../../../bibliopal-nextjs/pages/api/notifier/notify";
 import { NotificationManager } from "react-notifications";
+import ButtonComponent from "@/components/utility/Button";
 
 const stateOptions = [
   { key: "al", value: "AL", text: "Alabama" },
@@ -247,7 +248,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
           <div
             id="onboarding-back-btn "
             onClick={formStepHandler}
-            className="flex justify-center !mt-5 py-1 bg-atlantis w-7 rounded-full border border-black cursor-pointer hover:opacity-80"
+            className="flex justify-center !mt-5 py-1 bg-primary w-7 rounded-full border border-black cursor-pointer hover:opacity-80"
             size={""}
           >
             <Image
@@ -275,16 +276,22 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                 placeholder="Website Url"
                 name="url"
               />
-              <Button
-                rounded
-                className="mt-5 !w-full"
-                onClick={formStepHandler}
-              >
-                Next
-              </Button>
+              <div className="mt-5 w-full">
+                <ButtonComponent
+                  full
+                  rounded
+                  onClick={formStepHandler}
+                >
+                  Next
+                </ButtonComponent>
+              </div>
             </div>
           ) : (
-            <form id="onboarding-form" className="mt-6" onSubmit={handleSubmit}>
+            <form
+              id="onboarding-form"
+              className="mt-6"
+              onSubmit={handleSubmit}
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 sm:gap-3">
                 <Input
                   onChange={handleChange}
@@ -314,7 +321,10 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                       "
                 >
                   {stateOptions.map((state) => (
-                    <option key={state.key} value={state.value}>
+                    <option
+                      key={state.key}
+                      value={state.value}
+                    >
                       {state.text}
                     </option>
                   ))}
@@ -340,21 +350,29 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                 <h6 id="onboarding-form-tc-agree-text">I agree to the</h6>
                 <h6
                   id="onboarding-form-tc-link"
-                  className="text-atlantis ml-1 cursor-pointer"
+                  className="text-primary ml-1 cursor-pointer"
                   onClick={tcModalOpenHandler}
                 >
                   Terms and Conditions
                 </h6>
               </div>
-              <div className="flex justify-center">
-                <Button className="mt-5" type="submit">
+              <div className="mt-5 w-full">
+                <ButtonComponent
+                  full
+                  rounded
+                  type="submit"
+                >
                   Submit
-                </Button>
+                </ButtonComponent>
               </div>
             </form>
           )}
         </div>
-        <Modal open={isTCModalOpen} closeButton onClose={tcModalCloseHandler}>
+        <Modal
+          open={isTCModalOpen}
+          closeButton
+          onClose={tcModalCloseHandler}
+        >
           <TCModalContent />
         </Modal>
       </div>

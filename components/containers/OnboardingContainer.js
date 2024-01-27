@@ -3,6 +3,7 @@ import AuthContainer from "./AuthContainer";
 import { Button, Loading, Input } from "@nextui-org/react";
 import OnboardingForm from "../OnboardingForm";
 import { useRouter } from "next/router";
+import ButtonComponent from "@/components/utility/Button";
 
 const OnboardingContainer = () => {
   const { user } = {};
@@ -149,13 +150,13 @@ const OnboardingContainer = () => {
               <div className="flex flex-col items-center">
                 <button
                   onClick={handleBusinessOnboard}
-                  className=" text-white w-4/5 py-5 my-10 border border-black bg-blbBlue rounded"
+                  className=" text-white w-4/5 py-5 my-10 border hover:opacity-90 border-black bg-primary rounded"
                 >
                   Business
                 </button>
                 <button
                   onClick={handleConsumerOnboard}
-                  className="text-white w-4/5 py-5 my-5 border border-black bg-biblioGreen rounded"
+                  className="text-white w-4/5 py-5 my-5 border hover:opacity-90 border-black bg-biblioGreen rounded"
                 >
                   Consumer
                 </button>
@@ -177,9 +178,16 @@ const OnboardingContainer = () => {
                   placeholder="Username"
                   name="username"
                 />
-                <Button className="mt-5" type="submit">
-                  Submit
-                </Button>
+
+                <div className="mt-5 w-full">
+                  <ButtonComponent
+                    full
+                    rounded
+                    type="submit"
+                  >
+                    Submit
+                  </ButtonComponent>
+                </div>
               </form>
             </div>
           ) : userType === "business" && !isOnboardingCompleted ? (
@@ -195,9 +203,14 @@ const OnboardingContainer = () => {
                 click the button below to enter FashionPal
               </h2>
 
-              <Button className="mt-5" type="button" onClick={() => onEnter()}>
-                Enter FashionPal
-              </Button>
+              <ButtonComponent
+                rounded
+                className="mt-5 !px-10"
+                type="button"
+                onClick={() => onEnter()}
+              >
+                Submit
+              </ButtonComponent>
             </div>
           )}
         </div>
