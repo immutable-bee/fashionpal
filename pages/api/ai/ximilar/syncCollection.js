@@ -14,11 +14,18 @@ const handler = async (req, res) => {
   try {
     const listingsToSync = await prisma.listing.findMany({
       where: { isSyncedWithXimilar: false },
+      include: {
+        Business: {
+          select: {
+            id: true,
+          },
+        },
+      },
       take: 10,
     });
 
     const listingMap = listingsToSync.map((listing) => ({
-      _id: listing.id,
+      _id: `${listing.Business.id}---${listing.id}`,
       _url: listing.mainImageUrl,
     }));
 
