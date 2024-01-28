@@ -63,6 +63,7 @@ const handler = async (req, res) => {
         const categoryParams = JSON.parse(fields.categoryParams);
         const price = parseFloat(fields.price);
         const status = fields.status[0];
+        const isPremium = fields.premium == "true";
 
         const timestampSku = new Date()
           .toISOString()
@@ -86,6 +87,7 @@ const handler = async (req, res) => {
             status,
             Barcode: timestampSku,
             businessId: business.id,
+            isPremiun: isPremium,
             tinyUrl: newTinyUrl,
             categories: {
               create: {
