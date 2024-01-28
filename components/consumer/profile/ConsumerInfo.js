@@ -368,10 +368,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
           </div>
         </div>
         <div className="flex justify-center mt-2">
-          <QRCode
-            value={consumerData.email}
-            size={250}
-          />
+          <QRCode value={consumerData.email} size={250} />
         </div>
         <label className="flex justify-center">{consumerData.email}</label>
       </div>
@@ -383,10 +380,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
             <caption className="pb-3 text-xl">Store Name</caption>
 
             {consumerData?.following.map((store) => (
-              <tr
-                className="border border-black"
-                key={store.businessId}
-              >
+              <tr className="border border-black" key={store.businessId}>
                 <td className="text-lg pl-2">{store.businessName}</td>
                 <td>
                   <img
@@ -404,10 +398,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
           <h2>You are not currently following any stores</h2>
         )}
 
-        <form
-          className="flex flex-col w-full"
-          onSubmit={followBusiness}
-        >
+        <form className="flex flex-col w-full" onSubmit={followBusiness}>
           <h2 className="mt-9 text-lg pl-1 text-gray-700">Enter Store Code</h2>
           <div className="flex items-center gap-1">
             <input
