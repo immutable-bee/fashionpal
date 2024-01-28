@@ -60,7 +60,23 @@ const handler = async (req, res) => {
     let statsByCategory = {};
 
     listingsInDateRange.forEach((listing) => {
-      const categoryName = listing.categories[0]?.category.name;
+      let categoryName;
+      let highestProbabilityCategory = null;
+      let highestProbability = -1;
+
+      for (const cat of listing.categories) {
+        if (cat.category.probability === null) {
+          categoryName = cat.category.taxonomicPath;
+          break;
+        } else if (cat.category.probability > highestProbability) {
+          highestProbability = cat.category.probability;
+          highestProbabilityCategory = cat.category;
+        }
+      }
+      if (categoryName === null && highestProbabilityCategory !== null) {
+        categoryName = highestProbabilityCategory.taxonomicPath;
+      }
+
       let soldDate = new Date(); // Default to current date if not sold
       let soldPrice = 0;
       const soldOrder = orders.find((order) =>
@@ -74,7 +90,7 @@ const handler = async (req, res) => {
           item.catalog_object_id.startsWith(listing.id)
         );
         if (soldItem) {
-          soldPrice = soldItem.total_money.amount; // Assuming total_money has an amount property
+          soldPrice = soldItem.total_money.amount;
         }
       }
 
@@ -108,13 +124,31 @@ const handler = async (req, res) => {
 
     orders.forEach((order) => {
       order.line_items.forEach((item) => {
-        const itemId = item.catalog_object_id.slice(0, -5);
+        const itemId = item.catalog_object_id.replace(
+          /-(subscriber|non-subscriber)$/,
+          ""
+        );
         const soldPrice = item.total_money;
 
         const listing = listingsInDateRange.find(
           (listing) => listing.id === itemId
         );
-        const categoryName = listing?.categories[0]?.category.name;
+        let categoryName;
+        let highestProbabilityCategory = null;
+        let highestProbability = -1;
+
+        for (const cat of listing.categories) {
+          if (cat.category.probability === null) {
+            categoryName = cat.category.taxonomicPath;
+            break;
+          } else if (cat.category.probability > highestProbability) {
+            highestProbability = cat.category.probability;
+            highestProbabilityCategory = cat.category;
+          }
+        }
+        if (categoryName === null && highestProbabilityCategory !== null) {
+          categoryName = highestProbabilityCategory.taxonomicPath;
+        }
 
         if (categoryName) {
           statsByCategory[categoryName].revenue += soldPrice;
