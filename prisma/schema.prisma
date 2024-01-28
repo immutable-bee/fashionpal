@@ -158,6 +158,8 @@ model Listing {
   brandImageUrl      String?
   mainImageUrl       String?
   isSyncedWithSquare Boolean                @default(false)
+  isTagged           Boolean                @default(false)
+  isSyncedWithXimilar Boolean               @default(false)
   squareId           String?
   discountPercentage Int?
   discountPrice      Float?
