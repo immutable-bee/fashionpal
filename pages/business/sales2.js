@@ -150,7 +150,7 @@ const ProfileComponent = ({}) => {
                 name="name"
                 value={data?.name}
                 type="text"
-                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
+                className="bg-white form-input focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
                 onChange={onInputChange}
               />
             </div>
@@ -177,7 +177,7 @@ const ProfileComponent = ({}) => {
                 name="discount_amount"
                 value={data?.discount_amount}
                 type="text"
-                className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
+                className="bg-white form-input focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg  px-4 my-1 py-2"
                 onChange={onInputChange}
               />
             </div>
@@ -188,7 +188,7 @@ const ProfileComponent = ({}) => {
                   selected={data.start_date}
                   onChange={onStartDateChange}
                   dateFormat="yyyy/MM/dd"
-                  className="bg-white sm:w-[500px] w-[90vw] form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 rounded-lg  px-4 my-1 py-2"
+                  className="bg-white sm:w-[500px] w-[90vw] form-input focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 rounded-lg  px-4 my-1 py-2"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -214,7 +214,7 @@ const ProfileComponent = ({}) => {
                   onChange={onEndDateChange}
                   minDate={data.start_date}
                   dateFormat="yyyy/MM/dd"
-                  className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg bg-transparent  px-4 my-1 py-2 "
+                  className="bg-white form-input focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 sm:w-[500px] w-[90vw] rounded-lg bg-transparent  px-4 my-1 py-2 "
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

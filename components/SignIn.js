@@ -191,7 +191,7 @@ const SignIn = ({ props }) => {
                   className="absolute inset-0 flex items-center"
                   aria-hidden="true"
                 >
-                  <div className="w-full border-t border-[#ffc71f]"></div>
+                  <div className="w-full border-t border-primary"></div>
                 </div>
                 <div className="relative flex justify-center text-sm font-medium leading-6">
                   <span className="bg-white font-medium px-6 text-gray-600">

@@ -121,7 +121,7 @@ function EmployeeListingForm({ onBack, onFetch }) {
                 </label>
                 <input
                   type="text"
-                  className="bg-white w-full mx-auto form-input  focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500  rounded-lg  px-4 py-2.5"
+                  className="bg-white w-full mx-auto form-input  focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500  rounded-lg  px-4 py-2.5"
                   onChange={(e) => setEmployeeName(e.target.value)}
                 />
               </div>
