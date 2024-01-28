@@ -93,8 +93,10 @@ const handler = async (req, res) => {
 
     orders.forEach((order) => {
       order.line_items.forEach((item) => {
-        // slice "-main" off the end of the id
-        const itemId = item.catalog_object_id.slice(0, -5);
+        const itemId = item.catalog_object_id.replace(
+          /-(subscriber|non-subscriber)$/,
+          ""
+        );
         const soldPrice = item.total_money;
         const groupKey = getGroupKey(order.closedAt, groupingBasis);
 
@@ -129,20 +131,6 @@ const handler = async (req, res) => {
       )
     );
 
-    let whereConditionForListings = { id: { in: uniqueItemIds } };
-    if (category && category !== "All") {
-      whereConditionForListings = {
-        ...whereConditionForListings,
-        categories: {
-          some: {
-            category: {
-              name: category,
-            },
-          },
-        },
-      };
-    }
-
     const listingsById = await prisma.listing.findMany({
       where: { id: { in: uniqueItemIds } },
       select: {
@@ -153,7 +141,7 @@ const handler = async (req, res) => {
           select: {
             category: {
               select: {
-                name: true,
+                taxonomicPath: true,
               },
             },
           },
@@ -174,10 +162,25 @@ const handler = async (req, res) => {
               (1000 * 60 * 60 * 24)
           );
 
-          const firstCategoryName =
-            listing.categories && listing.categories.length > 0
-              ? listing.categories[0].category.name
-              : null;
+          let firstCategoryName = null;
+          let highestProbabilityCategory = null;
+          let highestProbability = -1;
+
+          for (const cat of listing.categories) {
+            if (cat.category.probability === null) {
+              firstCategoryName = cat.category.taxonomicPath;
+              break;
+            } else if (cat.category.probability > highestProbability) {
+              highestProbability = cat.category.probability;
+              highestProbabilityCategory = cat.category;
+            }
+          }
+          if (
+            firstCategoryName === null &&
+            highestProbabilityCategory !== null
+          ) {
+            firstCategoryName = highestProbabilityCategory.taxonomicPath;
+          }
 
           item.listingData = {
             createdAt: listing.createdAt,
