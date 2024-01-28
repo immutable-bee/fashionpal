@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import Barcode from "react-barcode";
 import { QRCode } from "react-qrcode-logo";
 
-const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
+const PrintBarcode = ({ sku, price, tinyUrl }) => {
   const [template, setTemplate] = useState("1");
 
   const skuWithBaseURL = useMemo(() => {
@@ -12,11 +12,6 @@ const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
     return `${baseUrl}/scan/`;
   }, [window]);
 
-  const onChangeHandler = (value) => {
-    setTemplate(value);
-    localStorage.setItem("printOption", value);
-  };
-
   return (
     <>
       <div className="flex flex-col min-h-[460px] items-center container mx-auto ">
@@ -24,7 +19,7 @@ const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
         <select
           value={template}
           className="mt-1  rounded-xl px-3 py-2 border border-gray-600"
-          onChange={(e) => onChangeHandler(e.target.value)}
+          onChange={(e) => setTemplate(e.target.value)}
         >
           <option value={"1"}>QR Code (Sku) 1x1</option>
           <option value={"2"}>QR Code (Product Link) 1x1</option>
@@ -44,7 +39,7 @@ const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
             )}
             {template === "2" && (
               <div className="print:qr-container print:qr-code flex flex-col items-center">
-                <h6 className="label-text font-bold">Member Price</h6>
+                <h6 className="label-text font-bold">Subscriber Price</h6>
 
                 <QRCode value={tinyUrl} size={175} />
               </div>
@@ -57,7 +52,7 @@ const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
             )}
             {template === "4" && (
               <div className="print:qr-container print:qr-code flex flex-col items-center">
-                <h6 className="label-text font-bold">Member Price</h6>
+                <h6 className="label-text font-bold">Subscriber Price</h6>
 
                 <QRCode value={tinyUrl} size={175} />
               </div>
@@ -66,7 +61,7 @@ const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
               <div className="sm:flex print:qr-container print:double-code flex">
                 <div className="flex-1 flex flex-col items-center print:qr-code">
                   <h6 className="w-full text-center text-sm font-bold label-text">
-                    Member Price
+                    Subscriber Price
                   </h6>
                   <QRCode value={tinyUrl} size={175} />
                 </div>
@@ -202,4 +197,4 @@ const PrintBarcodeForModal = ({ sku, price, tinyUrl }) => {
   );
 };
 
-export default PrintBarcodeForModal;
+export default PrintBarcode;
