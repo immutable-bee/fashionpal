@@ -1,52 +1,81 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from "react-notifications";
+import SelectCategory from "../business/SelectCategory";
 
 const EditBusinessProfileModal = ({ onClose, onDone }) => {
-  const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [categoriesWithThresholds, setCategoriesWithThresholds] = useState([]);
+  const [categoryTaxonomicPath, setCategoryTaxonomicPath] = useState("");
 
-  const [clothingValues, setClothingValues] = useState({});
+  const fetchThresholds = async () => {
+    const response = await fetch("/api/business/liquidationRules/fetch");
 
-  const addCategory = () => {
-    console.log(1);
-    if (category && !categories.includes(category)) {
-      console.log(2);
-      const newCategory = category;
+    if (!response.ok) {
+      return;
+    }
 
-      // Check if the category already exists in clothingValues
-      if (!(newCategory in clothingValues)) {
-        setCategories([...categories, newCategory]);
-        setClothingValues({
-          ...clothingValues,
-          [newCategory]: "",
-        });
-        setCategory("");
+    const thresholds = await response.json();
+    setCategoriesWithThresholds(thresholds || []);
+  };
+
+  const addTaxonomicCategory = () => {
+    let alreadyExists;
+    if (categoryTaxonomicPath) {
+      if (categoriesWithThresholds) {
+        alreadyExists = categoriesWithThresholds.some(
+          (category) => category.name === categoryTaxonomicPath
+        );
       }
-    } else {
-      console.log(3);
-
-      // Category already exists, handle it according to your logic
-      NotificationManager.error(`Category "${category}" already exists.`);
-      // You can choose to overwrite the existing type or handle it differently
-      // For example, you can display a message to the user.
+      if (!alreadyExists) {
+        const newCategory = { name: categoryTaxonomicPath, days: 90 };
+        setCategoriesWithThresholds([...categoriesWithThresholds, newCategory]); // Corrected this line
+        setCategoryTaxonomicPath("");
+      } else {
+        NotificationManager.error(
+          `Category "${categoryTaxonomicPath}" already exists.`
+        );
+      }
     }
   };
 
-  const deleteCategory = (category) => {
-    const updatedCategories = categories.filter((c) => c !== category);
-    const { [category]: _, ...updatedClothingValues } = clothingValues;
-    setCategories(updatedCategories);
-    setClothingValues(updatedClothingValues);
+  const removeCategoryById = async (idToRemove) => {
+    const response = await fetch("/api/business/liquidationRules/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(idToRemove),
+    });
+
+    const filteredCategories = categoriesWithThresholds.filter(
+      (category) => category.id !== idToRemove
+    );
+    setCategoriesWithThresholds(filteredCategories);
   };
 
-  const onSave = () => {
-    const JSON = {
-      data: clothingValues,
-    };
-
-    onDone(JSON);
+  const updateCategoryThreshold = (categoryName, newThreshold) => {
+    const updatedCategories = categoriesWithThresholds.map((category) => {
+      if (category.name === categoryName) {
+        return { ...category, days: newThreshold };
+      }
+      return category;
+    });
+    setCategoriesWithThresholds(updatedCategories);
   };
+
+  const onSave = async () => {
+    const response = await fetch("/api/business/liquidationRules/update", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(categoriesWithThresholds),
+    });
+  };
+
+  useEffect(() => {
+    fetchThresholds();
+  }, []);
 
   return (
     <ModalComponent
@@ -71,37 +100,31 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
             Liquidation Thresholds
           </h1>
           <div className="mt-4 flex justify-center items-center gap-3">
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="bg-white focus:ring-1 focus:ring-primary focus:outline-none form-input border border-gray-500 max-w-[16rem] rounded-lg px-4 my-1 py-2"
-            >
-              <option value="">Add Category</option>
-              <option value="Clothing">Clothing</option>
-              <option value="Footwear">Footwear</option>
-              <option value="Hats">Hats</option>
-            </select>
+            <SelectCategory
+              setCategoryTaxonomicPath={setCategoryTaxonomicPath}
+            />
+
             <button
-              onClick={addCategory}
+              onClick={addTaxonomicCategory}
               className="bg-primary text-white px-4 py-2 rounded-lg"
             >
               Add Category
             </button>
           </div>
-          {categories && categories.length !== 0 ? (
+          {categoriesWithThresholds && categoriesWithThresholds.length !== 0 ? (
             <div>
               <div className="flex items-center justify-end  mt-3">
                 <h1 className="pr-[36px] font-medium">Days</h1>
               </div>
               {/* map */}
-              {categories.map((category) => (
+              {categoriesWithThresholds.map((category) => (
                 <div
                   key={category}
                   className="flex items-center justify-between mt-2"
                 >
                   <div className="flex items-center">
                     <svg
-                      onClick={() => deleteCategory(category)}
+                      onClick={() => removeCategoryById(category.id)}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -116,15 +139,12 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
                       />
                     </svg>
 
-                    <h1 className="pr-2 font-medium">{category}</h1>
+                    <h1 className="pr-2 font-medium">{category.name}</h1>
                   </div>
                   <input
-                    value={clothingValues[category]}
+                    value={category.days}
                     onChange={(e) =>
-                      setClothingValues({
-                        ...clothingValues,
-                        [category]: e.target.value,
-                      })
+                      updateCategoryThreshold(category.name, e.target.value)
                     }
                     className="font-medium px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
                   />
