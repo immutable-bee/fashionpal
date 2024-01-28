@@ -274,7 +274,7 @@ const Alerts = ({ props, fetchUserData }) => {
         >
           Create Alert
         </button>
-        {alerts.length !== 0 ? (
+        {alerts && alerts.length !== 0 ? (
           <button
             className="bg-primary text-white px-4 mt-2 py-1.5 flex items-center  rounded-md  text-decoration-none"
             onClick={toggleModal}

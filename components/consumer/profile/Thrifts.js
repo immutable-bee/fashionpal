@@ -172,7 +172,7 @@ const ThriftList = ({ toggleThrift, consumerData, setConsumerData }) => {
             </button>
           </div>
           <div>
-            {dataList.length > 0 ? (
+            {dataList && dataList.length > 0 ? (
               dataList.map((listItem) => (
                 <div
                   key={listItem.id}

@@ -770,12 +770,18 @@ const Dashboard = ({ onBack }) => {
             <table className="w-full text-sm text-left text-gray-500 table-fixed">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                 <tr>
-                  <th scope="col" className="px-6 py-4 text-center w-auto">
+                  <th
+                    scope="col"
+                    className="px-6 py-4 text-center w-auto"
+                  >
                     Category
                   </th>
 
-                  {selectedStats.length === 0 ? (
-                    <th scope="col" className="px-6 py-4 text-center w-auto">
+                  {selectedStats && selectedStats.length === 0 ? (
+                    <th
+                      scope="col"
+                      className="px-6 py-4 text-center w-auto"
+                    >
                       Revenue
                     </th>
                   ) : (
@@ -808,7 +814,7 @@ const Dashboard = ({ onBack }) => {
                         <td className="text-black px-6 py-4 text-center w-auto">
                           {categoryName}
                         </td>
-                        {selectedStats.length ? (
+                        {selectedStats && selectedStats.length ? (
                           selectedStats.map((stat, index) => (
                             <td
                               key={index}

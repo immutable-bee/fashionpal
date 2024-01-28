@@ -145,7 +145,10 @@ function AdminListingForm() {
         {step === 1 ? (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div>
@@ -226,7 +229,7 @@ function AdminListingForm() {
                                 </svg>
                               </div>
                             </div>
-                            {listings.length !== 0 ? (
+                            {listings && listings.length !== 0 ? (
                               <ButtonComponent
                                 loading={uploading}
                                 full
@@ -242,7 +245,7 @@ function AdminListingForm() {
                         )}
                       </div>
                     </div>
-                    {listingQueue.length > 0 && (
+                    {listingQueue && listingQueue.length > 0 && (
                       <div className="grid grid-cols-2 mt-4 mx-auto gap-3">
                         <button
                           onClick={() => setStep(6)}

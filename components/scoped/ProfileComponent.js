@@ -218,7 +218,6 @@ function ProfileComponent() {
                 className="mt-3"
                 rounded
                 full
-                loading={updating}
                 onClick={handleSquareAuth}
               >
                 {businessData?.squareAccessToken

@@ -127,7 +127,8 @@ const RePricer = ({ onBack, categoryList }) => {
             >
               Select category
             </option>
-            {categoryList.length > 0 &&
+            {categoryList &&
+              categoryList.length > 0 &&
               categoryList.map((category) => (
                 <option
                   key={category.id}

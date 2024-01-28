@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from "react-notifications";
 import SelectCategory from "../business/SelectCategory";
+import Loading from "@/components/utility/loading";
+import ButtonComponent from "@/components/utility/Button";
 
 const EditBusinessProfileModal = ({ onClose, onDone }) => {
   const [categoriesWithThresholds, setCategoriesWithThresholds] = useState([]);
   const [categoryTaxonomicPath, setCategoryTaxonomicPath] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loadingListings, setLoadingListings] = useState(true);
 
   const fetchThresholds = async () => {
+    setLoadingListings(true);
     const response = await fetch("/api/business/liquidationRules/fetch");
-
+    setLoadingListings(false);
     if (!response.ok) {
       return;
     }
@@ -56,7 +61,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
   const updateCategoryThreshold = (categoryName, newThreshold) => {
     const updatedCategories = categoriesWithThresholds.map((category) => {
       if (category.name === categoryName) {
-        return { ...category, days: newThreshold };
+        return { ...category, days: Number(newThreshold) };
       }
       return category;
     });
@@ -64,6 +69,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
   };
 
   const onSave = async () => {
+    setLoading(true);
     const response = await fetch("/api/business/liquidationRules/update", {
       method: "POST",
       headers: {
@@ -71,6 +77,7 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
       },
       body: JSON.stringify(categoriesWithThresholds),
     });
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -80,17 +87,19 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
   return (
     <ModalComponent
       open={true}
-      width="500px"
+      width="800px"
       title="Edit"
       onClose={() => onClose()}
       footer={
         <div className="flex justify-end w-full">
-          <button
-            className=" bg-primary px-4 py-1.5 mt-2 rounded-lg text-white"
+          <ButtonComponent
+            rounded
+            className="!mx-1 !px-5"
+            loading={loading}
             onClick={() => onSave()}
           >
             Save
-          </button>
+          </ButtonComponent>
         </div>
       }
     >
@@ -99,61 +108,81 @@ const EditBusinessProfileModal = ({ onClose, onDone }) => {
           <h1 className="text-xl text-black text-center">
             Liquidation Thresholds
           </h1>
-          <div className="mt-4 flex justify-center items-center gap-3">
+          <div className="mt-4 flex justify-center items-end gap-3">
             <SelectCategory
               setCategoryTaxonomicPath={setCategoryTaxonomicPath}
             />
 
             <button
               onClick={addTaxonomicCategory}
-              className="bg-primary text-white px-4 py-2 rounded-lg"
+              className="bg-primary text-white px-4 py-2 rounded-lg min-w-fit"
             >
               Add Category
             </button>
           </div>
-          {categoriesWithThresholds && categoriesWithThresholds.length !== 0 ? (
-            <div>
-              <div className="flex items-center justify-end  mt-3">
-                <h1 className="pr-[36px] font-medium">Days</h1>
-              </div>
-              {/* map */}
-              {categoriesWithThresholds.map((category) => (
-                <div
-                  key={category}
-                  className="flex items-center justify-between mt-2"
-                >
-                  <div className="flex items-center">
-                    <svg
-                      onClick={() => removeCategoryById(category.id)}
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-4 h-4 cursor-pointer hover:opacity-70 text-red-500 mr-[10px]"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                      />
-                    </svg>
-
-                    <h1 className="pr-2 font-medium">{category.name}</h1>
+          <div className="w-full">
+            {loadingListings ? (
+              <div className=" w-full mt-10">
+                <div>
+                  <div className="">
+                    <Loading size="xl" />
                   </div>
-                  <input
-                    value={category.days}
-                    onChange={(e) =>
-                      updateCategoryThreshold(category.name, e.target.value)
-                    }
-                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
-                  />
                 </div>
-              ))}
-            </div>
-          ) : (
-            <h3 className="text-center mt-4 text-xl">No categories added</h3>
-          )}
+              </div>
+            ) : (
+              <>
+                {categoriesWithThresholds &&
+                categoriesWithThresholds.length !== 0 ? (
+                  <div>
+                    <div className="flex items-center justify-end  mt-3">
+                      <h1 className="pr-[36px] font-medium">Days</h1>
+                    </div>
+                    {/* map */}
+                    {categoriesWithThresholds.map((category) => (
+                      <div
+                        key={category}
+                        className="flex items-center justify-between mt-2"
+                      >
+                        <div className="flex items-center">
+                          <svg
+                            onClick={() => removeCategoryById(category.id)}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-4 h-4 cursor-pointer hover:opacity-70 text-red-500 mr-[10px]"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                            />
+                          </svg>
+
+                          <h1 className="pr-2 font-medium">{category.name}</h1>
+                        </div>
+                        <input
+                          value={category.days}
+                          onChange={(e) =>
+                            updateCategoryThreshold(
+                              category.name,
+                              e.target.value
+                            )
+                          }
+                          className="font-medium px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <h3 className="text-center mt-4 text-xl">
+                    No categories added
+                  </h3>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </ModalComponent>

@@ -67,7 +67,8 @@ function ListingItem({
         )}
       </div>
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        {tags.length !== 0 &&
+        {tags &&
+          tags.length !== 0 &&
           tags.slice(0, 3).map((tag, tagIndex) => (
             <p
               key={tagIndex}
@@ -77,7 +78,10 @@ function ListingItem({
             </p>
           ))}
         {isSlot && children ? (
-          <div className="mt-1.5" onClick={stopClick}>
+          <div
+            className="mt-1.5"
+            onClick={stopClick}
+          >
             {children}
           </div>
         ) : (

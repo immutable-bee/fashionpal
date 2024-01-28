@@ -186,7 +186,8 @@ const RePricer = ({ categoryList }) => {
                   onChange={(e) => setFilterCategory(e.target.value)}
                 >
                   <option value="">All</option>
-                  {categoryList.length > 0 &&
+                  {categoryList &&
+                    categoryList.length > 0 &&
                     categoryList.map((category) => (
                       <option
                         key={category.id}
@@ -296,7 +297,8 @@ const RePricer = ({ categoryList }) => {
                 >
                   Select category
                 </option>
-                {categoryList.length > 0 &&
+                {categoryList &&
+                  categoryList.length > 0 &&
                   categoryList.map((category) => (
                     <option
                       key={category.id}
