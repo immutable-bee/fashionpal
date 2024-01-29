@@ -25,7 +25,7 @@ const handler = async (req, res) => {
     const payload = {
       query_record: {
         _id: queuedListing.id,
-        _url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${queuedListing.bucketPath}/mainImage`,
+        _url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${queuedListing.bucketPath}mainImage`,
       },
       fields_to_return: ["_url", "_id", "price"],
     };
