@@ -45,7 +45,6 @@ const handler = async (req, res) => {
     }
 
     const resData = await response.json();
-
     const answerRecords = resData.answer_records;
     const topRecords = answerRecords.slice(0, 3);
     const topRecordIds = topRecords.map((record) => record._id.split("---")[1]);
@@ -56,29 +55,31 @@ const handler = async (req, res) => {
       },
     });
 
-    let relatedProductPromises;
+    let relatedProductPromises = topRecords.map((topRecord) => {
+      const recordId = topRecord._id.split("---")[1];
+      const foundListing = recommendedListings.find(
+        (listing) => listing.id === recordId
+      );
 
-    if (recommendedListings) {
-      relatedProductPromises = recommendedListings.map((listing) => {
+      if (foundListing) {
         return prisma.relatedProduct.create({
           data: {
             queuedListingId: queuedListing.id,
-            price: listing.price,
-            thumbnail: listing.mainImageUrl,
+            price: foundListing.price,
+            thumbnail: foundListing.mainImageUrl,
           },
         });
-      });
-    } else {
-      relatedProductPromises = topRecords.map((record) => {
+      } else {
         return prisma.relatedProduct.create({
           data: {
             queuedListingId: queuedListing.id,
-            price: record.price,
-            thumbnail: record._url,
+            price: parseFloat(topRecord.price),
+            thumbnail: topRecord._url,
           },
         });
-      });
-    }
+      }
+    });
+
     const relatedProducts = await Promise.all(relatedProductPromises);
 
     const updateListingStatus = await prisma.queuedListing.update({
@@ -88,7 +89,7 @@ const handler = async (req, res) => {
       },
     });
 
-    res.status(200).json({ message: "Related products added" });
+    res.status(200).json({ message: topRecords });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
