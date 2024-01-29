@@ -47,13 +47,12 @@ class App extends Component {
           min: 0,
           labels: {
             formatter: function (value) {
-              return (
-                "$" +
-                value.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })
-              );
+              const formattedValue = value.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              });
+              const roundedValue = parseFloat(formattedValue).toFixed(0);
+              return "$" + roundedValue; // Display one digit after the decimal point
             },
           },
         },

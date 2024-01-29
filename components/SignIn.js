@@ -1,5 +1,5 @@
 import Image from "next/image";
-import PeopleSVG from "../assets/svg/people.svg";
+import PeopleSVG from "../assets/people.svg";
 import Logo from "../public/images/logo-vertical.jpg";
 import { Button, Input, Loading } from "@nextui-org/react";
 import { useMemo, useState } from "react";
@@ -67,7 +67,7 @@ const SignIn = ({ props }) => {
   }, [email]);
 
   return (
-    <div className="sm:flex sm:px-3 min-h-screen bg-[#FEFBE8] onboarding-page-container">
+    <div className="sm:flex gap-3 sm:px-3 min-h-screen bg-[#FEFBE8] onboarding-page-container">
       <div
         className="sm:w-1/2 hidden sm:flex items-center justify-center"
         id="people-svg-container"

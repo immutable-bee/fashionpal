@@ -29,6 +29,14 @@ class App extends Component {
         },
         yaxis: {
           min: 0,
+          labels: {
+            formatter: function (value) {
+              return value.toFixed(0); // Display one digit after the decimal point
+            },
+            style: {
+              fontSize: "12px", // Adjust the font size as needed
+            },
+          },
         },
         plotOptions: {
           bar: {
