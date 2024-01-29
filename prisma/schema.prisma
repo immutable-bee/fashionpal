@@ -192,11 +192,11 @@ model QueuedListing {
 
 model RelatedProduct {
   id              String        @id @default(uuid())
-  title           String
-  price           Int
-  thumbnail       String
+  title           String?
+  price           Int?
+  thumbnail       String?
   queuedListingId String
-  link            String
+  link            String?
   Listing         QueuedListing @relation(fields: [queuedListingId], references: [id])
 }
 
