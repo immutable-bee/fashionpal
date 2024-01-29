@@ -81,6 +81,13 @@ const handler = async (req, res) => {
     }
     const relatedProducts = await Promise.all(relatedProductPromises);
 
+    const updateListingStatus = await prisma.queuedListing.update({
+      where: { id: listingId },
+      data: {
+        status: "PROCESSED",
+      },
+    });
+
     res.status(200).json({ message: "Related products added" });
   } catch (error) {
     res.status(500).json({ message: error.message });
