@@ -183,6 +183,7 @@ model QueuedListing {
   topCategory     String?
   mainCategory    String?
   subCategory     String?
+  categoryPath    String?
   tags            String[]
   bucketPath      String?          @unique
   status          QueuedStatus     @default(QUEUED)
