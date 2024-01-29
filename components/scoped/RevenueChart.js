@@ -51,7 +51,7 @@ class App extends Component {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2,
               });
-              const roundedValue = parseFloat(formattedValue).toFixed(1);
+              const roundedValue = parseFloat(formattedValue).toFixed(0);
               return "$" + roundedValue; // Display one digit after the decimal point
             },
           },
