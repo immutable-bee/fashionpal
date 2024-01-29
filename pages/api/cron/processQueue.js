@@ -10,7 +10,6 @@ export const config = {
 
 const handler = async (req, res) => {
   const { baseUrl, batchSize } = req.query;
-  let queuedListingBatchIds;
 
   try {
     let queuedListingBatch = await prisma.queuedListing.findMany({
@@ -26,26 +25,17 @@ const handler = async (req, res) => {
       if (queuedListingBatch.length === 0) {
         return res.status(200).json("No listings are currently queued");
       }
-      queuedListingBatchIds = queuedListingBatch.map((listing) => listing.id);
     }
-    queuedListingBatchIds = processingListingBatch.map((listing) => listing.id);
-  } catch (error) {
-    return res.status(500).json({
-      message: "Failed to fetch queued listings >>>> " + error.message,
-    });
-  }
-  try {
-    const updateBatchStatus = await prisma.queuedListing.updateMany({
+
+    const queuedListingBatchIds = queuedListingBatch.map(
+      (listing) => listing.id
+    );
+
+    await prisma.queuedListing.updateMany({
       where: { id: { in: queuedListingBatchIds } },
       data: { status: "PROCESSING" },
     });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Failed to update queued listings status >>>> " + error.message,
-    });
-  }
 
-  try {
     const apiCalls = queuedListingBatch.map(async (listing) => {
       const { data: fileList, error } = await supabase.storage
         .from("queued-listings")
@@ -106,7 +96,9 @@ const handler = async (req, res) => {
           );
 
           if (!searchResponse.ok) {
-            throw new Error(`API call failed with status ${response.status}`);
+            throw new Error(
+              `API call failed with status ${searchResponse.status}`
+            );
           }
         } catch (error) {
           console.error(`Error in making Ximilar call: ${error.message}`);
