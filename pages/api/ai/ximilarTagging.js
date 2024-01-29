@@ -38,6 +38,10 @@ const handler = async (req, res) => {
     const mainCategory = firstObject._tags_map["Category"];
     const subCategory = firstObject._tags_map["Subcategory"];
 
+    const taxonomicPath = subCategory
+      ? `${mainCategory}/${subCategory}`
+      : mainCategory;
+
     const updateQueuedListing = await prisma.queuedListing.update({
       where: { id: queuedListingId },
       data: {
@@ -45,23 +49,9 @@ const handler = async (req, res) => {
         mainCategory,
         subCategory,
         tags: simpleTags,
+        categoryPath: taxonomicPath,
       },
     });
-
-    const productSearch = await fetch(
-      `${baseUrl}/api/ai/serpapi/googleShoppingSearch`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ simpleTags, queuedListingId }),
-      }
-    );
-
-    if (!productSearch.ok) {
-      return res.status(500).json({ message: "Product search failed" });
-    }
 
     return res.status(200).json("Listing successfully tagged");
   } catch (error) {
