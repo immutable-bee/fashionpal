@@ -41,7 +41,7 @@ const Slidercomponent = ({ storesNearYou }) => {
     <div className=" mt-10">
       <div className="flex justify-between items-center mb-2">
         <p className="text-gray-900 text-base">
-          {listings.length + 1} Results found
+          {listings && listings.length + 1} Results found
         </p>
       </div>
 

@@ -221,7 +221,7 @@ const Alerts = ({ props, fetchUserData }) => {
           <label className="text-sm text-black font-medium">Brand:</label>
           <input
             type="text"
-            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
+            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
             name="brand"
             value={inputValues.brand}
             onChange={handleChange}
@@ -231,7 +231,7 @@ const Alerts = ({ props, fetchUserData }) => {
           <label className="text-sm text-black font-medium">Type:</label>
           <input
             type="text"
-            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
+            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
             name="type"
             value={inputValues.type}
             onChange={handleChange}
@@ -241,7 +241,7 @@ const Alerts = ({ props, fetchUserData }) => {
           <label className="text-sm text-black font-medium">Size:</label>
           <input
             type="text"
-            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
+            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
             name="size"
             value={inputValues.size}
             onChange={handleChange}
@@ -251,7 +251,7 @@ const Alerts = ({ props, fetchUserData }) => {
           <label className="text-sm text-black font-medium">Length:</label>
           <input
             type="text"
-            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
+            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
             name="length"
             value={inputValues.length}
             onChange={handleChange}
@@ -261,7 +261,7 @@ const Alerts = ({ props, fetchUserData }) => {
           <label className="text-sm text-black font-medium">Color:</label>
           <input
             type="text"
-            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
+            className="bg-white  form-input mt-1 focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
             name="color"
             value={inputValues.color}
             onChange={handleChange}
@@ -274,7 +274,7 @@ const Alerts = ({ props, fetchUserData }) => {
         >
           Create Alert
         </button>
-        {alerts.length !== 0 ? (
+        {alerts && alerts.length !== 0 ? (
           <button
             className="bg-primary text-white px-4 mt-2 py-1.5 flex items-center  rounded-md  text-decoration-none"
             onClick={toggleModal}
@@ -302,7 +302,7 @@ const Alerts = ({ props, fetchUserData }) => {
               <input
                 value={newZip}
                 onChange={(e) => setNewZip(e.target.value)}
-                className="bg-white  form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
+                className="bg-white  form-input focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 py-2.5"
                 type="text"
                 placeholder="1593300"
               />

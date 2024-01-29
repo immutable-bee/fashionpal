@@ -35,7 +35,7 @@ const UsernameInput = ({ props, onUsernameUpdate }) => {
       <label className="text-sm text-black font-medium">Username</label>
       <div className="flex items-center">
         <input
-          className="bg-white form-input focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
+          className="bg-white form-input focus:ring-1 focus:ring-primary focus:outline-none border border-gray-500 w-full rounded-lg  px-4 my-1 py-2"
           type="text"
           placeholder={props.username}
           onChange={handleChange}

@@ -38,7 +38,7 @@ const ResetInventoryModal = ({ visible, closeHandler }) => {
             </button>
             <button
               onClick={closeHandler}
-              className="rounded-lg border border-black px-8 py-3 bg-[#FFC71F]"
+              className="rounded-lg border border-black px-8 py-3 bg-primary"
             >
               Cancel
             </button>

@@ -121,7 +121,7 @@ const Inputcomponent = ({
                   ZIP CODE
                 </label>
                 <input
-                  className="w-full sm:w-auto focus:ring-1 focus:ring-[#ffc71f] focus:outline-none border px-3 rounded-lg mx-2 py-2"
+                  className="w-full sm:w-auto focus:ring-1 focus:ring-primary focus:outline-none border px-3 rounded-lg mx-2 py-2"
                   type="text"
                   onChange={handleZipCodeChange}
                   onKeyDown={handleSearchKeyDown}

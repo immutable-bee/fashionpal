@@ -680,7 +680,7 @@ function SimpleListingForm({ onBack, onFetch }) {
               ))}
             </div>
 
-            {listings.length > 0 ? (
+            {listings && listings.length > 0 ? (
               <div className="mt-10 ml-3">
                 <div className="flex justify-center sm:justify-start mt-1">
                   <label className="relative mb-4 flex items-center cursor-pointer">
