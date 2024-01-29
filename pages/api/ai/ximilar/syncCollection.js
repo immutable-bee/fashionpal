@@ -31,8 +31,8 @@ const handler = async (req, res) => {
     }));
 
     const payload = {
-      fields_to_return: [_id],
-      records: [listingMap],
+      fields_to_return: ["_id"],
+      records: listingMap,
     };
 
     const ximilarCall = await fetch(endPoint, {
