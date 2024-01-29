@@ -36,8 +36,9 @@ const handler = async (req, res) => {
       body: JSON.stringify(payload),
     });
     if (!response.ok) {
+      const errorBody = await response.text();
       throw new Error(
-        `HTTP error! status: ${response.status}, text: ${response.status.text}`
+        `HTTP error! status: ${response.status}, text: ${errorBody}`
       );
     }
 
