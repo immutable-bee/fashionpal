@@ -194,7 +194,7 @@ model QueuedListing {
 model RelatedProduct {
   id              String        @id @default(uuid())
   title           String?
-  price           Int?
+  price           Decimal?
   thumbnail       String?
   queuedListingId String
   link            String?
