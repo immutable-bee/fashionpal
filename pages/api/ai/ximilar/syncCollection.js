@@ -47,6 +47,7 @@ const handler = async (req, res) => {
 
     res.status(200).json({ message: "Batch synced with collection" });
   } catch (error) {
+    console.error("Error occurred:", error);
     return res.status(500).json({ message: error.message });
   }
 };
