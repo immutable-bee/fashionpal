@@ -12,18 +12,22 @@ const handler = async (req, res) => {
   const { listingId } = req.body;
 
   try {
-    const listing = await prisma.listing.findUnique({
+    const queuedListing = await prisma.queuedListing.findUnique({
       where: {
         id: listingId,
       },
     });
 
-    if (!listing) {
+    if (!queuedListing) {
       return res.status(404).json({ message: "Listing not found" });
     }
 
     const payload = {
-      query_record: { _id: listing.id, _url: listing.mainImageUrl },
+      query_record: {
+        _id: queuedListing.id,
+        _url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${queuedListing.bucketPath}/mainImage`,
+      },
+      fields_to_return: ["_url", "_id", "price"],
     };
 
     const response = await fetch(ximilarEndpoint, {
@@ -47,16 +51,29 @@ const handler = async (req, res) => {
       },
     });
 
-    const relatedProductPromises = recommendedListings.map((listing) => {
-      return prisma.relatedProduct.create({
-        data: {
-          queuedListingId: listing.id,
-          price: listing.price,
-          thumbnail: listing.mainImageUrl,
-        },
-      });
-    });
+    let relatedProductPromises;
 
+    if (recommendedListings) {
+      relatedProductPromises = recommendedListings.map((listing) => {
+        return prisma.relatedProduct.create({
+          data: {
+            queuedListingId: queuedListing.id,
+            price: listing.price,
+            thumbnail: listing.mainImageUrl,
+          },
+        });
+      });
+    } else {
+      relatedProductPromises = topRecords.map((record) => {
+        return prisma.relatedProduct.create({
+          data: {
+            queuedListingId: queuedListing.id,
+            price: record.price,
+            thumbnail: record._url,
+          },
+        });
+      });
+    }
     const relatedProducts = await Promise.all(relatedProductPromises);
 
     res.status(200).json({ message: "Related products added" });

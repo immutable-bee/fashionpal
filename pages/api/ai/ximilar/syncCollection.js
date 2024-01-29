@@ -27,6 +27,7 @@ const handler = async (req, res) => {
     const listingMap = listingsToSync.map((listing) => ({
       _id: `${listing.Business.id}---${listing.id}`,
       _url: listing.mainImageUrl,
+      price: listing.price,
     }));
 
     const payload = {
