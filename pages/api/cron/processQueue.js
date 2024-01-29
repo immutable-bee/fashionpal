@@ -11,15 +11,14 @@ export const config = {
 const handler = async (req, res) => {
   const { baseUrl, batchSize } = req.query;
   let queuedListingBatchIds;
-  let queuedListingBatch;
 
   try {
-    const processingListingBatch = await prisma.queuedListing.findMany({
+    let queuedListingBatch = await prisma.queuedListing.findMany({
       where: { status: "PROCESSING" },
       take: parseInt(batchSize),
     });
 
-    if (!processingListingBatch) {
+    if (queuedListingBatch.length === 0) {
       queuedListingBatch = await prisma.queuedListing.findMany({
         where: { status: "QUEUED" },
         take: parseInt(batchSize),
@@ -28,7 +27,7 @@ const handler = async (req, res) => {
         return res.status(200).json("No listings are currently queued");
       }
       queuedListingBatchIds = queuedListingBatch.map((listing) => listing.id);
-    } else queuedListingBatch = processingListingBatch;
+    }
     queuedListingBatchIds = processingListingBatch.map((listing) => listing.id);
   } catch (error) {
     return res.status(500).json({

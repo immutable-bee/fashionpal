@@ -42,7 +42,10 @@ const handler = async (req, res) => {
     });
 
     if (!ximilarCall.ok) {
-      throw new Error(`HTTP error! status: ${ximilarCall.status}`);
+      const errorBody = await ximilarCall.text();
+      throw new Error(
+        `HTTP error! status: ${ximilarCall.status}, body: ${errorBody}`
+      );
     }
 
     res.status(200).json({ message: "Batch synced with collection" });
