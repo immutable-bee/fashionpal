@@ -75,7 +75,7 @@ const handler = async (req, res) => {
         });
       }
 
-      const makeXimilarCall = async (listingId) => {
+      const makeXimilarCalls = async (listingId) => {
         try {
           const response = await fetch(`${baseUrl}/api/ai/ximilarTagging`, {
             method: "POST",
@@ -92,13 +92,30 @@ const handler = async (req, res) => {
           if (!response.ok) {
             throw new Error(`API call failed with status ${response.status}`);
           }
+
+          const searchResponse = await fetch(
+            `${baseUrl}/api/ai/ximilar/fashionSearch`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                listingId: listingId,
+              }),
+            }
+          );
+
+          if (!searchResponse.ok) {
+            throw new Error(`API call failed with status ${response.status}`);
+          }
         } catch (error) {
           console.error(`Error in making Ximilar call: ${error.message}`);
           throw error;
         }
       };
 
-      return makeXimilarCall(listing.id);
+      return makeXimilarCalls(listing.id);
     });
 
     await Promise.all(apiCalls);
