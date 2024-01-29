@@ -79,7 +79,9 @@ const handler = async (req, res) => {
           });
 
           if (!response.ok) {
-            throw new Error(`API call failed with status ${response.status}`);
+            throw new Error(
+              `Tagging API call failed with status ${response.status}`
+            );
           }
 
           const searchResponse = await fetch(
@@ -97,11 +99,11 @@ const handler = async (req, res) => {
 
           if (!searchResponse.ok) {
             throw new Error(
-              `API call failed with status ${searchResponse.status}`
+              `Search API call failed with status ${searchResponse.status}`
             );
           }
         } catch (error) {
-          console.error(`Error in making Ximilar call: ${error.message}`);
+          console.error(`Error in making Ximilar calls: ${error.message}`);
           throw error;
         }
       };
