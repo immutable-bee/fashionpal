@@ -31,7 +31,7 @@ class App extends Component {
           min: 0,
           labels: {
             formatter: function (value) {
-              return "$" + value;
+              return "$" + value.toFixed(1);
             },
           },
         },

@@ -5,6 +5,7 @@ import { Modal } from "@nextui-org/react";
 import { NotificationManager } from "react-notifications";
 import Loading from "@/components/utility/loading";
 import { useRouter } from "next/router";
+import SampleProductImage from "../../../assets/sample-product.jpg";
 
 const PerksModalContent = () => {
   return (
@@ -71,7 +72,13 @@ function Scan() {
   const [email, setEmail] = useState("");
   const [loadingListings, setLoadingListings] = useState(true);
 
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState({
+    isSaleAllUsers: true,
+    mainImageUrl: SampleProductImage,
+    discountAllUsers: 20,
+    discountPercentage: 20,
+    price: 10,
+  });
 
   const fetchListing = useCallback(async (e) => {
     try {
@@ -166,26 +173,25 @@ function Scan() {
           </div>
 
           <div className="py-2">
-            {product.discountPercentage ||
-              (product.price && (
-                <div>
-                  <h3 className="text-xl text-center mt-3  uppercase">
-                    MEMBER PRICE
-                  </h3>
+            {product.discountPercentage && product.price && (
+              <div>
+                <h3 className="text-xl text-center mt-3  uppercase">
+                  MEMBER PRICE
+                </h3>
 
-                  <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
-                    <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
-                    <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
-                      <h3 className="text-3xl">
-                        $
-                        {product.discountPercentage
-                          ? product.discountPercentage
-                          : product.price}
-                      </h3>
-                    </div>
+                <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
+                  <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
+                  <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
+                    <h3 className="text-3xl">
+                      $
+                      {product.discountPercentage
+                        ? product.discountPercentage
+                        : product.price}
+                    </h3>
                   </div>
                 </div>
-              ))}
+              </div>
+            )}
 
             <h3
               className="text-2xl cursor-pointer text-blue-500 underline text-center mt-3"
@@ -209,8 +215,8 @@ function Scan() {
             onClick={followBusiness}
           >
             {product.isFollowing
-              ? `Following ${product.Business?.businessName}`
-              : `Follow ${product.Business?.businessName}`}
+              ? `Following ${product.Business?.businessName || "store"}`
+              : `Follow ${product.Business?.businessName || "store"}`}
           </ButtonComponent>
         </>
       )}
