@@ -52,19 +52,31 @@ const handler = async (req, res) => {
         queuedListing.mainCategory,
         queuedListing.subCategory,
       ];
+      const categoryPath = queuedListing.categoryPath;
+
       categories = categories.filter(
         (entry) => entry !== null && entry !== undefined
       );
-      const categoriesToCreate = categories.map((category) => ({
+      const categoryToCreate = {
         category: {
           connectOrCreate: {
-            where: { name: category },
-            create: { name: category },
+            where: { taxonomicPath: categoryPath },
+            create: {
+              taxonomicPath: categoryPath,
+              top: categories[0],
+              name: categories[2] ? categories[2] : categories[1],
+              sub: categories[2] ? categories[2] : null,
+            },
           },
         },
-      }));
+      };
 
       const newTinyUrl = await generateUniqueTinyUrl();
+
+      const timestampSku = new Date()
+        .toISOString()
+        .replace(/[-T:]/g, "")
+        .slice(0, 14);
 
       const newListing = await prisma.listing.create({
         data: {
@@ -75,13 +87,13 @@ const handler = async (req, res) => {
           status: data.status,
           isActive: true,
           daysToExpiry: 7,
-          Barcode: "1",
+          Barcode: timestampSku,
           tinyUrl: newTinyUrl,
           Business: {
             connect: { id: queuedListing.queue.ownerId },
           },
           categories: {
-            create: categoriesToCreate,
+            create: categoryToCreate,
           },
         },
       });
