@@ -1,4 +1,3 @@
-"use client";
 import { useMemo, useState } from "react";
 import Barcode from "react-barcode";
 import { QRCode } from "react-qrcode-logo";
@@ -151,7 +150,7 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
               align-items: center;
               justify-content: center;
               gap: 4px;
-              margin-top: -20%;
+              margin-top: -8%;
             }
 
             .print\\:barcode-container .print\\:qr-code > canvas {
@@ -159,8 +158,8 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
               height: 76% !important;
             }
 
-            .print\\:barcode-container .print\\:sku {
-              transform: rotate(-90deg) !important;
+            .print\\:barcode-container .print\\:qr-code {
+              transform: rotate(90deg) !important;
             }
 
             .print\\:barcode-container .print\\:sku .price-text {
