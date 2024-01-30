@@ -38,7 +38,7 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
             )}
             {template === "2" && (
               <div className="print:qr-container print:qr-code flex flex-col items-center">
-                <h6 className="label-text font-bold">Subscriber Price</h6>
+                <h6 className="label-text font-bold">Member Price</h6>
 
                 <QRCode value={tinyUrl} size={175} />
               </div>
@@ -51,7 +51,7 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
             )}
             {template === "4" && (
               <div className="print:qr-container print:qr-code flex flex-col items-center">
-                <h6 className="label-text font-bold">Subscriber Price</h6>
+                <h6 className="label-text font-bold">Member Price</h6>
 
                 <QRCode value={tinyUrl} size={175} />
               </div>
@@ -60,7 +60,7 @@ const PrintBarcode = ({ sku, price, tinyUrl }) => {
               <div className="sm:flex print:qr-container print:double-code flex">
                 <div className="flex-1 flex flex-col items-center print:qr-code">
                   <h6 className="w-full text-center text-sm font-bold label-text">
-                    Subscriber Price
+                    Member Price
                   </h6>
                   <QRCode value={tinyUrl} size={175} />
                 </div>
