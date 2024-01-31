@@ -62,6 +62,9 @@ export default async function handler(
         skip,
         take: limit,
         where: whereClause,
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       // Get the total count of listings with filtering
