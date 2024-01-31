@@ -165,8 +165,12 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                         <ul className=" list-decimal ml-4 text-lg">
                           <li>Photo of the front</li>
                           <li>Photo of the item tag</li>
-                          <li>Add to the appropriate pile</li>
+                          <li>Print labels and tag products</li>
                         </ul>
+                        <h2>
+                          * Product listing will become active within 15 minutes
+                          of printing the SKU
+                        </h2>
                       </div>
                       <div className="flex  justify-center mt-8 rounded-2xl gap-2">
                         {showCamera ? (
