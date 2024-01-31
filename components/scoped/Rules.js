@@ -203,7 +203,7 @@ const RePricer = ({ categoryList }) => {
                   onChange={(e) => setFilterType(e.target.value)}
                 >
                   <option value="ALL">Include Non-Members</option>
-                  <option value="PREMIUM_ONLY">Members only</option>
+                  <option value="PREMIUM_ONLY">Members Only</option>
                   <option value="EXCLUDE_PREMIUM">Non-Members Only</option>
                 </select>
               </div>

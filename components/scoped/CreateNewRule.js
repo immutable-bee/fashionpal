@@ -6,6 +6,7 @@ import axios from "axios";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import SelectCategory from "../business/SelectCategory";
 
 const RePricer = ({ onBack, categoryList }) => {
   const [ruleType, setRuleType] = useState("STANDARD");
@@ -17,6 +18,8 @@ const RePricer = ({ onBack, categoryList }) => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [listingType, setListingType] = useState("ALL");
+
+  const [categoryTaxonomicPath, setCategoryTaxonomicPath] = useState({});
 
   const [adjustPriceBy, setAdjustPriceBy] = useState(0);
   const [cycle, setCycle] = useState("weekly");
@@ -114,30 +117,7 @@ const RePricer = ({ onBack, categoryList }) => {
           />
         </div>
         <div className="py-2">
-          <label className="text-lg">Category</label>
-          <select
-            value={category}
-            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option
-              value=""
-              selected
-              disabled
-            >
-              Select category
-            </option>
-            {categoryList &&
-              categoryList.length > 0 &&
-              categoryList.map((category) => (
-                <option
-                  key={category.id}
-                  value={category.id}
-                >
-                  {category.name}
-                </option>
-              ))}
-          </select>
+          <SelectCategory setCategoryTaxonomicPath={setCategoryTaxonomicPath} />
         </div>
         <ul
           class="
@@ -207,9 +187,9 @@ const RePricer = ({ onBack, categoryList }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setListingType(e.target.value)}
           >
-            <option value="ALL">Include premium</option>
-            <option value="PREMIUM_ONLY">premium only</option>
-            <option value="EXCLUDE_PREMIUM">Exclude premium</option>
+            <option value="ALL">Include Non-Members</option>
+            <option value="PREMIUM_ONLY">Members Only</option>
+            <option value="EXCLUDE_PREMIUM">Non-Members Only</option>
           </select>
         </div>
         <div className="py-2">
