@@ -11,14 +11,14 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
-  const [defaultPrice, setDefaultPrice] = useState(5);
+  const [defaultPrice, setDefaultPrice] = useState(5.0);
 
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
 
   const [categoryParams, setCategoryParams] = useState({});
 
-  const [price, setPrice] = useState(5);
+  const [price, setPrice] = useState(5.0);
 
   const [showCamera, setShowCamera] = useState(false);
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
@@ -139,8 +139,17 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                           type="number"
                           className="w-36 mt-1 !text-xl rounded-xl pl-8 pr-2  !py-2.5 border-4 border-gray-400"
                           onChange={(e) => {
-                            setDefaultPrice(e.target.value);
-                            setPrice(e.target.value);
+                            if (!isNaN(e.target.value)) {
+                              setDefaultPrice(e.target.value);
+                              setPrice(e.target.value);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let value = parseFloat(e.target.value);
+                            if (value < 0) value = 0;
+                            value = value.toFixed(2);
+                            setDefaultPrice(value);
+                            setPrice(value);
                           }}
                         />
                       </div>
@@ -275,7 +284,17 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                           value={price}
                           type="number"
                           className="w-48 mt-1 !text-4xl rounded-2xl pl-10 pr-2  !py-3 border-4 border-gray-400"
-                          onChange={(e) => setPrice(e.target.value)}
+                          onChange={(e) => {
+                            if (!isNaN(e.target.value)) {
+                              setPrice(e.target.value);
+                            }
+                          }}
+                          onBlur={(e) => {
+                            let value = parseFloat(e.target.value);
+                            if (value < 0) value = 0;
+                            value = value.toFixed(2);
+                            setPrice(value);
+                          }}
                         />
                       </div>
                     </div>
