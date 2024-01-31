@@ -60,6 +60,7 @@ export default function CustomerFilters({
   });
 
   const onChangeSearchText = (e) => {
+    e.preventDefault();
     const value = e.target.value;
     setFilter(value);
     changeSearchText(value);
