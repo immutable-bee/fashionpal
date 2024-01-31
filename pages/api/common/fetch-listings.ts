@@ -42,7 +42,7 @@ export default async function handler(
 
       if (apparel) {
         whereClause.categories = {
-          some: { category: { name: apparel } },
+          some: { category: { top: apparel } },
         };
       }
       if (status) {
