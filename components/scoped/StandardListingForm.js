@@ -27,6 +27,8 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [newListingSku, setNewListingSku] = useState("");
   const [newListingTinyUrl, setNewListingTinyUrl] = useState("");
 
+  const [isInstructionsOpen, setIsInstructionsOpen] = useState(true);
+
   const resetListingForm = () => {
     setStep(1);
     setMainImage("");
@@ -112,6 +114,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
     onBack();
   };
 
+  const toggleInstructions = () => {
+    setIsInstructionsOpen((prevState) => !prevState);
+  };
+
   return (
     <div className="">
       <>
@@ -155,79 +161,96 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                       </div>
                     </div>
 
-                    <div className="mx-auto">
-                      <h3 className="text-2xl text-center font-semibold mt-8 mb-2">
-                        Start Listing!
-                      </h3>
-                      <div className="border border-gray-500 rounded-xl w-72 mx-auto px-4 py-3">
-                        <h3 className="text-xl font-semibold">Instructions</h3>
-
-                        <ul className=" list-decimal ml-4 text-lg">
-                          <li>Photo of the front</li>
-                          <li>Photo of the item tag</li>
-                          <li>Print labels and tag products</li>
-                        </ul>
-                        <h2>
-                          * Product listing will become active within 15 minutes
-                          of printing the SKU
-                        </h2>
+                    <div className="border border-gray-500 rounded-xl w-72 mx-auto mt-2 px-4 py-3">
+                      <div className="flex w-full justify-between">
+                        <h3 className="text-2xl text-center font-semibold mb-2">
+                          {isInstructionsOpen
+                            ? "Start Listing!"
+                            : "Instructions"}
+                        </h3>
+                        <button onClick={toggleInstructions}>
+                          <img
+                            src={
+                              isInstructionsOpen
+                                ? "/images/chevron-down.svg"
+                                : "/images/chevron-up.svg"
+                            }
+                          ></img>
+                        </button>
                       </div>
-                      <div className="flex  justify-center mt-8 rounded-2xl gap-2">
-                        {showCamera ? (
-                          !mainImage ? (
-                            <Capture
-                              onCapture={(e) => onCapture(e, "main")}
-                              text="Main Image"
-                            />
-                          ) : (
-                            <div className="flex flex-col items-center gap-5">
-                              <Capture
-                                onCapture={(e) => onCapture(e, "brandTag")}
-                                text={"Brand Tag"}
-                              />
+                      {isInstructionsOpen && (
+                        <>
+                          <h3 className="text-xl font-semibold">
+                            Instructions
+                          </h3>
 
-                              <button
-                                className="bg-gray-300 w-1/2 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
-                                onClick={() => skipBrandImage()}
-                              >
-                                Skip
-                              </button>
-                            </div>
-                          )
+                          <ul className=" list-decimal ml-4 text-lg">
+                            <li>Photo of the front</li>
+                            <li>Photo of the item tag</li>
+                            <li>Print labels and tag products</li>
+                          </ul>
+                          <h2>
+                            * Product listing will become active within 15
+                            minutes of printing the SKU
+                          </h2>
+                        </>
+                      )}
+                    </div>
+                    <div className="flex  justify-center mt-8 rounded-2xl gap-2">
+                      {showCamera ? (
+                        !mainImage ? (
+                          <Capture
+                            onCapture={(e) => onCapture(e, "main")}
+                            text="Main Image"
+                          />
                         ) : (
-                          <div>
-                            <div
-                              onClick={() => openCamera()}
-                              className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
+                          <div className="flex flex-col items-center gap-5">
+                            <Capture
+                              onCapture={(e) => onCapture(e, "brandTag")}
+                              text={"Brand Tag"}
+                            />
+
+                            <button
+                              className="bg-gray-300 w-1/2 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
+                              onClick={() => skipBrandImage()}
                             >
-                              <div>
-                                <h1 className="text-xl text-center font-medium font-mono ">
-                                  Take Photo
-                                </h1>
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth="1.5"
-                                  stroke="currentColor"
-                                  className="w-16 h-16 mt-4 mx-auto"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-                                  />
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
-                                  />
-                                </svg>
-                              </div>
+                              Skip
+                            </button>
+                          </div>
+                        )
+                      ) : (
+                        <div>
+                          <div
+                            onClick={() => openCamera()}
+                            className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
+                          >
+                            <div>
+                              <h1 className="text-xl text-center font-medium font-mono ">
+                                Take Photo
+                              </h1>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1.5"
+                                stroke="currentColor"
+                                className="w-16 h-16 mt-4 mx-auto"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+                                />
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+                                />
+                              </svg>
                             </div>
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
