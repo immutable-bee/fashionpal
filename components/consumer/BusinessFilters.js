@@ -55,10 +55,7 @@ export default function CustomerFilters({
   const [filter, setFilter] = useState("");
   const [size, setSize] = useState("");
   const [status, setStatus] = useState({ label: "All status", value: "" });
-  const [category, setCategory] = useState({
-    label: "All categories",
-    value: "",
-  });
+  const [category, setCategory] = useState("");
 
   const onChangeSearchText = (e) => {
     e.preventDefault();
