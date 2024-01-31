@@ -187,9 +187,9 @@ const RePricer = ({ onBack, categoryList }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setListingType(e.target.value)}
           >
-            <option value="ALL">Include Non-Members</option>
-            <option value="PREMIUM_ONLY">Members Only</option>
-            <option value="EXCLUDE_PREMIUM">Non-Members Only</option>
+            <option value="ALL">Include Premium</option>
+            <option value="PREMIUM_ONLY">Premium Only</option>
+            <option value="EXCLUDE_PREMIUM">Exclude Premium</option>
           </select>
         </div>
         <div className="py-2">
@@ -199,9 +199,9 @@ const RePricer = ({ onBack, categoryList }) => {
             className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
             onChange={(e) => setAppliedTo(e.target.value)}
           >
-            <option value="ALL">Include Members</option>
-            <option value="MEMBERS_ONLY">Members</option>
-            <option value="EXCLUDE_MEMBERS">Non Members</option>
+            <option value="ALL">Include Non-Members</option>
+            <option value="MEMBERS_ONLY">Members Only</option>
+            <option value="EXCLUDE_MEMBERS">Non-Members Only</option>
           </select>
         </div>
         {ruleType === "SALE" && (
