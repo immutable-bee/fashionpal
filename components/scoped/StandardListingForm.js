@@ -211,7 +211,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                             />
 
                             <button
-                              className="bg-gray-300 w-1/2 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
+                              className=" w-1/2 border border-gray-600 hover:opacity-90 rounded-xl px-4 text-lg py-1.5"
                               onClick={() => skipBrandImage()}
                             >
                               Skip

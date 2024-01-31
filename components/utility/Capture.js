@@ -27,12 +27,7 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
   return (
     <div>
       {loading ? (
-        <Image
-          src={capturedImage}
-          width={400}
-          height={400}
-          alt=""
-        />
+        <Image src={capturedImage} width={400} height={400} alt="" />
       ) : (
         <Webcam
           audio={false}
@@ -49,9 +44,7 @@ function Capture({ text, onCapture, skip = false, loading = false }) {
             <ButtonComponent
               loading={loading}
               color="grey"
-              className={` px-5 py-2 hover:opacity-90 rounded-lg mt-3 w-[70%] sm:w-auto ${
-                text === "Main Image" ? "bg-gray-300 text-black" : ""
-              }`}
+              className={`px-5 py-2 hover:opacity-90 rounded-lg mt-3 w-[70%] sm:w-auto bg-gray-300 text-black}`}
               onClick={() => capture()}
             >
               Capture {text}
