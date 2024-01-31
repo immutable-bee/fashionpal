@@ -55,7 +55,7 @@ const RePricer = ({ onBack, categoryList }) => {
     setIsLoading(true);
     const data = {
       name: name,
-      categoryId: category,
+      categoryPath: categoryTaxonomicPath,
       listingType: listingType,
       ruleType: ruleType,
       isRecurring: isRecurring,
