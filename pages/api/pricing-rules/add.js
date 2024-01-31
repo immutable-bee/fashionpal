@@ -67,7 +67,7 @@ const handler = async (req, res) => {
         error: `${validatorResponse.issueForParam} cannot be empty`,
       });
     } else {
-      const records = await prisma.PricingRule.findMany({
+      const records = await prisma.pricingRule.findMany({
         where: {
           categoryId: payload.categoryId,
           ownerId: payload.ownerId,
