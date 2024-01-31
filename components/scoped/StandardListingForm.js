@@ -11,14 +11,14 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [isPremium, setIsPremium] = useState(false);
-  const [defaultPrice, setDefaultPrice] = useState(5);
+  const [defaultPrice, setDefaultPrice] = useState("5.00");
 
   const [mainImage, setMainImage] = useState();
   const [brandImage, setBrandImage] = useState();
 
   const [categoryParams, setCategoryParams] = useState({});
 
-  const [price, setPrice] = useState(5.0);
+  const [price, setPrice] = useState("5.00");
 
   const [showCamera, setShowCamera] = useState(false);
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
@@ -141,18 +141,15 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                       <div className="relative flex items-center justify-center ml-4">
                         <h3 className="absolute text-xl left-3 mt-1">$</h3>
                         <input
-                          value={defaultPrice.toFixed(2)}
-                          type="number"
+                          value={defaultPrice}
                           className="w-36 mt-1 !text-xl rounded-xl pl-8 pr-2  !py-2.5 border-4 border-gray-400"
                           onChange={(e) => {
-                            if (!isNaN(e.target.value)) {
-                              setDefaultPrice(e.target.value);
-                              setPrice(e.target.value);
-                            }
+                            setDefaultPrice(e.target.value);
+                            setPrice(e.target.value);
                           }}
                           onBlur={(e) => {
                             let value = parseFloat(e.target.value);
-                            if (value < 0) value = 0;
+                            if (isNaN(value) || value < 0) value = 0;
                             value = value.toFixed(2);
                             setDefaultPrice(value);
                             setPrice(value);
@@ -312,13 +309,11 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                           type="number"
                           className="w-48 mt-1 !text-4xl rounded-2xl pl-10 pr-2  !py-3 border-4 border-gray-400"
                           onChange={(e) => {
-                            if (!isNaN(e.target.value)) {
-                              setPrice(e.target.value);
-                            }
+                            setPrice(e.target.value);
                           }}
                           onBlur={(e) => {
                             let value = parseFloat(e.target.value);
-                            if (value < 0) value = 0;
+                            if (isNaN(value) || value < 0) value = 0;
                             value = value.toFixed(2);
                             setPrice(value);
                           }}
