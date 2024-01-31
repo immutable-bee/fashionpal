@@ -327,7 +327,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
 
                   <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
                     <button
-                      onClick={() => pushListing("DISPOSED")}
+                      onClick={() => resetListingForm()}
                       className={`hover:bg-red-500 hover:text-white duration-250 min-w-[100px] ease-in-out  rounded-xl px-10 text-xl py-2.5  border-2 border-red-500`}
                     >
                       Cancel
