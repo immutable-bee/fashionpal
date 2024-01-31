@@ -34,29 +34,24 @@ const QueuedListings = () => {
   }, []);
 
   const calulateAvgPrice = (products) => {
-    const total = products.reduce((sum, item) => {
-      return sum + (item.price || 0);
-    }, 0);
-
-    const average =
-      products.length > 0
-        ? parseFloat((total / products.length).toFixed(2))
-        : 0;
-
-    return average;
+    const total = products.reduce(
+      (sum, item) => sum + parseFloat(item.price || 0),
+      0
+    );
+    return products.length > 0
+      ? parseFloat((total / products.length).toFixed(2))
+      : 0;
   };
 
   const findLowestPrice = (products) => {
-    return products.reduce(
-      (min, p) => (p.price < min ? p.price : min),
-      products[0]?.price
+    return Math.min(
+      ...products.map((product) => parseFloat(product.price || Infinity))
     );
   };
 
   const findHighestPrice = (products) => {
-    return products.reduce(
-      (max, p) => (p.price > max ? p.price : max),
-      products[0]?.price
+    return Math.max(
+      ...products.map((product) => parseFloat(product.price || -Infinity))
     );
   };
 
@@ -105,6 +100,19 @@ const QueuedListings = () => {
   const closeOpenListing = () => {
     setOpenListing("");
     setOpenListingPrice(0);
+  };
+
+  const handlePriceChange = (e) => {
+    const value = parseFloat(e.target.value);
+    if (!isNaN(value) && value >= 0) {
+      setOpenListingPrice(value.toString());
+    }
+  };
+
+  const handlePriceBlur = () => {
+    let value = parseFloat(price);
+    if (isNaN(value) || value < 0) value = 0;
+    setOpenListingPrice(value.toFixed(2));
   };
 
   const updatePriceReference = (ref) => {
@@ -253,9 +261,8 @@ const QueuedListings = () => {
                                   value={openListingPrice}
                                   type="number"
                                   className="w-32 mt-1 !text-2xl rounded-2xl pl-10 pr-2 !py-2 border-4 border-gray-400"
-                                  onChange={(e) =>
-                                    setOpenListingPrice(e.target.value)
-                                  }
+                                  onChange={handlePriceChange}
+                                  onBlur={handlePriceBlur}
                                 />
                               </div>
                             </div>
