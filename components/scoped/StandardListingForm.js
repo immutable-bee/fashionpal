@@ -27,7 +27,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [newListingSku, setNewListingSku] = useState("");
   const [newListingTinyUrl, setNewListingTinyUrl] = useState("");
 
-  const [isInstructionsOpen, setIsInstructionsOpen] = useState(true);
+  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
 
   const resetListingForm = () => {
     setStep(1);
