@@ -1,5 +1,5 @@
 import Image from "next/image";
-import placeholder from "@/public/images/icon.jpg";
+import placeholder from "@/public/favicon.ico";
 
 function ListingItem({
   mainPhoto,
@@ -78,7 +78,10 @@ function ListingItem({
             </p>
           ))}
         {isSlot && children ? (
-          <div className="mt-1.5" onClick={stopClick}>
+          <div
+            className="mt-1.5"
+            onClick={stopClick}
+          >
             {children}
           </div>
         ) : (

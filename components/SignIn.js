@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PeopleSVG from "../assets/people.svg";
-import Logo from "../public/images/logo-vertical.jpg";
+import Logo from "../assets/logo.png";
 import { Button, Input, Loading } from "@nextui-org/react";
 import { useMemo, useState } from "react";
 import IconGoogle from "../assets/svg/icon-google.svg";

@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
+import Logo from "../../assets/logo.png";
 
 import BookWorm from "../../assets/worm.webp";
 import OutsideClickHandler from "react-outside-click-handler";
@@ -84,7 +85,7 @@ const HeaderComponent = () => {
         <div>
           <Link href="/business">
             <Image
-              src="/images/logo-vertical.jpg"
+              src={Logo}
               width={120}
               height={58}
               className="w-36 sm:w-48"

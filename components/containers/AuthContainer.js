@@ -1,6 +1,6 @@
 import Image from "next/image";
 import PeopleSVG from "../../assets/people.svg";
-import Logo from "../../public/images/logo-vertical.jpg";
+import Logo from "../../assets/logo.png";
 const AuthContainer = (props) => {
   return (
     <div className="sm:flex gap-3 sm:px-4 min-h-screen bg-[#FEFBE8] onboarding-page-container">

@@ -8,7 +8,7 @@ import PaginationComponent from "@/components/utility/Pagination";
 import moment from "moment";
 import Image from "next/image";
 
-import placeholder from "@/public/images/icon.jpg";
+import placeholder from "@/public/favicon.ico";
 
 export default function Home() {
   const [store, setStore] = useState("");

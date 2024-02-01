@@ -3,7 +3,7 @@ import Image from "next/image";
 import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from "react-notifications";
 import Link from "next/link";
-import placeholder from "@/public/images/icon.jpg";
+import placeholder from "@/public/favicon.ico";
 import ButtonComponent from "@/components/utility/Button";
 import moment from "moment";
 

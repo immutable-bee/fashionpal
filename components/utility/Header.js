@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import BookWorm from "../../assets/worm.webp";
 import { useSession } from "next-auth/react";
+import Logo from "../../assets/logo.png";
 
 const HeaderComponent = () => {
   const { data: session } = useSession();
@@ -44,7 +45,7 @@ const HeaderComponent = () => {
       <div>
         <Link href="">
           <Image
-            src="/images/logo-vertical.jpg"
+            src={Logo}
             width={120}
             height={58}
             className="w-36 sm:w-48"
