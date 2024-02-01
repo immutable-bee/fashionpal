@@ -21,11 +21,11 @@ function App({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <>
       <SessionProvider session={session}>
-        {/* <UserProvider> */}
-        {isBusinessPage && <HeaderComponent />}
-        <Component {...pageProps} />
-        <NotificationContainer />
-        {/* </UserProvider> */}
+        <UserProvider>
+          {isBusinessPage && <HeaderComponent />}
+          <Component {...pageProps} />
+          <NotificationContainer />
+        </UserProvider>
       </SessionProvider>
     </>
   );
