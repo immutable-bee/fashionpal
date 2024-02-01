@@ -37,7 +37,7 @@ const handler = async (req, res) => {
       data: {
         username: username,
         email: session.user.email,
-        onboardingComplete: true,
+
         emailPreferences: {
           create: {},
         },
@@ -46,6 +46,13 @@ const handler = async (req, res) => {
             id: user.id,
           },
         },
+      },
+    });
+
+    const onboardingComplete = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        onboardingComplete: true,
       },
     });
 

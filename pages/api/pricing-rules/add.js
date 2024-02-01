@@ -1,4 +1,4 @@
-import { prisma } from "@/db/prismaDB";
+import { prisma } from "../../../db/prismaDB";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { RepricingRuleType } from "@prisma/client";
@@ -15,7 +15,7 @@ const handler = async (req, res) => {
   const data = req.body;
   const requiredParam = [
     "name",
-    "categoryId",
+    "categoryPath",
     "listingType",
     "ruleType",
     "appliedTo",
@@ -30,9 +30,14 @@ const handler = async (req, res) => {
     if (business) {
       payload["ownerId"] = business.id;
     }
+
+    const category = await prisma.category.findUnique({
+      where: { taxonomicPath: data.categoryPath },
+    });
+
     payload["ruleType"] = data.ruleType;
     payload["name"] = data.name;
-    payload["categoryId"] = data.categoryId;
+    payload["categoryId"] = category.id;
     payload["appliedTo"] = data.appliedTo;
     payload["listingType"] = data.listingType;
     payload["adjustPriceBy"] = parseFloat(data.adjustPriceBy);
@@ -62,7 +67,7 @@ const handler = async (req, res) => {
         error: `${validatorResponse.issueForParam} cannot be empty`,
       });
     } else {
-      const records = await prisma.PricingRule.findMany({
+      const records = await prisma.pricingRule.findMany({
         where: {
           categoryId: payload.categoryId,
           ownerId: payload.ownerId,
@@ -97,7 +102,7 @@ const handler = async (req, res) => {
         }
       }
 
-      const newListing = await prisma.PricingRule.create({ data: payload });
+      const newListing = await prisma.pricingRule.create({ data: payload });
 
       res.status(200).json(newListing);
     }

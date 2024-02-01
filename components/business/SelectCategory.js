@@ -53,7 +53,7 @@ const SelectCategory = ({
         <label className="text-lg">Category</label>
         <select
           value={tierOneCategory}
-          className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+          className="w-full mt-1 rounded-xl px-3 py-3 border border-gray-600"
           onChange={(e) => setTierOneCategory(e.target.value)}
         >
           {defaultTopOption && <option value={""}>Select Category</option>}
@@ -70,9 +70,10 @@ const SelectCategory = ({
       {tierOneCategory && secondLevelCategories[tierOneCategory] && (
         <div className="sm:w-96 mx-auto">
           <label className="text-lg">Subcategory</label>
+          <label> *optional</label>
           <select
             value={tierTwoCategory}
-            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+            className="w-full mt-1 rounded-xl px-3 py-3 border border-gray-600"
             onChange={(e) => setTierTwoCategory(e.target.value)}
           >
             <option value={""}>None</option>
@@ -90,9 +91,10 @@ const SelectCategory = ({
       {tierTwoCategory && thirdLevelCategories[tierTwoCategory] && (
         <div className="sm:w-96 mx-auto">
           <label className="text-lg">Subcategory</label>
+          <label> *optional</label>
           <select
             value={tierThreeCategory}
-            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+            className="w-full mt-1 rounded-xl px-3 py-3 border border-gray-600"
             onChange={(e) => setTierThreeCategory(e.target.value)}
           >
             <option value={""}>None</option>

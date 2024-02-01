@@ -78,21 +78,20 @@ function ListingItem({
             </p>
           ))}
         {isSlot && children ? (
-          <div
-            className="mt-1.5"
-            onClick={stopClick}
-          >
+          <div className="mt-1.5" onClick={stopClick}>
             {children}
           </div>
         ) : (
           ""
         )}
-        <button
-          onClick={(e) => printSKU(e, Barcode, price, tinyUrl)}
-          className={`hover:bg-green-500 hover:text-white duration-250 min-w-[10px] ease-in-out leading-5 rounded-lg px-4 text-base py-1  border-2 border-green-500`}
-        >
-          Print
-        </button>
+        {status === "SALE" && (
+          <button
+            onClick={(e) => printSKU(e, Barcode, price, tinyUrl)}
+            className={`hover:bg-green-500 hover:text-white duration-250 min-w-[10px] ease-in-out leading-5 rounded-lg px-4 text-base py-1  border-2 border-green-500`}
+          >
+            Print
+          </button>
+        )}
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Inputcomponent from "@/components/utility/Input";
 import debounce from "lodash.debounce";
 import OutsideClickHandler from "react-outside-click-handler";
+import { topLevelCategories } from "../../constants/categories";
 
 export default function CustomerFilters({
   fetchListings,
@@ -54,12 +55,10 @@ export default function CustomerFilters({
   const [filter, setFilter] = useState("");
   const [size, setSize] = useState("");
   const [status, setStatus] = useState({ label: "All status", value: "" });
-  const [category, setCategory] = useState({
-    label: "All categories",
-    value: "",
-  });
+  const [category, setCategory] = useState("");
 
   const onChangeSearchText = (e) => {
+    e.preventDefault();
     const value = e.target.value;
     setFilter(value);
     changeSearchText(value);
@@ -151,7 +150,7 @@ export default function CustomerFilters({
               type="button"
               onClick={() => openCategoriesDropdown()}
             >
-              {category.label}
+              {category ? category : "All categories"}
               <svg
                 className="w-2.5 h-2.5 ms-2.5"
                 aria-hidden="true"
@@ -204,14 +203,25 @@ export default function CustomerFilters({
                   className="py-2 text-sm text-gray-700 "
                   aria-labelledby="dropdown-button"
                 >
-                  {categoryOptions.map((option) => (
+                  <li>
+                    <button>
+                      <button
+                        type="button"
+                        className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                        onClick={() => onChangeCategory("")}
+                      >
+                        All categories
+                      </button>
+                    </button>
+                  </li>
+                  {topLevelCategories.map((option) => (
                     <li key={option}>
                       <button
                         type="button"
                         className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
                         onClick={() => onChangeCategory(option)}
                       >
-                        {option.label}
+                        {option}
                       </button>
                     </li>
                   ))}

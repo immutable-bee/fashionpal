@@ -55,7 +55,6 @@ const handler = async (req, res) => {
         ...data,
         email: session.user.email,
         tinyUrl: newTinyUrl,
-        onboardingComplete: true,
         emailPreferences: {
           create: {},
         },
@@ -66,6 +65,14 @@ const handler = async (req, res) => {
         },
       },
     });
+
+    const onboardingComplete = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        onboardingComplete: true,
+      },
+    });
+
     res.status(200).json({ business });
   } catch (err) {
     // notify.error(err);

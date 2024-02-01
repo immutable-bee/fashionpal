@@ -42,7 +42,7 @@ export default async function handler(
 
       if (apparel) {
         whereClause.categories = {
-          some: { category: { name: apparel } },
+          some: { category: { top: apparel } },
         };
       }
       if (status) {
@@ -62,6 +62,9 @@ export default async function handler(
         skip,
         take: limit,
         where: whereClause,
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       // Get the total count of listings with filtering
