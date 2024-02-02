@@ -404,7 +404,7 @@ function ProductDetails({
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`w-12 h-12 ${
-                      data.matches ? "stroke-[#E44A1F] " : ""
+                      data.matches ? "stroke-primary " : ""
                     }`}
                     width="44"
                     height="44"

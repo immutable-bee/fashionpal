@@ -76,7 +76,7 @@ model Business {
   listingQueue          ListingQueue?
   performanceMetrics    PerformanceMetricsVariables?
   pricingRules          PricingRule[]
-  followedBy Follow[]
+  followedBy            Follow[]
 }
 
 model Consumer {
@@ -89,17 +89,16 @@ model Consumer {
   emailPreferences EmailPreferences?
   ThriftList       ThriftList[]
   votes            Vote[]
-  following Follow[]
+  following        Follow[]
 }
 
 model Follow {
-  id String @id @default(uuid())
+  id         String   @id @default(uuid())
   businessId String
   consumerId String
-  business Business @relation(fields: [businessId], references: [id])
-  consumer Consumer @relation(fields: [consumerId], references: [id])
+  business   Business @relation(fields: [businessId], references: [id])
+  consumer   Consumer @relation(fields: [consumerId], references: [id])
 }
-
 
 model Vote {
   id        String   @id @default(uuid())
@@ -121,53 +120,52 @@ model ThriftList {
 
 model Category {
   id                    String                 @id @default(uuid())
-  name                  String?                 @unique
+  name                  String?                @unique
   top                   String?
   sub                   String?
-  taxonomicPath         String?               @unique
+  taxonomicPath         String?                @unique
   listings              CategoriesOnListings[]
   LiquidationThresholds LiquidationThreshold[]
   PricingRule           PricingRule[]
-
 }
 
 model CategoriesOnListings {
-  id         String   @id @default(uuid())
-  listingId  String
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  listing    Listing  @relation(fields: [listingId], references: [id])
-  probability Decimal? @db.Decimal(10,9)
+  id          String   @id @default(uuid())
+  listingId   String
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  listing     Listing  @relation(fields: [listingId], references: [id])
+  probability Decimal? @db.Decimal(10, 9)
 }
 
 model Listing {
-  id                 String                 @id @default(cuid())
-  mainImage          Json?
-  brandImage         Json?
-  dataSource         String?
-  price              Decimal?
-  delivery           String?
-  tags               String[]
-  status             StatusType             @default(SALE)
-  isActive           Boolean                @default(true)
-  createdAt          DateTime?              @default(now())
-  updatedAt          DateTime?
-  daysToExpiry       Int                    @default(7)
-  businessId         String?
-  Barcode            String
-  brandImageUrl      String?
-  mainImageUrl       String?
-  isSyncedWithSquare Boolean                @default(false)
-  isTagged           Boolean                @default(false)
-  isSyncedWithXimilar Boolean               @default(false)
-  squareId           String?
-  discountPercentage Int?
-  discountPrice      Float?
-  isPremiun          Boolean                @default(false)
-  tinyUrl            String?                @unique
-  categories         CategoriesOnListings[]
-  Business           Business?              @relation(fields: [businessId], references: [id])
-  votes              Vote[]
+  id                  String                 @id @default(cuid())
+  mainImage           Json?
+  brandImage          Json?
+  dataSource          String?
+  price               Decimal?
+  delivery            String?
+  tags                String[]
+  status              StatusType             @default(SALE)
+  isActive            Boolean                @default(true)
+  createdAt           DateTime?              @default(now())
+  updatedAt           DateTime?
+  daysToExpiry        Int                    @default(7)
+  businessId          String?
+  Barcode             String
+  brandImageUrl       String?
+  mainImageUrl        String?
+  isSyncedWithSquare  Boolean                @default(false)
+  isTagged            Boolean                @default(false)
+  isSyncedWithXimilar Boolean                @default(false)
+  squareId            String?
+  discountPercentage  Int?
+  discountPrice       Float?
+  isPremiun           Boolean                @default(false)
+  tinyUrl             String?                @unique
+  categories          CategoriesOnListings[]
+  Business            Business?              @relation(fields: [businessId], references: [id])
+  votes               Vote[]
 }
 
 model ListingQueue {
@@ -240,13 +238,13 @@ model LiquidationThreshold {
 }
 
 model EmailPreferences {
-  id                        String   @id @default(uuid())
-  discountEmailReport       Boolean  @default(false)
-  weeklyEmailReport         Boolean  @default(false)
-  receiveTreasures          Boolean  @default(false)
-  receiveNewlyListedPremium Boolean  @default(false)
-  receiveRecurringDiscounts Boolean  @default(false)
-  receiveOneTimeSpecials    Boolean  @default(false)
+  id                        String    @id @default(uuid())
+  discountEmailReport       Boolean   @default(false)
+  weeklyEmailReport         Boolean   @default(false)
+  receiveTreasures          Boolean   @default(false)
+  receiveNewlyListedPremium Boolean   @default(false)
+  receiveRecurringDiscounts Boolean   @default(false)
+  receiveOneTimeSpecials    Boolean   @default(false)
   businessId                String?   @unique
   consumerId                String?   @unique
   business                  Business? @relation(fields: [businessId], references: [id])

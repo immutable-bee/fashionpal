@@ -124,7 +124,7 @@ const compiledHtml = `<!doctype html>
                                                 <tbody>
                                                   <tr>
                                                     <td style="padding-bottom: 5px; width: 250px;" width="250">
-                                                      <img alt="Buy local books network logo" height="auto" src="{{logo}}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="250">
+                                                      <img alt="FashionPal logo" height="auto" src="{{logo}}" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="250">
                                                     </td>
                                                   </tr>
                                                 </tbody>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ModalComponent from "@/components/utility/Modal";
 import { NotificationManager } from "react-notifications";
-export default function ShareFashionPal() {
+export default function ShareProduct() {
   const [openModal, setOpenModal] = useState(false);
 
   const handleCopy = () => {

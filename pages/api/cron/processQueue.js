@@ -9,116 +9,120 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const { baseUrl, batchSize } = req.query;
+  // const { baseUrl, batchSize } = req.query;
 
-  try {
-    let queuedListingBatch = await prisma.queuedListing.findMany({
-      where: { status: "PROCESSING" },
-      take: parseInt(batchSize),
-    });
+  return res
+    .status(429)
+    .json("API is stopped in development mode. Please try again later.");
 
-    if (queuedListingBatch.length === 0) {
-      queuedListingBatch = await prisma.queuedListing.findMany({
-        where: { status: "QUEUED" },
-        take: parseInt(batchSize),
-      });
-      if (queuedListingBatch.length === 0) {
-        return res.status(200).json("No listings are currently queued");
-      }
-    }
+  // try {
+  //   let queuedListingBatch = await prisma.queuedListing.findMany({
+  //     where: { status: "PROCESSING" },
+  //     take: parseInt(batchSize),
+  //   });
 
-    const queuedListingBatchIds = queuedListingBatch.map(
-      (listing) => listing.id
-    );
+  //   if (queuedListingBatch.length === 0) {
+  //     queuedListingBatch = await prisma.queuedListing.findMany({
+  //       where: { status: "QUEUED" },
+  //       take: parseInt(batchSize),
+  //     });
+  //     if (queuedListingBatch.length === 0) {
+  //       return res.status(200).json("No listings are currently queued");
+  //     }
+  //   }
 
-    await prisma.queuedListing.updateMany({
-      where: { id: { in: queuedListingBatchIds } },
-      data: { status: "PROCESSING" },
-    });
+  //   const queuedListingBatchIds = queuedListingBatch.map(
+  //     (listing) => listing.id
+  //   );
 
-    const apiCalls = queuedListingBatch.map(async (listing) => {
-      const { data: fileList, error } = await supabase.storage
-        .from("queued-listings")
-        .list(listing.bucketPath);
+  //   await prisma.queuedListing.updateMany({
+  //     where: { id: { in: queuedListingBatchIds } },
+  //     data: { status: "PROCESSING" },
+  //   });
 
-      if (error) {
-        console.error(`Error fetching files: ${error.message}`);
-        throw error;
-      }
+  //   const apiCalls = queuedListingBatch.map(async (listing) => {
+  //     const { data: fileList, error } = await supabase.storage
+  //       .from("queued-listings")
+  //       .list(listing.bucketPath);
 
-      const hasMainImage = fileList.some((file) => file.name === "mainImage");
-      const hasBrandImage = fileList.some((file) => file.name === "brandImage");
+  //     if (error) {
+  //       console.error(`Error fetching files: ${error.message}`);
+  //       throw error;
+  //     }
 
-      const ximilarReqBody = [];
+  //     const hasMainImage = fileList.some((file) => file.name === "mainImage");
+  //     const hasBrandImage = fileList.some((file) => file.name === "brandImage");
 
-      if (hasMainImage) {
-        ximilarReqBody.push({
-          id: listing.id + "mainImage",
-          url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`,
-        });
-      }
-      if (hasBrandImage) {
-        ximilarReqBody.push({
-          id: listing.id + "brandImage",
-          url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}brandImage`,
-        });
-      }
+  //     const ximilarReqBody = [];
 
-      const makeXimilarCalls = async (listingId) => {
-        try {
-          const response = await fetch(`${baseUrl}/api/ai/ximilarTagging`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              queuedListingId: listingId,
-              ximilarReqBody,
-              baseUrl,
-            }),
-          });
+  //     if (hasMainImage) {
+  //       ximilarReqBody.push({
+  //         id: listing.id + "mainImage",
+  //         url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}mainImage`,
+  //       });
+  //     }
+  //     if (hasBrandImage) {
+  //       ximilarReqBody.push({
+  //         id: listing.id + "brandImage",
+  //         url: `${process.env.SUPABASE_STORAGE_URL}queued-listings/${listing.bucketPath}brandImage`,
+  //       });
+  //     }
 
-          if (!response.ok) {
-            throw new Error(
-              `Tagging API call failed with status ${response.status}`
-            );
-          }
+  //     const makeXimilarCalls = async (listingId) => {
+  //       try {
+  //         const response = await fetch(`${baseUrl}/api/ai/ximilarTagging`, {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //             queuedListingId: listingId,
+  //             ximilarReqBody,
+  //             baseUrl,
+  //           }),
+  //         });
 
-          const searchResponse = await fetch(
-            `${baseUrl}/api/ai/ximilar/fashionSearch`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                listingId: listingId,
-              }),
-            }
-          );
+  //         if (!response.ok) {
+  //           throw new Error(
+  //             `Tagging API call failed with status ${response.status}`
+  //           );
+  //         }
 
-          if (!searchResponse.ok) {
-            throw new Error(
-              `Search API call failed with status ${searchResponse.status}`
-            );
-          }
-        } catch (error) {
-          console.error(`Error in making Ximilar calls: ${error.message}`);
-          throw error;
-        }
-      };
+  //         const searchResponse = await fetch(
+  //           `${baseUrl}/api/ai/ximilar/fashionSearch`,
+  //           {
+  //             method: "POST",
+  //             headers: {
+  //               "Content-Type": "application/json",
+  //             },
+  //             body: JSON.stringify({
+  //               listingId: listingId,
+  //             }),
+  //           }
+  //         );
 
-      return makeXimilarCalls(listing.id);
-    });
+  //         if (!searchResponse.ok) {
+  //           throw new Error(
+  //             `Search API call failed with status ${searchResponse.status}`
+  //           );
+  //         }
+  //       } catch (error) {
+  //         console.error(`Error in making Ximilar calls: ${error.message}`);
+  //         throw error;
+  //       }
+  //     };
 
-    await Promise.all(apiCalls);
+  //     return makeXimilarCalls(listing.id);
+  //   });
 
-    res.status(200).json("All AI API calls executed successfully");
-  } catch (error) {
-    return res.status(500).json({
-      message: "AI API call failed >>>> " + error.message,
-    });
-  }
+  //   await Promise.all(apiCalls);
+
+  //   res.status(200).json("All AI API calls executed successfully");
+  // } catch (error) {
+  //   return res.status(500).json({
+  //     message: "AI API call failed >>>> " + error.message,
+  //   });
+  // }
 };
 
 export default verifySignature(handler);

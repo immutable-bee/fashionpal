@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Inputcomponent from "@/components/utility/Input";
-import ShareFashionPal from "@/components/consumer/ShareFashionPal";
+import ShareProduct from "@/components/consumer/ShareProduct";
 export default function CustomerFilters({ changeStore, changeChance }) {
   const [chance, setChance] = useState("");
   const [store, setStore] = useState("");
@@ -18,7 +18,7 @@ export default function CustomerFilters({ changeStore, changeChance }) {
 
   return (
     <div>
-      <ShareFashionPal />
+      <ShareProduct />
       <ul className=" mt-2 flex flex-wrap sm:justify-center sm:items-center sm:ml-2">
         <div className="px-2 w-[50%] sm:w-auto sm:mt-0 mt-3 ">
           <label className="block">Store</label>

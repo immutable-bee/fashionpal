@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Inputcomponent from "@/components/utility/Input";
-import ShareFashionPal from "@/components/consumer/ShareFashionPal";
+import ShareProduct from "@/components/consumer/ShareProduct";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 export default function CustomerFilters({
@@ -46,7 +46,7 @@ export default function CustomerFilters({
 
   return (
     <div>
-      <ShareFashionPal />
+      <ShareProduct />
       <div className=" flex justify-between px-5 max-w-7xl mx-auto">
         <Inputcomponent
           value={searchText}
