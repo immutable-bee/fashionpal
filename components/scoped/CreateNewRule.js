@@ -42,10 +42,10 @@ const RePricer = ({ onBack, categoryList }) => {
       NotificationManager.error("Rule name is required!");
       return;
     }
-    if (!category) {
-      NotificationManager.error("Category is required!");
-      return;
-    }
+    // if (!category) {
+    //   NotificationManager.error("Category is required!");
+    //   return;
+    // }
     if (!isRecurring) {
       if (!saleStartDate) {
         NotificationManager.error("Start Date is required!");

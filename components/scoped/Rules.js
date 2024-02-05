@@ -105,10 +105,10 @@ const RePricer = ({ categoryList }) => {
       NotificationManager.error("Rule name is required!");
       return;
     }
-    if (!category) {
-      NotificationManager.error("Category is required!");
-      return;
-    }
+    // if (!category) {
+    //   NotificationManager.error("Category is required!");
+    //   return;
+    // }
     if (!isRecurring) {
       if (!saleStartDate) {
         NotificationManager.error("Start Date is required!");
@@ -189,7 +189,10 @@ const RePricer = ({ categoryList }) => {
                   {categoryList &&
                     categoryList.length > 0 &&
                     categoryList.map((category) => (
-                      <option key={category.id} value={category.id}>
+                      <option
+                        key={category.id}
+                        value={category.id}
+                      >
                         {category.name}
                       </option>
                     ))}
@@ -287,13 +290,20 @@ const RePricer = ({ categoryList }) => {
                 className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="" selected disabled>
+                <option
+                  value=""
+                  selected
+                  disabled
+                >
                   Select category
                 </option>
                 {categoryList &&
                   categoryList.length > 0 &&
                   categoryList.map((category) => (
-                    <option key={category.id} value={category.id}>
+                    <option
+                      key={category.id}
+                      value={category.id}
+                    >
                       {category.name}
                     </option>
                   ))}
