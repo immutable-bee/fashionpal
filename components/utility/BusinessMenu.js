@@ -5,7 +5,7 @@ import Link from "next/link";
 const HeaderComponent = ({ open, close, mobile }) => {
   const router = useRouter();
   const linkColor = (path) => {
-    return router.pathname === path ? "#E44A1F" : "#828282";
+    return router.pathname === path ? "text-primary" : "text-[#828282]";
   };
 
   const onClose = () => {
@@ -24,8 +24,9 @@ const HeaderComponent = ({ open, close, mobile }) => {
       <ul className="font-medium sm:w-auto w-full text-lg flex flex-col p-4 md:p-0 mt-4 border border-gray-100 sm:border-transparent rounded-lg sm:bg-transparent bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
         <li>
           <Link
-            style={{ color: linkColor("/business") }}
-            className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+              "/business"
+            )} `}
             href="/business"
             onClick={() => onClose()}
           >
@@ -34,8 +35,9 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li>
           <Link
-            style={{ color: linkColor("/business/listing-queue") }}
-            className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+              "/business/listing-queue"
+            )} `}
             href="/business/listing-queue"
             onClick={() => onClose()}
           >
@@ -44,8 +46,9 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li>
           <Link
-            style={{ color: linkColor("/business/sales") }}
-            className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+              "/business/sales"
+            )} `}
             href="/business/sales"
             onClick={() => onClose()}
           >
@@ -54,8 +57,9 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li>
           <Link
-            style={{ color: linkColor("/business/dashboard") }}
-            className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+              "/business/dashboard"
+            )} `}
             href="/business/dashboard"
             onClick={() => onClose()}
           >
@@ -64,8 +68,9 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li className="hidden">
           <Link
-            style={{ color: linkColor("/business/sales") }}
-            className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+              "/business/sales"
+            )} `}
             href="/business/sales"
           >
             Sales
@@ -73,8 +78,9 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li className="hidden">
           <Link
-            style={{ color: linkColor("/consumer") }}
-            className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+              "/consumer"
+            )} `}
             href="/consumer"
           >
             Consumer
