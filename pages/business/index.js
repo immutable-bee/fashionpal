@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import Head from "next/head";
 import BusinessFilters from "@/components/consumer/BusinessFilters";
 import { useSession } from "next-auth/react";
 import { NotificationManager } from "react-notifications";
@@ -168,6 +169,9 @@ export default function Home() {
 
   return (
     <div className="bg-white">
+      <Head>
+        <title>Listings</title>
+      </Head>
       {detailsModal ? (
         <ProductDetails
           open={detailsModal}

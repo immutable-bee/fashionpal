@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Dropdown } from "@nextui-org/react";
+import Head from "next/head";
 
 // Import the chart component using dynamic import
 const ItemLinkedSoldChart = dynamic(
@@ -745,6 +746,9 @@ const Dashboard = ({ onBack }) => {
 
   return (
     <div className="  pb-8 sm:pt-6 pt-0">
+      <Head>
+        <title>Dashboard</title>
+      </Head>
       <div className="px-3 sm:px-5">
         <div className="w-full   bg-white rounded-2xl shadow py-2 px-3 sm:px-6 flex justify-center mt-3">
           <div className="flex flex-wrap gap-3 text-sm font-medium text-center text-gray-500 overflow-x-auto medium-x-scrollbar">

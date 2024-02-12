@@ -5,6 +5,7 @@ import { NotificationManager } from "react-notifications";
 import Barcode from "react-barcode";
 import ModalComponent from "@/components/utility/Modal";
 import cloneDeep from "lodash.clonedeep";
+import Head from "next/head";
 
 const Liquidation = () => {
   const [sku, setSKU] = useState("");
@@ -162,6 +163,9 @@ const Liquidation = () => {
 
   return (
     <>
+      <Head>
+        <title>Liquidation</title>
+      </Head>
       <ModalComponent
         open={confirmModal}
         onClose={() => setConfirmModal(false)}

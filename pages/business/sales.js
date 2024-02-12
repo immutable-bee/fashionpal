@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import ButtonComponent from "@/components/utility/Button";
 import CreateNewRule from "@/components/scoped/CreateNewRule";
 import Rules from "@/components/scoped/Rules";
-import ReportDashboard from "@/components/scoped/ReportDashboard";
+import Head from "next/head";
 
 const RePricer = () => {
   const [addRule, setAddRule] = useState(false);
@@ -25,6 +24,9 @@ const RePricer = () => {
 
   return (
     <div className="sm:w-96 mx-auto mt-4 mb-7 px-3">
+      <Head>
+        <title>Sales</title>
+      </Head>
       <>
         {addRule ? (
           <CreateNewRule
