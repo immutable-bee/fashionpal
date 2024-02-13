@@ -137,7 +137,7 @@ function ProfileComponent() {
   const handleSquareAuth = async () => {
     if (!businessData.squareAccessToken) {
       router.push(
-        `https://connect.squareup.com/oauth2/authorize?client_id=sq0idp-aFxBr4NKKAfjaET0GpKLKA&scope=ITEMS_WRITE+ITEMS_READ+MERCHANT_PROFILE_READ+MERCHANT_PROFILE_WRITE+ORDERS_WRITE+ORDERS_READ&session=false&state=${squareStateCode}`
+        `https://connect.squareup.com/oauth2/authorize?client_id=sq0idp-aFxBr4NKKAfjaET0GpKLKA&scope=ITEMS_WRITE+ITEMS_READ+MERCHANT_PROFILE_READ+MERCHANT_PROFILE_WRITE+ORDERS_WRITE+ORDERS_READ+INVENTORY_WRITE+INVENTORY_READ&session=false&state=${squareStateCode}`
       );
     }
     if (business.squareAccessToken) {
@@ -352,10 +352,7 @@ function ProfileComponent() {
           </div>
         </div>
         {editModal === true && (
-          <EditBusinessProfileModal
-            onClose={onClose}
-            onDone={onDone}
-          />
+          <EditBusinessProfileModal onClose={onClose} onDone={onDone} />
         )}
       </div>
     </div>
