@@ -1,4 +1,4 @@
-import { prisma } from "@/db/prismaDB";
+import { prisma } from "../../../db/prismaDB";
 import { v4 as uuid } from "uuid";
 import { AES, enc } from "crypto-ts";
 
