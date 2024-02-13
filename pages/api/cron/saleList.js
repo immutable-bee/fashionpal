@@ -48,7 +48,7 @@ const handler = async (req, res) => {
         createdAt: "desc",
       },
     });
-    const pricingRules = await prisma.PricingRule.findMany({});
+    const pricingRules = await prisma.pricingRule.findMany({});
     const pricingRuleMap = new Map();
     pricingRules.forEach((rule) => {
       const key = `${rule.categoryId}-${rule.ownerId}`;
