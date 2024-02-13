@@ -4,6 +4,16 @@ import { authOptions } from "../auth/[...nextauth]";
 import { RepricingRuleType } from "@prisma/client";
 import PayloadValidator from "../../../components/utility/payloadValidator";
 
+const parseCategoryPath = (path) => {
+  const sections = path.split("/");
+
+  if (sections.length === 1) {
+    return path;
+  } else {
+    return [sections[0], sections[sections.length - 1]];
+  }
+};
+
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
   if (!session) {
@@ -31,9 +41,28 @@ const handler = async (req, res) => {
       payload["ownerId"] = business.id;
     }
 
-    const category = await prisma.category.findUnique({
+    let category;
+
+    category = await prisma.category.findUnique({
       where: { taxonomicPath: data.categoryPath },
     });
+
+    if (!category) {
+      const categoryFields = parseCategoryPath(data.categoryPath);
+      const isNestedPath = Array.isArray(categoryFields);
+
+      const categoryData = isNestedPath
+        ? {
+            taxonomicPath: data.categoryPath,
+            name: categoryFields[1],
+            top: categoryFields[0],
+          }
+        : { taxonomicPath: data.categoryPath, name: data.categoryPath };
+
+      category = await prisma.category.create({
+        data: categoryData,
+      });
+    }
 
     payload["ruleType"] = data.ruleType;
     payload["name"] = data.name;
