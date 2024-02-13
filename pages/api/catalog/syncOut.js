@@ -1,6 +1,7 @@
 import { prisma } from "../../../db/prismaDB";
 import { v4 as uuid } from "uuid";
 import { AES, enc } from "crypto-ts";
+import { verifySignature } from "@upstash/qstash/dist/nextjs";
 
 const { Client, Environment } = require("square");
 
@@ -89,4 +90,4 @@ const handler = async (req, res) => {
   }
 };
 
-export default handler;
+export default verifySignature(handler);
