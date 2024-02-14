@@ -105,6 +105,11 @@ export const UserProvider = ({ children }) => {
   // useEffect to handle user-related logic on component mount and updates
   useEffect(() => {
     const handler = async () => {
+      if (router.pathname === "/") {
+        setUserDataFetched(true);
+        return;
+      }
+
       if (router.query.authenticating) {
         setUserDataFetched(true); // Set to true even on error to prevent infinite loadin
         return;
