@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { QRCode } from "react-qrcode-logo";
 import { Checkbox } from "@nextui-org/react";
 
@@ -51,28 +51,41 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
       console.error("Error:", error);
     }
   };
-  const debouncedSendFieldUpdate = debounce(sendFieldUpdate, 500);
+  const debouncedSendFieldUpdate = useCallback(
+    debounce((name, value) => {
+      // Your API call logic here
+      console.log("Sending update for", name, "with value", value);
+      sendFieldUpdate(name, value);
+    }, 500),
+    [] // Dependency array, ensures this is created only once
+  );
 
-  const handleCheckboxChange = (name, checked) => {
-    setConsumerData({
-      ...consumerData,
-      [name]: checked,
-    });
+  // const handleCheckboxChange = (name, checked) => {
+  //   setConsumerData({
+  //     ...consumerData,
+  //     [name]: checked,
+  //   });
 
-    debouncedSendFieldUpdate(name, checked);
-  };
-  const handleInputChange = (e) => {
-    let { name, value, checked } = e.target;
-    let modifyValue = ["emailAlertsOn", "discountEmailAlertsOn"].includes(name)
-      ? checked
-      : value;
-    setConsumerData({
-      ...consumerData,
-      [name]: modifyValue,
-    });
+  //   debouncedSendFieldUpdate(name, checked);
+  // };
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value, checked } = e.target;
+      const modifyValue = ["emailAlertsOn", "discountEmailAlertsOn"].includes(
+        name
+      )
+        ? checked
+        : value;
 
-    debouncedSendFieldUpdate(name, modifyValue);
-  };
+      setConsumerData((prevData) => ({
+        ...prevData,
+        [name]: modifyValue,
+      }));
+
+      debouncedSendFieldUpdate(name, modifyValue);
+    },
+    [debouncedSendFieldUpdate]
+  );
 
   const handleFollowCodeChange = (e) => {
     setFollowCode(e.target.value);
