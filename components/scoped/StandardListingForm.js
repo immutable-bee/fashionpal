@@ -19,6 +19,9 @@ const StandardListingForm = ({ onBack, onFetch }) => {
   const [categoryParams, setCategoryParams] = useState({});
 
   const [price, setPrice] = useState("5.00");
+  const [purchasePrice, setPurchasePrice] = useState("0.00");
+
+  const [addPhotos, setAddPhotos] = useState(false);
 
   const [showCamera, setShowCamera] = useState(false);
   const [currentPhotoType, setCurrentPhotoType] = useState("main");
@@ -77,13 +80,16 @@ const StandardListingForm = ({ onBack, onFetch }) => {
     setLoading(true);
 
     const formData = new FormData();
-    const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
-    formData.append("mainImage", mainFile);
+    if (mainImage) {
+      const mainFile = convertDataURLtoFile(mainImage, "main.jpg");
+      formData.append("mainImage", mainFile);
+    }
     if (brandImage) {
       const brandFile = convertDataURLtoFile(brandImage, "brand.jpg");
       formData.append("brandImage", brandFile);
     }
     formData.append("price", price);
+    formData.append("purchasePrice", purchasePrice);
     formData.append("categoryParams", JSON.stringify(categoryParams));
     formData.append("status", status);
     formData.append("premium", isPremium);
@@ -157,8 +163,30 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                         />
                       </div>
                     </div>
+                    <div className="mt-5  mx-auto flex items-center justify-center mr-4  ">
+                      <label className="block text-gray-600 text-xl ">
+                        Purchase price
+                      </label>
+                      <div className="relative flex items-center justify-center ml-4">
+                        <h3 className="absolute text-xl left-3 mt-1">$</h3>
+                        <input
+                          value={purchasePrice}
+                          className="w-36 mt-1 !text-xl rounded-xl pl-8 pr-2  !py-2.5 border-4 border-gray-400"
+                          onChange={(e) => {
+                            setPurchasePrice(e.target.value);
+                          }}
+                          onBlur={(e) => {
+                            let value = parseFloat(e.target.value);
+                            if (isNaN(value) || value < 0) value = 0;
+                            value = value.toFixed(2);
+                            setPurchasePrice(value);
+                          }}
+                        />
+                      </div>
+                    </div>
 
-                    <div className="border border-gray-500 rounded-xl w-72 mx-auto mt-2 px-4 py-3">
+                    <div className="border border-gray-500 flex justify-center rounded-xl w-48 mx-auto mt-4 px-4 py-3">
+                      {/*
                       <div className="flex w-full justify-between">
                         <h3 className="text-2xl text-center font-semibold mb-2">
                           {isInstructionsOpen
@@ -175,7 +203,11 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                           ></img>
                         </button>
                       </div>
-                      {isInstructionsOpen && (
+                          */}
+                      <Checkbox isSelected={addPhotos} onChange={setAddPhotos}>
+                        Add Photos?
+                      </Checkbox>
+                      {/* isInstructionsOpen && (
                         <>
                           <h3 className="text-xl font-semibold">
                             Instructions
@@ -191,7 +223,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                             minutes of printing the SKU
                           </h2>
                         </>
-                      )}
+                      )*/}
                     </div>
                     <div className="flex  justify-center mt-8 rounded-2xl gap-2">
                       {showCamera ? (
@@ -217,35 +249,44 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                         )
                       ) : (
                         <div>
-                          <div
-                            onClick={() => openCamera()}
-                            className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
-                          >
-                            <div>
-                              <h1 className="text-xl text-center font-medium font-mono ">
-                                Take Photo
-                              </h1>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth="1.5"
-                                stroke="currentColor"
-                                className="w-16 h-16 mt-4 mx-auto"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
-                                />
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
-                                />
-                              </svg>
+                          {addPhotos ? (
+                            <div
+                              onClick={() => openCamera()}
+                              className="rounded-2xl px-2 cursor-pointer hover:opacity-70 flex items-center justify-center w-72 border-2 shadow-md h-56"
+                            >
+                              <div>
+                                <h1 className="text-xl text-center font-medium font-mono ">
+                                  Take Photo
+                                </h1>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth="1.5"
+                                  stroke="currentColor"
+                                  className="w-16 h-16 mt-4 mx-auto"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"
+                                  />
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z"
+                                  />
+                                </svg>
+                              </div>
                             </div>
-                          </div>
+                          ) : (
+                            <button
+                              onClick={() => pushListing("SALE")}
+                              className="hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out border-2 border-green-500 p-5 rounded-2xl"
+                            >
+                              Add Listing & Get SKU
+                            </button>
+                          )}
                         </div>
                       )}
                     </div>
