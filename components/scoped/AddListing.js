@@ -32,6 +32,7 @@ function AddListing({ onBack, onFetch }) {
       {!islistTypeSelected ? (
         <div>
           <div className="flex flex-wrap gap-3 items-center justify-center mt-5">
+            {/*
             <button
               onClick={() => setListType("speed")}
               className={`${
@@ -40,6 +41,7 @@ function AddListing({ onBack, onFetch }) {
             >
               Donations
             </button>
+            */}
 
             <button
               onClick={() => setListType("standard")}
@@ -71,27 +73,18 @@ function AddListing({ onBack, onFetch }) {
       ) : (
         <>
           {listType === "admin" ? (
-            <AdminListingForm2
-              onBack={onBack}
-              onFetch={onFetch}
-            />
+            <AdminListingForm2 onBack={onBack} onFetch={onFetch} />
           ) : (
             ""
           )}
 
           {listType === "speed" ? (
-            <SpeedListingForm
-              onBack={onBack}
-              onFetch={onFetch}
-            />
+            <SpeedListingForm onBack={onBack} onFetch={onFetch} />
           ) : (
             ""
           )}
           {listType === "standard" && (
-            <StandardListingForm
-              onBack={onBack}
-              onFetch={onFetch}
-            />
+            <StandardListingForm onBack={onBack} onFetch={onFetch} />
           )}
         </>
       )}
