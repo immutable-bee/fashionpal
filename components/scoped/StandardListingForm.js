@@ -130,7 +130,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
         {step === 1 && (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div>
@@ -165,7 +168,7 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                     </div>
                     <div className="mt-5  mx-auto flex items-center justify-center mr-4  ">
                       <label className="block text-gray-600 text-xl ">
-                        Purchase price
+                        Cost
                       </label>
                       <div className="relative flex items-center justify-center ml-4">
                         <h3 className="absolute text-xl left-3 mt-1">$</h3>
@@ -204,7 +207,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                         </button>
                       </div>
                           */}
-                      <Checkbox isSelected={addPhotos} onChange={setAddPhotos}>
+                      <Checkbox
+                        isSelected={addPhotos}
+                        onChange={setAddPhotos}
+                      >
                         Add Photos?
                       </Checkbox>
                       {/* isInstructionsOpen && (
@@ -282,9 +288,9 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                           ) : (
                             <button
                               onClick={() => pushListing("SALE")}
-                              className="hover:bg-green-500 hover:text-white duration-250 min-w-[100px] ease-in-out border-2 border-green-500 p-5 rounded-2xl"
+                              className="hover:bg-green-500 hover:text-white duration-250 min-w-[150px] ease-in-out border-2 border-green-500 p-5 rounded-2xl"
                             >
-                              Add Listing & Get SKU
+                              Add Listing
                             </button>
                           )}
                         </div>
@@ -300,7 +306,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
         {step === 2 && (
           <div>
             {loading ? (
-              <LoadingComponent className="mt-6" size="xl" />
+              <LoadingComponent
+                className="mt-6"
+                size="xl"
+              />
             ) : (
               <div>
                 <div className="px-5 mt-6 w-[480px] mx-auto">
@@ -333,7 +342,10 @@ const StandardListingForm = ({ onBack, onFetch }) => {
                       className="mr-2"
                       size={"xl"}
                     ></Checkbox>
-                    <h6 id="onboarding-form-tc-agree-text" className="text-2xl">
+                    <h6
+                      id="onboarding-form-tc-agree-text"
+                      className="text-2xl"
+                    >
                       Premium
                     </h6>
                   </div>
