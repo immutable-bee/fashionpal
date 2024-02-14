@@ -101,12 +101,12 @@ function ProductDetails({
   const triggerOpenShareModal = () => {
     setOpenShareModal(true);
   };
-  const productUrl = data?.mainImageUrl;
-  if (!productUrl) {
-    return;
-  }
 
   const handleShare = (platform) => {
+    const productUrl = data?.mainImageUrl;
+    if (!productUrl) {
+      return;
+    }
     switch (platform) {
       case "url":
         copyToClipboard();
