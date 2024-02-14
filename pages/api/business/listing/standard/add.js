@@ -62,6 +62,7 @@ const handler = async (req, res) => {
 
         const categoryParams = JSON.parse(fields.categoryParams);
         const price = parseFloat(fields.price);
+        const purchasePrice = parseFloat(fields.purchasePrice);
         const status = fields.status[0];
         const isPremium = fields.premium == "true";
 
@@ -85,6 +86,7 @@ const handler = async (req, res) => {
           data: {
             price,
             status,
+            purchasePrice,
             Barcode: timestampSku,
             businessId: business.id,
             isPremiun: isPremium,
@@ -108,38 +110,47 @@ const handler = async (req, res) => {
 
         newListingId = newListing.id;
 
-        for (const key of Object.keys(files)) {
-          const file = files[key][0];
-          const filePath = file.filepath;
-          const fileData = fs.readFileSync(filePath);
-          const uploadPath = `${business.id}/${newListing.id}/${key}`;
+        const uploadPromises = Object.keys(files).map(async (key) => {
+          const fileArray = files[key];
+          if (fileArray && fileArray.length > 0) {
+            const file = fileArray[0];
+            const filePath = file.filepath;
+            const fileData = fs.readFileSync(filePath);
+            const uploadPath = `${businessId}/${newListingId}/${key}`;
 
-          const { error } = await supabase.storage
-            .from("standard-listings")
-            .upload(uploadPath, fileData, {
-              contentType: file.mimetype,
-              upsert: false,
-            });
+            const { error } = await supabase.storage
+              .from("standard-listings")
+              .upload(uploadPath, fileData, {
+                contentType: file.mimetype,
+                upsert: true,
+              });
 
-          fs.unlinkSync(filePath);
-          if (error) {
-            throw new Error(error.message);
-          }
-        }
-
-        const data = files.brandImage
-          ? {
-              mainImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/mainImage`,
-              brandImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/brandImage`,
+            fs.unlinkSync(filePath);
+            if (error) {
+              throw new Error(error.message);
             }
-          : {
-              mainImageUrl: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${business.id}/${newListing.id}/mainImage`,
-            };
 
-        await tx.listing.update({
-          where: { id: newListing.id },
-          data,
+            return {
+              key: key,
+              url: `${process.env.SUPABASE_STORAGE_URL}standard-listings/${businessId}/${newListingId}/${key}`,
+            };
+          }
         });
+
+        const uploadedFiles = await Promise.all(uploadPromises);
+        const imageData = uploadedFiles.reduce((acc, { key, url }) => {
+          if (key && url) {
+            acc[`${key}Url`] = url;
+          }
+          return acc;
+        }, {});
+
+        if (Object.keys(imageData).length > 0) {
+          await tx.listing.update({
+            where: { id: newListingId },
+            data: imageData,
+          });
+        }
       },
       {
         maxWait: 5000,
