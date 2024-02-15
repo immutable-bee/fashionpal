@@ -144,7 +144,7 @@ model Listing {
   brandImage          Json?
   dataSource          String?
   price               Decimal?
-  purchasePrice       Decimal? 
+  cost                Decimal?
   delivery            String?
   tags                String[]
   status              StatusType             @default(SALE)
