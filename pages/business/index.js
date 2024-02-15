@@ -172,17 +172,14 @@ export default function Home() {
       <Head>
         <title>Listings</title>
       </Head>
-      {detailsModal ? (
-        <ProductDetails
-          open={detailsModal}
-          imageOnly={true}
-          onClose={() => setDetailsModal(false)}
-          data={listings[activeIndex]}
-          fetchListings={() => fetchListings(pagination.current_page)}
-        />
-      ) : (
-        ""
-      )}
+
+      <ProductDetails
+        open={detailsModal}
+        imageOnly={true}
+        onClose={() => setDetailsModal(false)}
+        data={listings[activeIndex]}
+        fetchListings={() => fetchListings(pagination.current_page)}
+      />
 
       {mode === "view" ? (
         <div>

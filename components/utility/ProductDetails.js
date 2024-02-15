@@ -151,7 +151,7 @@ function ProductDetails({
   };
   return (
     <div>
-      {open ? (
+      {open && (
         <ModalComponent
           open={open}
           title={imageOnly ? "Full view" : "Details"}
@@ -488,7 +488,7 @@ function ProductDetails({
                   {moment(data.createdAt).fromNow()}
                 </h3>
               </div>
-              {data?.mainImageUrl && (
+              {data?.mainImageUrl ? (
                 <div className="flex justify-center !mt-3">
                   <svg
                     onClick={() => triggerOpenShareModal()}
@@ -511,12 +511,21 @@ function ProductDetails({
                     <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
                   </svg>
                 </div>
+              ) : (
+                <div className="flex justify-center items-center gap-4 mt-3">
+                  <ButtonComponent
+                    onClick={() => copyListingUrl()}
+                    rounded
+                    padding="none"
+                    className="!px-3 sm:!px-7 !py-1.5"
+                  >
+                    Copy Listing URL
+                  </ButtonComponent>
+                </div>
               )}
             </div>
           )}
         </ModalComponent>
-      ) : (
-        ""
       )}
     </div>
   );
