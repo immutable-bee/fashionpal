@@ -1,6 +1,6 @@
 import { prisma } from "../../../db/prismaDB";
 import { v4 as uuid } from "uuid";
-import { AES, enc } from "crypto-ts";
+import { AES, enc } from "crypto-js";
 import { verifySignature } from "@upstash/qstash/dist/nextjs";
 
 const { Client, Environment } = require("square");
@@ -60,15 +60,15 @@ const handler = async (req, res) => {
 
       const soldListingsSquareIds = [];
 
-      if (soldListingsSquareIds?.length === 0) {
-        res.status(200).json({ message: "No listings to sync." });
-        return;
-      }
-
       for (const count of response?.result?.counts) {
         if (count?.quantity === "0") {
           soldListingsSquareIds.push(count.catalogObjectId);
         }
+      }
+
+      if (soldListingsSquareIds?.length === 0) {
+        res.status(200).json({ message: "No listings to sync." });
+        return;
       }
 
       await prisma.listing.updateMany({
