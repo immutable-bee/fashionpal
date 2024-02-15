@@ -1,6 +1,6 @@
 import { prisma } from "../../../db/prismaDB";
 import { v4 as uuid } from "uuid";
-import { AES, enc } from "crypto-ts";
+import { AES, enc } from "crypto-js";
 import { Readable } from "stream";
 import { verifySignature } from "@upstash/qstash/dist/nextjs";
 
