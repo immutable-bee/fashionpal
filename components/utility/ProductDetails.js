@@ -101,9 +101,8 @@ function ProductDetails({
   const triggerOpenShareModal = () => {
     setOpenShareModal(true);
   };
-
+  const productUrl = data?.mainImageUrl;
   const handleShare = (platform) => {
-    const productUrl = data?.mainImageUrl;
     if (!productUrl) {
       return;
     }
@@ -489,28 +488,30 @@ function ProductDetails({
                   {moment(data.createdAt).fromNow()}
                 </h3>
               </div>
-              <div className="flex justify-center !mt-3">
-                <svg
-                  onClick={() => triggerOpenShareModal()}
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-12 h-12 mx-2 cursor-pointer"
-                  width="44"
-                  height="44"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="#2c3e50"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path
-                    stroke="none"
-                    d="M0 0h24v24H0z"
+              {data?.mainImageUrl && (
+                <div className="flex justify-center !mt-3">
+                  <svg
+                    onClick={() => triggerOpenShareModal()}
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-12 h-12 mx-2 cursor-pointer"
+                    width="44"
+                    height="44"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="#2c3e50"
                     fill="none"
-                  />
-                  <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
-                </svg>
-              </div>
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path
+                      stroke="none"
+                      d="M0 0h24v24H0z"
+                      fill="none"
+                    />
+                    <path d="M13 4v4c-6.575 1.028 -9.02 6.788 -10 12c-.037 .206 5.384 -5.962 10 -6v4l8 -7l-8 -7z" />
+                  </svg>
+                </div>
+              )}
             </div>
           )}
         </ModalComponent>
