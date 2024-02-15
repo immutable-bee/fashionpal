@@ -217,7 +217,7 @@ model PricingRule {
   adjustPriceBy Int
   cycle         String
   roundTo       Float
-  floorPrice    Int
+  floorPrice    Decimal
   ruleType      RepricingRuleOption
   isRecurring   Boolean?
   daysOfWeek    String[]            @default([])
