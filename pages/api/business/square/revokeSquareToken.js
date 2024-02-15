@@ -43,6 +43,7 @@ const handler = async (req, res) => {
       {
         method: "POST",
         headers: {
+          "Square-Version": "2024-01-18",
           Authorization: `Client ${process.env.SQUARE_SECRET}`,
           "Content-Type": "application/json",
         },

@@ -1,6 +1,6 @@
 import { prisma } from "../../../db/prismaDB";
 import { v4 as uuid } from "uuid";
-import { AES, enc } from "crypto-ts";
+import { AES, enc } from "crypto-js";
 import { Readable } from "stream";
 import { verifySignature } from "@upstash/qstash/dist/nextjs";
 
@@ -13,6 +13,8 @@ export const config = {
 };
 
 const handler = async (req, res) => {
+  const operationErrors = [];
+
   try {
     const allIdsToUpdate = [];
     const allSyncedObjects = [];
@@ -24,7 +26,7 @@ const handler = async (req, res) => {
     for (const business of businesses) {
       try {
         const squareAccessToken = AES.decrypt(
-          business?.squareAccessToken,
+          business.squareAccessToken,
           process.env.NEXTAUTH_SECRET
         ).toString(enc.Utf8);
 
@@ -237,8 +239,9 @@ const handler = async (req, res) => {
           idMappings[mapping?.clientObjectId?.replace("#", "")] =
             mapping.objectId;
         }
-      } catch (e) {
-        console.log(e.message);
+      } catch (error) {
+        console.error(`Error processing business ${business.id}:`, error);
+        operationErrors.push({ businessId: business.id, error: error.message });
       }
     }
 
@@ -266,9 +269,21 @@ const handler = async (req, res) => {
           )
         : { message: "No listings to sync." };
 
-    res.status(200).json(message);
+    if (operationErrors.length > 0) {
+      console.log("Operation completed with errors:", operationErrors);
+      return res
+        .status(206)
+        .json({ message: "Operations completed with errors", operationErrors });
+    }
+
+    res.status(200).json({ message: "All operations completed successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("General error in handler:", error);
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+      operationErrors,
+    });
   }
 };
 
