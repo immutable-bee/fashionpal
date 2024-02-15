@@ -7,9 +7,19 @@ const HomeHeader = () => {
     <div className="w-full bg-white flex justify-between p-2">
       <div className="pt-2">
         {isMenuOpen ? (
-          <img src="/images/x-cross.svg" />
+          <img
+            onClick={() => setIsMenuOpen(false)}
+            src="/images/x-cross.svg"
+            width={40}
+            height={40}
+          />
         ) : (
-          <img src="/images/hamburger-menu.svg" />
+          <img
+            onClick={() => setIsMenuOpen(true)}
+            src="/images/hamburger-menu.svg"
+            width={40}
+            height={40}
+          />
         )}
       </div>
 
@@ -17,8 +27,8 @@ const HomeHeader = () => {
         <img width={250} height={250} src="/images/logo.png" />
       </div>
 
-      <div className="pt-2">
-        <img src="/images/person.svg" />
+      <div className="pt-5">
+        <img src="/images/person.svg" width={40} height={40} />
       </div>
     </div>
   );
