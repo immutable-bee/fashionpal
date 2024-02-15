@@ -86,7 +86,7 @@ const handler = async (req, res) => {
           data: {
             price,
             status,
-            purchasePrice,
+            cost: purchasePrice,
             Barcode: timestampSku,
             businessId: business.id,
             isPremiun: isPremium,
