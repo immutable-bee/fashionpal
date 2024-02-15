@@ -161,7 +161,8 @@ model Listing {
   isSyncedWithXimilar Boolean                @default(false)
   squareId            String?
   discountPercentage  Int?
-  discountPrice       Float?
+  discountPrice       Decimal?
+  memberPrice         Decimal?
   isPremiun           Boolean                @default(false)
   tinyUrl             String?                @unique
   categories          CategoriesOnListings[]
