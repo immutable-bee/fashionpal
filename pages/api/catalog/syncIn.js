@@ -26,7 +26,7 @@ const handler = async (req, res) => {
     for (const business of businesses) {
       try {
         const squareAccessToken = AES.decrypt(
-          business?.squareAccessToken,
+          business.squareAccessToken,
           process.env.NEXTAUTH_SECRET
         ).toString(enc.Utf8);
 
