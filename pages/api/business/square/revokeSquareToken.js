@@ -79,6 +79,8 @@ const handler = async (req, res) => {
         .status(500)
         .json({ message: "Sqaure call was not successful" });
     }
+
+    return res.status(200).json({ message: "Token revoked" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
