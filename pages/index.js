@@ -262,6 +262,139 @@ const HomeHeader = () => {
           </div>
         </div>
       </div>
+
+      <div>
+        <div class="grid grid-cols-3 my-20 w-[1200px] mx-auto">
+          <div class="border pb-10">
+            <div class="h-[300px] border-b px-[68px] flex flex-col justify-between py-6">
+              <div class="">
+                <h2 class="text-center text-black text-2xl font-medium">
+                  Basics{" "}
+                </h2>
+
+                <h1 class="flex items-start justify-center font-bold text-center pt-3">
+                  <span class="text-3xl">$</span>
+                  <span class="text-6xl">0</span>
+                </h1>
+              </div>
+              <h4 class="text-center text-gray-500">0-1 EMPLOYEES</h4>
+              <div class="flex justify-center">
+                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg">
+                  View Plan Price
+                </button>
+              </div>
+            </div>
+            <div class="h-[300px] pt-12 mb-10">
+              <ul class="list-disc px-[40px]">
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> 100 Al Listing
+                  Credits
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span>Automated Sales
+                  Discounting
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span>Square
+                  Integration
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span>Email and
+                  Social Marketing
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span>Main Category
+                  Analytics
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="border pb-10 -mt-[46px]">
+            <div class="bg-sky-500 w-full h-2"></div>
+            <div class="h-[338px] border-b px-[68px] flex flex-col justify-between pb-6 pt-2">
+              <h2 class="text-center text-yellow-500 text-xl font-medium">
+                Growth
+              </h2>
+              <h2 class="text-center text-black text-2xl font-medium">
+                Growth
+              </h2>
+              <div class="">
+                <h1 class="flex items-start justify-center font-bold text-center">
+                  <span class="text-3xl">$</span>
+                  <span class="text-6xl">25</span>
+                </h1>
+              </div>
+              <h4 class="text-center text-gray-500">1-5 EMPLOYEES</h4>
+              <div class="flex justify-center">
+                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg">
+                  View Plan Price
+                </button>
+              </div>
+            </div>
+            <div class="h-[300px] pt-12 mb-10">
+              <ul class="list-disc px-[40px]">
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> Unlimited Al
+                  Listing Credits
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> Smart
+                  Aged-Inventory Repricer
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span>Square
+                  Integration
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> Email and
+                  Social Marketing
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> Advanced
+                  Business Metrics
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="border pb-10">
+            <div class="h-[300px] border-b px-[68px] flex flex-col justify-between py-6">
+              <div class="">
+                <h2 class="text-center text-black text-2xl font-medium">
+                  Volume
+                </h2>
+
+                <h1 class="flex items-start justify-center font-bold text-center pt-3">
+                  <span class="text-3xl">$</span>
+                  <span class="text-6xl">49</span>
+                </h1>
+              </div>
+              <h4 class="text-center text-gray-500">5+ EMPLOYEES</h4>
+              <div class="flex justify-center">
+                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg">
+                  View Plan Price
+                </button>
+              </div>
+            </div>
+            <div class="h-[300px] pt-12 mb-10">
+              <ul class="list-disc px-[40px]">
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> All Growth
+                  Features InIcuded
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> Discounted
+                  Transaction Fee
+                </li>
+                <li class="mb-2 flex items-center text-black text-xl font-nomal">
+                  <span class="text-sky-500 mr-3">&#10003;</span> Priority
+                  Support
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
