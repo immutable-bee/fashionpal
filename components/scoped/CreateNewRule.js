@@ -192,18 +192,6 @@ const RePricer = ({ onBack, categoryList }) => {
             <option value="EXCLUDE_PREMIUM">Exclude Premium</option>
           </select>
         </div>
-        <div className="py-2">
-          <label className="text-lg">Applies To</label>
-          <select
-            value={appliedTo}
-            className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-            onChange={(e) => setAppliedTo(e.target.value)}
-          >
-            <option value="ALL">Include Non-Members</option>
-            <option value="MEMBERS_ONLY">Members Only</option>
-            <option value="EXCLUDE_MEMBERS">Non-Members Only</option>
-          </select>
-        </div>
         {ruleType === "SALE" && (
           <>
             <ul

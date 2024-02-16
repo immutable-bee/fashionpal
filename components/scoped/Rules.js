@@ -189,25 +189,10 @@ const RePricer = ({ categoryList }) => {
                   {categoryList &&
                     categoryList.length > 0 &&
                     categoryList.map((category) => (
-                      <option
-                        key={category.id}
-                        value={category.id}
-                      >
+                      <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))}
-                </select>
-              </div>
-              <div className="py-2">
-                <label className="text-lg">Type</label>
-                <select
-                  value={filterType}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setFilterType(e.target.value)}
-                >
-                  <option value="ALL">Include Non-Members</option>
-                  <option value="PREMIUM_ONLY">Members Only</option>
-                  <option value="EXCLUDE_PREMIUM">Non-Members Only</option>
                 </select>
               </div>
             </div>
@@ -290,20 +275,13 @@ const RePricer = ({ categoryList }) => {
                 className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option
-                  value=""
-                  selected
-                  disabled
-                >
+                <option value="" selected disabled>
                   Select category
                 </option>
                 {categoryList &&
                   categoryList.length > 0 &&
                   categoryList.map((category) => (
-                    <option
-                      key={category.id}
-                      value={category.id}
-                    >
+                    <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
                   ))}

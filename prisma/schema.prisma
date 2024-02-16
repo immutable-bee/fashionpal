@@ -144,7 +144,7 @@ model Listing {
   brandImage          Json?
   dataSource          String?
   price               Decimal?
-  purchasePrice       Decimal? 
+  cost                Decimal?
   delivery            String?
   tags                String[]
   status              StatusType             @default(SALE)
@@ -160,8 +160,11 @@ model Listing {
   isTagged            Boolean                @default(false)
   isSyncedWithXimilar Boolean                @default(false)
   squareId            String?
+  basePriceVariationId String?
+  memberPriceVariationId String? 
   discountPercentage  Int?
-  discountPrice       Float?
+  discountPrice       Decimal?
+  memberPrice         Decimal?
   isPremiun           Boolean                @default(false)
   tinyUrl             String?                @unique
   categories          CategoriesOnListings[]
@@ -213,10 +216,10 @@ model PricingRule {
   name          String
   listingType   RepricingRuleType
   appliedTo     RepricingRuleApply?
-  adjustPriceBy Int
+  adjustPriceBy Decimal
   cycle         String
   roundTo       Float
-  floorPrice    Int
+  floorPrice    Decimal
   ruleType      RepricingRuleOption
   isRecurring   Boolean?
   daysOfWeek    String[]            @default([])
