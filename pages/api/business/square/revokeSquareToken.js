@@ -14,6 +14,7 @@ const handler = async (req, res) => {
     const business = await prisma.business.findUnique({
       where: { email: session.user.email },
       select: {
+        id: true,
         squareAccessToken: true,
         squareRefreshToken: true,
       },
