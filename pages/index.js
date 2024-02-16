@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
 import SmartPricingImage from "../assets/website/smart_pricing.png";
 import ProfitableDiscountingImage from "../assets/website/profitable_discounting.png";
