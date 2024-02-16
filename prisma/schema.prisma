@@ -160,6 +160,8 @@ model Listing {
   isTagged            Boolean                @default(false)
   isSyncedWithXimilar Boolean                @default(false)
   squareId            String?
+  basePriceVariationId String?
+  memberPriceVariationId String? 
   discountPercentage  Int?
   discountPrice       Decimal?
   memberPrice         Decimal?
@@ -214,7 +216,7 @@ model PricingRule {
   name          String
   listingType   RepricingRuleType
   appliedTo     RepricingRuleApply?
-  adjustPriceBy Int
+  adjustPriceBy Decimal
   cycle         String
   roundTo       Float
   floorPrice    Decimal
