@@ -148,6 +148,7 @@ function ProfileComponent() {
   const revokeSquareAuth = async () => {
     try {
       await fetch("/api/business/square/revokeSquareToken");
+      await fetchBusinessData();
     } catch (error) {}
   };
 
