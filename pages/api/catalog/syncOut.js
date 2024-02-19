@@ -62,51 +62,66 @@ const handler = async (req, res) => {
       });
       console.log(JSON.stringify(response, null, 2));
 
-      const inventoryAdjustments = [];
-      response.result.counts.forEach((count) => {
-        if (count.quantity === "0") {
-          const otherVariationId = count.catalogObjectId.endsWith("-subscriber")
-            ? count.catalogObjectId.replace("-subscriber", "-non-subscriber")
-            : count.catalogObjectId.replace("-non-subscriber", "-subscriber");
+      if (
+        response &&
+        response.result &&
+        Array.isArray(response.result.counts)
+      ) {
+        const inventoryAdjustments = [];
+        response.result.counts.forEach((count) => {
+          if (count.quantity === "0") {
+            const otherVariationId = count.catalogObjectId.endsWith(
+              "-subscriber"
+            )
+              ? count.catalogObjectId.replace("-subscriber", "-non-subscriber")
+              : count.catalogObjectId.replace("-non-subscriber", "-subscriber");
 
-          locationIds.forEach((locationId) => {
-            inventoryAdjustments.push({
-              type: "ADJUSTMENT",
-              adjustment: {
-                catalogObjectId: otherVariationId,
-                fromState: "IN_STOCK",
-                toState: "WASTE",
-                locationId: locationId,
-                quantity: "1",
-              },
+            locationIds.forEach((locationId) => {
+              inventoryAdjustments.push({
+                type: "ADJUSTMENT",
+                adjustment: {
+                  catalogObjectId: otherVariationId,
+                  fromState: "IN_STOCK",
+                  toState: "WASTE",
+                  locationId: locationId,
+                  quantity: "1",
+                },
+              });
             });
-          });
 
-          const listingId = count.catalogObjectId.split("-")[0];
-          allIdsToUpdate.push(listingId);
-        }
-      });
-
-      if (inventoryAdjustments.length > 0) {
-        await client.inventoryApi.batchChangeInventory({
-          idempotencyKey: uuid(),
-          changes: inventoryAdjustments,
-          ignoreUnchangedCounts: true,
+            const listingId = count.catalogObjectId.split("-")[0];
+            allIdsToUpdate.push(listingId);
+          }
         });
+
+        if (inventoryAdjustments.length > 0) {
+          await client.inventoryApi.batchChangeInventory({
+            idempotencyKey: uuid(),
+            changes: inventoryAdjustments,
+            ignoreUnchangedCounts: true,
+          });
+        }
+
+        await Promise.all(
+          allIdsToUpdate.map((listingId) =>
+            prisma.listing.update({
+              where: { id: listingId },
+              data: { isActive: false, status: "SOLD" },
+            })
+          )
+        );
+      } else {
+        res
+          .status(204)
+          .json(
+            "Unexpected response structure or no counts returned:",
+            JSON.stringify(response, null, 2)
+          );
       }
 
-      await Promise.all(
-        allIdsToUpdate.map((listingId) =>
-          prisma.listing.update({
-            where: { id: listingId },
-            data: { isActive: false, status: "SOLD" },
-          })
-        )
-      );
-    }
-
-    if (allIdsToUpdate.length === 0) {
-      return res.status(204).json({ message: "No listings were updated." });
+      if (allIdsToUpdate.length === 0) {
+        return res.status(204).json({ message: "No listings were updated." });
+      }
     }
 
     res
