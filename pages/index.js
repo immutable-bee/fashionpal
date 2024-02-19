@@ -6,6 +6,8 @@ import OneTouchCheckoutImage from "../assets/website/one_tourch_checkout.png";
 import RelevantMarketingImage from "../assets/website/relevant_marketing.png";
 import AnalyticsImage from "../assets/website/analytics.png";
 import Image from "next/image";
+import WebsiteHeader from "@/components/utility/WebsiteHeader";
+import Link from "next/link";
 
 const HomeHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -13,41 +15,10 @@ const HomeHeader = () => {
 
   return (
     <div>
-      <div className="w-full flex-shrink-0 bg-white flex justify-between items-center p-2">
-        <div className="">
-          {isMenuOpen ? (
-            <img
-              onClick={() => setIsMenuOpen(false)}
-              src="/images/x-cross.svg"
-              width={40}
-              height={40}
-            />
-          ) : (
-            <img
-              onClick={() => setIsMenuOpen(true)}
-              src="/images/hamburger-menu.svg"
-              width={40}
-              height={40}
-            />
-          )}
-        </div>
-
-        <div>
-          <img
-            width={250}
-            height={250}
-            src="/images/logo.png"
-          />
-        </div>
-
-        <div className="">
-          <img
-            src="/images/person.svg"
-            width={40}
-            height={40}
-          />
-        </div>
+      <div className="h-[5rem]">
+        <WebsiteHeader />
       </div>
+
       <div className="h-[calc(100vh-6rem)] bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
         <div className="bg-white w-full mx-auto max-w-4xl rounded-3xl min-h-[20rem] flex items-center justify-center px-4 py-5">
           <div>
@@ -56,18 +27,25 @@ const HomeHeader = () => {
             </h3>
 
             <div className="flex justify-center items-center mt-6 gap-4">
-              <button className="bg-primary hover:scale-110 w-[35%] h-14 rounded-lg text-2xl font-medium text-white duration-300 ease-in-out">
-                Login
-              </button>
-              <button className="border-[3px] border-primary w-[35%] h-14 rounded-lg text-2xl text-gray-700 font-medium hover:scale-110 duration-300 ease-in-out">
-                Create an Account
-              </button>
+              <Link href="/auth">
+                <button className="bg-primary hover:scale-110 w-72 h-14 rounded-lg text-2xl font-medium text-white duration-300 ease-in-out">
+                  Login
+                </button>
+              </Link>
+              <Link href="/auth">
+                <button className="border-[3px] border-primary w-72 h-14 rounded-lg text-2xl text-gray-700 font-medium hover:scale-110 duration-300 ease-in-out">
+                  Create an Account
+                </button>
+              </Link>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 mt-12">
+      <div
+        className="max-w-7xl mx-auto px-6 mt-12"
+        id="pricing"
+      >
         <div>
           <div
             className="flex items-center justify-between gap-4 px-2 hover:bg-gray-50 duration-300 ease-in-out cursor-pointer py-2 border-y border-gray-400 w-full"
@@ -279,7 +257,7 @@ const HomeHeader = () => {
               </div>
               <h4 class="text-center text-gray-500">0-1 EMPLOYEES</h4>
               <div class="flex justify-center">
-                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg">
+                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
                   View Plan Price
                 </button>
               </div>
@@ -327,7 +305,7 @@ const HomeHeader = () => {
               </div>
               <h4 class="text-center text-gray-500">1-5 EMPLOYEES</h4>
               <div class="flex justify-center">
-                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg">
+                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
                   View Plan Price
                 </button>
               </div>
@@ -371,7 +349,7 @@ const HomeHeader = () => {
               </div>
               <h4 class="text-center text-gray-500">5+ EMPLOYEES</h4>
               <div class="flex justify-center">
-                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg">
+                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
                   View Plan Price
                 </button>
               </div>
@@ -394,6 +372,62 @@ const HomeHeader = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div
+        class="max-w-7xl mx-auto mt-20 pb-20"
+        id="contact-us"
+      >
+        <h1 class="text-5xl text-gray-700 font-medium">
+          Shedula a demo or contact us
+        </h1>
+        <form
+          action="mailto:nate@fashionpal.com"
+          method="post"
+          enctype="text/plain"
+        >
+          <div class="grid grid-cols-2 mt-12 gap-5">
+            <input
+              type="text"
+              name="name"
+              class="rounded-2xl border border-gray-400 px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              placeholder="Name"
+            />
+            <input
+              type="email"
+              name="email"
+              required
+              class="rounded-2xl border border-gray-400 px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              placeholder="Email *"
+            />
+          </div>
+          <div class="mt-8">
+            <input
+              type="tel"
+              name="phone"
+              class="rounded-2xl border border-gray-400 px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              placeholder="Phone number *"
+            />
+          </div>
+          <div class="mt-8">
+            <textarea
+              placeholder="Comment"
+              name="comment"
+              class="rounded-2xl border border-gray-400 px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              id=""
+              cols="30"
+              rows="4"
+            ></textarea>
+          </div>
+          <div class="mt-12">
+            <button
+              class="rounded-lg px-12  py-[14px] text-xl text-gray-50 font-medium bg-primary hover:scale-110 duration-300 ease-in-out"
+              type="submit"
+            >
+              Send
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
