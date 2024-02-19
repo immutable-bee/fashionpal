@@ -264,7 +264,7 @@ const HomeHeader = () => {
 
                 <h1 class="flex items-start justify-center font-bold text-center pt-3">
                   <span class="text-3xl">$</span>
-                  <span class="text-6xl">0</span>
+                  <span class="text-6xl">19.99</span>
                 </h1>
               </div>
               <h4 class="text-center text-gray-500">0-1 EMPLOYEES</h4>
@@ -312,7 +312,7 @@ const HomeHeader = () => {
               <div class="">
                 <h1 class="flex items-start justify-center font-bold text-center">
                   <span class="text-3xl">$</span>
-                  <span class="text-6xl">25</span>
+                  <span class="text-6xl">99.99</span>
                 </h1>
               </div>
               <h4 class="text-center text-gray-500">1-5 EMPLOYEES</h4>
@@ -356,7 +356,7 @@ const HomeHeader = () => {
 
                 <h1 class="flex items-start justify-center font-bold text-center pt-3">
                   <span class="text-3xl">$</span>
-                  <span class="text-6xl">49</span>
+                  <span class="text-6xl">299.99</span>
                 </h1>
               </div>
               <h4 class="text-center text-gray-500">5+ EMPLOYEES</h4>
