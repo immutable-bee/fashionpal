@@ -110,17 +110,12 @@ const handler = async (req, res) => {
             })
           )
         );
-      } else {
-        res
-          .status(204)
-          .json("Unexpected response structure or no counts returned:");
-      }
-
-      if (allIdsToUpdate.length === 0) {
-        return res.status(204).json({ message: "No listings were updated." });
       }
     }
 
+    if (allIdsToUpdate.length === 0) {
+      return res.status(204).json({ message: "No listings were updated." });
+    }
     res
       .status(200)
       .json({ message: `Updated listings: ${allIdsToUpdate.join(", ")}` });
