@@ -48,9 +48,10 @@ const handler = async (req, res) => {
         continue;
       }
 
-      const catalogObjectIds = listingsToFetchInventory.map(
-        (listing) => listing.squareId
-      );
+      const catalogObjectIds = listingsToFetchInventory.flatMap((listing) => [
+        `${listing.id}-subscriber`,
+        `${listing.id}-non-subscriber`,
+      ]);
 
       const { result } = await client.locationsApi.listLocations();
       const locationIds = result?.locations?.map((loc) => loc.id) || [];
@@ -59,37 +60,62 @@ const handler = async (req, res) => {
         catalogObjectIds,
         locationIds,
       });
+      console.log(response.result);
 
-      const soldListingsSquareIds =
-        response?.result?.counts
-          ?.filter((count) => count?.quantity === "0")
-          .map((count) => count.catalogObjectId) || [];
+      if (
+        response &&
+        response.result &&
+        Array.isArray(response.result.counts)
+      ) {
+        const inventoryAdjustments = [];
+        response.result.counts.forEach((count) => {
+          if (count.quantity === "0") {
+            const otherVariationId = count.catalogObjectId.endsWith(
+              "-subscriber"
+            )
+              ? count.catalogObjectId.replace("-subscriber", "-non-subscriber")
+              : count.catalogObjectId.replace("-non-subscriber", "-subscriber");
 
-      if (soldListingsSquareIds.length > 0) {
-        const updateResult = await prisma.listing.updateMany({
-          where: {
-            squareId: {
-              in: soldListingsSquareIds,
-            },
-          },
-          data: {
-            isActive: false,
-            status: "SOLD",
-          },
+            locationIds.forEach((locationId) => {
+              inventoryAdjustments.push({
+                type: "ADJUSTMENT",
+                adjustment: {
+                  catalogObjectId: otherVariationId,
+                  fromState: "IN_STOCK",
+                  toState: "WASTE",
+                  locationId: locationId,
+                  quantity: "1",
+                },
+              });
+            });
+
+            const listingId = count.catalogObjectId.split("-")[0];
+            allIdsToUpdate.push(listingId);
+          }
         });
 
-        allIdsToUpdate.push(...soldListingsSquareIds);
-      } else {
-        allBusinessesProcessed = false;
+        if (inventoryAdjustments.length > 0) {
+          await client.inventoryApi.batchChangeInventory({
+            idempotencyKey: uuid(),
+            changes: inventoryAdjustments,
+            ignoreUnchangedCounts: true,
+          });
+        }
+
+        await Promise.all(
+          allIdsToUpdate.map((listingId) =>
+            prisma.listing.update({
+              where: { id: listingId },
+              data: { isActive: false, status: "SOLD" },
+            })
+          )
+        );
       }
     }
 
     if (allIdsToUpdate.length === 0) {
-      return res
-        .status(allBusinessesProcessed ? 200 : 204)
-        .json({ message: "No listings were updated." });
+      return res.status(204).json({ message: "No listings were updated." });
     }
-
     res
       .status(200)
       .json({ message: `Updated listings: ${allIdsToUpdate.join(", ")}` });
