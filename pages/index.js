@@ -33,7 +33,7 @@ const HomeHeader = () => {
       </div>
 
       <div className="h-[30rem] sm:h-[calc(100vh-6rem)] bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
-        <div className="bg-white w-full sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[15rem] sm:min-h-[20rem] flex items-center justify-center px-4 mx-4 py-4 sm:py-5">
+        <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[13rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-4 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
             <h3 className="text-gray-500 text-xl sm:text-3xl text-center">
               Inventory Management Software Tailored to Second Hand Fashion
