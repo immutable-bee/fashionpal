@@ -113,10 +113,7 @@ const handler = async (req, res) => {
       } else {
         res
           .status(204)
-          .json(
-            "Unexpected response structure or no counts returned:",
-            JSON.stringify(response, null, 2)
-          );
+          .json("Unexpected response structure or no counts returned:");
       }
 
       if (allIdsToUpdate.length === 0) {
