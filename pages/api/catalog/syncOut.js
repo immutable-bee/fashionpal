@@ -62,7 +62,7 @@ const handler = async (req, res) => {
       });
 
       const inventoryAdjustments = [];
-      response.counts.forEach((count) => {
+      response.result.counts.forEach((count) => {
         if (count.quantity === "0") {
           const otherVariationId = count.catalogObjectId.endsWith("-subscriber")
             ? count.catalogObjectId.replace("-subscriber", "-non-subscriber")
