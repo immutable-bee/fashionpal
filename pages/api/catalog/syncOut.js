@@ -60,7 +60,7 @@ const handler = async (req, res) => {
         catalogObjectIds,
         locationIds,
       });
-      console.log(JSON.stringify(response, null, 2));
+      console.log(response.result);
 
       if (
         response &&
