@@ -60,6 +60,7 @@ const handler = async (req, res) => {
         catalogObjectIds,
         locationIds,
       });
+      console.log(JSON.stringify(response, null, 2));
 
       const inventoryAdjustments = [];
       response.result.counts.forEach((count) => {
