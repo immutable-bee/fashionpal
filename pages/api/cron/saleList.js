@@ -37,6 +37,8 @@ function calculateDiscount(listing, pricingRule) {
   };
 }
 
+const calculateMemberPrice = (listing, pricingRule) => {};
+
 const handler = async (req, res) => {
   try {
     const listings = await prisma.listing.findMany({
@@ -60,22 +62,40 @@ const handler = async (req, res) => {
         const key = `${listing.categories[0].categoryId}-${listing.businessId}`;
         const applicablePricingRule = pricingRuleMap.get(key);
         if (applicablePricingRule) {
-          const discountInfo = calculateDiscount(
-            listing,
-            applicablePricingRule
-          );
+          let updatedListing;
+          if (applicablePricingRule.ruleType === "STANDARD") {
+            const discountInfo = calculateDiscount(
+              listing,
+              applicablePricingRule
+            );
 
-          if (discountInfo) {
-            const updatedListing = await prisma.listing.update({
-              where: { id: listing.id },
-              data: {
-                discountPrice: discountInfo.discountPrice,
-                discountPercentage: discountInfo.discountPercentage,
-              },
-            });
-
-            updatedListings.push(updatedListing);
+            if (discountInfo) {
+              updatedListing = await prisma.listing.update({
+                where: { id: listing.id },
+                data: {
+                  discountPrice: discountInfo.discountPrice,
+                  discountPercentage: discountInfo.discountPercentage,
+                },
+              });
+            }
           }
+          if (applicablePricingRule.ruleType === "SAlE") {
+            const memberPriceInfo = calculateMemberPrice(
+              listing,
+              applicablePricingRule
+            );
+
+            if (memberPriceInfo) {
+              updatedListing = await prisma.listing.update({
+                where: { id: listing.id },
+                data: {
+                  memberPrice: memberPriceInfo.memberPrice,
+                },
+              });
+            }
+          }
+
+          updatedListings.push(updatedListing);
         }
 
         return listing;
