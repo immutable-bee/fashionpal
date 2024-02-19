@@ -60,7 +60,7 @@ const handler = async (req, res) => {
         catalogObjectIds,
         locationIds,
       });
-      console.log(response.result);
+      console.log(response);
 
       if (
         response &&
