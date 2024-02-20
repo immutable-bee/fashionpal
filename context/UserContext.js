@@ -206,6 +206,11 @@ export const UserProvider = ({ children }) => {
 
         const allowedRoutes = ACCESS_RULES[role] || [];
 
+        if (role === "business" && router.pathname.startsWith("/consumer")) {
+          router.push("/business");
+          return;
+        }
+
         // Check if the user role is defined and the router pathname is not in allowedRoutes
         if (role && !allowedRoutes.find((route) => router.pathname === route)) {
           // Redirect the user to the first allowed route if not on the "/auth" page
