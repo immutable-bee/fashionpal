@@ -63,7 +63,7 @@ const HomeHeader = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-6 mt-12">
-        <div>
+        {/* <div>
           <div
             className="flex items-center justify-between gap-4 px-2 hover:bg-gray-50 duration-300 ease-in-out cursor-pointer py-2 border-y border-gray-400 w-full"
             onClick={() => setIsCollapseOpen(!isCollapseOpen)}
@@ -88,7 +88,7 @@ const HomeHeader = () => {
                 The Value We Offer
               </h3>
             </div>
-            {/* {!isCollapseOpen ? (
+            {!isCollapseOpen ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -118,7 +118,7 @@ const HomeHeader = () => {
                   d="m4.5 15.75 7.5-7.5 7.5 7.5"
                 />
               </svg>
-            )} */}
+            )}
           </div>
 
           <p className="text-lg text-gray-600 mt-3">
@@ -135,7 +135,7 @@ const HomeHeader = () => {
             business thrive in alignment with your customers' evolving
             preferences.
           </p>
-        </div>
+        </div> */}
         <div className="mt-20">
           <div className="sm:flex sm:border-non border rounded-3xl overflow-hidden my-12">
             <div className=" sm:w-1/3">
