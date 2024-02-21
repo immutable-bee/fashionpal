@@ -80,17 +80,17 @@ const handler = async (req, res) => {
       let soldDate = new Date(); // Default to current date if not sold
       let soldPrice = 0;
       const soldOrder = orders.find((order) =>
-        order.line_items.some((item) =>
-          item.catalog_object_id.startsWith(listing.id)
+        order.lineItems.some((item) =>
+          item.catalogObjectId.startsWith(listing.id)
         )
       );
       if (soldOrder) {
         soldDate = new Date(soldOrder.closedAt);
-        const soldItem = soldOrder.line_items.find((item) =>
-          item.catalog_object_id.startsWith(listing.id)
+        const soldItem = soldOrder.lineItems.find((item) =>
+          item.catalogObjectId.startsWith(listing.id)
         );
         if (soldItem) {
-          soldPrice = soldItem.total_money.amount;
+          soldPrice = soldItem.totalMoney.amount;
         }
       }
 
@@ -123,12 +123,12 @@ const handler = async (req, res) => {
     });
 
     orders.forEach((order) => {
-      order.line_items.forEach((item) => {
-        const itemId = item.catalog_object_id.replace(
+      order.lineItems.forEach((item) => {
+        const itemId = item.catalogObjectId.replace(
           /-(subscriber|non-subscriber)$/,
           ""
         );
-        const soldPrice = item.total_money;
+        const soldPrice = item.totalMoney;
 
         const listing = listingsInDateRange.find(
           (listing) => listing.id === itemId
