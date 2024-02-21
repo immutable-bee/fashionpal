@@ -310,7 +310,7 @@ const HomeHeader = () => {
               </div>
 
               <h4 class="text-center italic text-sm text-gray-500 px-3">
-                Best for stores with more than $40K or more of monthly revenue.
+                For stores with more than $50K Monthly Sales
               </h4>
               <div class="flex justify-center px-[68px]">
                 <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
