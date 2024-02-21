@@ -59,7 +59,7 @@ const handler = async (req, res) => {
       const orders = response.result.orders;
 
       const skus = orders.map((order) => {
-        console.log(order.lineItems[0]);
+        console.log(order.lineItems[0].note);
         return order.lineItems[0].note;
       });
 
