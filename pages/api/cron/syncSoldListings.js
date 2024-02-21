@@ -58,24 +58,24 @@ const handler = async (req, res) => {
 
       const orders = response.result.orders;
 
-      const skus = orders.flatMap((order) =>
-        order.lineItems.flatMap((lineItem) =>
-          lineItem?.note ? [lineItem.note] : []
-        )
-      );
+      if (orders) {
+        const skus = orders.flatMap((order) =>
+          order.lineItems.flatMap((lineItem) =>
+            lineItem?.note ? [lineItem.note] : []
+          )
+        );
 
-      if (skus.length > 0) {
-        const updateListings = await prisma.listing.updateMany({
-          where: {
-            businessId: business.id,
-            Barcode: {
-              in: skus,
+        if (skus.length > 0) {
+          const updateListings = await prisma.listing.updateMany({
+            where: {
+              businessId: business.id,
+              Barcode: {
+                in: skus,
+              },
             },
-          },
-          data: { status: "SOLD" },
-        });
-      } else {
-        return res.status(200).json({ message: "No new orders to sync" });
+            data: { status: "SOLD" },
+          });
+        }
       }
     }
 
