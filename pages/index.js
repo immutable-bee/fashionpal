@@ -207,8 +207,7 @@ const HomeHeader = () => {
               </div>
 
               <h4 class="text-center italic text-sm text-gray-500 px-3">
-                For those that are running a store solo and maybe with a little
-                part time help.
+                For stores running solo or with part-time help.
               </h4>
               <div class="flex justify-center px-[68px]">
                 <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
@@ -261,8 +260,8 @@ const HomeHeader = () => {
               </div>
 
               <h4 class="text-center italic text-sm text-gray-500 px-3">
-                For stores that want to maximize store profitibility and
-                streamline workflows.
+                For stores ready to maximize profitability and streamline
+                workflows.
               </h4>
               <div class="flex justify-center px-[68px]">
                 <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
