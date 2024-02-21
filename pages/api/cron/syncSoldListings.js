@@ -58,26 +58,30 @@ const handler = async (req, res) => {
 
       const orders = response.result.orders;
 
-      const skus = orders.map((order) => {
-        console.log(order.lineItems[0].note);
-        if (order.lineItems[0].note) {
-          return order.lineItems[0].note;
-        }
-      });
+      const skus = orders.flatMap((order) =>
+        order.lineItems.flatMap((lineItem) =>
+          lineItem?.note ? [lineItem.note] : []
+        )
+      );
 
-      const updateListings = await prisma.listing.updateMany({
-        where: {
-          businessId: business.id,
-          Barcode: {
-            in: skus,
+      if (skus.length > 0) {
+        const updateListings = await prisma.listing.updateMany({
+          where: {
+            businessId: business.id,
+            Barcode: {
+              in: skus,
+            },
           },
-        },
-        data: { status: "SOLD" },
-      });
+          data: { status: "SOLD" },
+        });
+      } else {
+        return res.status(200).json({ message: "No new orders to sync" });
+      }
     }
 
     return res.status(200).json({ message: "Orders synced to listings" });
   } catch (error) {
+    console.error("Failed to process the request:", error);
     return res.status(500).json({ message: error.message });
   }
 };
