@@ -33,12 +33,12 @@ const HomeHeader = () => {
       </div>
 
       <div className="h-[35rem] sm:h-[calc(100vh-6rem)] bg-center bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
-        <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-4 sm:w-full w-[90%] py-4 sm:py-5">
+        <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-8 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
-            <h3 className="text-gray-700 text-xl sm:text-3xl text-center">
+            <h3 className="text-gray-700 text-xl sm:text-[1.8rem] text-center">
               Inventory Management Software Tailored to Second Hand Fashion
             </h3>
-            <p className="text-gray-500 text-center mt-3 text-base sm:text-lg">
+            <p className="text-gray-500 text-center mt-3 text-base sm:text-lg mx-4">
               Your digital fashion ally. Tailored to your unique needs, it
               transforms customer insights into success strategies. Elevate your
               operations, boost profitability, and enhance customer
@@ -47,7 +47,7 @@ const HomeHeader = () => {
             </p>
 
             <div className="flex justify-center items-center mt-6 gap-4">
-              <Link href="/auth">
+              <Link href="#pricing">
                 <button className="bg-primary hover:scale-110 w-[40vw] sm:w-72 h-14 rounded-lg text-lg sm:text-2xl font-medium text-white duration-300 ease-in-out">
                   Start now
                 </button>
@@ -180,13 +180,13 @@ const HomeHeader = () => {
             Create your FashionPal account today!
           </p>
 
-          <div className="flex justify-center items-center mt-6 gap-4">
+          {/* <div className="flex justify-center items-center mt-6 gap-4">
             <Link href="/auth">
               <button className="bg-primary hover:scale-110 w-52 sm:w-64 h-14 rounded-lg text-xl sm:text-2xl font-medium text-white duration-300 ease-in-out">
                 Create an Account
               </button>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -342,7 +342,7 @@ const HomeHeader = () => {
         id="contact-us"
       >
         <h1 class="text-3xl sm:text-5xl text-gray-700 font-medium">
-          Shedula a demo or contact us
+          Contact Us
         </h1>
         <form onSubmit={handleSubmit}>
           <div class="grid grid-cols-2 mt-8 sm:mt-12 gap-5">

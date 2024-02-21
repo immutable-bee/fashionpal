@@ -99,12 +99,12 @@ const HeaderComponent = () => {
         </div>
 
         <div className="hidden sm:flex justify-end items-center gap-4 w-96">
-          {/* <Link href="/auth">
-            <button className="bg-primary hover:scale-110 sm:w-40 w-24 h-10 sm:h-14 rounded-lg text-base sm:text-2xl font-medium text-white duration-300 ease-in-out">
+          <Link href="/auth">
+            <button className="bg-primary hover:scale-110 sm:w-28 w-20 h-10 sm:h-12 rounded-lg text-base sm:text-2xl font-medium text-white duration-300 ease-in-out">
               Login
             </button>
           </Link>
-          <Link href="/auth">
+          {/* <Link href="/auth">
             <button className="border-[3px] border-primary sm:w-40 w-24 h-10 sm:h-14 rounded-lg text-base sm:text-2xl text-gray-700 font-medium hover:scale-110 duration-300 ease-in-out">
               Register
             </button>
