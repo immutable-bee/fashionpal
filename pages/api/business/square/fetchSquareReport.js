@@ -92,12 +92,12 @@ const handler = async (req, res) => {
       statsByGroup = {};
 
     orders.forEach((order) => {
-      order.line_items.forEach((item) => {
-        const itemId = item.catalog_object_id.replace(
+      order.lineItems.forEach((item) => {
+        const itemId = item.catalogObjectId.replace(
           /-(subscriber|non-subscriber)$/,
           ""
         );
-        const soldPrice = item.total_money;
+        const soldPrice = item.totalMoney;
         const groupKey = getGroupKey(order.closedAt, groupingBasis);
 
         if (!groupedLineItems[groupKey]) {
