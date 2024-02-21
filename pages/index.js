@@ -211,31 +211,31 @@ const HomeHeader = () => {
                 part time help.
               </h4>
               <div class="flex justify-center px-[68px]">
-                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
-                  View Plan Price
+                <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
+                  Get Started
                 </button>
               </div>
             </div>
             <div class="sm:h-[300px] pt-12 mb-10">
               <ul class="list-disc px-[40px]">
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> 100 Al Listing
+                  <span class="text-primary mr-3">&#10003;</span> 100 Al Listing
                   Credits
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span>Automated Sales
+                  <span class="text-primary mr-3">&#10003;</span>Automated Sales
                   Discounting
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span>Square
+                  <span class="text-primary mr-3">&#10003;</span>Square
                   Integration
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span>Email and
+                  <span class="text-primary mr-3">&#10003;</span>Email and
                   Social Marketing
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span>Main Category
+                  <span class="text-primary mr-3">&#10003;</span>Main Category
                   Analytics
                 </li>
               </ul>
@@ -243,7 +243,7 @@ const HomeHeader = () => {
           </div>
 
           <div class="border sm:pb-10 my-3 sm:my-0 sm:-mt-[46px]">
-            <div class="bg-sky-500 w-full h-2 hidden sm:block"></div>
+            <div class="bg-primary w-full h-2 hidden sm:block"></div>
             <div class="h-[338px] border-b  flex flex-col justify-between pb-6 pt-2">
               <h2 class="text-center text-yellow-500 text-xl font-medium hidden sm:block">
                 Growth
@@ -265,31 +265,31 @@ const HomeHeader = () => {
                 streamline workflows.
               </h4>
               <div class="flex justify-center px-[68px]">
-                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
-                  View Plan Price
+                <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
+                  Get Started
                 </button>
               </div>
             </div>
             <div class="sm:h-[300px] pt-12 mb-10">
               <ul class="list-disc px-[40px]">
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> Unlimited Al
+                  <span class="text-primary mr-3">&#10003;</span> Unlimited Al
                   Listing Credits
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> Smart
+                  <span class="text-primary mr-3">&#10003;</span> Smart
                   Aged-Inventory Repricer
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span>Square
+                  <span class="text-primary mr-3">&#10003;</span>Square
                   Integration
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> Email and
+                  <span class="text-primary mr-3">&#10003;</span> Email and
                   Social Marketing
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> Advanced
+                  <span class="text-primary mr-3">&#10003;</span> Advanced
                   Business Metrics
                 </li>
               </ul>
@@ -313,23 +313,23 @@ const HomeHeader = () => {
                 Best for stores with more than $40K or more of monthly revenue.
               </h4>
               <div class="flex justify-center px-[68px]">
-                <button class="bg-sky-500 px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
-                  View Plan Price
+                <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
+                  Get Started
                 </button>
               </div>
             </div>
             <div class="sm:h-[300px] pt-12 mb-10">
               <ul class="list-disc px-[40px]">
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> All Growth
+                  <span class="text-primary mr-3">&#10003;</span> All Growth
                   Features InIcuded
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> Discounted
+                  <span class="text-primary mr-3">&#10003;</span> Discounted
                   Transaction Fee
                 </li>
                 <li class="mb-2 flex items-center text-black text-xl font-nomal">
-                  <span class="text-sky-500 mr-3">&#10003;</span> Priority
+                  <span class="text-primary mr-3">&#10003;</span> Priority
                   Support
                 </li>
               </ul>
