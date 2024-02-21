@@ -60,7 +60,7 @@ const handler = async (req, res) => {
 
       const skus = orders.map((order) => {
         console.log(order.lineItems[0]);
-        return order.lineItems[1].note;
+        return order.lineItems[0].note;
       });
 
       const updateListings = await prisma.listing.updateMany({
