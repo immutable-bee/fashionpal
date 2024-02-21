@@ -57,6 +57,7 @@ const handler = async (req, res) => {
       });
 
       const orders = response.result.orders;
+      console.log(orders);
 
       const skus = orders.map((order) => {
         return order.line_items[1].note;
