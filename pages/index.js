@@ -32,12 +32,19 @@ const HomeHeader = () => {
         <WebsiteHeader />
       </div>
 
-      <div className="h-[30rem] sm:h-[calc(100vh-6rem)] bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
-        <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[13rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-4 sm:w-full w-[90%] py-4 sm:py-5">
+      <div className="h-[35rem] sm:h-[calc(100vh-6rem)] bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
+        <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-4 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
-            <h3 className="text-gray-500 text-xl sm:text-3xl text-center">
+            <h3 className="text-gray-700 text-xl sm:text-3xl text-center">
               Inventory Management Software Tailored to Second Hand Fashion
             </h3>
+            <p className="text-gray-500 text-center mt-3 text-base sm:text-lg">
+              Your digital fashion ally. Tailored to your unique needs, it
+              transforms customer insights into success strategies. Elevate your
+              operations, boost profitability, and enhance customer
+              satisfaction, all in one sleek platform. Navigate fashion's
+              complexities with ease and watch your business flourish
+            </p>
 
             <div className="flex justify-center items-center mt-6 gap-4">
               <Link href="/auth">
@@ -56,7 +63,7 @@ const HomeHeader = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-6 mt-12">
-        <div>
+        {/* <div>
           <div
             className="flex items-center justify-between gap-4 px-2 hover:bg-gray-50 duration-300 ease-in-out cursor-pointer py-2 border-y border-gray-400 w-full"
             onClick={() => setIsCollapseOpen(!isCollapseOpen)}
@@ -81,7 +88,7 @@ const HomeHeader = () => {
                 The Value We Offer
               </h3>
             </div>
-            {/* {!isCollapseOpen ? (
+            {!isCollapseOpen ? (
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -111,7 +118,7 @@ const HomeHeader = () => {
                   d="m4.5 15.75 7.5-7.5 7.5 7.5"
                 />
               </svg>
-            )} */}
+            )}
           </div>
 
           <p className="text-lg text-gray-600 mt-3">
@@ -128,9 +135,9 @@ const HomeHeader = () => {
             business thrive in alignment with your customers' evolving
             preferences.
           </p>
-        </div>
+        </div> */}
         <div className="mt-20">
-          <div className="sm:flex sm:border-none border rounded-3xl overflow-hidden my-12">
+          <div className="sm:flex sm:border-non border rounded-3xl overflow-hidden my-12">
             <div className=" sm:w-1/3">
               <Image
                 src={SmartPricingImage}
@@ -150,7 +157,7 @@ const HomeHeader = () => {
               </div>
             </div>
           </div>
-          <div className="sm:flex sm:border-none border sm:flex-row-reverse rounded-3xl overflow-hidden my-12">
+          <div className="sm:flex sm:border-non border sm:flex-row-reverse rounded-3xl overflow-hidden my-12">
             <div className=" sm:w-1/3">
               <Image
                 src={ProfitableDiscountingImage}
@@ -171,7 +178,7 @@ const HomeHeader = () => {
               </div>
             </div>
           </div>
-          <div className="sm:flex sm:border-none border rounded-3xl overflow-hidden my-12">
+          <div className="sm:flex sm:border-non border rounded-3xl overflow-hidden my-12">
             <div className=" sm:w-1/3">
               <Image
                 src={OneTouchCheckoutImage}
@@ -192,7 +199,7 @@ const HomeHeader = () => {
               </div>
             </div>
           </div>
-          <div className="sm:flex sm:border-none border sm:flex-row-reverse rounded-3xl overflow-hidden my-12">
+          <div className="sm:flex sm:border-non border sm:flex-row-reverse rounded-3xl overflow-hidden my-12">
             <div className=" sm:w-1/3">
               <Image
                 src={RelevantMarketingImage}
@@ -212,7 +219,7 @@ const HomeHeader = () => {
               </div>
             </div>
           </div>
-          <div className="sm:flex sm:border-none border rounded-3xl overflow-hidden my-12">
+          <div className="sm:flex sm:border-non border rounded-3xl overflow-hidden my-12">
             <div className=" sm:w-1/3">
               <Image
                 src={AnalyticsImage}
