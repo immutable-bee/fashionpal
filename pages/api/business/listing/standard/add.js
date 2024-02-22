@@ -71,7 +71,9 @@ const handler = async (req, res) => {
           .replace(/[-T:]/g, "")
           .slice(0, 14);
 
-        newListingSku = timestampSku;
+        // including suffix nanoid to prevent edge case of multiple listings
+        //uploaded in the same second having duplicate sku
+        newListingSku = timestampSku + nanoid(3);
 
         newTinyUrl = await generateUniqueTinyUrl();
 
@@ -87,7 +89,7 @@ const handler = async (req, res) => {
             price,
             status,
             cost: purchasePrice,
-            Barcode: timestampSku,
+            Barcode: newListingSku,
             businessId: business.id,
             isPremiun: isPremium,
             tinyUrl: newTinyUrl,
