@@ -18,6 +18,8 @@ const generateUniqueTinyUrl = async () => {
 const handler = async (req, res) => {
   const { data } = req.body;
 
+  let newListingSku;
+
   try {
     // Start the transaction
     await prisma.$executeRaw`BEGIN`;
@@ -78,6 +80,10 @@ const handler = async (req, res) => {
         .replace(/[-T:]/g, "")
         .slice(0, 14);
 
+      // including suffix nanoid to prevent edge case of multiple listings
+      //uploaded in the same second having duplicate sku
+      newListingSku = timestampSku + nanoid(3);
+
       const newListing = await prisma.listing.create({
         data: {
           mainImageUrl,
@@ -87,7 +93,7 @@ const handler = async (req, res) => {
           status: data.status,
           isActive: true,
           daysToExpiry: 7,
-          Barcode: timestampSku,
+          Barcode: newListingSku,
           tinyUrl: newTinyUrl,
           Business: {
             connect: { id: queuedListing.queue.ownerId },
