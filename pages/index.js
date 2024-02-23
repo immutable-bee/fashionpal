@@ -230,7 +230,7 @@ const HomeHeader = () => {
                 <h4 class="text-center text-gray-500">0-1 EMPLOYEES</h4>
               </div>
 
-              <h4 class="text-center italic text-sm text-gray-500 px-3">
+              <h4 class="text-center italic text-sm text-gray-500 px-3 my-4 sm:my-0">
                 For stores running solo or with part-time help.
               </h4>
               <div class="flex justify-center px-[68px]">
@@ -273,7 +273,7 @@ const HomeHeader = () => {
 
           <div class="border sm:pb-10 my-3 sm:my-0 sm:-mt-[46px]">
             <div class="bg-primary w-full h-2 hidden sm:block"></div>
-            <div class="h-[338px] border-b  flex flex-col justify-between pb-6 pt-2">
+            <div class="sm:h-[338px] border-b  flex flex-col justify-between pb-6 pt-2">
               <h2 class="text-center text-yellow-500 text-xl font-medium hidden sm:block">
                 Growth
               </h2>
@@ -314,7 +314,7 @@ const HomeHeader = () => {
                 <h4 class="text-center text-gray-500">1-5 EMPLOYEES</h4>
               </div>
 
-              <h4 class="text-center italic text-sm text-gray-500 px-3">
+              <h4 class="text-center italic text-sm text-gray-500 px-3 my-4 sm:my-0">
                 For stores ready to maximize profitability and streamline
                 workflows.
               </h4>
@@ -394,7 +394,7 @@ const HomeHeader = () => {
                 <h4 class="text-center text-gray-500">5+ EMPLOYEES</h4>
               </div>
 
-              <h4 class="text-center italic text-sm text-gray-500 px-3">
+              <h4 class="text-center italic text-sm text-gray-500 px-3 my-4 sm:my-0">
                 For stores with more than $50K Monthly Sales
               </h4>
               <div class="flex justify-center px-[68px]">
@@ -542,7 +542,7 @@ const HomeHeader = () => {
           Contact Us
         </h1>
         <form onSubmit={handleSubmit}>
-          <div class="grid grid-cols-2 mt-8 sm:mt-12 gap-5">
+          <div class="grid grid-cols-1 sm:grid-cols-2 mt-8 sm:mt-12 gap-5">
             <input
               type="text"
               name="name"
