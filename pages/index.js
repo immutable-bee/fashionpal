@@ -210,9 +210,15 @@ const HomeHeader = () => {
                 For stores running solo or with part-time help.
               </h4>
               <div class="flex justify-center px-[68px]">
-                <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
-                  Get Started
-                </button>
+                <a
+                  href="https://buy.stripe.com/3cs5kZ8Z0fXPg7uaEG"
+                  target="_black"
+                  className="w-full"
+                >
+                  <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
+                    Get Started
+                  </button>
+                </a>
               </div>
             </div>
             <div class="sm:h-[300px] pt-12 mb-10">
@@ -264,9 +270,15 @@ const HomeHeader = () => {
                 workflows.
               </h4>
               <div class="flex justify-center px-[68px]">
-                <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
-                  Get Started
-                </button>
+                <a
+                  href="https://buy.stripe.com/28o14J7UW26ZdZmcMN"
+                  target="_black"
+                  className="w-full"
+                >
+                  <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
+                    Get Started
+                  </button>
+                </a>
               </div>
             </div>
             <div class="sm:h-[300px] pt-12 mb-10">
@@ -312,9 +324,15 @@ const HomeHeader = () => {
                 For stores with more than $50K Monthly Sales
               </h4>
               <div class="flex justify-center px-[68px]">
-                <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
-                  Get Started
-                </button>
+                <a
+                  href="https://buy.stripe.com/8wM8xbgrs3b3bRebII"
+                  target="_black"
+                  className="w-full"
+                >
+                  <button class="bg-primary px-3 h-[52px] w-full text-white rounded-lg text-lg hover:scale-110 duration-300 ease-in-out">
+                    Get Started
+                  </button>
+                </a>
               </div>
             </div>
             <div class="sm:h-[300px] pt-12 mb-10">
