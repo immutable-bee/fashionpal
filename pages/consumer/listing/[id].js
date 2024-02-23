@@ -80,6 +80,13 @@ function Scan() {
     price: 10,
   });
 
+  const formatPrice = (priceString) => {
+    if (Number(priceString) === parseInt(priceString, 10)) {
+      return `${priceString}.00`;
+    }
+    return priceString;
+  };
+
   const fetchListing = useCallback(async (e) => {
     try {
       const res = await fetch(`/api/consumer/fetchListingWithFollowing/${e}`);
@@ -164,7 +171,11 @@ function Scan() {
 
           <div className=" mx-auto   rounded-2xl w-full   relative">
             <Image
-              src={product.mainImageUrl}
+              src={
+                product.mainImageUrl
+                  ? product.mainImageUrl
+                  : "/images/fpLogo.png"
+              }
               width={100}
               height={100}
               className="rounded-xl w-full mx-auto object-cover"
@@ -172,22 +183,28 @@ function Scan() {
             />
           </div>
 
+          <div>
+            <h3 className="text-xl text-center mt-3  uppercase">Price</h3>
+
+            <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
+              <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
+              <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
+                <h3 className="text-3xl">${formatPrice(product.price)}</h3>
+              </div>
+            </div>
+          </div>
+
           <div className="py-2">
             {product.discountPercentage && product.price && (
               <div>
                 <h3 className="text-xl text-center mt-3  uppercase">
-                  MEMBER PRICE
+                  Member Price
                 </h3>
 
                 <div className="relative w-28 h-28 mb-2 mx-auto mt-2 group">
                   <div className="absolute inset-0 border-4 border-green-300 rounded-full shadow-md"></div>
                   <div className="absolute inset-2 border-2 border-green-300 rounded-full flex justify-center items-center bg-white animate-pulse-once shadow-md">
-                    <h3 className="text-3xl">
-                      $
-                      {product.discountPercentage
-                        ? product.discountPercentage
-                        : product.price}
-                    </h3>
+                    <h3 className="text-3xl">${product.discountPercentage}</h3>
                   </div>
                 </div>
               </div>
