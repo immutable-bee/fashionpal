@@ -12,9 +12,11 @@ import ListingItem from "@/components/utility/ListingItem";
 import ButtonComponent from "@/components/utility/Button";
 import AddListing from "@/components/scoped/AddListing";
 import PrintBarcodeForModal from "../../components/business/PrintBarcodeForModal";
+import { useUser } from "../../context/UserContext";
 
 export default function Home() {
   const { data: session } = useSession();
+  const { user } = useUser();
 
   const [searchText, setSearchText] = useState("");
   const [size, setSize] = useState("");
@@ -228,6 +230,7 @@ export default function Home() {
                   rounded
                   padding="none"
                   className="!px-3 sm:!px-7 !py-1.5"
+                  disabled={!user.business.squareAccessToken}
                 >
                   Add listing
                 </ButtonComponent>
@@ -303,7 +306,17 @@ export default function Home() {
                       })}
 
                       {listings.length === 0 ? (
-                        <p className="text-2xl mt-5">No Listings</p>
+                        user.business.squareAccessToken ? (
+                          <p className="text-2xl mt-5">No Listings</p>
+                        ) : (
+                          <div className="flex justify-center w-1/2">
+                            <p className="text-xl mt-5 text-center">
+                              Square account not authorized, please navigate to
+                              the profile page and authorize Square to begin
+                              listing products.
+                            </p>
+                          </div>
+                        )
                       ) : (
                         ""
                       )}
