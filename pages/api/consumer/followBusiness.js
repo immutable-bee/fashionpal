@@ -1,6 +1,7 @@
 import { prisma } from "../../../db/prismaDB";
 import { authOptions } from "../auth/[...nextauth]";
 import { getServerSession } from "next-auth";
+import { Client, Environment } from "square";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -46,6 +47,34 @@ const handler = async (req, res) => {
         },
       });
     }
+
+    const business = await prisma.business.findUnique({
+      where: { id: businessId },
+      select: { squareAccessToken: true },
+    });
+
+    const squareAccessToken = AES.decrypt(
+      business.squareAccessToken,
+      process.env.NEXTAUTH_SECRET
+    ).toString(enc.Utf8);
+    const client = new Client({
+      accessToken: squareAccessToken,
+      environment: Environment.Production,
+    });
+
+    const newCustomer = await client.customersApi.createCustomer({
+      emailAddress: consumer.email,
+      referenceId: consumer.id,
+    });
+
+    const customerGroups = await client.customerGroupsApi.listCustomerGroups();
+
+    const groupId = customerGroups.result.groups[0].id;
+
+    const response = await client.customersApi.addGroupToCustomer(
+      newCustomer.result.customer.id,
+      groupId
+    );
 
     res.status(200).json({ message: "Store successfully followed" });
   } catch (error) {
