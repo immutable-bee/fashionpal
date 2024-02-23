@@ -500,34 +500,38 @@ const HomeHeader = () => {
             </p>
           </details>
         </div>
-        <p className="mb-4">
-          Please Note:
-          <ul className="list-disc pl-6">
-            <li>
-              This guarantee applies to your first subscription period only. It
-              does not cover any subsequent renewals or additional services
-              purchased.
-            </li>
-            <li>
-              Any request for a refund must be submitted within the 30-day
-              period. Requests made after the 30-day window will not be eligible
-              for a refund under this guarantee.
-            </li>
-            <li>
-              Certain conditions may apply for refunds on transactions involving
-              additional fees, such as currency conversion fees. These will be
-              assessed on a case-by-case basis.
-            </li>
-          </ul>
-        </p>
-        <p>
-          At FashionPal, we believe in the quality and reliability of our
-          software solutions. Our 30-Day 100% Money-Back Guarantee is a
-          testament to our confidence in our services and our commitment to your
-          satisfaction. We're here to support you every step of the way, so you
-          can make the most informed decision for your needs without any
-          pressure.
-        </p>
+        <div className="mb-4">
+          <details className="border-b border-gray-300 pb-4 mb-4">
+            <summary className="font-bold cursor-pointer">Please Note:</summary>
+            <p className="mt-2">
+              <ul className="list-disc pl-6">
+                <li>
+                  This guarantee applies to your first subscription period only.
+                  It does not cover any subsequent renewals or additional
+                  services purchased.
+                </li>
+                <li>
+                  Any request for a refund must be submitted within the 30-day
+                  period. Requests made after the 30-day window will not be
+                  eligible for a refund under this guarantee.
+                </li>
+                <li>
+                  Certain conditions may apply for refunds on transactions
+                  involving additional fees, such as currency conversion fees.
+                  These will be assessed on a case-by-case basis.
+                </li>
+              </ul>{" "}
+              <br />
+              At FashionPal, we believe in the quality and reliability of our
+              software solutions. Our 30-Day 100% Money-Back Guarantee is a
+              testament to our confidence in our services and our commitment to
+              your satisfaction. We're here to support you every step of the
+              way, so you can make the most informed decision for your needs
+              without any pressure.
+            </p>
+          </details>
+        </div>
+
         <p className="mt-4">
           Thank you for choosing FashionPal. We look forward to serving you and
           helping you achieve your goals with our innovative software solutions.
