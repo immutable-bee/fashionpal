@@ -2,6 +2,7 @@ import { prisma } from "../../../../db/prismaDB";
 import { authOptions } from "../../auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { AES } from "crypto-js";
+import { Client, Environment } from "square";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -53,6 +54,17 @@ const handler = async (req, res) => {
         squareAccessToken: encryptedAccessToken,
         squareRefreshToken: encryptedRefreshToken,
         squareTokenIssueDate: currentDate,
+      },
+    });
+
+    const client = new Client({
+      accessToken: data.access_token,
+      environment: Environment.Production,
+    });
+
+    const response = await client.customerGroupsApi.createCustomerGroup({
+      group: {
+        name: "Members",
       },
     });
 
