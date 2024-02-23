@@ -32,7 +32,7 @@ const HomeHeader = () => {
         <WebsiteHeader />
       </div>
 
-      <div className="h-[35rem] sm:h-[calc(100vh-6rem)] bg-center bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
+      <div className="h-[35rem] sm:h-[calc(100vh-6rem)] bg-[url('../assets/website/cover.png')] bg-cover bg-no-repeat flex items-center justify-center">
         <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-8 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
             <h3 className="text-gray-700 text-xl sm:text-[1.8rem] text-center">
