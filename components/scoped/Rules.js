@@ -86,9 +86,9 @@ const RePricer = ({ categoryList }) => {
     setIsEditing(true);
 
     setRuleId(rule.id);
-    setSearchText(rule.searchText);
-    setFilterCategory(rule.filterCategory);
-    setFilterType(rule.filterType);
+    // setSearchText(rule.searchText);
+    // setFilterCategory(rule.filterCategory);
+    // setFilterType(rule.filterType);
     setName(rule.name);
     setCategory(rule.categoryId);
     setListingType(rule.listingType);

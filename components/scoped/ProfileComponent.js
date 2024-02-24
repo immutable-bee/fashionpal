@@ -353,7 +353,10 @@ function ProfileComponent() {
           </div>
         </div>
         {editModal === true && (
-          <EditBusinessProfileModal onClose={onClose} onDone={onDone} />
+          <EditBusinessProfileModal
+            onClose={onClose}
+            onDone={onDone}
+          />
         )}
       </div>
     </div>
