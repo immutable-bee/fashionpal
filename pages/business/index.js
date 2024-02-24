@@ -230,7 +230,7 @@ export default function Home() {
                   rounded
                   padding="none"
                   className="!px-3 sm:!px-7 !py-1.5"
-                  disabled={!user.business.squareAccessToken}
+                  disabled={!user.business || !user.business.squareAccessToken}
                 >
                   Add listing
                 </ButtonComponent>
