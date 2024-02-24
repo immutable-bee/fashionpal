@@ -9,11 +9,19 @@ import Image from "next/image";
 import WebsiteHeader from "@/components/utility/WebsiteHeader";
 import Link from "next/link";
 import TooltipComponent from "../components/utility/Tooltip";
+import axios from "axios";
+import { NotificationManager } from "react-notifications";
 
 const HomeHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCollapseOpen, setIsCollapseOpen] = useState(false);
-  const [formData, setFormData] = useState();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    comment: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +33,30 @@ const HomeHeader = () => {
     e.preventDefault();
 
     console.log(formData);
+    setIsLoading(true);
+
+    try {
+      // Assuming you have a state variable formData containing the form data
+      const { data } = await axios.post("/api/contact", formData);
+
+      if (data.success) {
+        NotificationManager.success("Form submitted successfully!");
+
+        // Reset the form after successful submission
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          comment: "",
+        });
+      } else {
+        NotificationManager.error("Failed to submit form:", data.message);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      NotificationManager.error("Error submit form request:", error);
+    }
   };
 
   return (
@@ -550,15 +582,18 @@ const HomeHeader = () => {
             <input
               type="text"
               name="name"
-              class="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
-              placeholder="Name"
+              required
+              value={formData.name}
+              className="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              placeholder="Name *"
               onChange={handleChange}
             />
             <input
               type="email"
               name="email"
               required
-              class="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              value={formData.email}
+              className="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
               placeholder="Email *"
               onChange={handleChange}
             />
@@ -567,17 +602,19 @@ const HomeHeader = () => {
             <input
               type="tel"
               name="phone"
-              class="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
-              placeholder="Phone number *"
+              value={formData.phone}
+              className="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
+              placeholder="Phone number"
               onChange={handleChange}
             />
           </div>
           <div class="mt-8">
             <textarea
-              placeholder="Comment"
+              placeholder="Comment *"
+              required
               name="comment"
-              class="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
-              id=""
+              value={formData.comment}
+              className="rounded-2xl border border-gray-400 px-3 sm:px-6 w-full focus:outline-none py-3 text-lg text-gray-600"
               cols="30"
               rows="4"
               onChange={handleChange}
@@ -585,7 +622,9 @@ const HomeHeader = () => {
           </div>
           <div class="mt-6 sm:mt-6">
             <button
-              class="rounded-xl px-12  py-[14px] text-xl text-gray-50 font-medium bg-primary hover:scale-110 duration-300 ease-in-out"
+              className={`rounded-xl px-12  py-[14px] text-xl text-gray-50 font-medium bg-primary hover:scale-110 duration-300 ease-in-out ${
+                isLoading && "pointer-events-none opacity-70"
+              }`}
               type="submit"
             >
               Send
