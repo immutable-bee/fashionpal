@@ -40,11 +40,16 @@ const HomeHeader = () => {
               Inventory Management Software Tailored to Second Hand Fashion
             </h3>
             <p className="text-gray-500 text-center mt-3 text-base sm:text-lg mx-4">
-              Your digital fashion ally. Tailored to your unique needs, it
+              Be in the know of every one of your products at all times of the
+              sales cycle. From price tagging to the customer purchase.
+              FashionPal will feel like that perfect pair pants that fits you
+              and your body type. Helping you gain insights into your business
+              and be your 24/7 assistant attending to your every need.
+              {/* Your digital fashion ally. Tailored to your unique needs, it
               transforms customer insights into success strategies. Elevate your
               operations, boost profitability, and enhance customer
               satisfaction, all in one sleek platform. Navigate fashion's
-              complexities with ease and watch your business flourish
+              complexities with ease and watch your business flourish */}
             </p>
 
             <div className="flex justify-center items-center mt-6 gap-4">

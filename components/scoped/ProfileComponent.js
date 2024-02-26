@@ -5,6 +5,7 @@ import Loading from "@/components/utility/loading";
 import { signOut } from "next-auth/react";
 import { NotificationManager } from "react-notifications";
 import { useRouter } from "next/router";
+import TooltipComponent from "@/components/utility/Tooltip";
 
 function ProfileComponent() {
   const router = useRouter();
@@ -251,12 +252,24 @@ function ProfileComponent() {
                   <h1 className="text-md text-gray-700">
                     90 day Sell through Target:
                   </h1>
-                  <input
-                    value={daysThroughTraget}
-                    type="number"
-                    onChange={handleDaysThroughTarget}
-                    className="font-medium px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
-                  />
+                  <TooltipComponent
+                    rounded
+                    placement="rightStart"
+                    width="sm:!w-64 !w-48"
+                    id="shipping-status-tooltip"
+                    css={{ zIndex: 10000 }}
+                    content={
+                      "I'm the future I want to have an AI module to built to help the user make targeted suggestions to improve those goals metrics."
+                    }
+                  >
+                    <input
+                      value={daysThroughTraget}
+                      type="number"
+                      onChange={handleDaysThroughTarget}
+                      disabled
+                      className="font-medium bg-gray-200 px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
+                    />
+                  </TooltipComponent>
                 </div>
               </div>
             </div>
@@ -278,12 +291,24 @@ function ProfileComponent() {
                 </div>
                 <div className="flex items-center justify-between  mt-3">
                   <h1 className="text-md text-gray-700">90 day ASP Target:</h1>
-                  <input
-                    value={daysASPTarget}
-                    type="number"
-                    onChange={handleDaysASPTarget}
-                    className="font-medium px-2 focus:ring-1 focus:ring-primary py-1 border border-primary focus:outline-none text-black rounded-xl w-28 h-10"
-                  />
+                  <TooltipComponent
+                    rounded
+                    placement="rightStart"
+                    width="sm:!w-64 !w-48"
+                    id="shipping-status-tooltip"
+                    css={{ zIndex: 10000 }}
+                    content={
+                      "I'm the future I want to have an AI module to built to help the user make targeted suggestions to improve those goals metrics."
+                    }
+                  >
+                    <input
+                      value={daysASPTarget}
+                      type="number"
+                      onChange={handleDaysASPTarget}
+                      disabled
+                      className="font-medium px-2 bg-gray-200 focus:ring-1 focus:ring-primary py-1 border border-primary focus:outline-none text-black rounded-xl w-28 h-10"
+                    />
+                  </TooltipComponent>
                 </div>
               </div>
             </div>
