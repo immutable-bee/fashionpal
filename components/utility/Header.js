@@ -68,7 +68,7 @@ const HeaderComponent = () => {
             <Link
               href="/consumer"
               style={{ color: linkColor("/consumer") }}
-              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 "
               aria-current="page"
             >
               Home
@@ -79,7 +79,7 @@ const HeaderComponent = () => {
             <Link
               href="/consumer/saved"
               style={{ color: linkColor("/consumer/saved") }}
-              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 "
             >
               Saved
             </Link>
@@ -88,7 +88,7 @@ const HeaderComponent = () => {
             <Link
               href="/consumer/sales"
               style={{ color: linkColor("/consumer/sales") }}
-              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 "
             >
               Sales
             </Link>
@@ -98,7 +98,7 @@ const HeaderComponent = () => {
             <Link
               href="/business"
               style={{ color: linkColor("/business") }}
-              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 "
+              className="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 "
             >
               Business
             </Link>

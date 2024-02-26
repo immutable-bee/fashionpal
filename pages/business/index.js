@@ -13,6 +13,7 @@ import ButtonComponent from "@/components/utility/Button";
 import AddListing from "@/components/scoped/AddListing";
 import PrintBarcodeForModal from "../../components/business/PrintBarcodeForModal";
 import { useUser } from "../../context/UserContext";
+import Link from "next/link";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -230,7 +231,9 @@ export default function Home() {
                   rounded
                   padding="none"
                   className="!px-3 sm:!px-7 !py-1.5"
-                  disabled={!user.business.squareAccessToken}
+                  disabled={
+                    !user || !user.business || !user.business.squareAccessToken
+                  }
                 >
                   Add listing
                 </ButtonComponent>
@@ -309,12 +312,25 @@ export default function Home() {
                         user.business.squareAccessToken ? (
                           <p className="text-2xl mt-5">No Listings</p>
                         ) : (
-                          <div className="flex justify-center w-1/2">
-                            <p className="text-xl mt-5 text-center">
-                              Square account not authorized, please navigate to
-                              the profile page and authorize Square to begin
-                              listing products.
-                            </p>
+                          <div className="flex justify-center w-1/2 bg-white shadow mt-5 px-4 py-4 rounded-3xl">
+                            <div>
+                              <p className="text-xl mt-5 text-center">
+                                Square account not authorized, please navigate
+                                to the profile page and authorize Square to
+                                begin listing products.
+                              </p>
+                              <div className="max-w-[20rem] mx-auto">
+                                <Link href="/business/profile">
+                                  <ButtonComponent
+                                    className="mt-3"
+                                    rounded
+                                    full
+                                  >
+                                    Connect Square Account
+                                  </ButtonComponent>
+                                </Link>
+                              </div>
+                            </div>
                           </div>
                         )
                       ) : (

@@ -14,7 +14,7 @@ module.exports = {
         bronze: "#5C3COC",
         mine: "#242424",
         kidnapper: "#DDE5CB",
-        biblioSeafoam: "#d2e2ae",
+        biblioSeafoam: "#eec2b5",
         blbBlue: "#2eaaed",
         biblioGreen: "#A5CB4C",
       },

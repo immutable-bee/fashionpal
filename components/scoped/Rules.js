@@ -53,10 +53,10 @@ const RePricer = ({ categoryList }) => {
   const fetchListings = useCallback(async () => {
     setLoadingListings(true);
 
+    let url = `/api/pricing-rules/list?name=${searchText}&categoryId=${filterCategory}`;
+    // &listingType=${filterType}
     try {
-      const res = await fetch(
-        `/api/pricing-rules/list?name=${searchText}&categoryId=${filterCategory}&listingType=${filterType}`
-      );
+      const res = await fetch(url);
 
       if (res.status === 200) {
         const data = await res.json();
@@ -86,9 +86,9 @@ const RePricer = ({ categoryList }) => {
     setIsEditing(true);
 
     setRuleId(rule.id);
-    setSearchText(rule.searchText);
-    setFilterCategory(rule.filterCategory);
-    setFilterType(rule.filterType);
+    // setSearchText(rule.searchText);
+    // setFilterCategory(rule.filterCategory);
+    // setFilterType(rule.filterType);
     setName(rule.name);
     setCategory(rule.categoryId);
     setListingType(rule.listingType);
@@ -177,25 +177,28 @@ const RePricer = ({ categoryList }) => {
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="py-2">
-                <label className="text-lg">Category</label>
-                <select
-                  value={filterCategory}
-                  className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
-                  onChange={(e) => setFilterCategory(e.target.value)}
-                >
-                  <option value="">All</option>
-                  {categoryList &&
-                    categoryList.length > 0 &&
-                    categoryList.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                </select>
-              </div>
+            {/* <div className="grid grid-cols-2 gap-3"> */}
+            <div className="py-2">
+              <label className="text-lg">Category</label>
+              <select
+                value={filterCategory}
+                className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
+                onChange={(e) => setFilterCategory(e.target.value)}
+              >
+                <option value="">All</option>
+                {categoryList &&
+                  categoryList.length > 0 &&
+                  categoryList.map((category) => (
+                    <option
+                      key={category.id}
+                      value={category.id}
+                    >
+                      {category.name}
+                    </option>
+                  ))}
+              </select>
             </div>
+            {/* </div> */}
 
             <div className="w-full">
               {loadingListings ? (
@@ -275,13 +278,20 @@ const RePricer = ({ categoryList }) => {
                 className="w-full mt-1 rounded-xl px-3 py-2 border border-gray-600"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="" selected disabled>
+                <option
+                  value=""
+                  selected
+                  disabled
+                >
                   Select category
                 </option>
                 {categoryList &&
                   categoryList.length > 0 &&
                   categoryList.map((category) => (
-                    <option key={category.id} value={category.id}>
+                    <option
+                      key={category.id}
+                      value={category.id}
+                    >
                       {category.name}
                     </option>
                   ))}

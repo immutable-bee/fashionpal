@@ -198,16 +198,16 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
     e.preventDefault();
 
     if (!formData?.businessStreet) {
-      NotificationManager.error("Street is required!");
+      NotificationManager.error("Business Address is required!");
       return;
     } else if (!formData?.businessCity) {
-      NotificationManager.error("City url is required!");
+      NotificationManager.error("Business City is required!");
       return;
     } else if (!formData?.businessState) {
-      NotificationManager.error("State url is required!");
+      NotificationManager.error("Business State is required!");
       return;
     } else if (!formData?.businessZip) {
-      NotificationManager.error("Zip code url is required!");
+      NotificationManager.error("Zip code is required!");
       return;
     } else if (!agreedToTerms) {
       NotificationManager.error(
@@ -315,11 +315,12 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                       border-[#f1f3f5]
                       rounded-xl
                       bg-[#f1f3f5]
-                      text-[#787878]
+                      text-black placeholder-gray-300
                       h-10
                       my-2 px-2
                       "
                 >
+                  <option value="">Select state</option>
                   {stateOptions.map((state) => (
                     <option
                       key={state.key}
@@ -329,6 +330,7 @@ const OnboardingForm = ({ isCompleteHandler, loadingHandler }) => {
                     </option>
                   ))}
                 </select>
+
                 <Input
                   onChange={handleChange}
                   className="small-onboard-fields  my-2"

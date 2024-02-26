@@ -100,7 +100,7 @@ const compiledHtml = `<!doctype html>
 </head>
 
 <body style="word-spacing:normal;">
-  <div className="body" style="background-color:#d2e2ae;">
+  <div className="body" style="background-color:#eec2b5;">
     <div style="height:12px;line-height:12px;">&#8202;</div>
     <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:480px;" width="480" bgcolor="transparent" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div style="background:transparent;background-color:transparent;margin:0px auto;border-radius:14px;max-width:480px;">

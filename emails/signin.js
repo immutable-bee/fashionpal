@@ -90,7 +90,7 @@ const compiledHtml = `<!doctype html>
 </head>
 
 <body style="word-spacing:normal;">
-  <div className="body" style="background-color:#d2e2ae;">
+  <div className="body" style="background-color:#eec2b5;">
     <div style="height:12px;line-height:12px;">&#8202;</div>
     <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" className="" style="width:480px;" width="480" bgcolor="transparent" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div style="background:transparent;background-color:transparent;margin:0px auto;border-radius:14px;max-width:480px;">
@@ -223,8 +223,8 @@ const compiledHtml = `<!doctype html>
                                                     <td align="center" vertical-align="middle" className="btn-link" style="padding-bottom: 5px; font-size: 0px; padding: 12px; word-break: break-word;">
                                                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:120px;line-height:100%;">
                                                         <tr>
-                                                          <td align="center" bgcolor="#FFC71F" role="presentation" style="padding-bottom: 5px; border: 1px solid black; border-radius: 24px; cursor: auto; height: 30px; mso-padding-alt: 0; background: #FFC71F;" valign="middle" height="30">
-                                                            <a href="{{cta1}}" style="display: inline-block; width: 118px; background: #FFC71F; color: #333333; font-family: Poppins, sans-serif; font-size: 12px; font-weight: 500; line-height: 100%; margin: 0; text-decoration: none; text-transform: none; padding: 0; mso-padding-alt: 0px; border-radius: 24px;" target="_blank"> Sign in </a>
+                                                          <td align="center" bgcolor="#FFC71F" role="presentation" style="border-radius: 10px; cursor: auto; height: 30px; mso-padding-alt: 0; background: #e44a1f;" valign="middle" height="30">
+                                                            <a href="{{cta1}}" style="display: inline-block; padding-top: 10px; padding-bottom: 10px; width: 118px; background: #e44a1f; color: #ffffff; font-family: Poppins, sans-serif; font-size: 16px; font-weight: 500; line-height: 100%; margin: 0; text-decoration: none; text-transform: none; mso-padding-alt: 0px; border-radius: 24px;" target="_blank"> Sign in </a>
                                                           </td>
                                                         </tr>
                                                       </table>
