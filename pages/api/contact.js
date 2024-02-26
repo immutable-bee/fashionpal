@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       // Send the email
       await transporter.sendMail({
         from: `"FashionPal" <${process.env.EMAIL_FROM}>`,
-        to: "natepeterson.fitness@gmail.com",
+        to: "nate@fashionpal.app",
         subject: "Contact Us Form Submission",
         html: emailBody,
       });
