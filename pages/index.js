@@ -191,7 +191,10 @@ const HomeHeader = () => {
         </div>
       </div>
 
-      <div id="pricing">
+      <div
+        id="pricing"
+        className="pt-20"
+      >
         <div class="grid grid-cols-1 sm:grid-cols-3 my-20 mx-auto max-w-6xl px-3 sm:px-6">
           <div class="border sm:pb-10 my-3 sm:my-0">
             <div class="sm:h-[300px] border-b  flex flex-col justify-between py-6">

@@ -24,7 +24,7 @@ const HeaderComponent = ({ open, close, mobile }) => {
       <ul className="font-medium sm:w-auto w-full text-xl sm:text-2xl flex flex-col p-4 md:p-0 mt-4 border border-gray-100 sm:border-transparent rounded-lg sm:bg-transparent bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white">
         <li>
           <Link
-            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 ${linkColor(
               "/business"
             )} `}
             href="#"
@@ -35,7 +35,7 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li>
           <Link
-            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 ${linkColor(
               "/business/listing-queue"
             )} `}
             href="#pricing"
@@ -46,7 +46,7 @@ const HeaderComponent = ({ open, close, mobile }) => {
         </li>
         <li>
           <Link
-            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 ${linkColor(
+            className={`block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-primary md:p-0 ${linkColor(
               "/business/sales"
             )} `}
             href="#contact-us"
