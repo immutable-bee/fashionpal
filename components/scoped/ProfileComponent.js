@@ -249,27 +249,43 @@ function ProfileComponent() {
                   </h3>
                 </div>
                 <div className="flex items-center justify-between  mt-3">
-                  <h1 className="text-md text-gray-700">
-                    90 day Sell through Target:
-                  </h1>
-                  <TooltipComponent
-                    rounded
-                    placement="rightStart"
-                    width="sm:!w-64 !w-48"
-                    id="shipping-status-tooltip"
-                    css={{ zIndex: 10000 }}
-                    content={
-                      "I'm the future I want to have an AI module to built to help the user make targeted suggestions to improve those goals metrics."
-                    }
-                  >
-                    <input
-                      value={daysThroughTraget}
-                      type="number"
-                      onChange={handleDaysThroughTarget}
-                      disabled
-                      className="font-medium bg-gray-200 px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
-                    />
-                  </TooltipComponent>
+                  <div className="flex ">
+                    <h1 className="text-md text-gray-700">
+                      90 day Sell through Target:
+                    </h1>
+                    <TooltipComponent
+                      rounded
+                      placement="rightStart"
+                      width="sm:!w-64 !w-48"
+                      id="shipping-status-tooltip"
+                      css={{ zIndex: 10000 }}
+                      content={
+                        "Input a benchmark target for your store to aim for"
+                      }
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 cursor-pointer"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                        />
+                      </svg>
+                    </TooltipComponent>
+                  </div>
+
+                  <input
+                    value={daysThroughTraget}
+                    type="number"
+                    onChange={handleDaysThroughTarget}
+                    className="font-medium  px-2 py-1 border focus:ring-1 focus:ring-primary border-primary focus:outline-none text-black rounded-xl w-28 h-10"
+                  />
                 </div>
               </div>
             </div>
@@ -290,25 +306,42 @@ function ProfileComponent() {
                   </h3>
                 </div>
                 <div className="flex items-center justify-between  mt-3">
-                  <h1 className="text-md text-gray-700">90 day ASP Target:</h1>
-                  <TooltipComponent
-                    rounded
-                    placement="rightStart"
-                    width="sm:!w-64 !w-48"
-                    id="shipping-status-tooltip"
-                    css={{ zIndex: 10000 }}
-                    content={
-                      "I'm the future I want to have an AI module to built to help the user make targeted suggestions to improve those goals metrics."
-                    }
-                  >
-                    <input
-                      value={daysASPTarget}
-                      type="number"
-                      onChange={handleDaysASPTarget}
-                      disabled
-                      className="font-medium px-2 bg-gray-200 focus:ring-1 focus:ring-primary py-1 border border-primary focus:outline-none text-black rounded-xl w-28 h-10"
-                    />
-                  </TooltipComponent>
+                  <div className="flex">
+                    <h1 className="text-md text-gray-700">
+                      90 day ASP Target:
+                    </h1>
+                    <TooltipComponent
+                      rounded
+                      placement="rightStart"
+                      width="sm:!w-64 !w-48"
+                      id="shipping-status-tooltip"
+                      css={{ zIndex: 10000 }}
+                      content={
+                        "Input a benchmark target for your store to aim for"
+                      }
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 cursor-pointer"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+                        />
+                      </svg>
+                    </TooltipComponent>
+                  </div>
+                  <input
+                    value={daysASPTarget}
+                    type="number"
+                    onChange={handleDaysASPTarget}
+                    className="font-medium px-2 focus:ring-1 focus:ring-primary py-1 border border-primary focus:outline-none text-black rounded-xl w-28 h-10"
+                  />
                 </div>
               </div>
             </div>
