@@ -224,7 +224,7 @@ const compiledHtml = `<!doctype html>
                                                       <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;width:120px;line-height:100%;">
                                                         <tr>
                                                           <td align="center" bgcolor="#FFC71F" role="presentation" style="border-radius: 10px; cursor: auto; height: 30px; mso-padding-alt: 0; background: #e44a1f;" valign="middle" height="30">
-                                                            <a href="{{cta1}}" style="display: inline-block; padding-top: 10px; padding-bottom: 10px; width: 118px; background: #e44a1f; color: #333333; font-family: Poppins, sans-serif; font-size: 16px; font-weight: 500; line-height: 100%; margin: 0; text-decoration: none; text-transform: none; mso-padding-alt: 0px; border-radius: 24px;" target="_blank"> Sign in </a>
+                                                            <a href="{{cta1}}" style="display: inline-block; padding-top: 10px; padding-bottom: 10px; width: 118px; background: #e44a1f; color: #ffffff; font-family: Poppins, sans-serif; font-size: 16px; font-weight: 500; line-height: 100%; margin: 0; text-decoration: none; text-transform: none; mso-padding-alt: 0px; border-radius: 24px;" target="_blank"> Sign in </a>
                                                           </td>
                                                         </tr>
                                                       </table>
