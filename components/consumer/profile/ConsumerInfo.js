@@ -377,7 +377,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
           {/*  */}
 
           <div className="w-full mt-5 rounded-lg md:w-3/4 sm:w-3/4 mx-auto bg-white border-2 border-gray-300 p-4 text-center">
-            <p>Use QR Code at checkout to receive your subscriber price</p>
+            <p>Use QR Code at checkout to receive your member price</p>
           </div>
         </div>
         <div className="flex justify-center mt-2">
