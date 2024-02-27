@@ -389,10 +389,10 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
         <label className="flex justify-center">{consumerData.email}</label>
       </div>
 
-      <div className="w-1/3 pt-5 pb-10 flex flex-col items-center">
+      <div className="w-full pt-5 pb-10 flex flex-col items-center max-w-lg mx-auto">
         <h2 className="text-3xl text-gray-700 mb-3">Following</h2>
         {consumerData?.following?.length > 0 ? (
-          <table className="w-1/2">
+          <table className="w-full">
             <caption className="pb-3 text-xl">Store Name</caption>
 
             {consumerData?.following.map((store) => (
@@ -400,7 +400,7 @@ function ConsumerInfo({ consumerData, setConsumerData, fetchConsumerDetails }) {
                 className="border border-black"
                 key={store.businessId}
               >
-                <td className="text-lg pl-2">{store.businessName}</td>
+                <td className="text-lg pl-2 py-3">{store.businessName}</td>
                 <td>
                   <img
                     class="cursor-pointer"
