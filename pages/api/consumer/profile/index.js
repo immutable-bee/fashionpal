@@ -42,8 +42,8 @@ const handler = async (req, res) => {
       ...consumer,
       following: followingBusinesses,
     };
-
-    const { ThriftList, following, ...rest } = consumerWithFollowing;
+    // ThriftList,
+    const { following, ...rest } = consumerWithFollowing;
 
     res.status(200).json({
       ...rest,
