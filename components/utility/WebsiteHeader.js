@@ -55,12 +55,12 @@ const HeaderComponent = () => {
 
   return (
     <div>
-      <header className="flex fixed bg-white drop-shadow-md  mx-auto w-full justify-center sm:justify-between items-center px-2 sm:px-8 py-3">
+      <header className="flex fixed bg-white drop-shadow-md  mx-auto w-full  justify-between items-center px-2 sm:px-8 py-3">
         <button
           onClick={() => openMenu()}
           data-collapse-toggle="navbar-default"
           type="button"
-          className="inline-flex items-center p-2 absolute left-3 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
           aria-controls="navbar-default"
           aria-expanded="false"
         >
@@ -98,18 +98,18 @@ const HeaderComponent = () => {
           </Link>
         </div>
 
-        <div className="hidden sm:flex justify-end items-center gap-4 w-96">
-          <Link href="/auth">
-            <button className="bg-primary hover:scale-110 sm:w-28 w-20 h-10 sm:h-12 rounded-lg text-base sm:text-2xl font-medium text-white duration-300 ease-in-out">
-              Login
-            </button>
-          </Link>
-          {/* <Link href="/auth">
+        {/* <div className="hidden sm:flex justify-end items-center gap-4 w-96"> */}
+        <Link href="/auth">
+          <button className="bg-primary hover:scale-110 sm:w-28 w-20 h-10 sm:h-12 rounded-lg text-base sm:text-2xl font-medium text-white duration-300 ease-in-out">
+            Login
+          </button>
+        </Link>
+        {/* <Link href="/auth">
             <button className="border-[3px] border-primary sm:w-40 w-24 h-10 sm:h-14 rounded-lg text-base sm:text-2xl text-gray-700 font-medium hover:scale-110 duration-300 ease-in-out">
               Register
             </button>
           </Link> */}
-        </div>
+        {/* </div> */}
       </header>
       <div className="sm:hidden block">
         {open && (
