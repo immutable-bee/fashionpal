@@ -2,6 +2,7 @@ import { prisma } from "../../../db/prismaDB";
 import { authOptions } from "../auth/[...nextauth]";
 import { getServerSession } from "next-auth";
 import { Client, Environment } from "square";
+import { AES, enc } from "crypto-js";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
@@ -40,6 +41,12 @@ const handler = async (req, res) => {
           id: true,
         },
       });
+
+      if (!business) {
+        // Business not found, return a 404 response
+        return res.status(404).json({ error: "Business not found" });
+      }
+
       const followByUrl = await prisma.follow.create({
         data: {
           businessId: business.id,
@@ -52,6 +59,11 @@ const handler = async (req, res) => {
       where: { id: businessId },
       select: { squareAccessToken: true },
     });
+
+    if (!business) {
+      // Business not found, return a 404 response
+      return res.status(404).json({ error: "Business not found" });
+    }
 
     const squareAccessToken = AES.decrypt(
       business.squareAccessToken,
