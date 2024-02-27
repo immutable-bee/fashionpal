@@ -90,7 +90,13 @@ const handler = async (req, res) => {
         }
       }
     }
-    const validatorResponse = PayloadValidator(payload, requiredParam);
+    console.log("==============");
+    console.log(payload);
+    console.log(data);
+    console.log(requiredParam);
+    console.log("==============");
+
+    const validatorResponse = PayloadValidator(data, requiredParam);
     if (validatorResponse.status) {
       return res.status(400).json({
         error: `${validatorResponse.issueForParam} cannot be empty`,
