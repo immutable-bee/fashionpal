@@ -82,11 +82,11 @@ const HeaderComponent = () => {
           </svg>
         </button>
 
-        <div className="sm:block hidden">
+        <div className="sm:block hidden flex-1">
           <WebsiteMenu mobile={false} />
         </div>
 
-        <div>
+        <div className="flex justify-center flex-1">
           <Link href="/">
             <Image
               src={Logo}
@@ -99,7 +99,10 @@ const HeaderComponent = () => {
         </div>
 
         {/* <div className="hidden sm:flex justify-end items-center gap-4 w-96"> */}
-        <Link href="/auth">
+        <Link
+          href="/auth"
+          className="flex justify-end flex-1"
+        >
           <button className="bg-primary hover:scale-110 sm:w-28 w-20 h-10 sm:h-12 rounded-lg text-base sm:text-2xl font-medium text-white duration-300 ease-in-out">
             Login
           </button>
