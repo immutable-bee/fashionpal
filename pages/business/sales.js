@@ -23,7 +23,7 @@ const RePricer = () => {
   }, []);
 
   return (
-    <div className="sm:w-96 mx-auto mt-4 mb-7 px-3">
+    <div className="sm:w-[24rem] mx-auto mt-4 mb-7 ">
       <Head>
         <title>Sales</title>
       </Head>
