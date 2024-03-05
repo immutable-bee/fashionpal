@@ -87,7 +87,7 @@ const HomeHeader = () => {
             <div className="flex justify-center items-center mt-6 gap-4">
               <Link href="#pricing">
                 <button className="bg-primary hover:scale-110 w-[40vw] sm:w-72 h-14 rounded-lg text-lg sm:text-2xl font-medium text-white duration-300 ease-in-out">
-                  Start now
+                  Get Started
                 </button>
               </Link>
               <a
