@@ -69,7 +69,7 @@ const HomeHeader = () => {
         <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-8 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
             <h3 className="text-gray-700 text-xl sm:text-[1.8rem] text-center">
-              Second-hand Fashion Made Easy
+              Effortless Second-Hand Fashion
             </h3>
             <p className="text-gray-500 text-center mt-3 text-base sm:text-lg mx-4">
               Stay on top of every detail of your products throughout the sales
