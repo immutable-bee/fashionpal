@@ -28,6 +28,8 @@ const AuthContainer = (props) => {
             >
               <Image
                 src={Logo}
+                width={3000}
+                height={1000}
                 alt="Logo"
                 className="!w-32"
               />

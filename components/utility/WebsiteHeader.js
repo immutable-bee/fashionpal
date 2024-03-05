@@ -90,8 +90,8 @@ const HeaderComponent = () => {
           <Link href="/">
             <Image
               src={Logo}
-              width={120}
-              height={58}
+              width={3000}
+              height={1000}
               className="w-48 sm:w-48"
               alt="logo"
             />
