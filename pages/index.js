@@ -69,14 +69,19 @@ const HomeHeader = () => {
         <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-8 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
             <h3 className="text-gray-700 text-xl sm:text-[1.8rem] text-center">
-              Inventory Management Software Tailored to Second Hand Fashion
+              Second-hand Fashion Made Easy
             </h3>
             <p className="text-gray-500 text-center mt-3 text-base sm:text-lg mx-4">
-              Be in the know of every one of your products at all times of the
+              Stay atop every detail of your products throughout the sales
+              cycle, from pricing to purchase. FashionPal spots trends in your
+              business, just as you do with fashion trends. It provides deep
+              insights into your business, acting as your 24/7 assistant,
+              catering to every need without fail.
+              {/* Be in the know of every one of your products at all times of the
               sales cycle. From price tagging to the customer purchase.
               FashionPal will feel like that perfect pair pants that fits you
               and your body type. Helping you gain insights into your business
-              and be your 24/7 assistant attending to your every need.
+              and be your 24/7 assistant attending to your every need. */}
               {/* Your digital fashion ally. Tailored to your unique needs, it
               transforms customer insights into success strategies. Elevate your
               operations, boost profitability, and enhance customer
