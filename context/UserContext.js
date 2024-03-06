@@ -10,6 +10,7 @@ export const useUser = () => useContext(UserContext);
 const ACCESS_RULES = {
   consumer: [
     "/consumer",
+    "/consumer/listing",
     "/consumer/profile",
     "/consumer/saved",
     "/consumer/sales",
