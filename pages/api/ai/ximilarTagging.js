@@ -55,6 +55,7 @@ const handler = async (req, res) => {
 
     return res.status(200).json("Listing successfully tagged");
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({ message: error.message });
   }
 };
