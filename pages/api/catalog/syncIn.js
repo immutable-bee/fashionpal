@@ -137,9 +137,18 @@ const handler = async (req, res) => {
           );
           const existentCategories = {};
 
+          console.log(
+            "API response - categoriesResponse?.result?.objects to process:",
+            JSON.stringify(categoriesResponse?.result?.objects)
+          );
           for (const entry of categoriesResponse?.result?.objects) {
             existentCategories[entry.categoryData.name] = entry.id;
           }
+
+          console.log(
+            "Unique categories to process:",
+            JSON.stringify(uniqueCategories)
+          );
           const categoriesToAdd = [];
           for (const category of uniqueCategories) {
             if (!existentCategories[category]) {
@@ -153,6 +162,7 @@ const handler = async (req, res) => {
               });
             }
           }
+          console.log("Categories to add:", JSON.stringify(categoriesToAdd));
           if (categoriesToAdd.length > 0) {
             const addCategoriesResponse =
               await client.catalogApi.batchUpsertCatalogObjects({
@@ -164,12 +174,20 @@ const handler = async (req, res) => {
                 ],
               });
 
+            console.log(
+              "addCategoriesResponse status code:",
+              addCategoriesResponse.statusCode
+            );
             if (addCategoriesResponse.statusCode === 200) {
               for (const entry of addCategoriesResponse?.result?.objects) {
                 existentCategories[entry.categoryData.name] = entry.id;
               }
             }
           }
+          console.log(
+            "Items to process for batchUpsertCatalogObjects:",
+            JSON.stringify(items)
+          );
 
           for (const item of items) {
             if (item.itemData.categories.length > 0) {
@@ -177,6 +195,10 @@ const handler = async (req, res) => {
                 existentCategories[item.itemData.categories[0]];
             }
 
+            console.log(
+              "item.itemdata.categories map:",
+              JSON.stringify(item.itemData.categories)
+            );
             item.itemData.categories = item.itemData.categories.map(
               (c, index) => ({
                 id: existentCategories[c],
