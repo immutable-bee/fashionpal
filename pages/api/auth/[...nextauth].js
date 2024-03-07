@@ -7,7 +7,7 @@ import signInEmail from "../../../emails/signin";
 import { createTransport } from "nodemailer";
 
 const logo =
-  "https://fashionpal.vercel.app/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.353fde4b.png&w=256&q=75";
+  "https://drive.google.com/thumbnail?id=1HUCpeVPnVh4kEvVI8y0P4JDIb-ClU6TX";
 
 const transporter = createTransport({
   host: process.env.EMAIL_SERVER_HOST,

@@ -69,25 +69,20 @@ const HomeHeader = () => {
         <div className="bg-white sm:mx-auto max-w-4xl rounded-xl sm:rounded-3xl min-h-[20rem] sm:min-h-[20rem] flex items-center justify-center px-8 sm:px-8 sm:w-full w-[90%] py-4 sm:py-5">
           <div>
             <h3 className="text-gray-700 text-xl sm:text-[1.8rem] text-center">
-              Inventory Management Software Tailored to Second Hand Fashion
+              Effortless Second-Hand Fashion
             </h3>
             <p className="text-gray-500 text-center mt-3 text-base sm:text-lg mx-4">
-              Be in the know of every one of your products at all times of the
-              sales cycle. From price tagging to the customer purchase.
-              FashionPal will feel like that perfect pair pants that fits you
-              and your body type. Helping you gain insights into your business
-              and be your 24/7 assistant attending to your every need.
-              {/* Your digital fashion ally. Tailored to your unique needs, it
-              transforms customer insights into success strategies. Elevate your
-              operations, boost profitability, and enhance customer
-              satisfaction, all in one sleek platform. Navigate fashion's
-              complexities with ease and watch your business flourish */}
+              Stay on top of every detail of your products throughout the sales
+              cycle, from pricing to purchase. FashionPal spots trends in your
+              business, just as you do with fashion trends. It provides deep
+              insights into your business, acting as your 24/7 assistant,
+              catering to every need without fail.
             </p>
 
             <div className="flex justify-center items-center mt-6 gap-4">
               <Link href="#pricing">
                 <button className="bg-primary hover:scale-110 w-[40vw] sm:w-72 h-14 rounded-lg text-lg sm:text-2xl font-medium text-white duration-300 ease-in-out">
-                  Start now
+                  Get Started
                 </button>
               </Link>
               <a
@@ -161,7 +156,7 @@ const HomeHeader = () => {
 
                 <h3 className="text-lg text-white mt-4">
                   Enjoy an employee-friendly POS experience designed to minimize
-                  errors and capture detailed sales information of each loyal
+                  errors and capture detailed sales information for each loyal
                   customer.
                 </h3>
               </div>
@@ -181,7 +176,7 @@ const HomeHeader = () => {
                 </h1>
 
                 <h3 className="text-lg text-white mt-4">
-                  Affract your customers back to the store with automated emails
+                  Attract your customers back to the store with automated emails
                   showcasing new and relevant items tailored just for them.
                 </h3>
               </div>
