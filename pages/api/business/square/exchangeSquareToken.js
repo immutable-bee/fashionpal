@@ -1,7 +1,7 @@
 import { prisma } from "../../../../db/prismaDB";
 import { authOptions } from "../../auth/[...nextauth]";
 import { getServerSession } from "next-auth";
-import { AES } from "crypto-js";
+import { AES, enc } from "crypto-js";
 import { Client, Environment } from "square";
 
 const handler = async (req, res) => {
@@ -40,11 +40,11 @@ const handler = async (req, res) => {
     const encryptedAccessToken = AES.encrypt(
       data.access_token,
       process.env.NEXTAUTH_SECRET
-    ).toString();
+    ).toString(enc.Utf8);
     const encryptedRefreshToken = AES.encrypt(
       data.refresh_token,
       process.env.NEXTAUTH_SECRET
-    ).toString();
+    ).toString(enc.Utf8);
 
     const currentDate = new Date().toISOString();
 
