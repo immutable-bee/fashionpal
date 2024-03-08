@@ -141,8 +141,11 @@ const handler = async (req, res) => {
             "API response - categoriesResponse?.result?.objects to process:",
             JSON.stringify(categoriesResponse?.result?.objects)
           );
-          for (const entry of categoriesResponse?.result?.objects) {
-            existentCategories[entry.categoryData.name] = entry.id;
+
+          if (categoriesResponse?.result?.objects) {
+            for (const entry of categoriesResponse?.result?.objects) {
+              existentCategories[entry.categoryData.name] = entry.id;
+            }
           }
 
           console.log(
