@@ -19,15 +19,7 @@ const handler = async (req, res) => {
     return res.status(404).json({ message: "Business record not found" });
   }
   console.log(data);
-  if (
-    data?.squareAccessToken &&
-    business.squareAccessToken !== data?.squareAccessToken
-  ) {
-    data.squareAccessToken = AES.encrypt(
-      data.squareAccessToken,
-      process.env.NEXTAUTH_SECRET
-    ).toString();
-  }
+
   try {
     const updatedBusiness = await prisma.business.update({
       where: { email: session.user.email },
