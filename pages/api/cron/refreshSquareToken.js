@@ -57,11 +57,11 @@ const handler = async (req, res) => {
         const encryptedAccessToken = AES.encrypt(
           data.access_token,
           process.env.NEXTAUTH_SECRET
-        ).toString(enc.Utf8);
+        ).toString();
         const encryptedRefreshToken = AES.encrypt(
           data.refresh_token,
           process.env.NEXTAUTH_SECRET
-        ).toString(enc.Utf8);
+        ).toString();
 
         await prisma.business.update({
           where: { id: business.id },
