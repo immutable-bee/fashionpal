@@ -262,7 +262,6 @@ const handler = async (req, res) => {
             mapping.objectId;
         }
       } catch (error) {
-        console.error(`Error processing business ${business.id}:`, error);
         operationErrors.push({ businessId: business.id, error: error.message });
       }
     }
