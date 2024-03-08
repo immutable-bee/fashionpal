@@ -292,10 +292,9 @@ const handler = async (req, res) => {
         : { message: "No listings to sync." };
 
     if (operationErrors.length > 0) {
-      console.log("Operation completed with errors:", operationErrors);
       return res
         .status(206)
-        .json({ message: "Operations completed with errors", operationErrors });
+        .json({ message: "Operations completed with errors" });
     }
 
     res.status(200).json({ message: "All operations completed successfully" });
