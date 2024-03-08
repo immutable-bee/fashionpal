@@ -1,7 +1,6 @@
 import { prisma } from "@/db/prismaDB";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
-import { AES } from "crypto-ts";
 
 const handler = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
