@@ -62,11 +62,15 @@ const handler = async (req, res) => {
       environment: Environment.Production,
     });
 
-    const response = await client.customerGroupsApi.createCustomerGroup({
-      group: {
-        name: "Members",
-      },
-    });
+    const existingGroup = await client.customerGroupsApi.listCustomerGroups();
+
+    if (!existingGroup.groups) {
+      const response = await client.customerGroupsApi.createCustomerGroup({
+        group: {
+          name: "Members",
+        },
+      });
+    }
 
     res.status(200).json({ message: "Token exchange successful" });
   } catch (error) {
