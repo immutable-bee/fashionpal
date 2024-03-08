@@ -64,7 +64,7 @@ const handler = async (req, res) => {
 
     const existingGroup = await client.customerGroupsApi.listCustomerGroups();
 
-    if (!existingGroup.groups) {
+    if (Object.keys(existingGroup.result).length === 0) {
       const response = await client.customerGroupsApi.createCustomerGroup({
         group: {
           name: "Members",
